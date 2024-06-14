@@ -74,9 +74,11 @@
                 MaxLines="4"
                 HorizontalOptions="Start" />
 
+
             <HorizontalStackLayout
                 x:Name="RecordingModeButtonStackLayout"
                 Spacing="10"
+                HorizontalOptions="Center"
                 VerticalOptions="Start">
                 <Button
                     x:Name="FinishRecordingButton"
@@ -86,13 +88,15 @@
                     HorizontalOptions="Center" />
                 <Button
                     x:Name="RequestCancelRecordingButton"
-                    Text="Cancel"
+                    Text="Cancel Recording"
+                    LineBreakMode="WordWrap"
                     SemanticProperties.Hint="RequestCancelRecordingButton"
                     Clicked="OnRequestCancelRecordingClicked"
                     HorizontalOptions="Center" />
                 <Button
                     x:Name="ConfirmCancelRecordingButton"
-                    Text="Cancel"
+                    Text="Confirm Cancel"
+                    LineBreakMode="WordWrap"
                     SemanticProperties.Hint="ConfirmCancelRecordingButton"
                     Clicked="OnConfirmCancelRecordingClicked"
                 HorizontalOptions="Center" />

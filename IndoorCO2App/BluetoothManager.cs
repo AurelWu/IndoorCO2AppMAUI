@@ -25,6 +25,8 @@ namespace IndoorCO2App
         public static bool isRecording;
         public static BluetoothService bluetoothService;
         public static List<SensorData> recordedData;
+        public static SubmissionData submissionData;
+        public static string deviceID;
 
         internal async static void Init()
         {
@@ -53,6 +55,7 @@ namespace IndoorCO2App
             state = ble.State;
             adapter.ScanMode = ScanMode.LowLatency;
             adapter.ScanTimeout = 10000; //ms
+            deviceID = String.Empty;
 
         }
 
@@ -67,16 +70,25 @@ namespace IndoorCO2App
             
         }
 
-        public static void StartNewRecording()
+        public static void StartNewRecording(LocationData location, long startTime)
         {
             isRecording = true;
             recordedData = new List<SensorData>();
+            submissionData = new SubmissionData(UserIDManager.GetEncryptedID(deviceID), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
         }
 
         public static void StopRecording()
         {
             isRecording = false; 
+        }
 
+        public static void FinishRecording()
+        {
+            //Add co2 measurements to submissionData
+            //ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson());
+            isRecording= false;
+            submissionData.SensorData = recordedData;
+            ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(0,submissionData.SensorData.Count-1));
         }
 
         internal static async void ScanForDevices()
@@ -91,10 +103,19 @@ namespace IndoorCO2App
             if (ble == null) return; // if still null after trying to Init we abort
             var scanFilterOptions = new ScanFilterOptions();
             scanFilterOptions.ServiceUuids = new[] { AranetServiceUUID };
-            adapter.ScanMatchMode = ScanMatchMode.STICKY;            
+            adapter.ScanMatchMode = ScanMatchMode.STICKY;
+            adapter.ScanMode = ScanMode.LowLatency;
             await adapter.StartScanningForDevicesAsync(scanFilterOptions);
             await adapter.StopScanningForDevicesAsync();
-            discoveredDevices = adapter.DiscoveredDevices;
+            if(discoveredDevices.Count > 0 && adapter.DiscoveredDevices.Count ==0)
+            {
+                //we keep the old discoveredDevices.
+            }
+            else
+            {
+                discoveredDevices = adapter.DiscoveredDevices;
+            }
+            
             if (discoveredDevices.Count > 0)
             {
                 try
@@ -115,6 +136,7 @@ namespace IndoorCO2App
 
         internal static async void ConnectToDevice(IDevice device)
         {
+            deviceID = device.Id.ToString();
             IService r = await device.GetServiceAsync(AranetServiceUUID);
             IReadOnlyList<IService> results = await device.GetServicesAsync();
             if (results.Count > 0)

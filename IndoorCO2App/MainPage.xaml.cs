@@ -5,6 +5,7 @@
 //TODO: Layout
 //TODO: Button Functionality
 
+using Microsoft.Maui;
 using System.Diagnostics;
 
 namespace IndoorCO2App;
@@ -16,10 +17,15 @@ public partial class MainPage : ContentPage
 
     private DateTime timeOfLastGPSUpdate = DateTime.MinValue;
     internal List<LocationData> Locations { get; set; }
-    LocationData selectedLocation;   
+    LocationData selectedLocation;
+    public static MainPage MainPageSingleton;
+    public static IWakeLockService wakeLockService;
+
+    //public const string CHANNEL_ID = "com.companyname.indoorco2app.channel";
 
     public MainPage()
 	{
+        MainPageSingleton = this;
         Locations = new List<LocationData>();        
         //TODO => Overpass search range based on radio button instead of hardcoded 100
         //TODO: => record data when recording mode
@@ -31,7 +37,14 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         BluetoothManager.Init();
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
-        
+
+#if ANDROID
+        wakeLockService = new WakeLockServiceAndroid();
+#elif IOS
+        wakeLockService = new WakeLockServiceiOS();                
+#elif WINDOWS
+        wakeLockService = new WakeLockServiceWindows();
+#endif
 
 
         UISetup();
@@ -44,17 +57,33 @@ public partial class MainPage : ContentPage
         var screenWidth = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
 
         // Calculate 70% of the screen width
-        var buttonWidth = screenWidth * 0.7;
+        var buttonWidth70Percent = screenWidth * 0.7;
+        var buttonWidth60Percent = screenWidth * 0.6;
+        var buttonWidth50Percent = screenWidth * 0.5;
+        var buttonWidth30Percent = screenWidth * 0.3;
+        var buttonWidth25Percent = screenWidth * 0.25;
 
         // Set the button's minimum width
-        StartRecordingButton.MinimumWidthRequest = buttonWidth;
-        UpdateLocationsButton.MinimumWidthRequest = buttonWidth;
-        OpenMapButton.MinimumWidthRequest = buttonWidth;
-        OpenImprintButton.MinimumWidthRequest = buttonWidth;
+        StartRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
+        UpdateLocationsButton.MinimumWidthRequest = buttonWidth70Percent;
+        OpenMapButton.MinimumWidthRequest = buttonWidth70Percent;
+        OpenImprintButton.MinimumWidthRequest = buttonWidth70Percent;
+        FinishRecordingButton.MinimumWidthRequest = buttonWidth60Percent;
+        FinishRecordingButton.MaximumWidthRequest = buttonWidth60Percent;
+        RequestCancelRecordingButton.MinimumWidthRequest = buttonWidth25Percent;
+        RequestCancelRecordingButton.MaximumWidthRequest = buttonWidth25Percent;
+        ConfirmCancelRecordingButton.MinimumWidthRequest = buttonWidth25Percent;
+        ConfirmCancelRecordingButton.MaximumWidthRequest = buttonWidth25Percent;
     }
 
     private void SwitchToRecordingUI()
     {
+        wakeLockService.AcquireWakeLock();
+        //StackRangeTrimmer.IsVisible = true;        
+        FinishRecordingButton.Text = "Submit Data";
+        FinishRecordingButton.IsEnabled = true;
+        FinishRecordingButton.IsVisible = true;
+        RequestCancelRecordingButton.IsVisible = true;
         ConfirmCancelRecordingButton.IsVisible = false;
         RecordedDataLabel.IsVisible = true; //RecordedDataLabel is temporary instead of lineChart
         LocationLabelRecording.IsVisible = true;
@@ -69,6 +98,10 @@ public partial class MainPage : ContentPage
 
     private void SwitchToStandardUI() 
     {
+        wakeLockService.ReleaseWakeLock();
+        //StackRangeTrimmer.IsVisible = true;
+        FinishRecordingButton.IsVisible = false;
+        RequestCancelRecordingButton.IsVisible = false;
         ConfirmCancelRecordingButton.IsVisible = false;
         RecordedDataLabel.IsVisible = false; //RecordedDataLabel is temporary instead of lineChart
         LocationLabelRecording.IsVisible = false;
@@ -99,23 +132,27 @@ public partial class MainPage : ContentPage
                 selectedLocation = (LocationData)LocationPicker.SelectedItem;
             }
             SwitchToRecordingUI();
-            BluetoothManager.StartNewRecording();
+            BluetoothManager.StartNewRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
         }        
     }
 
     private void OnFinishRecordingClicked(object sender, EventArgs e)
     {
-
+        FinishRecordingButton.Text = "Submitting Data";
+        FinishRecordingButton.IsEnabled = false; ;
+        BluetoothManager.FinishRecording();
     }
-
+    
     private void OnRequestCancelRecordingClicked(object sender, EventArgs e)
     {
-
+        RequestCancelRecordingButton.IsVisible = false;
+        ConfirmCancelRecordingButton.IsVisible = true;
     }
 
     private void OnConfirmCancelRecordingClicked(object sender, EventArgs e)
     {
-
+        BluetoothManager.StopRecording();
+        SwitchToStandardUI();
     }
 
     private void OnShowMapInBrowserClicked(object sender, EventArgs e)
@@ -136,14 +173,15 @@ public partial class MainPage : ContentPage
             while (await _timer.WaitForNextTickAsync())
             {
                 UpdateUI();
-                BluetoothManager.Update();
-                StatusLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading;
+                StatusLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " | " + DateTime.Now;
+                //BluetoothManager.Update();
 
-                if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))
-                {
-                    SpatialManager.UpdateLocation();
-                    timeOfLastGPSUpdate = DateTime.Now;
-                }
+                //non-UI Stuff now done in foreground Service
+                //if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))
+                //{
+                //    SpatialManager.UpdateLocation();
+                //    timeOfLastGPSUpdate = DateTime.Now;
+                //}
 
             }
         }
@@ -266,6 +304,22 @@ public partial class MainPage : ContentPage
         bool granted = await SpatialManager.IsLocationPermissionGrantedAsync();
         if (granted) return; // won't do anything if we already got permission;
         //TODO
+    }
+
+    public void OnTransmissionFailed(string msg)
+    {
+        FinishRecordingButton.Text = msg;
+        FinishRecordingButton.IsEnabled = true;
+        //TODO: add Delay til returning to other UI
+    }
+    public void OnTransmissionSuccess(string msg)
+    {
+        FinishRecordingButton.Text = "Transmission successful!";
+        Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(4), () =>
+        {
+            SwitchToStandardUI();
+        });
+        //Submitting seems to work but Lambda doesnt write to DB so maybe message not correct yet? Compare with android message        
     }
 
     public void UpdateLocationPicker()

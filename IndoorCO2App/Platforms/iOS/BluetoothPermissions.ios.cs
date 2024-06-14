@@ -4,8 +4,7 @@ using CoreLocation;
 using Foundation;
 using System.Threading.Tasks;
 
-namespace IndoorCO2App
-{
+
     /// <summary>
     /// MAUI Bluetooth Permission Declaration (for iOS).
     /// </summary>
@@ -78,4 +77,4 @@ namespace IndoorCO2App
             }
         }
     }
-}
+

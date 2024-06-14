@@ -84,7 +84,10 @@ namespace IndoorCO2App
 
         public static async Task FetchNearbyBuildingsAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage)
         {
-            if(currentlyFetching) return;
+            //userLatitude = 51.1828806;
+            //userLongitude = 7.1872148;
+            //searchRadius = 250;
+            if (currentlyFetching) return;
             currentlyFetching = true;
             Console.WriteLine("Fetch NearbyBuildings called");
             LocationData.Clear();
