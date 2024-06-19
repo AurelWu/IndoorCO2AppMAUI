@@ -13,7 +13,6 @@ public partial class BluetoothPermissions : Permissions.BasePlatformPermission
         }
         catch (Exception ex)
         {
-            // logger.LogError(ex);
             return false;
         }
     }
@@ -27,7 +26,7 @@ public partial class BluetoothPermissions : Permissions.BasePlatformPermission
         }
         catch (Exception ex)
         {
-            // logger.LogError(ex);
+            
             return false;
         }
     }

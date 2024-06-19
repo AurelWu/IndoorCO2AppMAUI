@@ -6,6 +6,7 @@
 //TODO: Button Functionality
 
 using Microsoft.Maui;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace IndoorCO2App;
@@ -14,12 +15,12 @@ public partial class MainPage : ContentPage
 {
 	int count = 0;
     private readonly PeriodicTimer _timer;
-
+    int searchRange = 100;
     private DateTime timeOfLastGPSUpdate = DateTime.MinValue;
     internal List<LocationData> Locations { get; set; }
     LocationData selectedLocation;
     public static MainPage MainPageSingleton;
-    public static IWakeLockService wakeLockService;
+    //public static IWakeLockService wakeLockService;
 
     //public const string CHANNEL_ID = "com.companyname.indoorco2app.channel";
 
@@ -37,15 +38,6 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         BluetoothManager.Init();
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
-
-#if ANDROID
-        wakeLockService = new WakeLockServiceAndroid();
-#elif IOS
-        wakeLockService = new WakeLockServiceiOS();                
-#elif WINDOWS
-        wakeLockService = new WakeLockServiceWindows();
-#endif
-
 
         UISetup();
         SwitchToStandardUI();
@@ -74,11 +66,12 @@ public partial class MainPage : ContentPage
         RequestCancelRecordingButton.MaximumWidthRequest = buttonWidth25Percent;
         ConfirmCancelRecordingButton.MinimumWidthRequest = buttonWidth25Percent;
         ConfirmCancelRecordingButton.MaximumWidthRequest = buttonWidth25Percent;
+        RadioButton100m.IsChecked = true;
     }
 
     private void SwitchToRecordingUI()
     {
-        wakeLockService.AcquireWakeLock();
+        //wakeLockService.AcquireWakeLock();
         //StackRangeTrimmer.IsVisible = true;        
         FinishRecordingButton.Text = "Submit Data";
         FinishRecordingButton.IsEnabled = true;
@@ -98,7 +91,7 @@ public partial class MainPage : ContentPage
 
     private void SwitchToStandardUI() 
     {
-        wakeLockService.ReleaseWakeLock();
+        //wakeLockService.ReleaseWakeLock();
         //StackRangeTrimmer.IsVisible = true;
         FinishRecordingButton.IsVisible = false;
         RequestCancelRecordingButton.IsVisible = false;
@@ -116,13 +109,13 @@ public partial class MainPage : ContentPage
 
     private void OnUpdateLocationsClicked(object sender, EventArgs e)
     {
-        SemanticScreenReader.Announce(UpdateLocationsButton.Text);
-        OverpassModule.FetchNearbyBuildingsAsync(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, 100,this); //TODO => 
+        //SemanticScreenReader.Announce(UpdateLocationsButton.Text);
+        OverpassModule.FetchNearbyBuildingsAsync(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange,this); //TODO => 
     }
 
     private void OnStartRecordingClicked(object sender, EventArgs e)
     {    	    
-    	SemanticScreenReader.Announce(StartRecordingButton.Text);
+    	//SemanticScreenReader.Announce(StartRecordingButton.Text);
 
         //Console.WriteLine(LocationPicker);
         if(LocationPicker != null && Locations.Count>0) 
@@ -157,12 +150,31 @@ public partial class MainPage : ContentPage
 
     private void OnShowMapInBrowserClicked(object sender, EventArgs e)
     {
-        SemanticScreenReader.Announce(OpenMapButton.Text);
+        //SemanticScreenReader.Announce(OpenMapButton.Text);
+        var url = "http://indoorco2map.s3-website.eu-central-1.amazonaws.com/";
+        Launcher.OpenAsync(url);
+
     }
 
     private void OnImprintClicked(object sender, EventArgs e)
     {
-        SemanticScreenReader.Announce(OpenImprintButton.Text);
+        //SemanticScreenReader.Announce(OpenImprintButton.Text);
+    }
+
+    private void OnRadioButtonCheckedChanged(object sender, EventArgs e)
+    {        
+        if (RadioButton50m.IsChecked)
+        {
+            searchRange = 50;
+        }
+        else if (RadioButton100m.IsChecked)
+        {
+            searchRange = 100;
+        }
+        else if (RadioButton250m.IsChecked)
+        {
+            searchRange = 250;
+        }
     }
 
 
@@ -173,15 +185,19 @@ public partial class MainPage : ContentPage
             while (await _timer.WaitForNextTickAsync())
             {
                 UpdateUI();
-                StatusLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " | " + DateTime.Now;
-                //BluetoothManager.Update();
+
+                
+                StatusLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " | Next Update in: " + BluetoothManager.timeToNextUpdate+"s";
+#if IOS
+                BluetoothManager.Update();
 
                 //non-UI Stuff now done in foreground Service
-                //if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))
-                //{
-                //    SpatialManager.UpdateLocation();
-                //    timeOfLastGPSUpdate = DateTime.Now;
-                //}
+                if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))
+                {
+                    SpatialManager.UpdateLocation();
+                    timeOfLastGPSUpdate = DateTime.Now;
+                }
+#endif
 
             }
         }
@@ -323,9 +339,17 @@ public partial class MainPage : ContentPage
     }
 
     public void UpdateLocationPicker()
-    {
+    {        
         Locations = OverpassModule.LocationData;
+        if (Locations.Count == 0)
+        {
+            return;
+        }
+        LocationPicker.ItemsSource = null;
+        LocationPicker.Items.Clear();
         LocationPicker.ItemsSource = Locations;
+
+
         if (Locations.Count > 0)
         {
             LocationPicker.SelectedItem = Locations[0];

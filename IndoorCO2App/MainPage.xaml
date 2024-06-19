@@ -64,19 +64,9 @@
                 MaxLines="2"
                 HorizontalOptions="Start" />
 
-            <Label
-                x:Name="RecordedDataLabel"
-                Text="Location: "                
-                SemanticProperties.Description="SemanticProperties.Description"
-                FontSize="Small"
-                LineBreakMode="WordWrap"
-                VerticalOptions="StartAndExpand"
-                MaxLines="4"
-                HorizontalOptions="Start" />
-
 
             <HorizontalStackLayout
-                x:Name="RecordingModeButtonStackLayout"
+                x:Name="RecordingModeButtonStackLayout"                
                 Spacing="10"
                 HorizontalOptions="Center"
                 VerticalOptions="Start">
@@ -102,6 +92,20 @@
                 HorizontalOptions="Center" />
             </HorizontalStackLayout>
 
+            <GraphicsView x:Name="graphicsView" />
+
+            <Label
+                x:Name="RecordedDataLabel"
+                Text="Location: "                
+                SemanticProperties.Description="SemanticProperties.Description"
+                FontSize="Small"
+                LineBreakMode="WordWrap"
+                VerticalOptions="StartAndExpand"
+                MaxLines="4"
+                HorizontalOptions="Start" />
+
+
+
             <HorizontalStackLayout
             x:Name="SearchRangeStackLayout"
             Spacing="10"
@@ -109,11 +113,11 @@
                 <Label Text="Search Range: " FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Center" />
                 <StackLayout Orientation="Horizontal">
                     <Label Text="50m" HorizontalOptions="Start" VerticalOptions="Center" />
-                    <RadioButton x:Name="RadioButton50m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" />
+                    <RadioButton x:Name="RadioButton50m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" CheckedChanged="OnRadioButtonCheckedChanged"  />
                     <Label Text="100m" HorizontalOptions="Start" VerticalOptions="Center" />
-                    <RadioButton x:Name="RadioButton100m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" />
+                    <RadioButton x:Name="RadioButton100m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" CheckedChanged="OnRadioButtonCheckedChanged"  />
                     <Label Text="250m" HorizontalOptions="Start" VerticalOptions="Center" />
-                    <RadioButton x:Name="RadioButton250m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" />
+                    <RadioButton x:Name="RadioButton250m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" CheckedChanged="OnRadioButtonCheckedChanged"  />
                 </StackLayout>
             </HorizontalStackLayout>
 

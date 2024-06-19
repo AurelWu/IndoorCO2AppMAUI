@@ -1,6 +1,7 @@
 ﻿// In Platforms/Windows/LocationServiceWindows.cs
 
 
+
 namespace IndoorCO2App
 {
     internal class LocationServiceWindows : LocationService
@@ -10,6 +11,11 @@ namespace IndoorCO2App
             return false;
             //var accessStatus = Geolocator.RequestAccessAsync().GetAwaiter().GetResult();
             //return accessStatus == GeolocationAccessStatus.Allowed;
+        }
+
+        internal override Task<bool> ShowEnableGpsDialogAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

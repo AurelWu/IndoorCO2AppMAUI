@@ -90,7 +90,6 @@ namespace IndoorCO2App
             if (currentlyFetching) return;
             currentlyFetching = true;
             Console.WriteLine("Fetch NearbyBuildings called");
-            LocationData.Clear();
             var overpassQuery = BuildOverpassQuery(userLatitude, userLongitude, searchRadius);
             //var content = new StringContent("data=" + overpassQuery);
             var content = new StringContent("data=" + Uri.EscapeDataString(overpassQuery), Encoding.UTF8, "application/x-www-form-urlencoded");
