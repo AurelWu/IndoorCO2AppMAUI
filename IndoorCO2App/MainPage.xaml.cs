@@ -13,6 +13,11 @@ namespace IndoorCO2App;
 
 public partial class MainPage : ContentPage
 {
+    bool gpsGranted = false;
+    bool gpsActive = false;
+    bool btActive = false;
+    bool btGranted = false;
+
 	int count = 0;
     private readonly PeriodicTimer _timer;
     int searchRange = 100;
@@ -187,7 +192,7 @@ public partial class MainPage : ContentPage
                 UpdateUI();
 
                 
-                StatusLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " | Next Update in: " + BluetoothManager.timeToNextUpdate+"s";
+                
 #if IOS
                 BluetoothManager.Update();
 
@@ -213,15 +218,31 @@ public partial class MainPage : ContentPage
         UpdateGPSPermissionButton();
         UpdateBluetoothStatusButton();
         UpdateBluetoothPermissionsButton();
+        
+
         UpdateLocationLabel();
         UpdateLocationRecordingLabel();
         UpdateRecordedDataLabel();
+        UpdateStatusLabel();
+        UpdateDeviceLabel();
+    }
+
+    private void UpdateStatusLabel()
+    {
+        {
+            StatusLabel.Text=("");
+            if (!gpsActive) StatusLabel.Text += "GPS not enabled | ";            
+            if (!gpsGranted) StatusLabel.Text += "Location Permission missing |";
+            if (!btActive) StatusLabel.Text += "Bluetooth not enabled |";
+            if (!btGranted) StatusLabel.Text += "Bluetooth permission not granted";
+            if (gpsActive && gpsGranted && btActive && btGranted) StatusLabel.Text = "GPS & Bluetoooth Permissions and Status okay";
+        }
     }
 
     private async void UpdateGPSPermissionButton()
     {
-        bool granted = await SpatialManager.IsLocationPermissionGrantedAsync();
-        if(granted)
+        gpsGranted = await SpatialManager.IsLocationPermissionGrantedAsync();
+        if(gpsGranted)
         {             
             ButtonGPSPermission.BackgroundColor = Color.Parse("Green");
         }
@@ -233,8 +254,8 @@ public partial class MainPage : ContentPage
 
     private void UpdateGPSStatusButton()
     {
-        bool isActive = SpatialManager.CheckIfGpsIsEnabled();
-        if(isActive)
+        gpsActive = SpatialManager.CheckIfGpsIsEnabled();
+        if(gpsActive)
         {
             ButtonGPSStatus.BackgroundColor = Color.Parse("Green");
         }
@@ -246,8 +267,8 @@ public partial class MainPage : ContentPage
 
     private void UpdateBluetoothStatusButton()
     {
-        bool isActive = BluetoothManager.bluetoothService.IsBluetoothEnabled();
-        if(isActive)
+        btActive = BluetoothManager.bluetoothService.IsBluetoothEnabled();
+        if(btActive)
         {
             ButtonBluetoothStatus.BackgroundColor = Color.Parse("Green");
         }
@@ -257,10 +278,10 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private async void UpdateBluetoothPermissionsButton()
+    private void UpdateBluetoothPermissionsButton()
     {
-        bool granted = await BluetoothPermissions.CheckBluetoothPermissionStatus();
-        if(granted)
+        btGranted = BluetoothPermissions.CheckStatus();
+        if(btGranted) 
         {
             ButtonBluetoothPermissions.BackgroundColor = Color.Parse("Green");
         }
@@ -272,7 +293,52 @@ public partial class MainPage : ContentPage
 
     private void UpdateLocationLabel()
     {
-        LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.######") + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.######");
+        if (gpsActive && gpsGranted)
+        {
+            if (SpatialManager.currentLocation.Latitude != 0 || SpatialManager.currentLocation.Longitude != 0)
+            {
+                LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.######") + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.######");
+            }
+            else
+            {
+                LocationLabel.Text = "GPS enabled and Location permissions granted. Getting first Location Info. This might take a minute";
+            }
+        }
+        else
+        {
+            LocationLabel.Text = ("");
+            if (!gpsActive) LocationLabel.Text += ("GPS not enabled ");
+            if (!gpsGranted) LocationLabel.Text += ("Location Permission missing");            
+        }
+    }
+
+    private void UpdateDeviceLabel()
+    {
+        if (!btGranted || !btActive)
+        {
+            DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch Sensor Data";
+        }
+        else if (BluetoothManager.discoveredDevices.Count == 0)
+        {
+            DeviceLabel.Text = "Aranet Device not yet found | initiating Update in: " + BluetoothManager.timeToNextUpdate +"s";
+        }
+        else if(BluetoothManager.sensorUpdateInterval > 60)
+        {
+            DeviceLabel.Text = "Device found but Update Interval not set to 1 Minute, change to 1 Minute using official App. next attempt in " + BluetoothManager.timeToNextUpdate + "s";
+        }
+        else if(BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
+        {
+            DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " | Next Update in: " + BluetoothManager.timeToNextUpdate + "s";
+        }
+        else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
+        {
+            DeviceLabel.Text = "Sensor found, but the required 'Smart Home Integration' is disabled.\r\n Please enable it using the official Aranet App (use the Gears Icon)";
+        }
+        else if (BluetoothManager.currentCO2Reading == 0)
+        {
+            DeviceLabel.Text = "Waiting for first sensor update. This might take a Minute | ID: " + BluetoothManager.deviceID + " | rssi: " + BluetoothManager.rssi + "GattS: " + BluetoothManager.gattStatus;
+        }
+
     }
 
     private void UpdateLocationRecordingLabel()
@@ -310,7 +376,7 @@ public partial class MainPage : ContentPage
 
     private async void OnRequestBluetoothPermissionsDialog(object sender, EventArgs e)
     {
-        bool granted = await BluetoothPermissions.CheckBluetoothPermissionStatus();
+        bool granted = BluetoothPermissions.CheckStatus();
         if (granted) return; // won't do anything if we already got permissions;
         //TODO
     }

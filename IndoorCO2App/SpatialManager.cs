@@ -15,14 +15,7 @@ namespace IndoorCO2App
         static LocationService ls;
         static SpatialManager()
         {
-            #if ANDROID        
-                ls = new LocationServiceAndroid();
-            #elif IOS
-                ls = new LocationServiceiOS();
-            #elif WINDOWS
-                ls = new LocationServiceWindows();
-            #endif
-
+            ls = new LocationService();
             currentLocation = new Location();
         }
 

@@ -1,14 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// In Platforms/iOS/LocationServiceiOS.cs
+using CoreLocation;
+using Foundation;
+using UIKit;
+
 
 namespace IndoorCO2App
 {
-    internal abstract class LocationService
+    internal class LocationService
     {
-        internal abstract bool IsGpsEnabled();
-        internal abstract Task<bool> ShowEnableGpsDialogAsync();
+        internal bool IsGpsEnabled()
+        {
+            return CLLocationManager.Status == CLAuthorizationStatus.AuthorizedWhenInUse ||
+                   CLLocationManager.Status == CLAuthorizationStatus.AuthorizedAlways;
+        }
+
+        internal async Task<bool> ShowEnableGpsDialogAsync()
+        {
+            bool result = await App.Current.MainPage.DisplayAlert(
+                "Enable GPS",
+                "GPS is currently disabled. Would you like to enable it?",
+                "Yes",
+                "No");
+
+            if (result)
+            {
+                var url = new NSUrl("App-Prefs:root=LOCATION_SERVICES");
+                if (UIApplication.SharedApplication.CanOpenUrl(url))
+                {
+                    UIApplication.SharedApplication.OpenUrl(url);
+                }
+            }
+
+            return result;
+        }
     }
 }

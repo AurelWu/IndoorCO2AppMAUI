@@ -36,6 +36,7 @@
                 HorizontalOptions="Start" />
             
             <Label
+                x:Name="DeviceLabel"
                 Text="Device Status / Info"                
                 SemanticProperties.Description="SemanticProperties.Description"
                 FontSize="Small"

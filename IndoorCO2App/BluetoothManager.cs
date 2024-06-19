@@ -35,6 +35,10 @@ namespace IndoorCO2App
         public static List<SensorData> recordedData;
         public static SubmissionData submissionData;
         public static string deviceID;
+        public static bool isGattA2DP;
+        public static int rssi;
+        public static int txPower;
+        public static int gattStatus;
 
         internal async static void Init()
         {
@@ -42,7 +46,7 @@ namespace IndoorCO2App
 #if ANDROID
                 bluetoothService = new BluetoothServiceAndroid();
 #elif IOS
-                bluetoothService = new BluetoothServiceiOS();
+                bluetoothService = new BluetoothService();
 #elif WINDOWS
                 bluetoothService = new BluetoothServiceWindows();
 #endif
@@ -104,8 +108,8 @@ namespace IndoorCO2App
 
         internal static async void ScanForDevices()
         {
-            bool checkPermissions = await BluetoothPermissions.CheckBluetoothPermissionStatus();
-            bool requestedPermissionsResult = await BluetoothPermissions.RequestBluetoothAccess();
+            bool checkPermissions = BluetoothPermissions.CheckStatus();
+            await BluetoothPermissions.RequestAsync();
             if (ble == null)
             {
                 Init();
@@ -180,10 +184,17 @@ namespace IndoorCO2App
                             if (start < 0) start = 0;
                             var requestData = PackDataRequestCO2History(start);
                             var response = await aranet4CharacteristicWriter.WriteAsync(requestData);
+                            gattStatus = response;
                             if (response != 0)
                             {
-                                //error handling here
+                                
+                                if (response == 2)
+                                {
+                                    isGattA2DP=true;
+                                }
+                                return; //returning here should be fine
                             }
+                            isGattA2DP = false;
 
                             var history = await aranet4CharacteristicHistoryV2.ReadAsync();
                             var historyDataRaw = history.data;
