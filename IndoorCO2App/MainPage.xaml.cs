@@ -70,7 +70,7 @@ public partial class MainPage : ContentPage
         RequestCancelRecordingButton.MinimumWidthRequest = buttonWidth25Percent;
         RequestCancelRecordingButton.MaximumWidthRequest = buttonWidth25Percent;
         ConfirmCancelRecordingButton.MinimumWidthRequest = buttonWidth25Percent;
-        ConfirmCancelRecordingButton.MaximumWidthRequest = buttonWidth25Percent;
+        ConfirmCancelRecordingButton.MaximumWidthRequest = buttonWidth25Percent;        
         RadioButton100m.IsChecked = true;
     }
 
@@ -92,6 +92,7 @@ public partial class MainPage : ContentPage
         OpenImprintButton.IsVisible = false;
         OpenMapButton.IsVisible = false;
         UpdateLocationsButton.IsVisible = false;
+        StackLayoutTrimSlider.IsVisible = true;
     }
 
     private void SwitchToStandardUI() 
@@ -110,6 +111,7 @@ public partial class MainPage : ContentPage
         OpenImprintButton.IsVisible = true;
         OpenMapButton.IsVisible = true;
         UpdateLocationsButton.IsVisible = true;
+        StackLayoutTrimSlider.IsVisible = false;
     }
 
     private void OnUpdateLocationsClicked(object sender, EventArgs e)
@@ -138,7 +140,7 @@ public partial class MainPage : ContentPage
     {
         FinishRecordingButton.Text = "Submitting Data";
         FinishRecordingButton.IsEnabled = false; ;
-        BluetoothManager.FinishRecording();
+        BluetoothManager.FinishRecording((int)Math.Floor(slider.Value));
     }
     
     private void OnRequestCancelRecordingClicked(object sender, EventArgs e)
@@ -225,6 +227,34 @@ public partial class MainPage : ContentPage
         UpdateRecordedDataLabel();
         UpdateStatusLabel();
         UpdateDeviceLabel();
+        UpdateStartRecordingButton();
+        UpdateFinishRecordingButton();
+    }
+
+    private void UpdateStartRecordingButton()
+    {
+        if(gpsActive && gpsGranted && btGranted && btActive && OverpassModule.LocationData.Count > 0 && BluetoothManager.discoveredDevices.Count>0 && BluetoothManager.currentCO2Reading > 0)
+        {                        
+            StartRecordingButton.IsEnabled = true;
+        }
+        else
+        {
+            StartRecordingButton.IsEnabled = false;
+        }
+    }
+
+    private void UpdateFinishRecordingButton()
+    {
+        if ( (BluetoothManager.recordedData.Count - (int)Math.Floor(slider.Value))  >= 5 && BluetoothManager.isRecording)
+        {
+            FinishRecordingButton.IsEnabled = true;
+            FinishRecordingButton.Text = "Submit Data";
+        }
+        else if(BluetoothManager.isRecording)
+        {
+            FinishRecordingButton.IsEnabled = false;
+            FinishRecordingButton.Text = "Submit Data (needs 5 Minutes of Data)";
+        }
     }
 
     private void UpdateStatusLabel()
@@ -356,7 +386,31 @@ public partial class MainPage : ContentPage
     private void UpdateRecordedDataLabel()
     {        
         string s = String.Join(" ", BluetoothManager.recordedData);
-        RecordedDataLabel.Text = " recorded CO2-Values: " + s;
+        RecordedDataLabel.Text = " recorded CO2-Values: ";
+
+        try
+        {
+            for (int i = 0; i < BluetoothManager.recordedData.Count; i++) //what happens if value changes during looping over it? =>
+            {
+                if (i < Math.Floor(slider.Value))
+                {
+                    RecordedDataLabel.Text += "(" + BluetoothManager.recordedData[i].CO2ppm.ToString() + ") ";
+                }
+                else
+                {
+                    RecordedDataLabel.Text += BluetoothManager.recordedData[i].CO2ppm.ToString() + " ";
+                }
+
+                //var color = i > (int)Math.Floor(slider.Value) ? Colors.Gray : Colors.Black;
+                //var formattedText = new Span { Text = $"{BluetoothManager.recordedData[i]} ", TextColor = color };
+                //RecordedDataLabel.FormattedText.Spans.Add(formattedText);
+            }
+        }
+        catch (Exception)
+        {
+            RecordedDataLabel.Text = "retrieving Data failed, next try in 1 Minute"; //maybe keep old Data in case this happens?
+        }
+        
     }
 
     private async void OnRequestBluetoothEnableDialog(object sender, EventArgs e)
@@ -420,6 +474,13 @@ public partial class MainPage : ContentPage
         {
             LocationPicker.SelectedItem = Locations[0];
         }            
+    }
+
+    private void OnSliderValueChanged(object sender, ValueChangedEventArgs e)
+    {
+        // Update the label with the new slider value
+        sliderValueLabel.Text = "Remove first " + $"{(int)Math.Floor(e.NewValue)}";
+        UpdateFinishRecordingButton();
     }
 
     #region

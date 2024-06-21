@@ -19,7 +19,17 @@
    id="metadata16"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
          rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
-   id="defs14" /><sodipodi:namedview
+   id="defs14"><rect
+     x="81.937866"
+     y="156.28889"
+     width="309.54306"
+     height="262.50464"
+     id="rect843" /><rect
+     x="81.937866"
+     y="156.28889"
+     width="309.54306"
+     height="262.50464"
+     id="rect860" /></defs><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
    borderopacity="1"
@@ -32,27 +42,42 @@
    inkscape:window-height="1017"
    id="namedview12"
    showgrid="false"
-   inkscape:zoom="1.8640351"
-   inkscape:cx="228"
-   inkscape:cy="228"
+   inkscape:zoom="1.3180719"
+   inkscape:cx="206.66752"
+   inkscape:cy="271.77604"
    inkscape:window-x="-8"
    inkscape:window-y="-8"
    inkscape:window-maximized="1"
-   inkscape:current-layer="svg10" />
-    <path
-   d="m 105.50037,281.60863 c -2.70293,0 -5.00091,-0.90042 -6.893127,-2.70209 -1.892214,-1.84778 -2.837901,-4.04181 -2.837901,-6.58209 0,-2.58722 0.945687,-4.80389 2.837901,-6.65167 1.892217,-1.84778 4.190197,-2.77167 6.893127,-2.77167 2.74819,0 5.06798,0.92389 6.96019,2.77167 1.93749,1.84778 2.90581,4.06445 2.90581,6.65167 0,2.54028 -0.96832,4.73431 -2.90581,6.58209 -1.89221,1.80167 -4.212,2.70209 -6.96019,2.70209 z"
-   style="fill:#00ffff;fill-rule:nonzero;stroke-width:0.838376;fill-opacity:1"
-   id="path2" />
-    <path
-   d="M 213.56111,280.08446 H 195.99044 L 149.69953,207.0544 c -1.17121,-1.84778 -2.14037,-3.76515 -2.90581,-5.75126 h -0.40578 c 0.36051,2.12528 0.54076,6.67515 0.54076,13.6496 v 65.13172 h -15.54349 v -99.36009 h 18.71925 l 44.7374,71.29798 c 1.89222,2.95695 3.1087,4.98917 3.64945,6.09751 h 0.26996 c -0.45021,-2.6325 -0.67573,-7.09015 -0.67573,-13.37293 v -64.02256 h 15.47557 z"
-   style="fill:#00ffff;fill-rule:nonzero;stroke-width:0.838376;fill-opacity:1"
-   id="path4" />
-    <path
-   d="m 289.25134,280.08446 h -54.40052 v -99.36009 h 52.23835 v 13.99669 h -36.15411 v 28.13085 h 33.31621 v 13.9271 h -33.31621 v 29.37835 h 38.31628 z"
-   style="fill:#00ffff;fill-rule:nonzero;stroke-width:0.838376;fill-opacity:1"
-   id="path6" />
-    <path
-   d="M 366.56466,231.94626 H 338.7222 v 48.1382 h -16.08423 v -48.1382 h -27.77455 v -7.89303 h 71.70124 z"
-   style="fill:#00ffff;fill-opacity:1;fill-rule:nonzero;stroke-width:0.629576"
-   id="path8" />
-</svg>
+   inkscape:current-layer="svg10"
+   inkscape:document-rotation="0" />
+    
+    
+    
+    
+<text
+   xml:space="preserve"
+   id="text841"
+   style="font-size:53.3333px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect843);clip-rule:evenodd;fill-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
+   x="117.72129"
+   y="0"
+   transform="translate(-11.417319,-57.08983)"><tspan
+     x="138.8705"
+     y="204.94665"><tspan
+       style="text-align:center;text-anchor:middle">Indoor 
+</tspan></tspan><tspan
+     x="170.77152"
+     y="271.61328"><tspan
+       style="text-align:center;text-anchor:middle">CO2 
+</tspan></tspan><tspan
+     x="117.59447"
+     y="338.2799"><tspan
+       style="text-align:center;text-anchor:middle">Recorder </tspan></tspan><tspan
+     x="166.64392"
+     y="404.94653"><tspan
+       style="text-align:center;text-anchor:middle">Beta 
+</tspan></tspan><tspan
+     style="visibility:hidden"
+     x="81.9375"
+     y="467.45056"><tspan
+       style="text-align:center;text-anchor:middle">
+</tspan></tspan></text></svg>

@@ -97,13 +97,13 @@ namespace IndoorCO2App
             isRecording = false; 
         }
 
-        public static void FinishRecording()
+        public static void FinishRecording(int trimStart)
         {
             //Add co2 measurements to submissionData
             //ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson());
             isRecording= false;
             submissionData.SensorData = recordedData;
-            ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(0,submissionData.SensorData.Count-1));
+            ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(trimStart,submissionData.SensorData.Count-1));
         }
 
         internal static async void ScanForDevices()
@@ -167,12 +167,57 @@ namespace IndoorCO2App
                     var aranet4CharacteristicWriter = await service.GetCharacteristicAsync(ARANET_WRITE_CHARACTERISTIC_UUID);
                     var aranet4CharacteristicHistoryV2 = await service.GetCharacteristicAsync(ARANET_HISTORY_V2_CHARACTERISTIC_UUID);
 
+                    
+
+                    if (aranet4CharacteristicLive != null)
+                    {
+                        (byte[] data, int resultCode) result;
+                        try
+                        {
+                            result = await aranet4CharacteristicLive.ReadAsync();
+                        }
+                        catch
+                        {
+                            return;
+                        }
+
+                        var data = result.data;
+                        if (data.Length >= 9)
+                        {
+                            currentCO2Reading = (data[1] << 8) | (data[0] & 0xFF);
+                            sensorUpdateInterval = (data[10] << 8) | (data[9] & 0xFF);
+
+                            //SensorData sd = new SensorData(currentCO2Reading, 0);
+                            //if (isRecording)
+                            //{
+                            //    long timeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                            //    recordedData.Add(new SensorData(currentCO2Reading, timeStamp));
+                            //}
+                        }
+
+
+                        else
+                        {
+                            Console.WriteLine("Byte array does not contain enough data");
+                        }
+                    }
+
                     int totalDataPoints = 0;
+
                     if (aranet4CharacteristicTotalDataPoints != null)
                     {
-                        var result = await aranet4CharacteristicTotalDataPoints.ReadAsync();
-                        byte[] totalDataPointsRaw = result.data;
-                        totalDataPoints= (totalDataPointsRaw[1] << 8) | (totalDataPointsRaw[0] & 0xFF);
+                        try
+                        {
+                            var result = await aranet4CharacteristicTotalDataPoints.ReadAsync();
+                            byte[] totalDataPointsRaw = result.data;
+                            totalDataPoints = (totalDataPointsRaw[1] << 8) | (totalDataPointsRaw[0] & 0xFF);
+                        }
+                        catch
+                        {
+                            return;
+                        }
+                        
+                        
                     }
                     if (isRecording)
                     {
@@ -183,7 +228,16 @@ namespace IndoorCO2App
                             ushort start = (ushort)(totalDataPoints - (0 + elapsedMinutes)); //change to higher value to grab a bit of historical data
                             if (start < 0) start = 0;
                             var requestData = PackDataRequestCO2History(start);
-                            var response = await aranet4CharacteristicWriter.WriteAsync(requestData);
+                            int response = -999;
+                            try
+                            {
+                                response = await aranet4CharacteristicWriter.WriteAsync(requestData);
+                            }
+                            catch (Exception)
+                            {
+                                return;
+                            }
+                            
                             gattStatus = response;
                             if (response != 0)
                             {
@@ -196,7 +250,16 @@ namespace IndoorCO2App
                             }
                             isGattA2DP = false;
 
-                            var history = await aranet4CharacteristicHistoryV2.ReadAsync();
+                            (byte[] data, int resultCode) history;
+                            try
+                            {
+                                history = await aranet4CharacteristicHistoryV2.ReadAsync();
+                            }
+                            catch
+                            {
+                                return;
+                            }
+                            
                             var historyDataRaw = history.data;
 
                             byte paramID = historyDataRaw[0];
@@ -221,29 +284,7 @@ namespace IndoorCO2App
                         }
                     }
 
-                    if (aranet4CharacteristicLive != null)
-                    {
-                        var result = await aranet4CharacteristicLive.ReadAsync();
-                        var data = result.data;
-                        if (data.Length >= 9)
-                        {                            
-                            currentCO2Reading = (data[1] << 8) | (data[0] & 0xFF);
-                            sensorUpdateInterval = (data[10] << 8) | (data[9] & 0xFF);
                     
-                            //SensorData sd = new SensorData(currentCO2Reading, 0);
-                            //if (isRecording)
-                            //{
-                            //    long timeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                            //    recordedData.Add(new SensorData(currentCO2Reading, timeStamp));
-                            //}
-                        }
-                    
-                    
-                        else
-                        {
-                            Console.WriteLine("Byte array does not contain enough data");
-                        }
-                    }
                 }
             }
         }
