@@ -6,10 +6,17 @@
 //TODO: Button Functionality
 
 using Microsoft.Maui;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using System.Diagnostics;
 
 namespace IndoorCO2App;
+
+
+//TODO: create lineChart
+//TODO: create double Sided Slider
+//TODO: create Loggint TextView
+//TODO: fix that first minute the value of t-1 is also shown, which then later disappears (cause probably that minimum 2 values are fetched?)11
 
 public partial class MainPage : ContentPage
 {
@@ -92,7 +99,8 @@ public partial class MainPage : ContentPage
         OpenImprintButton.IsVisible = false;
         OpenMapButton.IsVisible = false;
         UpdateLocationsButton.IsVisible = false;
-        StackLayoutTrimSlider.IsVisible = true;
+        StackLayoutTrimSliderStart.IsVisible = true;
+        StackLayoutTrimSliderEnd.IsVisible = true;
     }
 
     private void SwitchToStandardUI() 
@@ -111,7 +119,8 @@ public partial class MainPage : ContentPage
         OpenImprintButton.IsVisible = true;
         OpenMapButton.IsVisible = true;
         UpdateLocationsButton.IsVisible = true;
-        StackLayoutTrimSlider.IsVisible = false;
+        StackLayoutTrimSliderStart.IsVisible = false;
+        StackLayoutTrimSliderEnd.IsVisible = false;
     }
 
     private void OnUpdateLocationsClicked(object sender, EventArgs e)
@@ -140,7 +149,9 @@ public partial class MainPage : ContentPage
     {
         FinishRecordingButton.Text = "Submitting Data";
         FinishRecordingButton.IsEnabled = false; ;
-        BluetoothManager.FinishRecording((int)Math.Floor(slider.Value));
+        int trimStart = (int)Math.Floor(sliderStart.Value);
+        int trimEnd = (int)((BluetoothManager.recordedData.Count-1)- (int)Math.Floor(sliderEnd.Value));
+        BluetoothManager.FinishRecording(trimStart,trimEnd);
     }
     
     private void OnRequestCancelRecordingClicked(object sender, EventArgs e)
@@ -245,7 +256,10 @@ public partial class MainPage : ContentPage
 
     private void UpdateFinishRecordingButton()
     {
-        if ( (BluetoothManager.recordedData.Count - (int)Math.Floor(slider.Value))  >= 5 && BluetoothManager.isRecording)
+        int original = BluetoothManager.recordedData.Count;
+        int afterTrimmedStart = original - (int)Math.Floor(sliderStart.Value);
+        int afterTrimmedEnd = afterTrimmedStart - (BluetoothManager.recordedData.Count - (int)((BluetoothManager.recordedData.Count - (int)Math.Floor(sliderEnd.Value))));
+        if ( afterTrimmedEnd  >= 5 && BluetoothManager.isRecording)
         {
             FinishRecordingButton.IsEnabled = true;
             FinishRecordingButton.Text = "Submit Data";
@@ -384,33 +398,60 @@ public partial class MainPage : ContentPage
     }
 
     private void UpdateRecordedDataLabel()
-    {        
-        string s = String.Join(" ", BluetoothManager.recordedData);
-        RecordedDataLabel.Text = " recorded CO2-Values: ";
+    {
+        var formattedString = new FormattedString();
 
+        // Create spans with different colors
+        var labelspan = new Span
+        {
+            Text = "recorded CO2-Values: ",
+            TextColor = Colors.Black
+        };
+        var dataSpan = new Span
+        {
+            Text = "recorded CO2-Values: ",
+            TextColor = Colors.Black
+        };
+        formattedString.Spans.Add(labelspan);
+        //formattedString.Spans.Add(dataSpan);
+
+
+
+        //string s = String.Join(" ", BluetoothManager.recordedData);
+        //RecordedDataLabel.FormattedText = " recorded CO2-Values: ";
+        
         try
         {
             for (int i = 0; i < BluetoothManager.recordedData.Count; i++) //what happens if value changes during looping over it? =>
             {
-                if (i < Math.Floor(slider.Value))
+                //var x = testSlider;
+                int start = (int)Math.Floor(sliderStart.Value);
+                int end = (int)((BluetoothManager.recordedData.Count - 1)-Math.Floor(sliderEnd.Value)); //last Index
+                if (i < start || i > end)
                 {
-                    RecordedDataLabel.Text += "(" + BluetoothManager.recordedData[i].CO2ppm.ToString() + ") ";
+                    Span s = new Span
+                    {
+                        Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
+                        TextColor = Colors.LightGray
+                    };
+                    formattedString.Spans.Add(s);
                 }
                 else
                 {
-                    RecordedDataLabel.Text += BluetoothManager.recordedData[i].CO2ppm.ToString() + " ";
+                    Span s = new Span
+                    {
+                        Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
+                        TextColor = Colors.Black
+                    };
+                    formattedString.Spans.Add(s);
                 }
-
-                //var color = i > (int)Math.Floor(slider.Value) ? Colors.Gray : Colors.Black;
-                //var formattedText = new Span { Text = $"{BluetoothManager.recordedData[i]} ", TextColor = color };
-                //RecordedDataLabel.FormattedText.Spans.Add(formattedText);
             }
+            RecordedDataLabel.FormattedText = formattedString;
         }
         catch (Exception)
         {
             RecordedDataLabel.Text = "retrieving Data failed, next try in 1 Minute"; //maybe keep old Data in case this happens?
         }
-        
     }
 
     private async void OnRequestBluetoothEnableDialog(object sender, EventArgs e)
@@ -476,10 +517,17 @@ public partial class MainPage : ContentPage
         }            
     }
 
-    private void OnSliderValueChanged(object sender, ValueChangedEventArgs e)
+    private void OnSliderStartValueChanged(object sender, ValueChangedEventArgs e)
     {
         // Update the label with the new slider value
-        sliderValueLabel.Text = "Remove first " + $"{(int)Math.Floor(e.NewValue)}";
+        sliderStartValueLabel.Text = "Remove first " + $"{(int)Math.Floor(e.NewValue)}";
+        UpdateFinishRecordingButton();
+    }
+
+    private void OnSliderEndValueChanged(object sender, ValueChangedEventArgs e)
+    {
+        // Update the label with the new slider value
+        sliderEndValueLabel.Text = "Remove last " + $"{(int)Math.Floor(e.NewValue)}";
         UpdateFinishRecordingButton();
     }
 

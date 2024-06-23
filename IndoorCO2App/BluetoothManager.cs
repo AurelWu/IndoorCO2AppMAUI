@@ -97,13 +97,13 @@ namespace IndoorCO2App
             isRecording = false; 
         }
 
-        public static void FinishRecording(int trimStart)
+        public static void FinishRecording(int start,int end)
         {
             //Add co2 measurements to submissionData
             //ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson());
             isRecording= false;
             submissionData.SensorData = recordedData;
-            ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(trimStart,submissionData.SensorData.Count-1));
+            ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start,end));
         }
 
         internal static async void ScanForDevices()
@@ -120,18 +120,15 @@ namespace IndoorCO2App
             scanFilterOptions.ServiceUuids = new[] { AranetServiceUUID };
             adapter.ScanMatchMode = ScanMatchMode.STICKY;
             adapter.ScanMode = ScanMode.LowLatency;
-            await adapter.StartScanningForDevicesAsync(scanFilterOptions);
-            await adapter.StopScanningForDevicesAsync();
-            if(discoveredDevices.Count > 0 && adapter.DiscoveredDevices.Count ==0)
+
+            if (discoveredDevices != null && discoveredDevices.Count == 0)
             {
-                //we keep the old discoveredDevices.
-            }
-            else
-            {
+                await adapter.StartScanningForDevicesAsync(scanFilterOptions);
+                await adapter.StopScanningForDevicesAsync();
                 discoveredDevices = adapter.DiscoveredDevices;
             }
-            
-            if (discoveredDevices.Count > 0)
+                        
+            if (discoveredDevices != null && discoveredDevices.Count > 0)
             {
                 try
                 {
@@ -139,6 +136,7 @@ namespace IndoorCO2App
                 }
                 catch
                 {
+                    discoveredDevices = null;
                     Console.WriteLine("Connecting to Device failed");
                     return;
                 }
