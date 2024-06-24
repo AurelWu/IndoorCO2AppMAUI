@@ -42,7 +42,7 @@
                 FontSize="Small"
                 LineBreakMode="WordWrap"
                 VerticalOptions="StartAndExpand"
-                MaxLines="2"
+                MaxLines="3"
                 HorizontalOptions="Start" />
 
             <Label
@@ -164,7 +164,16 @@
                    Grid.Column="1"/>
                 </Grid>
 
-            </StackLayout> 
+            </StackLayout>
+            
+            <!--
+            <ScrollView VerticalScrollBarVisibility="Default">
+                <Label x:Name="scrollableDebugText" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" 
+                       Text="Debug Log" 
+                       MaxLines="4"
+                       />
+                
+            </ScrollView> -->
 
 
             <HorizontalStackLayout

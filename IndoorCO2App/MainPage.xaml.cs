@@ -176,7 +176,8 @@ public partial class MainPage : ContentPage
 
     private void OnImprintClicked(object sender, EventArgs e)
     {
-        //SemanticScreenReader.Announce(OpenImprintButton.Text);
+        var url = "https://www.bluestats.net/Datenschutz.html";
+        Launcher.OpenAsync(url);
     }
 
     private void OnRadioButtonCheckedChanged(object sender, EventArgs e)
@@ -364,7 +365,7 @@ public partial class MainPage : ContentPage
         }
         else if (BluetoothManager.discoveredDevices.Count == 0)
         {
-            DeviceLabel.Text = "Aranet Device not yet found | initiating Update in: " + BluetoothManager.timeToNextUpdate +"s";
+            DeviceLabel.Text = "Aranet Device not yet found. This might take a while.";
         }
         else if(BluetoothManager.sensorUpdateInterval > 60)
         {
@@ -372,7 +373,7 @@ public partial class MainPage : ContentPage
         }
         else if(BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
         {
-            DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " | Next Update in: " + BluetoothManager.timeToNextUpdate + "s";
+            DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  initiating Update in: " + BluetoothManager.timeToNextUpdate + "s" +"\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus ;
         }
         else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
         {
@@ -380,7 +381,7 @@ public partial class MainPage : ContentPage
         }
         else if (BluetoothManager.currentCO2Reading == 0)
         {
-            DeviceLabel.Text = "Waiting for first sensor update. This might take a Minute | ID: " + BluetoothManager.deviceID + " | rssi: " + BluetoothManager.rssi + "GattS: " + BluetoothManager.gattStatus;
+            DeviceLabel.Text = "initiating first Update in:" + BluetoothManager.timeToNextUpdate + "s" +"\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
         }
 
     }

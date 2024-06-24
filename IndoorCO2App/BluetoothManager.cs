@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls.PlatformConfiguration;
@@ -39,6 +40,7 @@ namespace IndoorCO2App
         public static int rssi;
         public static int txPower;
         public static int gattStatus;
+        public static bool currentlyUpdating; //not yet used as updates seem to be reasonable fast
 
         internal async static void Init()
         {
@@ -121,17 +123,28 @@ namespace IndoorCO2App
             adapter.ScanMatchMode = ScanMatchMode.STICKY;
             adapter.ScanMode = ScanMode.LowLatency;
 
-            if (discoveredDevices != null && discoveredDevices.Count == 0)
+            if(discoveredDevices == null)
             {
                 await adapter.StartScanningForDevicesAsync(scanFilterOptions);
                 await adapter.StopScanningForDevicesAsync();
                 discoveredDevices = adapter.DiscoveredDevices;
+                rssi = discoveredDevices[0].Rssi;
             }
-                        
+
+            else if (discoveredDevices != null && discoveredDevices.Count == 0)
+            {
+                await adapter.StartScanningForDevicesAsync(scanFilterOptions);
+                await adapter.StopScanningForDevicesAsync();
+                discoveredDevices = adapter.DiscoveredDevices;
+                rssi = discoveredDevices[0].Rssi;
+            }
+         
             if (discoveredDevices != null && discoveredDevices.Count > 0)
             {
                 try
                 {
+                    var obj = discoveredDevices[0].NativeDevice;                    
+
                     await adapter.ConnectToDeviceAsync(discoveredDevices[0]);
                 }
                 catch
@@ -144,6 +157,13 @@ namespace IndoorCO2App
                 //TODO Handle case of multiple Devices => Idea is that User can specify the MAC of the device? => or rather in a Advanced Menu, sees all Devices shown with Details and then picks it and we store it
                 //for now we always just use the first device (and in case of multiple, the idea is to filter it down to 1 as in mentioned in comment above
                 ConnectToDevice(discoveredDevices[0]);
+            }
+
+            if (discoveredDevices == null)
+            {
+                await adapter.StartScanningForDevicesAsync(scanFilterOptions);
+                await adapter.StopScanningForDevicesAsync();
+                discoveredDevices = adapter.DiscoveredDevices;
             }
         }
 
