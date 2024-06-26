@@ -27,7 +27,7 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>CFBundleIdentifier</key>
-	<string></string>
+	<string>com.aurelwuensch.indoorco2datacollector</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>We need access to Bluetooth to connect to nearby devices.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>

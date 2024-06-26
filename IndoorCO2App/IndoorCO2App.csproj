@@ -32,7 +32,23 @@
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
 	  <CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>
-	  <CodesignProvision>VS: WildCard Development</CodesignProvision>
+	  <CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+	  <ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
+	  <ApplicationDisplayVersion>5</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
+	  <MtouchUseLlvm>True</MtouchUseLlvm>
+	  <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+	  <ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
+	  <ApplicationDisplayVersion>5</ApplicationDisplayVersion>
+	  <ApplicationVersion>5</ApplicationVersion>
+	  <MtouchUseLlvm>False</MtouchUseLlvm>
+	  <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 	</PropertyGroup>
 
 	<ItemGroup>

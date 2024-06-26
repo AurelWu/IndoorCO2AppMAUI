@@ -41,6 +41,7 @@ namespace IndoorCO2App
         public static int txPower;
         public static int gattStatus;
         public static bool currentlyUpdating; //not yet used as updates seem to be reasonable fast
+        public static bool lastAttemptFailed = false;
 
         internal async static void Init()
         {
@@ -110,6 +111,7 @@ namespace IndoorCO2App
 
         internal static async void ScanForDevices()
         {
+            lastAttemptFailed = false;
             bool checkPermissions = BluetoothPermissions.CheckStatus();
             await BluetoothPermissions.RequestAsync();
             if (ble == null)
@@ -128,7 +130,11 @@ namespace IndoorCO2App
                 await adapter.StartScanningForDevicesAsync(scanFilterOptions);
                 await adapter.StopScanningForDevicesAsync();
                 discoveredDevices = adapter.DiscoveredDevices;
-                rssi = discoveredDevices[0].Rssi;
+                if(discoveredDevices.Count > 0)
+                {
+                    rssi = discoveredDevices[0].Rssi;
+                }
+                
             }
 
             else if (discoveredDevices != null && discoveredDevices.Count == 0)
@@ -136,24 +142,27 @@ namespace IndoorCO2App
                 await adapter.StartScanningForDevicesAsync(scanFilterOptions);
                 await adapter.StopScanningForDevicesAsync();
                 discoveredDevices = adapter.DiscoveredDevices;
-                rssi = discoveredDevices[0].Rssi;
+                if(discoveredDevices.Count>0)
+                {
+                    rssi = discoveredDevices[0].Rssi;
+                }
+                
             }
          
             if (discoveredDevices != null && discoveredDevices.Count > 0)
             {
                 try
-                {
-                    var obj = discoveredDevices[0].NativeDevice;                    
-
+                {                    
                     await adapter.ConnectToDeviceAsync(discoveredDevices[0]);
                 }
                 catch
                 {
+                    lastAttemptFailed = true;
                     discoveredDevices = null;
                     Console.WriteLine("Connecting to Device failed");
                     return;
                 }
-                IReadOnlyList<IService> results = await discoveredDevices[0].GetServicesAsync();
+                
                 //TODO Handle case of multiple Devices => Idea is that User can specify the MAC of the device? => or rather in a Advanced Menu, sees all Devices shown with Details and then picks it and we store it
                 //for now we always just use the first device (and in case of multiple, the idea is to filter it down to 1 as in mentioned in comment above
                 ConnectToDevice(discoveredDevices[0]);
@@ -164,6 +173,10 @@ namespace IndoorCO2App
                 await adapter.StartScanningForDevicesAsync(scanFilterOptions);
                 await adapter.StopScanningForDevicesAsync();
                 discoveredDevices = adapter.DiscoveredDevices;
+                if (discoveredDevices.Count > 0)
+                {
+                    rssi = discoveredDevices[0].Rssi;
+                }
             }
         }
 
@@ -174,137 +187,148 @@ namespace IndoorCO2App
             int elapsedMinutes = ConvertSecondsToFullMinutes(elapsedSeconds);
 
             deviceID = device.Id.ToString();
-            IService r = await device.GetServiceAsync(AranetServiceUUID);
-            IReadOnlyList<IService> results = await device.GetServicesAsync();
-            if (results.Count > 0)
+            rssi = device.Rssi;
+
+
+            try
             {
-                foreach (var service in results)
+                IService r = await device.GetServiceAsync(AranetServiceUUID);
+                IReadOnlyList<IService> results = await device.GetServicesAsync();
+                if (results.Count > 0)
                 {
-                    var aranet4CharacteristicLive = await service.GetCharacteristicAsync(Aranet_CharacteristicUUID);
-                    var aranet4CharacteristicTotalDataPoints = await service.GetCharacteristicAsync(ARANET_TOTAL_READINGS_CHARACTERISTIC_UUID);
-                    var aranet4CharacteristicWriter = await service.GetCharacteristicAsync(ARANET_WRITE_CHARACTERISTIC_UUID);
-                    var aranet4CharacteristicHistoryV2 = await service.GetCharacteristicAsync(ARANET_HISTORY_V2_CHARACTERISTIC_UUID);
-
-                    
-
-                    if (aranet4CharacteristicLive != null)
+                    foreach (var service in results)
                     {
-                        (byte[] data, int resultCode) result;
-                        try
-                        {
-                            result = await aranet4CharacteristicLive.ReadAsync();
-                        }
-                        catch
-                        {
-                            return;
-                        }
-
-                        var data = result.data;
-                        if (data.Length >= 9)
-                        {
-                            currentCO2Reading = (data[1] << 8) | (data[0] & 0xFF);
-                            sensorUpdateInterval = (data[10] << 8) | (data[9] & 0xFF);
-
-                            //SensorData sd = new SensorData(currentCO2Reading, 0);
-                            //if (isRecording)
-                            //{
-                            //    long timeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                            //    recordedData.Add(new SensorData(currentCO2Reading, timeStamp));
-                            //}
-                        }
+                        var aranet4CharacteristicLive = await service.GetCharacteristicAsync(Aranet_CharacteristicUUID);
+                        var aranet4CharacteristicTotalDataPoints = await service.GetCharacteristicAsync(ARANET_TOTAL_READINGS_CHARACTERISTIC_UUID);
+                        var aranet4CharacteristicWriter = await service.GetCharacteristicAsync(ARANET_WRITE_CHARACTERISTIC_UUID);
+                        var aranet4CharacteristicHistoryV2 = await service.GetCharacteristicAsync(ARANET_HISTORY_V2_CHARACTERISTIC_UUID);
 
 
-                        else
-                        {
-                            Console.WriteLine("Byte array does not contain enough data");
-                        }
-                    }
 
-                    int totalDataPoints = 0;
-
-                    if (aranet4CharacteristicTotalDataPoints != null)
-                    {
-                        try
+                        if (aranet4CharacteristicLive != null)
                         {
-                            var result = await aranet4CharacteristicTotalDataPoints.ReadAsync();
-                            byte[] totalDataPointsRaw = result.data;
-                            totalDataPoints = (totalDataPointsRaw[1] << 8) | (totalDataPointsRaw[0] & 0xFF);
-                        }
-                        catch
-                        {
-                            return;
-                        }
-                        
-                        
-                    }
-                    if (isRecording)
-                    {
-                        if (aranet4CharacteristicHistoryV2 != null && aranet4CharacteristicWriter != null && totalDataPoints > 0)
-                        {
-                            //ushort timeSinceRecordingStart = 0;
-                            //TODO calculalte actual timeSinceRecordingstart and always use the ceiling
-                            ushort start = (ushort)(totalDataPoints - (0 + elapsedMinutes)); //change to higher value to grab a bit of historical data
-                            if (start < 0) start = 0;
-                            var requestData = PackDataRequestCO2History(start);
-                            int response = -999;
+                            (byte[] data, int resultCode) result;
                             try
                             {
-                                response = await aranet4CharacteristicWriter.WriteAsync(requestData);
-                            }
-                            catch (Exception)
-                            {
-                                return;
-                            }
-                            
-                            gattStatus = response;
-                            if (response != 0)
-                            {
-                                
-                                if (response == 2)
-                                {
-                                    isGattA2DP=true;
-                                }
-                                return; //returning here should be fine
-                            }
-                            isGattA2DP = false;
-
-                            (byte[] data, int resultCode) history;
-                            try
-                            {
-                                history = await aranet4CharacteristicHistoryV2.ReadAsync();
+                                result = await aranet4CharacteristicLive.ReadAsync();
                             }
                             catch
                             {
                                 return;
                             }
-                            
-                            var historyDataRaw = history.data;
 
-                            byte paramID = historyDataRaw[0];
-                            ushort Interval = BitConverter.ToUInt16(historyDataRaw, 1);
-                            ushort totalReadings = BitConverter.ToUInt16(historyDataRaw, 3);
-                            ushort ago = BitConverter.ToUInt16(historyDataRaw, 5);
-                            ushort startIndex = BitConverter.ToUInt16(historyDataRaw, 7);
-                            byte count = historyDataRaw[9];
+                            var data = result.data;
+                            if (data.Length >= 9)
+                            {
+                                currentCO2Reading = (data[1] << 8) | (data[0] & 0xFF);
+                                sensorUpdateInterval = (data[10] << 8) | (data[9] & 0xFF);
 
-                            ushort[] co2dataArray = new ushort[count];
-                            for (int i = 0; i < co2dataArray.Length; i++) // first ten bytes are the header
-                            {
-                                co2dataArray[i] = BitConverter.ToUInt16(historyDataRaw, 10 + (i * 2));
+                                //SensorData sd = new SensorData(currentCO2Reading, 0);
+                                //if (isRecording)
+                                //{
+                                //    long timeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                                //    recordedData.Add(new SensorData(currentCO2Reading, timeStamp));
+                                //}
                             }
-                            Console.WriteLine("historyArrayLength: " + co2dataArray.Length);
-                            recordedData.Clear();
-                            foreach (var e in co2dataArray)
+
+
+                            else
                             {
-                                recordedData.Add(new SensorData(e, 0));
+                                Console.WriteLine("Byte array does not contain enough data");
                             }
-                            //WE keep a few historical data points which we transmit so we can also get data if sensor is calibrated okay but in UI it should only start with actual recoding
                         }
-                    }
 
-                    
+                        int totalDataPoints = 0;
+
+                        if (aranet4CharacteristicTotalDataPoints != null)
+                        {
+                            try
+                            {
+                                var result = await aranet4CharacteristicTotalDataPoints.ReadAsync();
+                                byte[] totalDataPointsRaw = result.data;
+                                totalDataPoints = (totalDataPointsRaw[1] << 8) | (totalDataPointsRaw[0] & 0xFF);
+                            }
+                            catch
+                            {
+                                return;
+                            }
+
+
+                        }
+                        if (isRecording)
+                        {
+                            if (aranet4CharacteristicHistoryV2 != null && aranet4CharacteristicWriter != null && totalDataPoints > 0)
+                            {
+                                //ushort timeSinceRecordingStart = 0;
+                                //TODO calculalte actual timeSinceRecordingstart and always use the ceiling
+                                ushort start = (ushort)(totalDataPoints - (0 + elapsedMinutes)); //change to higher value to grab a bit of historical data
+                                if (start < 0) start = 0;
+                                var requestData = PackDataRequestCO2History(start);
+                                int response = -999;
+                                try
+                                {
+                                    response = await aranet4CharacteristicWriter.WriteAsync(requestData);
+                                }
+                                catch (Exception)
+                                {
+                                    return;
+                                }
+
+                                gattStatus = response;
+                                if (response != 0)
+                                {
+
+                                    if (response == 2)
+                                    {
+                                        isGattA2DP = true;
+                                    }
+                                    return; //returning here should be fine
+                                }
+                                isGattA2DP = false;
+
+                                (byte[] data, int resultCode) history;
+                                try
+                                {
+                                    history = await aranet4CharacteristicHistoryV2.ReadAsync();
+                                }
+                                catch
+                                {
+                                    return;
+                                }
+
+                                var historyDataRaw = history.data;
+
+                                byte paramID = historyDataRaw[0];
+                                ushort Interval = BitConverter.ToUInt16(historyDataRaw, 1);
+                                ushort totalReadings = BitConverter.ToUInt16(historyDataRaw, 3);
+                                ushort ago = BitConverter.ToUInt16(historyDataRaw, 5);
+                                ushort startIndex = BitConverter.ToUInt16(historyDataRaw, 7);
+                                byte count = historyDataRaw[9];
+
+                                ushort[] co2dataArray = new ushort[count];
+                                for (int i = 0; i < co2dataArray.Length; i++) // first ten bytes are the header
+                                {
+                                    co2dataArray[i] = BitConverter.ToUInt16(historyDataRaw, 10 + (i * 2));
+                                }
+                                Console.WriteLine("historyArrayLength: " + co2dataArray.Length);
+                                recordedData.Clear();
+                                foreach (var e in co2dataArray)
+                                {
+                                    recordedData.Add(new SensorData(e, 0));
+                                }
+                                //WE keep a few historical data points which we transmit so we can also get data if sensor is calibrated okay but in UI it should only start with actual recoding
+                            }
+                        }
+
+
+                    }
                 }
             }
+            catch
+            { 
+                lastAttemptFailed = true;
+            }
+
         }
 
         public static byte[] PackDataRequestCO2History(ushort startIndex)

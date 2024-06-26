@@ -366,6 +366,11 @@ public partial class MainPage : ContentPage
         else if (BluetoothManager.discoveredDevices.Count == 0)
         {
             DeviceLabel.Text = "Aranet Device not yet found. This might take a while.";
+            
+            if (BluetoothManager.lastAttemptFailed)
+            {
+                DeviceLabel.Text += " | previous update failed";
+            }
         }
         else if(BluetoothManager.sensorUpdateInterval > 60)
         {
@@ -373,7 +378,11 @@ public partial class MainPage : ContentPage
         }
         else if(BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
         {
-            DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  initiating Update in: " + BluetoothManager.timeToNextUpdate + "s" +"\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus ;
+            DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  initiating Update in: " + BluetoothManager.timeToNextUpdate + "s" +"\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+            if(BluetoothManager.lastAttemptFailed)
+            {
+                DeviceLabel.Text += " | previous update failed";
+            }
         }
         else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
         {
@@ -382,6 +391,10 @@ public partial class MainPage : ContentPage
         else if (BluetoothManager.currentCO2Reading == 0)
         {
             DeviceLabel.Text = "initiating first Update in:" + BluetoothManager.timeToNextUpdate + "s" +"\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+            if (BluetoothManager.lastAttemptFailed)
+            {
+                DeviceLabel.Text += " | previous update failed";
+            }
         }
 
     }
@@ -406,12 +419,12 @@ public partial class MainPage : ContentPage
         var labelspan = new Span
         {
             Text = "recorded CO2-Values: ",
-            TextColor = Colors.Black
+            //TextColor = Colors.Black
         };
         var dataSpan = new Span
         {
             Text = "recorded CO2-Values: ",
-            TextColor = Colors.Black
+            //TextColor = Colors.Black
         };
         formattedString.Spans.Add(labelspan);
         //formattedString.Spans.Add(dataSpan);
@@ -433,7 +446,7 @@ public partial class MainPage : ContentPage
                     Span s = new Span
                     {
                         Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
-                        TextColor = Colors.LightGray
+                        TextColor = Colors.Gray
                     };
                     formattedString.Spans.Add(s);
                 }
@@ -442,7 +455,7 @@ public partial class MainPage : ContentPage
                     Span s = new Span
                     {
                         Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
-                        TextColor = Colors.Black
+                        //TextColor = Colors.Black
                     };
                     formattedString.Spans.Add(s);
                 }

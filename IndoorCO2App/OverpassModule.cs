@@ -31,6 +31,11 @@ namespace IndoorCO2App
             return "[out:json];" +
                 "(" +
                 $"nwr(around:{rString},{latString},{lonString})[shop];" +
+                $"nwr(around:{rString},{latString},{lonString})[leisure=fitness_centre];" +
+                $"nwr(around:{rString},{latString},{lonString})[leisure=bowling_alley];" +
+                $"nwr(around:{rString},{latString},{lonString})[leisure=sports_centre];" +
+                $"nwr(around:{rString},{latString},{lonString})[leisure=sports_hall];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=events_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=bar];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=place_of_worship];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=pub];" +
