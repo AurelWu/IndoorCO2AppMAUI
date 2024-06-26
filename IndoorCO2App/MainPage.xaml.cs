@@ -359,43 +359,52 @@ public partial class MainPage : ContentPage
 
     private void UpdateDeviceLabel()
     {
-        if (!btGranted || !btActive)
+        try
         {
-            DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch Sensor Data";
-        }
-        else if (BluetoothManager.discoveredDevices.Count == 0)
-        {
-            DeviceLabel.Text = "Aranet Device not yet found. This might take a while.";
-            
-            if (BluetoothManager.lastAttemptFailed)
+            if (!btGranted || !btActive)
             {
-                DeviceLabel.Text += " | previous update failed";
+                DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch Sensor Data";
+            }
+            else if (BluetoothManager.discoveredDevices.Count == 0)
+            {
+                DeviceLabel.Text = "Aranet Device not yet found. This might take a while.";
+
+                if (BluetoothManager.lastAttemptFailed)
+                {
+                    DeviceLabel.Text += " | previous update failed";
+                }
+            }
+            else if (BluetoothManager.sensorUpdateInterval > 60)
+            {
+                DeviceLabel.Text = "Device found but Update Interval not set to 1 Minute, change to 1 Minute using official App. next attempt in " + BluetoothManager.timeToNextUpdate + "s";
+            }
+            else if (BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
+            {
+                DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  initiating Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                if (BluetoothManager.lastAttemptFailed)
+                {
+                    DeviceLabel.Text += " | previous update failed";
+                }
+            }
+            else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
+            {
+                DeviceLabel.Text = "Sensor found, but the required 'Smart Home Integration' is disabled.\r\n Please enable it using the official Aranet App (use the Gears Icon)";
+            }
+            else if (BluetoothManager.currentCO2Reading == 0)
+            {
+                DeviceLabel.Text = "initiating first Update in:" + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                if (BluetoothManager.lastAttemptFailed)
+                {
+                    DeviceLabel.Text += " | previous update failed";
+                }
             }
         }
-        else if(BluetoothManager.sensorUpdateInterval > 60)
+        catch
         {
-            DeviceLabel.Text = "Device found but Update Interval not set to 1 Minute, change to 1 Minute using official App. next attempt in " + BluetoothManager.timeToNextUpdate + "s";
+            DeviceLabel.Text = "update failed - next attempt in: " + BluetoothManager.timeToNextUpdate;
+            Debug.WriteLine("UpdateDeviceLabel - exception caught");
         }
-        else if(BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
-        {
-            DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  initiating Update in: " + BluetoothManager.timeToNextUpdate + "s" +"\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
-            if(BluetoothManager.lastAttemptFailed)
-            {
-                DeviceLabel.Text += " | previous update failed";
-            }
-        }
-        else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
-        {
-            DeviceLabel.Text = "Sensor found, but the required 'Smart Home Integration' is disabled.\r\n Please enable it using the official Aranet App (use the Gears Icon)";
-        }
-        else if (BluetoothManager.currentCO2Reading == 0)
-        {
-            DeviceLabel.Text = "initiating first Update in:" + BluetoothManager.timeToNextUpdate + "s" +"\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
-            if (BluetoothManager.lastAttemptFailed)
-            {
-                DeviceLabel.Text += " | previous update failed";
-            }
-        }
+        
 
     }
 

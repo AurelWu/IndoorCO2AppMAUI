@@ -145,8 +145,7 @@ namespace IndoorCO2App
                 if(discoveredDevices.Count>0)
                 {
                     rssi = discoveredDevices[0].Rssi;
-                }
-                
+                }                
             }
          
             if (discoveredDevices != null && discoveredDevices.Count > 0)
