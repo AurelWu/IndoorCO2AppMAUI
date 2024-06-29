@@ -82,7 +82,14 @@ namespace IndoorCO2App
             if (currentTime - previousUpdate > TimeSpan.FromSeconds(refreshTime))
             {
                 previousUpdate = currentTime;
-                ScanForDevices();
+                try
+                {
+                    ScanForDevices();
+                }
+                catch
+                {
+                    lastAttemptFailed = true;
+                }                
             }
             
         }

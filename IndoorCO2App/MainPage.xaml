@@ -165,7 +165,41 @@
                 </Grid>
 
             </StackLayout>
-            
+
+            <HorizontalStackLayout
+                x:Name="StackCheckboxesDoorVentilation">
+                <Label Text="Open Doors/Windows"
+               VerticalOptions="CenterAndExpand" 
+               HorizontalOptions="CenterAndExpand" />
+                <CheckBox x:Name="CheckBoxDoorsWindows"
+                  IsChecked="False"
+                  VerticalOptions="CenterAndExpand"
+                  HorizontalOptions="CenterAndExpand"/>                 
+                <Label Text="Ventilation System"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+                <CheckBox x:Name="CheckBoxVentilation"
+                   IsChecked="False"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="CenterAndExpand" />
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout 
+                x:Name="StackNotes"
+                Padding= "10">
+                <Label Text="Enter text:"
+                VerticalOptions="Start" 
+                HorizontalOptions="FillAndExpand" />
+                <Editor x:Name="EditorNotes"
+                Text=""
+                Placeholder="Add note here (optional)"
+                VerticalOptions="Start"
+                HorizontalOptions="StartAndExpand"
+                AutoSize="TextChanges"
+                Focused="OnEditorFocused"
+                Unfocused="OnEditorUnfocused"                
+                HeightRequest="20"/>
+            </HorizontalStackLayout>
             <!--
             <ScrollView VerticalScrollBarVisibility="Default">
                 <Label x:Name="scrollableDebugText" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" 
@@ -183,7 +217,7 @@
                 <Label Text="Search Range: " FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Center" />
                 <StackLayout Orientation="Horizontal">
                     <Label Text="50m" HorizontalOptions="Start" VerticalOptions="Center" />
-                    <RadioButton x:Name="RadioButton50m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" CheckedChanged="OnRadioButtonCheckedChanged"  />
+                    <RadioButton x:Name="RadioButton50m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start"  CheckedChanged="OnRadioButtonCheckedChanged"  />
                     <Label Text="100m" HorizontalOptions="Start" VerticalOptions="Center" />
                     <RadioButton x:Name="RadioButton100m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" CheckedChanged="OnRadioButtonCheckedChanged"  />
                     <Label Text="250m" HorizontalOptions="Start" VerticalOptions="Center" />
@@ -231,4 +265,69 @@
         </VerticalStackLayout>
     </ScrollView>
 
+
+    <ContentPage.Resources>
+        <ControlTemplate x:Key="RadioButtonTemplate">
+            <Border
+            BackgroundColor="#F3F2F1"
+            HeightRequest="20"
+            HorizontalOptions="Center"
+            Stroke="#F3F2F1"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="2"
+            VerticalOptions="Center"
+            WidthRequest="20">
+                <Grid WidthRequest="20">
+                    <Grid
+                    
+                    HeightRequest="18"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    WidthRequest="18">
+                        <Ellipse
+                        Fill="White"
+                        HeightRequest="15"
+                        HorizontalOptions="Center"
+                        Stroke="Blue"
+                        VerticalOptions="Center"
+                        WidthRequest="15" />
+                        <Ellipse
+                        x:Name="check"
+                        Fill="Blue"
+                        HeightRequest="8"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        WidthRequest="8" />
+                    </Grid>
+                    <ContentPresenter />
+                </Grid>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CheckedStates">
+                            <VisualState x:Name="Checked">
+                                <VisualState.Setters>
+                                    <Setter Property="Stroke" Value="Blue" />
+                                    <Setter TargetName="check" Property="Opacity" Value="1" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Unchecked">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="#F3F2F1" />
+                                    <Setter Property="Stroke" Value="#F3F2F1" />
+                                    <Setter TargetName="check" Property="Opacity" Value="0" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Border>
+        </ControlTemplate>
+        <Style TargetType="RadioButton">
+            <Setter Property="ControlTemplate" Value="{StaticResource RadioButtonTemplate}" />
+        </Style>
+
+    </ContentPage.Resources>
+
+
 </ContentPage>
+

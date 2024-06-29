@@ -100,7 +100,9 @@ public partial class MainPage : ContentPage
         OpenMapButton.IsVisible = false;
         UpdateLocationsButton.IsVisible = false;
         StackLayoutTrimSliderStart.IsVisible = true;
-        StackLayoutTrimSliderEnd.IsVisible = true;
+        StackLayoutTrimSliderEnd.IsVisible = true;        
+        StackCheckboxesDoorVentilation.IsVisible = true;
+        StackNotes.IsVisible = false;
     }
 
     private void SwitchToStandardUI() 
@@ -120,7 +122,9 @@ public partial class MainPage : ContentPage
         OpenMapButton.IsVisible = true;
         UpdateLocationsButton.IsVisible = true;
         StackLayoutTrimSliderStart.IsVisible = false;
-        StackLayoutTrimSliderEnd.IsVisible = false;
+        StackLayoutTrimSliderEnd.IsVisible = false;        
+        StackCheckboxesDoorVentilation.IsVisible = false;
+        StackNotes.IsVisible = false; ;
     }
 
     private void OnUpdateLocationsClicked(object sender, EventArgs e)
@@ -193,7 +197,7 @@ public partial class MainPage : ContentPage
         else if (RadioButton250m.IsChecked)
         {
             searchRange = 250;
-        }
+        }        
     }
 
 
@@ -204,10 +208,8 @@ public partial class MainPage : ContentPage
             while (await _timer.WaitForNextTickAsync())
             {
                 UpdateUI();
-
                 
                 
-#if IOS
                 BluetoothManager.Update();
 
                 //non-UI Stuff now done in foreground Service
@@ -216,8 +218,6 @@ public partial class MainPage : ContentPage
                     SpatialManager.UpdateLocation();
                     timeOfLastGPSUpdate = DateTime.Now;
                 }
-#endif
-
             }
         }
         catch (OperationCanceledException)
@@ -552,6 +552,16 @@ public partial class MainPage : ContentPage
         // Update the label with the new slider value
         sliderEndValueLabel.Text = "Remove last " + $"{(int)Math.Floor(e.NewValue)}";
         UpdateFinishRecordingButton();
+    }
+
+    private void OnEditorFocused(object sender, EventArgs e)
+    {
+
+    }
+
+    private void OnEditorUnfocused(object sender, EventArgs e)
+    {
+
     }
 
     #region

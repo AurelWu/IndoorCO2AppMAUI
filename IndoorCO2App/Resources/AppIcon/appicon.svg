@@ -26,7 +26,20 @@
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs8" />
+     id="defs8">
+    <rect
+       x="81.937866"
+       y="156.28889"
+       width="309.54306"
+       height="262.50464"
+       id="rect843" />
+    <rect
+       x="81.937866"
+       y="156.28889"
+       width="309.54306"
+       height="262.50464"
+       id="rect861" />
+  </defs>
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -42,11 +55,12 @@
      showgrid="false"
      inkscape:zoom="1.8640351"
      inkscape:cx="228"
-     inkscape:cy="228"
+     inkscape:cy="178.16227"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg4" />
+     inkscape:current-layer="svg4"
+     inkscape:document-rotation="0" />
   <rect
      x="0"
      y="0"
@@ -55,4 +69,31 @@
      fill="#512BD4"
      id="rect2"
      style="fill:#b1e1df;fill-opacity:1" />
+  <text
+     xml:space="preserve"
+     id="text841"
+     style="font-size:53.3333px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect843);clip-rule:evenodd;fill-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
+     x="117.72129"
+     y="0"
+     transform="translate(-11.417319,-57.08983)"><tspan
+       x="138.8705"
+       y="204.94665"><tspan
+         style="text-align:center;text-anchor:middle">Indoor 
+</tspan></tspan><tspan
+       x="170.77152"
+       y="271.61328"><tspan
+         style="text-align:center;text-anchor:middle">CO2 
+</tspan></tspan><tspan
+       x="117.59447"
+       y="338.2799"><tspan
+         style="text-align:center;text-anchor:middle">Recorder </tspan></tspan><tspan
+       x="166.64392"
+       y="404.94653"><tspan
+         style="text-align:center;text-anchor:middle">Beta 
+</tspan></tspan><tspan
+       style="visibility:hidden"
+       x="81.9375"
+       y="467.45056"><tspan
+         style="text-align:center;text-anchor:middle">
+</tspan></tspan></text>
 </svg>
