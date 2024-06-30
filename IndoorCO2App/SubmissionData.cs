@@ -54,6 +54,9 @@ namespace IndoorCO2App
                 arrayIndex++;
             }
 
+            OpenWindowsDoors = MainPage.hasOpenWindowsDoors;
+            VentilationSystem = MainPage.hasVentilationSystem;
+
             json["d"] = SensorID;
             json["p"] = NwrType;
             json["i"] = NwrID;

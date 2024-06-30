@@ -258,9 +258,13 @@ namespace IndoorCO2App
                             {
                                 return;
                             }
-
-
+                        
                         }
+                        else
+                        {
+                            return;
+                        }
+
                         if (isRecording)
                         {
                             if (aranet4CharacteristicHistoryV2 != null && aranet4CharacteristicWriter != null && totalDataPoints > 0)
@@ -325,8 +329,6 @@ namespace IndoorCO2App
                                 //WE keep a few historical data points which we transmit so we can also get data if sensor is calibrated okay but in UI it should only start with actual recoding
                             }
                         }
-
-
                     }
                 }
             }

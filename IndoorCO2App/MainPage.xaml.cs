@@ -32,6 +32,9 @@ public partial class MainPage : ContentPage
     internal List<LocationData> Locations { get; set; }
     LocationData selectedLocation;
     public static MainPage MainPageSingleton;
+
+    public static bool hasOpenWindowsDoors;
+    public static bool hasVentilationSystem;
     //public static IWakeLockService wakeLockService;
 
     //public const string CHANNEL_ID = "com.companyname.indoorco2app.channel";
@@ -570,5 +573,15 @@ public partial class MainPage : ContentPage
         _timer.Dispose();
     }
     #endregion
+
+    private void CheckBoxVentilation_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    {        
+        hasVentilationSystem= CheckBoxVentilation.IsChecked;
+    }
+
+    private void CheckBoxDoorsWindows_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    {
+        hasOpenWindowsDoors = CheckBoxDoorsWindows.IsChecked;
+    }
 }
 

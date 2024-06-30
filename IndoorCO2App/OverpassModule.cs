@@ -50,13 +50,22 @@ namespace IndoorCO2App
                 $"nwr(around:{rString},{latString},{lonString})[amenity=kindergarten];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=language_school];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=library];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=cinema];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=theatre];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=music_venue];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=playground][indoor=yes];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=research_institute];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=music_school];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=school];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=townhall];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=courthouse];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=post_office];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=university];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=hospital];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=clinic];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=doctors];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=pharmacy];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=social_facility];" +
                 $"nwr(around:{rString},{latString},{lonString})[healthcare];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=museum];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=gallery];" +

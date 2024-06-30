@@ -172,6 +172,7 @@
                VerticalOptions="CenterAndExpand" 
                HorizontalOptions="CenterAndExpand" />
                 <CheckBox x:Name="CheckBoxDoorsWindows"
+                  CheckedChanged="CheckBoxDoorsWindows_CheckedChanged"
                   IsChecked="False"
                   VerticalOptions="CenterAndExpand"
                   HorizontalOptions="CenterAndExpand"/>                 
@@ -180,6 +181,7 @@
                 HorizontalOptions="CenterAndExpand" />
                 <CheckBox x:Name="CheckBoxVentilation"
                    IsChecked="False"
+                   CheckedChanged="CheckBoxVentilation_CheckedChanged"
                    VerticalOptions="CenterAndExpand"
                    HorizontalOptions="CenterAndExpand" />
             </HorizontalStackLayout>
