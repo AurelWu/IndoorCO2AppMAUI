@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
              xmlns:local="clr-namespace:IndoorCO2App"
              x:Class="IndoorCO2App.MainPage">
+    
 
     <ScrollView>
         <VerticalStackLayout
@@ -112,18 +113,23 @@
                 HorizontalOptions="Start" />
             -->
             
-
+            <HorizontalStackLayout Spacing="0" HorizontalOptions="Center" >
+                <Slider x:Name="startTrimSlider" WidthRequest="200" Minimum="0" Maximum="100" Value="0" MinimumTrackColor="{StaticResource Secondary}" MaximumTrackColor="{StaticResource Primary}" ValueChanged="OnSliderStartValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />
+                <Slider x:Name="endTrimSlider" WidthRequest="200" Minimum="0" Maximum="100" Value="100" MinimumTrackColor="{StaticResource Primary}" MaximumTrackColor="{StaticResource Secondary}" ValueChanged="OnSliderEndValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />
+            </HorizontalStackLayout>
+            
+            <!--
             <StackLayout 
                 x:Name="StackLayoutTrimSliderStart"
                 Padding="10">
 
-                <!-- Horizontal Stack Layout for the slider and label -->
+                
                 <Grid Padding="10"
               VerticalOptions="CenterAndExpand"
               HorizontalOptions="FillAndExpand"
               ColumnDefinitions="*,Auto">
 
-                    <!-- Define the Slider -->
+                
                     <Slider x:Name="sliderStart"
                     Minimum="0"
                     Maximum="5"
@@ -133,7 +139,7 @@
                     HorizontalOptions="FillAndExpand"
                     Grid.Column="0"/>
 
-                    <!-- Display the Slider Value -->
+                
                     <Label x:Name="sliderStartValueLabel"
                    Text="Remove first 0"
                    VerticalOptions="Center"
@@ -172,7 +178,7 @@
                 </Grid>
 
             </StackLayout>
-
+            -->
             <HorizontalStackLayout
                 x:Name="StackCheckboxesDoorVentilation">
                 <Label Text="Open Doors/Windows"

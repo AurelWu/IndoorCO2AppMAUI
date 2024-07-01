@@ -20,6 +20,12 @@ namespace IndoorCO2App;
 
 public partial class MainPage : ContentPage
 {
+    bool startTrimSliderHasBeenUsed = false;
+    bool endTrimSliderHasBeenUsed = false;
+
+    public static int startTrimSliderValue = 0;
+    public static int endTrimSliderValue = 1;
+
     bool gpsGranted = false;
     bool gpsActive = false;
     bool btActive = false;
@@ -52,7 +58,7 @@ public partial class MainPage : ContentPage
 
         InitializeComponent();
         BluetoothManager.Init();
-        _timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+        _timer = new PeriodicTimer(TimeSpan.FromSeconds(0.4));
 
         UISetup();
         SwitchToStandardUI();
@@ -102,11 +108,16 @@ public partial class MainPage : ContentPage
         OpenImprintButton.IsVisible = false;
         OpenMapButton.IsVisible = false;
         UpdateLocationsButton.IsVisible = false;
-        StackLayoutTrimSliderStart.IsVisible = true;
-        StackLayoutTrimSliderEnd.IsVisible = true;        
+        //StackLayoutTrimSliderStart.IsVisible = true;
+        //StackLayoutTrimSliderEnd.IsVisible = true;        
         StackCheckboxesDoorVentilation.IsVisible = true;
         StackNotes.IsVisible = false;
         lineChartView.IsVisible = true;
+        startTrimSlider.IsVisible = true;
+        endTrimSlider.IsVisible = true;
+
+        startTrimSliderHasBeenUsed = false;
+        endTrimSliderHasBeenUsed = false;
     }
 
     private void SwitchToStandardUI() 
@@ -125,11 +136,13 @@ public partial class MainPage : ContentPage
         OpenImprintButton.IsVisible = true;
         OpenMapButton.IsVisible = true;
         UpdateLocationsButton.IsVisible = true;
-        StackLayoutTrimSliderStart.IsVisible = false;
-        StackLayoutTrimSliderEnd.IsVisible = false;        
+        //StackLayoutTrimSliderStart.IsVisible = false;
+        //StackLayoutTrimSliderEnd.IsVisible = false;        
         StackCheckboxesDoorVentilation.IsVisible = false;
         StackNotes.IsVisible = false; ;
         lineChartView.IsVisible = false;
+        startTrimSlider.IsVisible = false;
+        endTrimSlider.IsVisible = false;
     }
 
     private void OnUpdateLocationsClicked(object sender, EventArgs e)
@@ -158,8 +171,8 @@ public partial class MainPage : ContentPage
     {
         FinishRecordingButton.Text = "Submitting Data";
         FinishRecordingButton.IsEnabled = false; ;
-        int trimStart = (int)Math.Floor(sliderStart.Value);
-        int trimEnd = (int)((BluetoothManager.recordedData.Count-1)- (int)Math.Floor(sliderEnd.Value));
+        int trimStart = (int)Math.Floor(startTrimSlider.Value);
+        int trimEnd = (int)Math.Floor(endTrimSlider.Value);
         BluetoothManager.FinishRecording(trimStart,trimEnd);
     }
     
@@ -264,8 +277,8 @@ public partial class MainPage : ContentPage
     private void UpdateFinishRecordingButton()
     {
         int original = BluetoothManager.recordedData.Count;
-        int afterTrimmedStart = original - (int)Math.Floor(sliderStart.Value);
-        int afterTrimmedEnd = afterTrimmedStart - (BluetoothManager.recordedData.Count - (int)((BluetoothManager.recordedData.Count - (int)Math.Floor(sliderEnd.Value))));
+        int afterTrimmedStart = original - (int)Math.Floor(startTrimSlider.Value);
+        int afterTrimmedEnd = afterTrimmedStart - (BluetoothManager.recordedData.Count - (int)((BluetoothManager.recordedData.Count - (int)Math.Floor(endTrimSlider.Value))));
         if ( afterTrimmedEnd  >= 5 && BluetoothManager.isRecording)
         {
             FinishRecordingButton.IsEnabled = true;
@@ -486,6 +499,32 @@ public partial class MainPage : ContentPage
     private void UpdateLineChart()
     {
         lineChartView.SetData(BluetoothManager.recordedData);
+        int maxSliderVal = BluetoothManager.recordedData.Count;
+
+        startTrimSlider.Minimum = 0;
+        startTrimSlider.Maximum = maxSliderVal;
+        endTrimSlider.Minimum = 0;        
+        
+        
+        if (endTrimSlider.Maximum == 0)
+        {
+            endTrimSlider.Maximum = 1;
+            endTrimSlider.Value = 1;
+        }
+        else if(maxSliderVal>0) 
+        {            
+            endTrimSlider.Maximum = maxSliderVal;
+            
+        }
+
+        if (!endTrimSliderHasBeenUsed && maxSliderVal>0)
+        {
+            endTrimSlider.Value = endTrimSlider.Maximum;
+        }
+        startTrimSliderValue = (int)startTrimSlider.Value;
+        endTrimSliderValue = (int)endTrimSlider.Value;
+
+        
     }
 
     private async void OnRequestBluetoothEnableDialog(object sender, EventArgs e)
@@ -554,15 +593,19 @@ public partial class MainPage : ContentPage
     private void OnSliderStartValueChanged(object sender, ValueChangedEventArgs e)
     {
         // Update the label with the new slider value
-        sliderStartValueLabel.Text = "Remove first " + $"{(int)Math.Floor(e.NewValue)}";
-        UpdateFinishRecordingButton();
+        //sliderStartValueLabel.Text = "Remove first " + $"{(int)Math.Floor(e.NewValue)}";
+        //UpdateFinishRecordingButton();
+        startTrimSliderHasBeenUsed= true;
+        //UpdateLineChart();
     }
 
     private void OnSliderEndValueChanged(object sender, ValueChangedEventArgs e)
     {
         // Update the label with the new slider value
-        sliderEndValueLabel.Text = "Remove last " + $"{(int)Math.Floor(e.NewValue)}";
-        UpdateFinishRecordingButton();
+        //sliderEndValueLabel.Text = "Remove last " + $"{(int)Math.Floor(e.NewValue)}";
+        //UpdateFinishRecordingButton();
+        endTrimSliderHasBeenUsed = true;
+        //UpdateLineChart();
     }
 
     private void OnEditorFocused(object sender, EventArgs e)
@@ -598,6 +641,8 @@ public partial class MainPage : ContentPage
 
         lineChartView.WidthRequest = 0.9 * width;
         lineChartView.HeightRequest = 0.25 * height;
+        startTrimSlider.WidthRequest = 0.4 * width;
+        endTrimSlider.WidthRequest = 0.4 * width;
     }
 }
 

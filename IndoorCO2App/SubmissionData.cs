@@ -40,6 +40,11 @@ namespace IndoorCO2App
             string[] ppmArray = new string[arraySize];
             string[] timestampArray = new string[arraySize];
 
+            if (rangeSliderMin + 1 > SensorData.Count)
+            {
+                throw new IndexOutOfRangeException("RangeSliderMax +1 > SensorData Array - this should not happen");
+            }
+
             if (rangeSliderMax + 1 > SensorData.Count)
             {
                 throw new IndexOutOfRangeException("RangeSliderMax +1 > SensorData Array - this should not happen");

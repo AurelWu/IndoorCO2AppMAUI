@@ -102,49 +102,76 @@ namespace IndoorCO2App
                     canvas.DrawString(i.ToString(), paddingLeft + 12, y - 5, 300, 10, HorizontalAlignment.Left, VerticalAlignment.Center);
                 }
 
+               
+
+                if (Data.Length > 0)
+                {
+                    // Draw data points
+                    canvas.StrokeColor = LineColor;
+                    canvas.StrokeSize = 2;
+                    float prevX = paddingLeft;
+                    float prevY = height - paddingBottom - (Data[0] - minValue) * yScale;
+
+                    for (int i = 0; i < Data.Length; i++)
+                    {
+                        if (i < MainPage.startTrimSliderValue + 1 || i >= MainPage.endTrimSliderValue)
+                        {
+                            canvas.StrokeDashPattern = new float[] { 1, 1 };
+                            canvas.StrokeColor = Color.FromRgb(155, 155, 155);
+                            canvas.FillColor = Color.FromRgb(155, 155, 155);
+                        }
+                        else
+                        {
+                            canvas.StrokeDashPattern = new float[] { 1, 0 };
+                            canvas.StrokeColor = LineColor;
+                            canvas.FillColor = LineColor;
+                        }
+                        float x = paddingLeft + i * xScale;
+                        float y = height - paddingBottom - (Data[i] - minValue) * yScale;
+                        if (i > 0)
+                        {
+                            canvas.DrawLine(prevX, prevY, x, y);
+                        }
+                        prevX = x;
+                        prevY = y;
+
+                        if (i < MainPage.startTrimSliderValue || i >= MainPage.endTrimSliderValue)
+                        {
+                            canvas.FillColor = Color.FromRgb(155, 155, 155);
+                        }
+                        else
+                        {
+                            canvas.FillColor = LineColor;
+                        }
+
+                        // Draw circles on data points
+                        if (Data.Length <= 25)
+                        {
+                            canvas.FillCircle(x, y, 5); // Adjust the radius as needed for the circle
+                        }
+                        else if (Data.Length <= 50)
+                        {
+                            canvas.FillCircle(x, y, 3); // Adjust the radius as needed for the circle
+                        }
+                        else
+                        {
+                            canvas.FillCircle(x, y, 2); // Adjust the radius as needed for the circle
+                        }
+                    }
+                }
+
                 // Draw X and Y axes
                 canvas.StrokeColor = LineColor;
+                canvas.StrokeDashPattern = new float[] { 1, 0 };
                 canvas.StrokeSize = 2;
                 canvas.DrawLine(paddingLeft, paddingTop, paddingLeft, height - paddingBottom); // Y-axis
                 canvas.DrawLine(paddingLeft, height - paddingBottom, width - paddingRight, height - paddingBottom); // X-axis
 
-                if (Data.Length == 0) return;
 
 
 
 
 
-                // Draw data points
-                canvas.StrokeColor = LineColor;
-                canvas.StrokeSize = 2;
-                float prevX = paddingLeft;
-                float prevY = height - paddingBottom - (Data[0] - minValue) * yScale;
-
-                for (int i = 0; i < Data.Length; i++)
-                {
-                    float x = paddingLeft + i * xScale;
-                    float y = height - paddingBottom - (Data[i] - minValue) * yScale;
-                    if (i > 0)
-                    {
-                        canvas.DrawLine(prevX, prevY, x, y);
-                    }
-                        prevX = x;
-                        prevY = y;                    
-
-                    // Draw circles on data points
-                    if (Data.Length <= 25)
-                    {
-                        canvas.FillCircle(x, y, 6); // Adjust the radius as needed for the circle
-                    }
-                    else if (Data.Length <= 50)
-                    {
-                        canvas.FillCircle(x, y, 4); // Adjust the radius as needed for the circle
-                    }
-                    else
-                    {
-                        canvas.FillCircle(x, y, 2); // Adjust the radius as needed for the circle
-                    }
-                }
             }
 
             // Helper method to get the maximum value in the data array
