@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:IndoorCO2App"
              x:Class="IndoorCO2App.MainPage">
 
     <ScrollView>
@@ -13,7 +14,9 @@
                 Text="Indoor CO2 Recorder"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="Title"
-                HorizontalOptions="Center" />
+                HorizontalOptions="Center"
+                
+                />
 
             <!-- HorizontalStackLayout with 4 buttons -->
             <HorizontalStackLayout
@@ -94,7 +97,10 @@
                 HorizontalOptions="Center" />
             </HorizontalStackLayout>
 
-
+            <StackLayout>
+                <local:LineChartView x:Name="lineChartView"/>
+            </StackLayout>
+            <!--
             <Label
                 x:Name="RecordedDataLabel"
                 Text="Location: "                
@@ -104,7 +110,8 @@
                 VerticalOptions="StartAndExpand"
                 MaxLines="8"
                 HorizontalOptions="Start" />
-
+            -->
+            
 
             <StackLayout 
                 x:Name="StackLayoutTrimSliderStart"

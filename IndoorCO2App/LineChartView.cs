@@ -1,18 +1,172 @@
-﻿using System;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IndoorCO2App
 {
-    internal class LineChartView : IDrawable
+
+
+    public class LineChartView : GraphicsView
     {
-        public void Draw(ICanvas canvas, RectF dirtyRect)
+        private readonly LineChartDrawable _drawable;
+
+        public LineChartView()
         {
-            canvas.StrokeColor = Colors.Red;
-            canvas.StrokeSize = 6;
-            canvas.DrawLine(10, 10, 90, 100);
+            _drawable = new LineChartDrawable();
+            Drawable = _drawable;
+            UpdateThemeColor();
+        }
+
+        internal void SetData(List<SensorData> newData)
+        {
+            int[] ints = new int[newData.Count];
+            for(int i = 0; i < newData.Count; i++)
+            {
+                ints[i] = newData[i].CO2ppm;
+            }
+            _drawable.Data = ints;
+            Invalidate(); // Force the view to redraw with the new data
+        }
+
+        private void UpdateThemeColor()
+        {
+            // Retrieve the theme color from the resources
+            ResourceDictionary colorResource = Application.Current.Resources.MergedDictionaries.FirstOrDefault() as ResourceDictionary;
+            if (colorResource != null && colorResource.TryGetValue("ThemeLineColor", out var colorValue) && colorValue is AppThemeColor themeColor)
+            {
+                AppTheme currentTheme = Application.Current.RequestedTheme;
+                Color lineColor = currentTheme == AppTheme.Light ? themeColor.Light : themeColor.Dark;
+                _drawable.LineColor = lineColor;
+            }
+            else
+            {
+                // Fallback color if not found
+                _drawable.LineColor = Colors.Gray;
+            }
+        }
+
+        private class LineChartDrawable : IDrawable
+        {
+            public int[] Data { get; set; } = new int[0];
+            public Color LineColor { get; set; } = Colors.Gray;
+
+            public void Draw(ICanvas canvas, RectF dirtyRect)
+            {
+                int width = (int)dirtyRect.Width;
+                int height = (int)dirtyRect.Height;
+                int paddingLeft = 25;
+                int paddingRight = 25;
+                int paddingTop = 0;
+                int paddingBottom = 0;
+
+                // Calculate the usable area after considering padding
+                int usableWidth = width - paddingLeft - paddingRight;
+                int usableHeight = height - paddingTop - paddingBottom;
+
+                canvas.FillColor = LineColor;
+                //canvas.FillRectangle(0, 0, width, height);
+
+                // Calculate scaling factors
+                float xScale = usableWidth / (float)(Data.Length - 1);
+                float maxValue = GetMaxDataValue();
+                float minValue = 300;
+                float yScale = usableHeight / (maxValue - minValue);
+                // Draw X-axis tick marks
+                canvas.StrokeColor = Colors.Gray;
+
+                canvas.StrokeSize = 2;
+                for (int i = 0; i < Data.Length; i++)
+                {
+                    float x = paddingLeft + i * xScale;
+                    if (i % 5 == 0)
+                    {
+                        canvas.DrawLine(x, height - paddingBottom, x, height - paddingBottom - 10); // Bigger tick
+                    }
+                    else
+                    {
+                        canvas.DrawLine(x, height - paddingBottom, x, height - paddingBottom - 5); // Regular tick
+                    }
+                }
+
+                // Draw Y-axis tick marks and labels
+                canvas.StrokeColor = LineColor;
+                canvas.FontColor = LineColor;
+                canvas.FontSize = 8;
+                canvas.StrokeSize = 2;
+                for (int i = 400; i <= maxValue; i += 400)
+                {
+                    float y = height - paddingBottom - (i - minValue) * yScale;
+                    canvas.DrawLine(paddingLeft, y, paddingLeft + 10, y); // Tick mark
+                    canvas.DrawString(i.ToString(), paddingLeft + 12, y - 5, 300, 10, HorizontalAlignment.Left, VerticalAlignment.Center);
+                }
+
+                // Draw X and Y axes
+                canvas.StrokeColor = LineColor;
+                canvas.StrokeSize = 2;
+                canvas.DrawLine(paddingLeft, paddingTop, paddingLeft, height - paddingBottom); // Y-axis
+                canvas.DrawLine(paddingLeft, height - paddingBottom, width - paddingRight, height - paddingBottom); // X-axis
+
+                if (Data.Length == 0) return;
+
+
+
+
+
+                // Draw data points
+                canvas.StrokeColor = LineColor;
+                canvas.StrokeSize = 2;
+                float prevX = paddingLeft;
+                float prevY = height - paddingBottom - (Data[0] - minValue) * yScale;
+
+                for (int i = 0; i < Data.Length; i++)
+                {
+                    float x = paddingLeft + i * xScale;
+                    float y = height - paddingBottom - (Data[i] - minValue) * yScale;
+                    if (i > 0)
+                    {
+                        canvas.DrawLine(prevX, prevY, x, y);
+                    }
+                        prevX = x;
+                        prevY = y;                    
+
+                    // Draw circles on data points
+                    if (Data.Length <= 25)
+                    {
+                        canvas.FillCircle(x, y, 6); // Adjust the radius as needed for the circle
+                    }
+                    else if (Data.Length <= 50)
+                    {
+                        canvas.FillCircle(x, y, 4); // Adjust the radius as needed for the circle
+                    }
+                    else
+                    {
+                        canvas.FillCircle(x, y, 2); // Adjust the radius as needed for the circle
+                    }
+                }
+            }
+
+            // Helper method to get the maximum value in the data array
+            private float GetMaxDataValue()
+            {
+                if (Data.Length == 0)
+                {
+                    return 1000;
+                }
+
+                int max = Data[0];
+                foreach (int value in Data)
+                {
+                    if (value > max)
+                    {
+                        max = value;
+                    }
+                }
+
+                // Round up to the next multiple of 400
+                return ((((max + 399) / 400) * 400) + 50);
+            }
         }
     }
 }

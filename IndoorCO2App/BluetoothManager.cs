@@ -260,10 +260,6 @@ namespace IndoorCO2App
                             }
                         
                         }
-                        else
-                        {
-                            return;
-                        }
 
                         if (isRecording)
                         {

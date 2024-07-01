@@ -93,7 +93,7 @@ public partial class MainPage : ContentPage
         FinishRecordingButton.IsVisible = true;
         RequestCancelRecordingButton.IsVisible = true;
         ConfirmCancelRecordingButton.IsVisible = false;
-        RecordedDataLabel.IsVisible = true; //RecordedDataLabel is temporary instead of lineChart
+        //RecordedDataLabel.IsVisible = true; //RecordedDataLabel is temporary instead of lineChart
         LocationLabelRecording.IsVisible = true;
         LocationLabel.IsVisible = false;
         SearchRangeStackLayout.IsVisible = false;
@@ -106,6 +106,7 @@ public partial class MainPage : ContentPage
         StackLayoutTrimSliderEnd.IsVisible = true;        
         StackCheckboxesDoorVentilation.IsVisible = true;
         StackNotes.IsVisible = false;
+        lineChartView.IsVisible = true;
     }
 
     private void SwitchToStandardUI() 
@@ -115,7 +116,7 @@ public partial class MainPage : ContentPage
         FinishRecordingButton.IsVisible = false;
         RequestCancelRecordingButton.IsVisible = false;
         ConfirmCancelRecordingButton.IsVisible = false;
-        RecordedDataLabel.IsVisible = false; //RecordedDataLabel is temporary instead of lineChart
+        //RecordedDataLabel.IsVisible = false; //RecordedDataLabel is temporary instead of lineChart
         LocationLabelRecording.IsVisible = false;
         LocationLabel.IsVisible = true;
         SearchRangeStackLayout.IsVisible = true;
@@ -128,6 +129,7 @@ public partial class MainPage : ContentPage
         StackLayoutTrimSliderEnd.IsVisible = false;        
         StackCheckboxesDoorVentilation.IsVisible = false;
         StackNotes.IsVisible = false; ;
+        lineChartView.IsVisible = false;
     }
 
     private void OnUpdateLocationsClicked(object sender, EventArgs e)
@@ -239,7 +241,8 @@ public partial class MainPage : ContentPage
 
         UpdateLocationLabel();
         UpdateLocationRecordingLabel();
-        UpdateRecordedDataLabel();
+        //UpdateRecordedDataLabel();
+        UpdateLineChart();
         UpdateStatusLabel();
         UpdateDeviceLabel();
         UpdateStartRecordingButton();
@@ -425,59 +428,64 @@ public partial class MainPage : ContentPage
 
     private void UpdateRecordedDataLabel()
     {
-        var formattedString = new FormattedString();
+        //var formattedString = new FormattedString();
+        //
+        //// Create spans with different colors
+        //var labelspan = new Span
+        //{
+        //    Text = "recorded CO2-Values: ",
+        //    //TextColor = Colors.Black
+        //};
+        //var dataSpan = new Span
+        //{
+        //    Text = "recorded CO2-Values: ",
+        //    //TextColor = Colors.Black
+        //};
+        //formattedString.Spans.Add(labelspan);
+        ////formattedString.Spans.Add(dataSpan);
+        //
+        //
+        //
+        ////string s = String.Join(" ", BluetoothManager.recordedData);
+        ////RecordedDataLabel.FormattedText = " recorded CO2-Values: ";
+        //
+        //try
+        //{
+        //    for (int i = 0; i < BluetoothManager.recordedData.Count; i++) //what happens if value changes during looping over it? =>
+        //    {
+        //        //var x = testSlider;
+        //        int start = (int)Math.Floor(sliderStart.Value);
+        //        int end = (int)((BluetoothManager.recordedData.Count - 1)-Math.Floor(sliderEnd.Value)); //last Index
+        //        if (i < start || i > end)
+        //        {
+        //            Span s = new Span
+        //            {
+        //                Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
+        //                TextColor = Colors.Gray
+        //            };
+        //            formattedString.Spans.Add(s);
+        //        }
+        //        else
+        //        {
+        //            Span s = new Span
+        //            {
+        //                Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
+        //                //TextColor = Colors.Black
+        //            };
+        //            formattedString.Spans.Add(s);
+        //        }
+        //    }
+        //    RecordedDataLabel.FormattedText = formattedString;
+        //}
+        //catch (Exception)
+        //{
+        //    RecordedDataLabel.Text = "retrieving Data failed, next try in 1 Minute"; //maybe keep old Data in case this happens?
+        //}
+    }
 
-        // Create spans with different colors
-        var labelspan = new Span
-        {
-            Text = "recorded CO2-Values: ",
-            //TextColor = Colors.Black
-        };
-        var dataSpan = new Span
-        {
-            Text = "recorded CO2-Values: ",
-            //TextColor = Colors.Black
-        };
-        formattedString.Spans.Add(labelspan);
-        //formattedString.Spans.Add(dataSpan);
-
-
-
-        //string s = String.Join(" ", BluetoothManager.recordedData);
-        //RecordedDataLabel.FormattedText = " recorded CO2-Values: ";
-        
-        try
-        {
-            for (int i = 0; i < BluetoothManager.recordedData.Count; i++) //what happens if value changes during looping over it? =>
-            {
-                //var x = testSlider;
-                int start = (int)Math.Floor(sliderStart.Value);
-                int end = (int)((BluetoothManager.recordedData.Count - 1)-Math.Floor(sliderEnd.Value)); //last Index
-                if (i < start || i > end)
-                {
-                    Span s = new Span
-                    {
-                        Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
-                        TextColor = Colors.Gray
-                    };
-                    formattedString.Spans.Add(s);
-                }
-                else
-                {
-                    Span s = new Span
-                    {
-                        Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
-                        //TextColor = Colors.Black
-                    };
-                    formattedString.Spans.Add(s);
-                }
-            }
-            RecordedDataLabel.FormattedText = formattedString;
-        }
-        catch (Exception)
-        {
-            RecordedDataLabel.Text = "retrieving Data failed, next try in 1 Minute"; //maybe keep old Data in case this happens?
-        }
+    private void UpdateLineChart()
+    {
+        lineChartView.SetData(BluetoothManager.recordedData);
     }
 
     private async void OnRequestBluetoothEnableDialog(object sender, EventArgs e)
@@ -582,6 +590,14 @@ public partial class MainPage : ContentPage
     private void CheckBoxDoorsWindows_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
         hasOpenWindowsDoors = CheckBoxDoorsWindows.IsChecked;
+    }
+
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+
+        lineChartView.WidthRequest = 0.9 * width;
+        lineChartView.HeightRequest = 0.25 * height;
     }
 }
 
