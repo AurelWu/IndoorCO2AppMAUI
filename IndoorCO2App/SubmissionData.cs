@@ -36,31 +36,32 @@ namespace IndoorCO2App
         public string ToJson(int rangeSliderMin, int rangeSliderMax)
         {
             JObject json = new JObject();
-            int arraySize = (rangeSliderMax - rangeSliderMin) + 1;
+            int arraySize = (rangeSliderMax - rangeSliderMin);
             string[] ppmArray = new string[arraySize];
             string[] timestampArray = new string[arraySize];
 
             if (rangeSliderMin + 1 > SensorData.Count)
             {
-                throw new IndexOutOfRangeException("RangeSliderMax +1 > SensorData Array - this should not happen");
+                throw new IndexOutOfRangeException("RangeSliderMin +1 > SensorData Array - this should not happen");
             }
 
-            if (rangeSliderMax + 1 > SensorData.Count)
+            if (rangeSliderMax > SensorData.Count)
             {
                 throw new IndexOutOfRangeException("RangeSliderMax +1 > SensorData Array - this should not happen");
             }
 
             int arrayIndex = 0;
-            for (int i = rangeSliderMin; i < rangeSliderMax + 1; i++)
+            for (int i = rangeSliderMin; i < rangeSliderMax ; i++)
             {
                 SensorData data = SensorData[i];
                 ppmArray[arrayIndex] = data.CO2ppm.ToString();
                 timestampArray[arrayIndex] = data.timeStamp.ToString();
                 arrayIndex++;
             }
-
+            
             OpenWindowsDoors = MainPage.hasOpenWindowsDoors;
             VentilationSystem = MainPage.hasVentilationSystem;
+            AdditionalNotes = MainPage.MainPageSingleton.GetNotesEditorText();
 
             json["d"] = SensorID;
             json["p"] = NwrType;

@@ -1,23 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
+             xmlns:controls="clr-namespace:IndoorCO2App.Controls"
              xmlns:local="clr-namespace:IndoorCO2App"
              x:Class="IndoorCO2App.MainPage">
-    
 
-    <ScrollView>
+
+    <controls:FixedScrollView>
         <VerticalStackLayout
-            Spacing="25"
+            Spacing="22"
             Padding="30,0"
             VerticalOptions="Start">
-
+            <!--
             <Label
                 Text="Indoor CO2 Recorder"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="Title"
                 HorizontalOptions="Center"
                 
-                />
+                /> -->
 
             <!-- HorizontalStackLayout with 4 buttons -->
             <HorizontalStackLayout
@@ -63,63 +64,7 @@
                 </Label.GestureRecognizers>
                 </Label>
             
-            <Label
-                x:Name="LocationLabelRecording"
-                Text="Location: "                
-                SemanticProperties.Description="SemanticProperties.Description"
-                FontSize="Small"
-                LineBreakMode="WordWrap"
-                VerticalOptions="StartAndExpand"
-                MaxLines="2"
-                HorizontalOptions="Start" />
 
-
-            <HorizontalStackLayout
-                x:Name="RecordingModeButtonStackLayout"                
-                Spacing="10"
-                HorizontalOptions="Center"
-                VerticalOptions="Start">
-                <Button
-                    x:Name="FinishRecordingButton"
-                    Text="Submit Data"
-                    LineBreakMode="WordWrap"
-                    SemanticProperties.Hint="FinishRecordingButton"
-                    Clicked="OnFinishRecordingClicked"
-                    HorizontalOptions="Center" />
-                <Button
-                    x:Name="RequestCancelRecordingButton"
-                    Text="Cancel Recording"
-                    LineBreakMode="WordWrap"
-                    SemanticProperties.Hint="RequestCancelRecordingButton"
-                    Clicked="OnRequestCancelRecordingClicked"
-                    HorizontalOptions="Center" />
-                <Button
-                    x:Name="ConfirmCancelRecordingButton"
-                    Text="Confirm Cancel"
-                    LineBreakMode="WordWrap"
-                    SemanticProperties.Hint="ConfirmCancelRecordingButton"
-                    Clicked="OnConfirmCancelRecordingClicked"
-                HorizontalOptions="Center" />
-            </HorizontalStackLayout>
-
-            <StackLayout>
-                <local:LineChartView x:Name="lineChartView"/>
-            </StackLayout>
-
-            <Label
-                x:Name="RecordedDataLabel"
-                Text="Location: "                
-                SemanticProperties.Description="SemanticProperties.Description"
-                FontSize="Small"
-                LineBreakMode="WordWrap"
-                VerticalOptions="StartAndExpand"
-                MaxLines="8"
-                HorizontalOptions="Start" />
-
-            <HorizontalStackLayout Spacing="0" HorizontalOptions="Center" >
-                <Slider x:Name="startTrimSlider" WidthRequest="200" Minimum="0" Maximum="100" Value="0" MinimumTrackColor="{StaticResource Secondary}" MaximumTrackColor="{StaticResource Primary}" ValueChanged="OnSliderStartValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />
-                <Slider x:Name="endTrimSlider" WidthRequest="200" Minimum="0" Maximum="100" Value="100" MinimumTrackColor="{StaticResource Primary}" MaximumTrackColor="{StaticResource Secondary}" ValueChanged="OnSliderEndValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />
-            </HorizontalStackLayout>
             
             <!--
             <StackLayout 
@@ -182,42 +127,9 @@
 
             </StackLayout>
             -->
-            <HorizontalStackLayout
-                x:Name="StackCheckboxesDoorVentilation">
-                <Label Text="Open Doors/Windows"
-               VerticalOptions="CenterAndExpand" 
-               HorizontalOptions="CenterAndExpand" />
-                <CheckBox x:Name="CheckBoxDoorsWindows"
-                  CheckedChanged="CheckBoxDoorsWindows_CheckedChanged"
-                  IsChecked="False"
-                  VerticalOptions="CenterAndExpand"
-                  HorizontalOptions="CenterAndExpand"/>                 
-                <Label Text="Ventilation System"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-                <CheckBox x:Name="CheckBoxVentilation"
-                   IsChecked="False"
-                   CheckedChanged="CheckBoxVentilation_CheckedChanged"
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="CenterAndExpand" />
-            </HorizontalStackLayout>
 
-            <HorizontalStackLayout 
-                x:Name="StackNotes"
-                Padding= "10">
-                <Label Text="Enter text:"
-                VerticalOptions="Start" 
-                HorizontalOptions="FillAndExpand" />
-                <Editor x:Name="EditorNotes"
-                Text=""
-                Placeholder="Add note here (optional)"
-                VerticalOptions="Start"
-                HorizontalOptions="StartAndExpand"
-                AutoSize="TextChanges"
-                Focused="OnEditorFocused"
-                Unfocused="OnEditorUnfocused"                
-                HeightRequest="20"/>
-            </HorizontalStackLayout>
+
+            
             <!--
             <ScrollView VerticalScrollBarVisibility="Default">
                 <Label x:Name="scrollableDebugText" VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand" 
@@ -280,8 +192,125 @@
                 Clicked="OnImprintClicked"
                 HorizontalOptions="Center" />
 
+            <Label
+                x:Name="LocationLabelRecording"
+                Text="Location: "                
+                SemanticProperties.Description="SemanticProperties.Description"
+                FontSize="Small"
+                LineBreakMode="WordWrap"
+                VerticalOptions="StartAndExpand"
+                MaxLines="2"
+                HorizontalOptions="Start" />
+
+
+            <HorizontalStackLayout
+                x:Name="RecordingModeButtonStackLayout"                
+                Spacing="10"
+                HorizontalOptions="Center"
+                VerticalOptions="Start">
+                <Button
+                    x:Name="FinishRecordingButton"
+                    Text="Submit Data"
+                    LineBreakMode="WordWrap"
+                    SemanticProperties.Hint="FinishRecordingButton"
+                    Clicked="OnFinishRecordingClicked"
+                    HorizontalOptions="Center" />
+                <Button
+                    x:Name="RequestCancelRecordingButton"
+                    Text="Cancel Recording"
+                    LineBreakMode="WordWrap"
+                    SemanticProperties.Hint="RequestCancelRecordingButton"
+                    Clicked="OnRequestCancelRecordingClicked"
+                    HorizontalOptions="Center" />
+                <Button
+                    x:Name="ConfirmCancelRecordingButton"
+                    Text="Confirm Cancel"
+                    LineBreakMode="WordWrap"
+                    SemanticProperties.Hint="ConfirmCancelRecordingButton"
+                    Clicked="OnConfirmCancelRecordingClicked"
+                HorizontalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <StackLayout>
+                <local:LineChartView x:Name="lineChartView"/>
+            </StackLayout>
+
+
+            <Label
+                x:Name="RecordedDataLabel"
+                Text="Location: "                
+                SemanticProperties.Description="SemanticProperties.Description"
+                FontSize="Small"
+                LineBreakMode="WordWrap"
+                VerticalOptions="StartAndExpand"
+                MaxLines="1"
+                HorizontalOptions="Start" />
+
+            <HorizontalStackLayout Spacing="0" HorizontalOptions="Center" >
+                <Slider x:Name="startTrimSlider" WidthRequest="200" Minimum="0" Maximum="1" Value="0" MinimumTrackColor="{StaticResource Secondary}" MaximumTrackColor="{StaticResource Primary}" ValueChanged="OnSliderStartValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />
+                <Slider x:Name="endTrimSlider" WidthRequest="200" Minimum="0" Maximum="1" Value="1" MinimumTrackColor="{StaticResource Primary}" MaximumTrackColor="{StaticResource Secondary}" ValueChanged="OnSliderEndValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />
+            </HorizontalStackLayout>
+
+            <Label
+                x:Name="TrimSliderInfoText"
+                Text="↑↑↑  ↑↑↑ &#10; Use sliders to trim start &amp; end if required"
+                HorizontalTextAlignment="Center"
+                HorizontalOptions="Center">
+                
+            </Label>
+
+            <Grid
+                x:Name="StackNotes"    
+                RowDefinitions="50"
+                ColumnDefinitions="50,*"
+                RowSpacing="0"
+                ColumnSpacing="5"
+                HorizontalOptions="FillAndExpand"
+                Margin="5">
+                <Label
+                    VerticalOptions="Center"
+                    VerticalTextAlignment="Center"
+                    Text="Notes:"
+                    Grid.Column="0" />
+                <Border                    
+                Stroke="{StaticResource Secondary}"
+                StrokeThickness="2"
+                Grid.Column="1"
+                Padding="0">
+
+                    <Editor
+                    x:Name="NotesEditor"  
+                    VerticalTextAlignment="Start"
+                    BackgroundColor="Transparent" 
+                     Focused="OnEditorFocused"
+                    Unfocused="OnEditorUnfocused" />
+                </Border>
+            </Grid>
+
+            <HorizontalStackLayout
+                x:Name="StackCheckboxesDoorVentilation">
+                <Label Text="Open Doors/Windows"
+               VerticalOptions="CenterAndExpand" 
+               HorizontalOptions="CenterAndExpand" />
+                <CheckBox x:Name="CheckBoxDoorsWindows"
+                  CheckedChanged="CheckBoxDoorsWindows_CheckedChanged"
+                  IsChecked="False"
+                  VerticalOptions="CenterAndExpand"
+                  HorizontalOptions="CenterAndExpand"/>
+                <Label Text="Ventilation System"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+                <CheckBox x:Name="CheckBoxVentilation"
+                   IsChecked="False"
+                   CheckedChanged="CheckBoxVentilation_CheckedChanged"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="CenterAndExpand" />
+            </HorizontalStackLayout>
+
+
+
         </VerticalStackLayout>
-    </ScrollView>
+    </controls:FixedScrollView>
 
 
     <ContentPage.Resources>

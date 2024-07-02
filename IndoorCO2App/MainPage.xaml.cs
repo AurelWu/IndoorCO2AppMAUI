@@ -94,6 +94,7 @@ public partial class MainPage : ContentPage
 
     private void SwitchToRecordingUI()
     {
+        NotesEditor.Text = "";
         //wakeLockService.AcquireWakeLock();
         //StackRangeTrimmer.IsVisible = true;        
         FinishRecordingButton.Text = "Submit Data";
@@ -113,10 +114,11 @@ public partial class MainPage : ContentPage
         //StackLayoutTrimSliderStart.IsVisible = true;
         //StackLayoutTrimSliderEnd.IsVisible = true;        
         StackCheckboxesDoorVentilation.IsVisible = true;
-        StackNotes.IsVisible = false;
+        StackNotes.IsVisible = true;
         lineChartView.IsVisible = true;
         startTrimSlider.IsVisible = true;
         endTrimSlider.IsVisible = true;
+        TrimSliderInfoText.IsVisible = true;
 
         startTrimSliderHasBeenUsed = false;
         endTrimSliderHasBeenUsed = false;
@@ -145,6 +147,7 @@ public partial class MainPage : ContentPage
         lineChartView.IsVisible = false;
         startTrimSlider.IsVisible = false;
         endTrimSlider.IsVisible = false;
+        TrimSliderInfoText.IsVisible = false;
     }
 
     private void OnUpdateLocationsClicked(object sender, EventArgs e)
@@ -154,11 +157,15 @@ public partial class MainPage : ContentPage
     }
 
     private void OnStartRecordingClicked(object sender, EventArgs e)
-    {    	    
-    	//SemanticScreenReader.Announce(StartRecordingButton.Text);
-
+    {
+        //SemanticScreenReader.Announce(StartRecordingButton.Text);
+        endTrimSlider.Minimum = 0;
+        endTrimSlider.Maximum = 1;
+        startTrimSlider.Maximum = 1;
+        startTrimSliderHasBeenUsed = false;
+        endTrimSliderHasBeenUsed = false;
         //Console.WriteLine(LocationPicker);
-        if(LocationPicker != null && Locations.Count>0) 
+        if (LocationPicker != null && Locations.Count>0) 
         {
             if(LocationPicker.SelectedItem != null)
             {
@@ -648,6 +655,12 @@ public partial class MainPage : ContentPage
     private void OnLocationLabelTapped(object sender, TappedEventArgs e)
     {
         hideLocation = !hideLocation;
+    }
+
+    public string GetNotesEditorText()
+    {
+        if (NotesEditor.Text == null) return string.Empty;
+        return NotesEditor.Text;
     }
 }
 
