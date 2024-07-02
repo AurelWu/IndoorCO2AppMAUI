@@ -53,6 +53,13 @@ namespace IndoorCO2App
                 $"nwr(around:{rString},{latString},{lonString})[amenity=cinema];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=theatre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=music_venue];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=arts_centre];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=brothel];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=love_hotel];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=nightclub];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=planetarium];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=stripclub];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=social_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=playground][indoor=yes];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=research_institute];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=music_school];" +
@@ -63,9 +70,11 @@ namespace IndoorCO2App
                 $"nwr(around:{rString},{latString},{lonString})[amenity=university];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=hospital];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=clinic];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=dentist];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=doctors];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=pharmacy];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=social_facility];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=bank];" +
                 $"nwr(around:{rString},{latString},{lonString})[healthcare];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=museum];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=gallery];" +
