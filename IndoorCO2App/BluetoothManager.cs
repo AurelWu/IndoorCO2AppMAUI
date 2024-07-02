@@ -223,6 +223,18 @@ namespace IndoorCO2App
                                 return;
                             }
 
+                            gattStatus = result.resultCode;
+                            if (gattStatus != 0)
+                            {
+
+                                if (gattStatus == 2)
+                                {
+                                    isGattA2DP = true;
+                                }
+                                return; //returning here should be fine
+                            }
+                            isGattA2DP = false;
+
                             var data = result.data;
                             if (data.Length >= 9)
                             {
@@ -280,17 +292,7 @@ namespace IndoorCO2App
                                     return;
                                 }
 
-                                gattStatus = response;
-                                if (response != 0)
-                                {
-
-                                    if (response == 2)
-                                    {
-                                        isGattA2DP = true;
-                                    }
-                                    return; //returning here should be fine
-                                }
-                                isGattA2DP = false;
+                                
 
                                 (byte[] data, int resultCode) history;
                                 try

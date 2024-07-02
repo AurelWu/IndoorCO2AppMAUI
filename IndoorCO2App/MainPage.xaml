@@ -57,7 +57,11 @@
                 LineBreakMode="WordWrap"
                 VerticalOptions="StartAndExpand"
                 MaxLines="2"
-                HorizontalOptions="Start" />
+                HorizontalOptions="Start">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLocationLabelTapped" />
+                </Label.GestureRecognizers>
+                </Label>
             
             <Label
                 x:Name="LocationLabelRecording"
@@ -101,7 +105,7 @@
             <StackLayout>
                 <local:LineChartView x:Name="lineChartView"/>
             </StackLayout>
-            <!--
+
             <Label
                 x:Name="RecordedDataLabel"
                 Text="Location: "                
@@ -111,8 +115,7 @@
                 VerticalOptions="StartAndExpand"
                 MaxLines="8"
                 HorizontalOptions="Start" />
-            -->
-            
+
             <HorizontalStackLayout Spacing="0" HorizontalOptions="Center" >
                 <Slider x:Name="startTrimSlider" WidthRequest="200" Minimum="0" Maximum="100" Value="0" MinimumTrackColor="{StaticResource Secondary}" MaximumTrackColor="{StaticResource Primary}" ValueChanged="OnSliderStartValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />
                 <Slider x:Name="endTrimSlider" WidthRequest="200" Minimum="0" Maximum="100" Value="100" MinimumTrackColor="{StaticResource Primary}" MaximumTrackColor="{StaticResource Secondary}" ValueChanged="OnSliderEndValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />

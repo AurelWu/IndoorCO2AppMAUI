@@ -20,6 +20,8 @@ namespace IndoorCO2App;
 
 public partial class MainPage : ContentPage
 {
+    bool hideLocation = true;
+
     bool startTrimSliderHasBeenUsed = false;
     bool endTrimSliderHasBeenUsed = false;
 
@@ -127,7 +129,7 @@ public partial class MainPage : ContentPage
         FinishRecordingButton.IsVisible = false;
         RequestCancelRecordingButton.IsVisible = false;
         ConfirmCancelRecordingButton.IsVisible = false;
-        //RecordedDataLabel.IsVisible = false; //RecordedDataLabel is temporary instead of lineChart
+        RecordedDataLabel.IsVisible = false; //RecordedDataLabel is temporary instead of lineChart
         LocationLabelRecording.IsVisible = false;
         LocationLabel.IsVisible = true;
         SearchRangeStackLayout.IsVisible = true;
@@ -277,9 +279,9 @@ public partial class MainPage : ContentPage
     private void UpdateFinishRecordingButton()
     {
         int original = BluetoothManager.recordedData.Count;
-        int afterTrimmedStart = original - (int)Math.Floor(startTrimSlider.Value);
-        int afterTrimmedEnd = afterTrimmedStart - (BluetoothManager.recordedData.Count - (int)((BluetoothManager.recordedData.Count - (int)Math.Floor(endTrimSlider.Value))));
-        if ( afterTrimmedEnd  >= 5 && BluetoothManager.isRecording)
+        int trimStart = (int)Math.Floor(startTrimSlider.Value);
+        int trimEnd = (int)Math.Floor(endTrimSlider.Value);
+        if ( trimEnd-trimStart  >= 5 && BluetoothManager.isRecording)
         {
             FinishRecordingButton.IsEnabled = true;
             FinishRecordingButton.Text = "Submit Data";
@@ -361,7 +363,14 @@ public partial class MainPage : ContentPage
         {
             if (SpatialManager.currentLocation.Latitude != 0 || SpatialManager.currentLocation.Longitude != 0)
             {
-                LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.######") + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.######");
+                if (!hideLocation)
+                {
+                    LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.######") + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.######")+ " (tap to hide)";
+                }
+                else
+                {
+                    LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.#") +"****" + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.#"+"****") + " (tap to show)";
+                }
             }
             else
             {
@@ -441,60 +450,53 @@ public partial class MainPage : ContentPage
 
     private void UpdateRecordedDataLabel()
     {
-        //var formattedString = new FormattedString();
-        //
-        //// Create spans with different colors
-        //var labelspan = new Span
-        //{
-        //    Text = "recorded CO2-Values: ",
-        //    //TextColor = Colors.Black
-        //};
-        //var dataSpan = new Span
-        //{
-        //    Text = "recorded CO2-Values: ",
-        //    //TextColor = Colors.Black
-        //};
-        //formattedString.Spans.Add(labelspan);
-        ////formattedString.Spans.Add(dataSpan);
-        //
-        //
-        //
-        ////string s = String.Join(" ", BluetoothManager.recordedData);
-        ////RecordedDataLabel.FormattedText = " recorded CO2-Values: ";
-        //
-        //try
-        //{
-        //    for (int i = 0; i < BluetoothManager.recordedData.Count; i++) //what happens if value changes during looping over it? =>
-        //    {
-        //        //var x = testSlider;
-        //        int start = (int)Math.Floor(sliderStart.Value);
-        //        int end = (int)((BluetoothManager.recordedData.Count - 1)-Math.Floor(sliderEnd.Value)); //last Index
-        //        if (i < start || i > end)
-        //        {
-        //            Span s = new Span
-        //            {
-        //                Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
-        //                TextColor = Colors.Gray
-        //            };
-        //            formattedString.Spans.Add(s);
-        //        }
-        //        else
-        //        {
-        //            Span s = new Span
-        //            {
-        //                Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
-        //                //TextColor = Colors.Black
-        //            };
-        //            formattedString.Spans.Add(s);
-        //        }
-        //    }
-        //    RecordedDataLabel.FormattedText = formattedString;
-        //}
-        //catch (Exception)
-        //{
-        //    RecordedDataLabel.Text = "retrieving Data failed, next try in 1 Minute"; //maybe keep old Data in case this happens?
-        //}
+        var formattedString = new FormattedString();
+
+        // Create spans with different colors
+        var labelspan = new Span
+        {
+            Text = "recorded CO2-Values: ",
+            //TextColor = Colors.Black
+        };
+
+        formattedString.Spans.Add(labelspan);
+
+
+        try
+        {
+            for (int i = 0; i < BluetoothManager.recordedData.Count; i++) //what happens if value changes during looping over it? =>
+            {
+                //var x = testSlider;
+                int start = (int)Math.Floor(startTrimSlider.Value);
+                int end = (int)(endTrimSlider.Value); //last Index
+                if (i < start || i > end)
+                {
+                    Span s = new Span
+                    {
+                        Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
+                        TextColor = Colors.Gray
+                    };
+                    formattedString.Spans.Add(s);
+                }
+                else
+                {
+                    Span s = new Span
+                    {
+                        Text = BluetoothManager.recordedData[i].CO2ppm.ToString() + " ",
+                        //TextColor = Colors.Black
+                    };
+                    formattedString.Spans.Add(s);
+                }
+                RecordedDataLabel.FormattedText = formattedString;
+            }
+        }
+
+        catch (Exception e)
+        {
+            RecordedDataLabel.Text = "retrieving Data failed, next try in 1 Minute"; //maybe keep old Data in case this happens?
+        }
     }
+    
 
     private void UpdateLineChart()
     {
@@ -522,9 +524,7 @@ public partial class MainPage : ContentPage
             endTrimSlider.Value = endTrimSlider.Maximum;
         }
         startTrimSliderValue = (int)startTrimSlider.Value;
-        endTrimSliderValue = (int)endTrimSlider.Value;
-
-        
+        endTrimSliderValue = (int)endTrimSlider.Value;        
     }
 
     private async void OnRequestBluetoothEnableDialog(object sender, EventArgs e)
@@ -643,6 +643,11 @@ public partial class MainPage : ContentPage
         lineChartView.HeightRequest = 0.25 * height;
         startTrimSlider.WidthRequest = 0.4 * width;
         endTrimSlider.WidthRequest = 0.4 * width;
+    }
+
+    private void OnLocationLabelTapped(object sender, TappedEventArgs e)
+    {
+        hideLocation = !hideLocation;
     }
 }
 
