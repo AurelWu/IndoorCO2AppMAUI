@@ -263,6 +263,7 @@ public partial class MainPage : ContentPage
 
         UpdateLocationLabel();
         UpdateLocationRecordingLabel();
+        UpdateLocationInfoLabel();
         //UpdateRecordedDataLabel();
         UpdateLineChart();
         UpdateStatusLabel();
@@ -389,6 +390,30 @@ public partial class MainPage : ContentPage
             LocationLabel.Text = ("");
             if (!gpsActive) LocationLabel.Text += ("GPS not enabled ");
             if (!gpsGranted) LocationLabel.Text += ("Location Permission missing");            
+        }
+    }
+
+    private void UpdateLocationInfoLabel()
+    {
+        if(OverpassModule.everFetchedLocations == false)
+        {
+            LocationInfoLabel.Text = "Press Update Locations to get nearby locations";
+        }
+        else if(OverpassModule.lastFetchWasSuccessButNoResults)
+        {
+            LocationInfoLabel.Text = "No locations in range";
+        }
+        else if(OverpassModule.lastFetchWasSuccess)
+        {
+            LocationInfoLabel.Text = "Select Location:";
+        }
+        else if(OverpassModule.lastFetchWasSuccess == false && !OverpassModule.currentlyFetching)
+        {
+            LocationInfoLabel.Text = "Update locations request failed, try again later";
+        }
+        else if(OverpassModule.currentlyFetching)
+        {
+            LocationInfoLabel.Text = "currently retrieving nearby locations";
         }
     }
 

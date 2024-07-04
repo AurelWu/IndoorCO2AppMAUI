@@ -4,7 +4,7 @@ using Microsoft.Maui.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IndoorCO2App
+namespace IndoorCO2App.Controls
 {
 
 

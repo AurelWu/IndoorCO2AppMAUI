@@ -14,6 +14,9 @@ namespace IndoorCO2App
 
         public static List<LocationData> LocationData { get; private set; }
         public static bool currentlyFetching =  false;
+        public static bool lastFetchWasSuccess = false;
+        public static bool lastFetchWasSuccessButNoResults = false;
+        public static bool everFetchedLocations = false;
 
         static OverpassModule()
         {
@@ -101,17 +104,27 @@ namespace IndoorCO2App
             }
 
             LocationData.Sort((point1, point2) => point1.distanceToGivenLocation.CompareTo(point2.distanceToGivenLocation));
-
+            if(LocationData.Count ==0)
+            {
+                lastFetchWasSuccessButNoResults= true;
+            }
+            else
+            {
+                lastFetchWasSuccessButNoResults = false;
+            }
             //spatialManager.MainActivity.InvalidateLocations = true;  //dirty flag for some UI stuff, might not be needed or maybe might
         }
 
         public static async Task FetchNearbyBuildingsAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage)
         {
+            everFetchedLocations = true;
             //userLatitude = 51.1828806;
             //userLongitude = 7.1872148;
             //searchRadius = 250;
             if (currentlyFetching) return;
             currentlyFetching = true;
+            lastFetchWasSuccess = false;
+            lastFetchWasSuccessButNoResults = false;
             Console.WriteLine("Fetch NearbyBuildings called");
             var overpassQuery = BuildOverpassQuery(userLatitude, userLongitude, searchRadius);
             //var content = new StringContent("data=" + overpassQuery);
@@ -124,10 +137,12 @@ namespace IndoorCO2App
                 var jsonData = await response.Content.ReadAsStringAsync();
                 ParseOverpassResponse(jsonData,userLatitude,userLongitude);
                 mainPage.UpdateLocationPicker();
+                lastFetchWasSuccess = true;
                 // Update UI on the main thread if necessary
             }
             else
             {
+                lastFetchWasSuccess= false;
                 // Handle unsuccessful response
             }
             currentlyFetching = false;
