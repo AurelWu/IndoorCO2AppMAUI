@@ -6,6 +6,7 @@
 //TODO: Button Functionality
 
 using Microsoft.Maui;
+using Microsoft.Maui.ApplicationModel;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -27,6 +28,7 @@ public partial class MainPage : ContentPage
 
     public static int startTrimSliderValue = 0;
     public static int endTrimSliderValue = 1;
+    public static int previousDataCount = 0;
 
     bool gpsGranted = false;
     bool gpsActive = false;
@@ -164,6 +166,7 @@ public partial class MainPage : ContentPage
         startTrimSlider.Maximum = 1;
         startTrimSliderHasBeenUsed = false;
         endTrimSliderHasBeenUsed = false;
+        previousDataCount = 0;
         //Console.WriteLine(LocationPicker);
         if (LocationPicker != null && Locations.Count>0) 
         {
@@ -551,10 +554,18 @@ public partial class MainPage : ContentPage
             
         }
 
+        if (maxSliderVal > previousDataCount)
+        {
+            int max = Math.Max(1, maxSliderVal);
+            previousDataCount = maxSliderVal;
+            if (endTrimSlider.Value == max - 1) endTrimSlider.Value = max;
+        }
+
         if (!endTrimSliderHasBeenUsed && maxSliderVal>0)
         {
             endTrimSlider.Value = endTrimSlider.Maximum;
-        }
+        }        
+
         startTrimSliderValue = (int)startTrimSlider.Value;
         endTrimSliderValue = (int)endTrimSlider.Value;        
     }
