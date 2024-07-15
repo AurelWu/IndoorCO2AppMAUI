@@ -35,6 +35,7 @@ namespace IndoorCO2App
         public static BluetoothService bluetoothService;
         public static List<SensorData> recordedData;
         public static SubmissionData submissionData;
+        public static SubmissionDataManual submissionDataManual;
         public static string deviceID;
         public static bool isGattA2DP;
         public static int rssi;
@@ -81,6 +82,13 @@ namespace IndoorCO2App
 
             if (currentTime - previousUpdate > TimeSpan.FromSeconds(refreshTime))
             {
+                if (submissionDataManual != null && SpatialManager.currentLocation != null)
+                {
+                    var lat = SpatialManager.currentLocation.Latitude;
+                    var lon = SpatialManager.currentLocation.Longitude;
+                    submissionDataManual.LatitudeData.Add(lat);
+                    submissionDataManual.LongitudeData.Add(lon);
+                }
                 previousUpdate = currentTime;
                 try
                 {
@@ -102,18 +110,38 @@ namespace IndoorCO2App
             startingTime = startTime;
         }
 
+        public static void StartNewManualRecording(LocationData location, long startTime)
+        {
+            isRecording = true;
+            recordedData = new List<SensorData>();
+            submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(deviceID),startTime);
+            startingTime = startTime;
+        }
+
         public static void StopRecording()
         {
             isRecording = false; 
         }
 
-        public static void FinishRecording(int start,int end)
+        public static void FinishRecording(int start,int end,bool manualMode, string locationNameManual, string locationAddressManual)
         {
             //Add co2 measurements to submissionData
             //ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson());
-            isRecording= false;
-            submissionData.SensorData = recordedData;
-            ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start,end));
+            if(!manualMode)
+            {
+                isRecording = false;
+                submissionData.SensorData = recordedData;
+                ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start, end),false);
+            }
+            else
+            {
+                isRecording = false;
+                submissionDataManual.sensorData = recordedData;
+                submissionDataManual.LocationName = locationNameManual;
+                submissionDataManual.LocationAddress = locationAddressManual;
+                ApiGatewayCaller.SendJsonToApiGateway(submissionDataManual.ToJson(start, end),true);
+            }
+            
         }
 
         internal static async void ScanForDevices()

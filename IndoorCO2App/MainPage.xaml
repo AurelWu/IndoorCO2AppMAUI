@@ -178,7 +178,14 @@
                 SemanticProperties.Hint="Start Recording Button"
                 Clicked="OnStartRecordingClicked"
                 HorizontalOptions="Center" />
-            
+
+            <Button
+                x:Name="StartManualRecordingButton"
+                Text="Start Manual Recording"
+                SemanticProperties.Hint="Start Manual Recording Button"
+                Clicked="OnStartManualRecordingClicked"
+                HorizontalOptions="Center" />
+
             <Button
                 x:Name="OpenMapButton"
                 Text="Open Map in Browser"
@@ -231,6 +238,63 @@
                     Clicked="OnConfirmCancelRecordingClicked"
                 HorizontalOptions="Center" />
             </HorizontalStackLayout>
+
+            <Grid
+    x:Name="StackManualName"    
+    RowDefinitions="50"
+    ColumnDefinitions="50,*"
+    RowSpacing="0"
+    ColumnSpacing="5"
+    HorizontalOptions="FillAndExpand"
+    Margin="5">
+                <Label
+        VerticalOptions="Center"
+        VerticalTextAlignment="Center"
+        Text="Name:"
+        Grid.Column="0" />
+                <Border                    
+    Stroke="{StaticResource Secondary}"
+    StrokeThickness="2"
+    Grid.Column="1"
+    Padding="0">
+
+                    <Editor
+        x:Name="ManualNameEditor"  
+        VerticalTextAlignment="Start"
+        BackgroundColor="Transparent" 
+         Focused="OnEditorFocused"
+        Unfocused="OnEditorUnfocused" />
+                </Border>
+            </Grid>
+
+            <Grid
+x:Name="StackManualAddress"    
+RowDefinitions="50"
+ColumnDefinitions="60,*"
+RowSpacing="0"
+ColumnSpacing="5"
+HorizontalOptions="FillAndExpand"
+Margin="5">
+                <Label
+    VerticalOptions="Center"
+    VerticalTextAlignment="Center"
+    Text="Address:"
+    Grid.Column="0" />
+                <Border                    
+Stroke="{StaticResource Secondary}"
+StrokeThickness="2"
+Grid.Column="1"
+Padding="0">
+
+                    <Editor
+    x:Name="ManualAddressEditor"  
+    VerticalTextAlignment="Start"
+    BackgroundColor="Transparent" 
+     Focused="OnEditorFocused"
+    Unfocused="OnEditorUnfocused" />
+                </Border>
+            </Grid>
+
 
             <StackLayout>
                 <controls:LineChartView x:Name="lineChartView"/>

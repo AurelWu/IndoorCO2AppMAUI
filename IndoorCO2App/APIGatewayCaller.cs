@@ -14,15 +14,22 @@ namespace IndoorCO2App
         };
 
         // Modify sendJsonToApiGateway to accept callback
-        public static async Task SendJsonToApiGateway(string json)
+        public static async Task SendJsonToApiGateway(string json, bool manualMode)
         {
             var successState = string.Empty;
 
             try
             {
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await client.PostAsync("https://wzugdkxj15.execute-api.eu-central-1.amazonaws.com/Standard/CO2", content);
+                HttpResponseMessage response;
+                if(!manualMode)
+                {
+                    response = await client.PostAsync("https://wzugdkxj15.execute-api.eu-central-1.amazonaws.com/Standard/CO2", content);
+                }                
+                else
+                {
+                    response = await client.PostAsync("https://40zfjhm5tg.execute-api.eu-central-1.amazonaws.com/SendManualCO2Data", content);
+                }
 
                 if (response.IsSuccessStatusCode)
                 {

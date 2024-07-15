@@ -41,11 +41,20 @@ namespace IndoorCO2App.Platforms.iOS.Utils
         /// <param name="rootView">Root view.</param>
         private static double GetViewRelativeBottom(this UIView view, UIView rootView)
         {
-            // https://developer.apple.com/documentation/uikit/uiview/1622424-convertpoint
-            var viewRelativeCoordinates = rootView.ConvertPointFromView(new CGPoint(0, 0), view);
-            var activeViewRoundedY = Math.Round(viewRelativeCoordinates.Y, 2);
+            try
+            {
+                // https://developer.apple.com/documentation/uikit/uiview/1622424-convertpoint
+                var viewRelativeCoordinates = rootView.ConvertPointFromView(new CGPoint(0, 0), view);
+                var activeViewRoundedY = Math.Round(viewRelativeCoordinates.Y, 2);
 
-            return activeViewRoundedY + view.Frame.Height;
+                return activeViewRoundedY + view.Frame.Height;
+            }
+            catch (Exception)
+            {
+
+                return 0;
+            }
+            
         }
 
         private static double GetOverlapDistance(double relativeBottom, UIView rootView, CGRect keyboardFrame)

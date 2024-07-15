@@ -5,6 +5,7 @@
 //TODO: Layout
 //TODO: Button Functionality
 
+using IndoorCO2App.Controls;
 using Microsoft.Maui;
 using Microsoft.Maui.ApplicationModel;
 using Newtonsoft.Json.Linq;
@@ -21,10 +22,12 @@ namespace IndoorCO2App;
 
 public partial class MainPage : ContentPage
 {
+    public bool manualRecordingMode = false;
     bool hideLocation = true;
 
     bool startTrimSliderHasBeenUsed = false;
     bool endTrimSliderHasBeenUsed = false;
+    bool endtrimSliderIsAtmax = true;
 
     public static int startTrimSliderValue = 0;
     public static int endTrimSliderValue = 1;
@@ -82,6 +85,7 @@ public partial class MainPage : ContentPage
 
         // Set the button's minimum width
         StartRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
+        StartManualRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
         UpdateLocationsButton.MinimumWidthRequest = buttonWidth70Percent;
         OpenMapButton.MinimumWidthRequest = buttonWidth70Percent;
         OpenImprintButton.MinimumWidthRequest = buttonWidth70Percent;
@@ -110,6 +114,7 @@ public partial class MainPage : ContentPage
         SearchRangeStackLayout.IsVisible = false;
         LocationStackLayout.IsVisible = false;
         StartRecordingButton.IsVisible = false;
+        StartManualRecordingButton.IsVisible = false;
         OpenImprintButton.IsVisible = false;
         OpenMapButton.IsVisible = false;
         UpdateLocationsButton.IsVisible = false;
@@ -117,6 +122,43 @@ public partial class MainPage : ContentPage
         //StackLayoutTrimSliderEnd.IsVisible = true;        
         StackCheckboxesDoorVentilation.IsVisible = true;
         StackNotes.IsVisible = true;
+        lineChartView.IsVisible = true;
+        startTrimSlider.IsVisible = true;
+        endTrimSlider.IsVisible = true;
+        TrimSliderInfoText.IsVisible = true;
+
+        startTrimSliderHasBeenUsed = false;
+        endTrimSliderHasBeenUsed = false;
+    }
+
+    private void SwitchToManualRecordingUI()
+    {
+        NotesEditor.Text = "";
+        //wakeLockService.AcquireWakeLock();
+        //StackRangeTrimmer.IsVisible = true;        
+        FinishRecordingButton.Text = "Submit Data";
+        FinishRecordingButton.IsEnabled = true;
+        FinishRecordingButton.IsVisible = true;
+        RequestCancelRecordingButton.IsVisible = true;
+        ConfirmCancelRecordingButton.IsVisible = false;
+        //RecordedDataLabel.IsVisible = true; //RecordedDataLabel is temporary instead of lineChart
+        LocationLabelRecording.IsVisible = false;
+        LocationLabel.IsVisible = true;
+        SearchRangeStackLayout.IsVisible = false;
+        LocationStackLayout.IsVisible = false;
+        StartRecordingButton.IsVisible = false;
+        StartManualRecordingButton.IsVisible = false;
+        OpenImprintButton.IsVisible = false;
+        OpenMapButton.IsVisible = false;
+        UpdateLocationsButton.IsVisible = false;
+        //StackLayoutTrimSliderStart.IsVisible = true;
+        //StackLayoutTrimSliderEnd.IsVisible = true;        
+        StackCheckboxesDoorVentilation.IsVisible = true;
+        StackNotes.IsVisible = true;
+        StackManualName.IsVisible = true;
+        StackManualAddress.IsVisible = true;
+        ManualNameEditor.Text = "";
+        ManualAddressEditor.Text = "";
         lineChartView.IsVisible = true;
         startTrimSlider.IsVisible = true;
         endTrimSlider.IsVisible = true;
@@ -139,6 +181,7 @@ public partial class MainPage : ContentPage
         SearchRangeStackLayout.IsVisible = true;
         LocationStackLayout.IsVisible = true;
         StartRecordingButton.IsVisible = true;
+        StartManualRecordingButton.IsVisible = true;
         OpenImprintButton.IsVisible = true;
         OpenMapButton.IsVisible = true;
         UpdateLocationsButton.IsVisible = true;
@@ -146,6 +189,8 @@ public partial class MainPage : ContentPage
         //StackLayoutTrimSliderEnd.IsVisible = false;        
         StackCheckboxesDoorVentilation.IsVisible = false;
         StackNotes.IsVisible = false; ;
+        StackManualName.IsVisible = false;
+        StackManualAddress.IsVisible = false;
         lineChartView.IsVisible = false;
         startTrimSlider.IsVisible = false;
         endTrimSlider.IsVisible = false;
@@ -158,9 +203,10 @@ public partial class MainPage : ContentPage
         OverpassModule.FetchNearbyBuildingsAsync(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange,this); //TODO => 
     }
 
-    private void OnStartRecordingClicked(object sender, EventArgs e)
+    private void StartRecording(bool manualMode)
     {
-        //SemanticScreenReader.Announce(StartRecordingButton.Text);
+        BluetoothManager.recordedData = new List<SensorData>();
+        this.manualRecordingMode = manualMode;
         endTrimSlider.Minimum = 0;
         endTrimSlider.Maximum = 1;
         startTrimSlider.Maximum = 1;
@@ -168,15 +214,43 @@ public partial class MainPage : ContentPage
         endTrimSliderHasBeenUsed = false;
         previousDataCount = 0;
         //Console.WriteLine(LocationPicker);
-        if (LocationPicker != null && Locations.Count>0) 
+        if (LocationPicker != null && Locations.Count > 0 && !manualMode)
         {
-            if(LocationPicker.SelectedItem != null)
+            if (LocationPicker.SelectedItem != null)
             {
                 selectedLocation = (LocationData)LocationPicker.SelectedItem;
             }
-            SwitchToRecordingUI();
+            SwitchToRecordingUI();            
             BluetoothManager.StartNewRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
-        }        
+        }
+        else if (manualMode)
+        {
+            SwitchToManualRecordingUI();
+            BluetoothManager.StartNewManualRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+        }
+    }
+
+    private void OnStartRecordingClicked(object sender, EventArgs e)
+    {
+        StartRecording(false);
+    }
+
+
+
+    private async void OnStartManualRecordingClicked(object sender, EventArgs e)
+    {
+        //shows pop up with warning to only use if really needed.
+        string msg = "Only use this recording mode if the location is not in the List above or if receiving Locations does not work currently. Recordings in this mode are not put into the map instantly but manually looked at and then added to the Map if the location can be validated. Using this mode the exact GPS Coordinates taken during the recording duration will be submitted at the end!";
+
+        bool result = await DisplayAlert("Manual Recording Mode", msg, "Understood", "Cancel");
+        if (result==true)
+        {            
+            StartRecording(true);
+        }
+        else
+        {
+            
+        }
     }
 
     private void OnFinishRecordingClicked(object sender, EventArgs e)
@@ -185,16 +259,28 @@ public partial class MainPage : ContentPage
         FinishRecordingButton.IsEnabled = false; ;
         int trimStart = (int)Math.Floor(startTrimSlider.Value);
         int trimEnd = (int)Math.Floor(endTrimSlider.Value);
-        BluetoothManager.FinishRecording(trimStart,trimEnd);
+        BluetoothManager.FinishRecording(trimStart,trimEnd,manualRecordingMode, ManualNameEditor.Text, ManualAddressEditor.Text);
     }
     
-    private void OnRequestCancelRecordingClicked(object sender, EventArgs e)
+    private async void OnRequestCancelRecordingClicked(object sender, EventArgs e)
     {
-        RequestCancelRecordingButton.IsVisible = false;
-        ConfirmCancelRecordingButton.IsVisible = true;
+        bool result = await DisplayAlert("Cancel Recording", "Are you sure you want to cancel the recording?", "Yes", "No");
+        if (result == true)
+        {
+            CancelRecording();
+        }
+        else
+        {
+
+        }
     }
 
     private void OnConfirmCancelRecordingClicked(object sender, EventArgs e)
+    {
+        CancelRecording();
+    }
+
+    private void CancelRecording()
     {
         BluetoothManager.StopRecording();
         SwitchToStandardUI();
@@ -203,7 +289,7 @@ public partial class MainPage : ContentPage
     private void OnShowMapInBrowserClicked(object sender, EventArgs e)
     {
         //SemanticScreenReader.Announce(OpenMapButton.Text);
-        var url = "http://indoorco2map.s3-website.eu-central-1.amazonaws.com/";
+        var url = "https://indoorco2map.com/";
         Launcher.OpenAsync(url);
 
     }
@@ -279,11 +365,21 @@ public partial class MainPage : ContentPage
     {
         if(gpsActive && gpsGranted && btGranted && btActive && OverpassModule.LocationData.Count > 0 && BluetoothManager.discoveredDevices.Count>0 && BluetoothManager.currentCO2Reading > 0)
         {                        
-            StartRecordingButton.IsEnabled = true;
+            StartRecordingButton.IsEnabled = true;         
         }
         else
         {
             StartRecordingButton.IsEnabled = false;
+         
+        }
+
+        if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.everFetchedLocations==true && OverpassModule.currentlyFetching==false && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
+        {        
+            StartManualRecordingButton.IsEnabled = true;
+        }
+        else
+        {
+            StartManualRecordingButton.IsEnabled = false;
         }
     }
 
@@ -293,15 +389,25 @@ public partial class MainPage : ContentPage
         int trimStart = (int)Math.Floor(startTrimSlider.Value);
         int trimEnd = (int)Math.Floor(endTrimSlider.Value);
         if ( trimEnd-trimStart  >= 5 && BluetoothManager.isRecording)
-        {
-            FinishRecordingButton.IsEnabled = true;
-            FinishRecordingButton.Text = "Submit Data";
+        {            
+            if (manualRecordingMode && (ManualNameEditor.Text.Length < 1 || ManualAddressEditor.Text.Length < 1))
+            {
+                FinishRecordingButton.IsEnabled = false;
+                FinishRecordingButton.Text = "Submit Data (needs Address & Name)";
+            }
+            else
+            {
+                FinishRecordingButton.IsEnabled = true;
+                FinishRecordingButton.Text = "Submit Data";
+            }
         }
         else if(BluetoothManager.isRecording)
         {
             FinishRecordingButton.IsEnabled = false;
             FinishRecordingButton.Text = "Submit Data (needs 5 Minutes of Data)";
         }
+        
+        
     }
 
     private void UpdateStatusLabel()
@@ -565,6 +671,19 @@ public partial class MainPage : ContentPage
         {
             endTrimSlider.Value = endTrimSlider.Maximum;
         }        
+        if(endtrimSliderIsAtmax)
+        {
+            endTrimSlider.Value = endTrimSlider.Maximum;
+        }
+
+        if(endTrimSlider.Value == endTrimSlider.Maximum)
+        {
+            endtrimSliderIsAtmax = true;
+        }
+        else
+        {
+            endtrimSliderIsAtmax= false;
+        }
 
         startTrimSliderValue = (int)startTrimSlider.Value;
         endTrimSliderValue = (int)endTrimSlider.Value;        
@@ -608,6 +727,10 @@ public partial class MainPage : ContentPage
     public void OnTransmissionSuccess(string msg)
     {
         FinishRecordingButton.Text = "Transmission successful!";
+        OverpassModule.lastFetchWasSuccess = false;
+        OverpassModule.lastFetchWasSuccessButNoResults = false;
+        OverpassModule.everFetchedLocations = false;
+
         Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(4), () =>
         {
             SwitchToStandardUI();
@@ -648,6 +771,10 @@ public partial class MainPage : ContentPage
         //sliderEndValueLabel.Text = "Remove last " + $"{(int)Math.Floor(e.NewValue)}";
         //UpdateFinishRecordingButton();
         endTrimSliderHasBeenUsed = true;
+        if(endTrimSlider.Value < endTrimSlider.Maximum)
+        {
+            endtrimSliderIsAtmax = false;
+        }
         //UpdateLineChart();
     }
 
