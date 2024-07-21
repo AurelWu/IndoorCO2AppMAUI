@@ -9,6 +9,7 @@ using Microsoft.Maui.Controls.PlatformConfiguration;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.iOS;
 
 namespace IndoorCO2App
 {
@@ -17,10 +18,28 @@ namespace IndoorCO2App
         public static IBluetoothLE ble;
         public static IAdapter adapter;
         public static BluetoothState state;
+        public static int prerecordingLength;
         public static int currentCO2Reading = 0;
         public static int sensorUpdateInterval = 0;
         public static IReadOnlyList<IDevice> discoveredDevices;
+
+        //Airvalent Approach still experimental and might not be the best
+        //Tested only with Firmware Version: v1.41
+        public static Guid AirvalentServiceUUID = Guid.Parse("B81C94A4-6B2B-4D41-9357-0C8229EA02DF");
+        public static Guid AirvalentUpdateIntervalCharacteristic = Guid.Parse("b1c48eea-4f5c-44f7-9797-73e0ce294881");
+        public static Guid AirvalentHistoryCharacteristic = Guid.Parse("426d4fa2-50ea-4a8d-b88c-c58b3e78f857");
+        public static Guid AirvalentDataChunkCount = Guid.Parse("a6cf90e4-7ec0-46b2-a90a-5c2580f85a43"); // 0 => just current data in History Characteristic is available (not sure yet what happens if we set the airvalentHistoryPointerCharacteristic to a value where no data is yet? does it return old data / random data / crash / ignore? 
+        //	↑	↑	↑	↑	↑
+        //First 8 Bytes are some headers/meta data, after that 8 Bytes per minute: Layout:
+        //14 Bit: CO2 Value
+        //10 Bit: Temperature 
+        //24 Bit: unknown / probably Humidity and something else? or unused?)
+        //16 Bit: Timer/Counter, Byte 6 increments by 15 every minute, Byte 7 increases whenever Byte 7 overflows (maybe Bit 5 is also timer/counter?)
+
+        public static Guid airvalentHistoryPointerCharacteristic = Guid.Parse("cdbde84d-2dc6-46e4-8d6b-f3ababf560aa");
+
         public static Guid AranetServiceUUID = Guid.Parse("0000FCE0-0000-1000-8000-00805f9b34fb");
+        
         public static Guid Aranet_CharacteristicUUID = Guid.Parse("f0cd3001-95da-4f4b-9ac8-aa55d312af0c"); //Characteristic which has the data we need
         public static Guid ARANET_WRITE_CHARACTERISTIC_UUID = Guid.Parse("f0cd1402-95da-4f4b-9ac8-aa55d312af0c");
         public static Guid ARANET_HISTORY_V2_CHARACTERISTIC_UUID = Guid.Parse("f0cd2005-95da-4f4b-9ac8-aa55d312af0c");
@@ -44,6 +63,8 @@ namespace IndoorCO2App
         public static bool currentlyUpdating; //not yet used as updates seem to be reasonable fast
         public static bool lastAttemptFailed = false;
 
+        public static Dictionary<CO2MonitorType,Guid> serviceUUIDByMonitorType;
+
         internal async static void Init()
         {
 
@@ -55,6 +76,9 @@ namespace IndoorCO2App
                 bluetoothService = new BluetoothServiceWindows();
 #endif
 
+            serviceUUIDByMonitorType = new Dictionary<CO2MonitorType, Guid>();
+            serviceUUIDByMonitorType.Add(CO2MonitorType.Aranet, AranetServiceUUID);
+            serviceUUIDByMonitorType.Add(CO2MonitorType.Airvalent, AirvalentServiceUUID);
             recordedData = new List<SensorData>();
             ble = CrossBluetoothLE.Current;
             discoveredDevices = new List<IDevice>(); // we init a dummy to avoid null checks
@@ -75,7 +99,7 @@ namespace IndoorCO2App
 
         }
 
-        internal static void Update()
+        internal static void Update(CO2MonitorType monitorType)
         {
             DateTime currentTime = DateTime.Now;            
             timeToNextUpdate = (int)(refreshTime - ((currentTime - previousUpdate).TotalSeconds));
@@ -92,7 +116,7 @@ namespace IndoorCO2App
                 previousUpdate = currentTime;
                 try
                 {
-                    ScanForDevices();
+                    ScanForDevices(monitorType);
                 }
                 catch
                 {
@@ -144,8 +168,17 @@ namespace IndoorCO2App
             
         }
 
-        internal static async void ScanForDevices()
+        internal static async void ScanForDevices(CO2MonitorType monitorType)
         {
+            Guid serviceUUID;
+            if (serviceUUIDByMonitorType.ContainsKey(monitorType))
+            {
+                serviceUUID = serviceUUIDByMonitorType[monitorType];
+            }            
+            else
+            {
+                throw new System.NotImplementedException("monitorType not supported");
+            }
             lastAttemptFailed = false;
             bool checkPermissions = BluetoothPermissions.CheckStatus();
             await BluetoothPermissions.RequestAsync();
@@ -156,7 +189,7 @@ namespace IndoorCO2App
             
             if (ble == null) return; // if still null after trying to Init we abort
             var scanFilterOptions = new ScanFilterOptions();
-            scanFilterOptions.ServiceUuids = new[] { AranetServiceUUID };
+            scanFilterOptions.ServiceUuids = new[] { serviceUUID };
             adapter.ScanMatchMode = ScanMatchMode.STICKY;
             adapter.ScanMode = ScanMode.LowLatency;
 
@@ -199,7 +232,7 @@ namespace IndoorCO2App
                 
                 //TODO Handle case of multiple Devices => Idea is that User can specify the MAC of the device? => or rather in a Advanced Menu, sees all Devices shown with Details and then picks it and we store it
                 //for now we always just use the first device (and in case of multiple, the idea is to filter it down to 1 as in mentioned in comment above
-                ConnectToDevice(discoveredDevices[0]);
+                ConnectToDevice(discoveredDevices[0],monitorType);
             }
 
             if (discoveredDevices == null)
@@ -214,7 +247,7 @@ namespace IndoorCO2App
             }
         }
 
-        internal static async void ConnectToDevice(IDevice device)
+        internal static async void ConnectToDevice(IDevice device, CO2MonitorType monitorType)
         {
             long cur = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             int elapsedSeconds = (int)Math.Ceiling((cur - startingTime)/1000d);
@@ -226,16 +259,18 @@ namespace IndoorCO2App
 
             try
             {
-                IService r = await device.GetServiceAsync(AranetServiceUUID);
+                IService service = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType]);
                 IReadOnlyList<IService> results = await device.GetServicesAsync();
-                if (results.Count > 0)
+                //IService results = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType]);
+
+                if (service != null)
                 {
-                    foreach (var service in results)
+                    if (monitorType == CO2MonitorType.Aranet)
                     {
-                        var aranet4CharacteristicLive = await service.GetCharacteristicAsync(Aranet_CharacteristicUUID);
-                        var aranet4CharacteristicTotalDataPoints = await service.GetCharacteristicAsync(ARANET_TOTAL_READINGS_CHARACTERISTIC_UUID);
-                        var aranet4CharacteristicWriter = await service.GetCharacteristicAsync(ARANET_WRITE_CHARACTERISTIC_UUID);
-                        var aranet4CharacteristicHistoryV2 = await service.GetCharacteristicAsync(ARANET_HISTORY_V2_CHARACTERISTIC_UUID);
+                        ICharacteristic aranet4CharacteristicLive = await service.GetCharacteristicAsync(Aranet_CharacteristicUUID);
+                        ICharacteristic aranet4CharacteristicTotalDataPoints = await service.GetCharacteristicAsync(ARANET_TOTAL_READINGS_CHARACTERISTIC_UUID);
+                        ICharacteristic aranet4CharacteristicWriter = await service.GetCharacteristicAsync(ARANET_WRITE_CHARACTERISTIC_UUID);
+                        ICharacteristic aranet4CharacteristicHistoryV2 = await service.GetCharacteristicAsync(ARANET_HISTORY_V2_CHARACTERISTIC_UUID);
 
 
 
@@ -298,7 +333,7 @@ namespace IndoorCO2App
                             {
                                 return;
                             }
-                        
+
                         }
 
                         if (isRecording)
@@ -309,18 +344,18 @@ namespace IndoorCO2App
                                 //TODO calculalte actual timeSinceRecordingstart and always use the ceiling
                                 ushort start = (ushort)(totalDataPoints - (0 + elapsedMinutes)); //change to higher value to grab a bit of historical data
                                 if (start < 0) start = 0;
-                                var requestData = PackDataRequestCO2History(start);
+                                var requestData = AranetPackDataRequestCO2History(start);
                                 int response = -999;
                                 try
                                 {
                                     response = await aranet4CharacteristicWriter.WriteAsync(requestData);
                                 }
-                                catch (Exception)
+                                catch
                                 {
                                     return;
                                 }
 
-                                
+
 
                                 (byte[] data, int resultCode) history;
                                 try
@@ -354,18 +389,110 @@ namespace IndoorCO2App
                                 }
                                 //WE keep a few historical data points which we transmit so we can also get data if sensor is calibrated okay but in UI it should only start with actual recoding
                             }
+                        }                        
+                    }
+                    else if (monitorType == CO2MonitorType.Airvalent)
+                    {
+                        ICharacteristic airValentUpdateInterval = await service.GetCharacteristicAsync(AirvalentUpdateIntervalCharacteristic);
+                        ICharacteristic airValentHistory =  await service.GetCharacteristicAsync(AirvalentHistoryCharacteristic);
+                        ICharacteristic airValentHistoryPointer = await service.GetCharacteristicAsync(airvalentHistoryPointerCharacteristic);
+                        ICharacteristic airValentChunkCounter = await service.GetCharacteristicAsync(AirvalentDataChunkCount);
+
+                        if (airValentUpdateInterval != null)
+                        {
+                            var reply = await airValentUpdateInterval.ReadAsync();
+                            byte[] intervalBytes = reply.data;
+                            ushort interval = BitConverter.ToUInt16(intervalBytes,0);
+                            sensorUpdateInterval = interval;
                         }
+
+                        ushort chunkCount = 0;
+                        if (airValentChunkCounter != null)
+                        {
+                            var reply = await airValentChunkCounter.ReadAsync();
+                            byte[] chunkCounterBytes = reply.data;
+                            chunkCount = BitConverter.ToUInt16(chunkCounterBytes, 0);                            
+                        }
+
+
+                        if (chunkCount > 0)
+                        {
+                            int response = -999;
+                            byte[] msg = AirvalentSetHistoryPointerMsgData();
+                            try
+                            {
+                                response = await airValentHistoryPointer.WriteAsync(msg);
+                                System.Diagnostics.Debug.WriteLine(response);
+
+                            }
+                            catch
+                            {
+                                return;
+                            }                           
+                        }
+
+                        var reply1 = await airValentHistory.ReadAsync();
+                        List<byte> bytes1 = reply1.data.ToList();
+                        bytes1.RemoveRange(0,8); //first entry is not the time series we are interested in (we might use some info of it later, so far not checked what's in it)
+                        var reply2 = await airValentHistory.ReadAsync();
+                        List<byte> bytes2 = reply2.data.ToList();
+                        bytes2.RemoveRange(0,8); //first entry is not the time series we are interested in (we might use some info of it later, so far not checked what's in it)
+                        if (chunkCount > 0)
+                        {
+                            bytes1.AddRange(bytes2);  //first entry should be oldest
+                        }
+
+                        List<ushort> co2values = new List<ushort>();
+                        for(int i = 0;i<bytes1.Count;i+=8)
+                        {
+                            byte co2byte2shift = (byte)(bytes1[i + 1] << 2); //we remove first 2 byte
+                            co2byte2shift = (byte)(co2byte2shift >> 2); //we shift it back
+                            byte[] co2bytes = new byte[2] { bytes1[i + 0], co2byte2shift };
+                            ushort co2Value = BitConverter.ToUInt16(co2bytes, 0);
+                            co2values.Add(co2Value);
+                        }
+
+                        int amountOfValuesToTake = elapsedMinutes + 1 + prerecordingLength; //we always take at least 1
+                        if (elapsedMinutes > 120) elapsedSeconds = 120;
+                        if (amountOfValuesToTake > co2values.Count)
+                        {
+                            amountOfValuesToTake= co2values.Count;
+                        }
+
+                        co2values.Reverse();
+                        List<ushort> valuesTaken = new List<ushort>();
+                        for(int i = 0; i<amountOfValuesToTake;i++)
+                        {
+                            valuesTaken.Add(co2values[i]);
+                        }
+                        valuesTaken.Reverse();
+
+                        recordedData.Clear();
+                        foreach (var e in valuesTaken)
+                        {
+                            recordedData.Add(new SensorData(e, 0));
+                        }
+                        if (recordedData.Count > 0)
+                        {
+                            currentCO2Reading = recordedData.Last().CO2ppm;
+                        }
+
+                        //write to HistoryPointer if chunkCount >0
+                        //collect all data
+                        //create CO2-Datalist
+                        //=> trim to start of recording
+                        //:-)                        
                     }
                 }
             }
             catch
-            { 
+            {
                 lastAttemptFailed = true;
             }
 
         }
 
-        public static byte[] PackDataRequestCO2History(ushort startIndex)
+        public static byte[] AranetPackDataRequestCO2History(ushort startIndex)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -379,7 +506,25 @@ namespace IndoorCO2App
                 }
 
                 byte[] data = memoryStream.ToArray();
+
+
                 System.Diagnostics.Debug.WriteLine("Sent data: " + BitConverter.ToString(data));
+                return memoryStream.ToArray();
+            }
+        }
+
+        public static byte[] AirvalentSetHistoryPointerMsgData() //sets it to the last but one data array (the newest already completely filled one)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                byte b1 = 0xbf;
+                byte b2 = 0x04;
+                using (var binaryWriter = new BinaryWriter(memoryStream))
+                {
+                    binaryWriter.Write(b1);
+                    binaryWriter.Write(b2);
+                }
+                byte[] data = memoryStream.ToArray();
                 return memoryStream.ToArray();
             }
         }

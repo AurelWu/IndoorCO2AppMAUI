@@ -48,12 +48,15 @@ public partial class MainPage : ContentPage
 
     public static bool hasOpenWindowsDoors;
     public static bool hasVentilationSystem;
+    internal CO2MonitorType monitorType;
     //public static IWakeLockService wakeLockService;
 
     //public const string CHANNEL_ID = "com.companyname.indoorco2app.channel";
 
     public MainPage()
 	{
+        //monitorType = CO2MonitorType.Aranet; //HARDCODED FOR NOW!
+        monitorType = CO2MonitorType.Aranet; //HARDCODED FOR NOW!
         MainPageSingleton = this;
         Locations = new List<LocationData>();        
         //TODO => Overpass search range based on radio button instead of hardcoded 100
@@ -326,7 +329,7 @@ public partial class MainPage : ContentPage
                 UpdateUI();
                 
                 
-                BluetoothManager.Update();
+                BluetoothManager.Update(monitorType);
 
                 //non-UI Stuff now done in foreground Service
                 if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))

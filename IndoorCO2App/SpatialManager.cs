@@ -62,19 +62,19 @@ namespace IndoorCO2App
 
             catch (FeatureNotSupportedException fnsEx)
             {
-                locationUpdateSuccessful = false; //maybe replace with enum?                
+                locationUpdateSuccessful = false; 
             }
             catch (FeatureNotEnabledException fneEx)
             {
-                locationUpdateSuccessful = false; //maybe replace with enum?
+                locationUpdateSuccessful = false; 
             }
             catch (PermissionException pEx)
             {
-                locationUpdateSuccessful = false; //maybe replace with enum?
+                locationUpdateSuccessful = false; 
             }
             catch (Exception ex)
             {
-                locationUpdateSuccessful = false; //maybe replace with enum?
+                locationUpdateSuccessful = false; 
             }
 
         }
