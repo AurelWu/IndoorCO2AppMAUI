@@ -22,6 +22,8 @@ namespace IndoorCO2App;
 
 public partial class MainPage : ContentPage
 {
+    private const string SelectedMonitorPreferenceKey = "SelectedMonitorIndex";
+    bool firstInit = true;
     public bool manualRecordingMode = false;
     bool hideLocation = true;
 
@@ -67,9 +69,14 @@ public partial class MainPage : ContentPage
         //TODO: => Data submission
 
         InitializeComponent();
+        CO2MonitorPicker.SelectedIndex = 0;
+        LoadMonitorType();
+        firstInit = false;
+
+        //TODO: if we have a stored value for the selection then we take that instead
+
         BluetoothManager.Init();
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(0.4));
-
         UISetup();
         SwitchToStandardUI();
         Update();
@@ -129,6 +136,7 @@ public partial class MainPage : ContentPage
         startTrimSlider.IsVisible = true;
         endTrimSlider.IsVisible = true;
         TrimSliderInfoText.IsVisible = true;
+        CO2MonitorPickerStackLayout.IsVisible = false;
 
         startTrimSliderHasBeenUsed = false;
         endTrimSliderHasBeenUsed = false;
@@ -166,6 +174,7 @@ public partial class MainPage : ContentPage
         startTrimSlider.IsVisible = true;
         endTrimSlider.IsVisible = true;
         TrimSliderInfoText.IsVisible = true;
+        CO2MonitorPickerStackLayout.IsVisible = false;
 
         startTrimSliderHasBeenUsed = false;
         endTrimSliderHasBeenUsed = false;
@@ -198,6 +207,7 @@ public partial class MainPage : ContentPage
         startTrimSlider.IsVisible = false;
         endTrimSlider.IsVisible = false;
         TrimSliderInfoText.IsVisible = false;
+        CO2MonitorPickerStackLayout.IsVisible = true;
     }
 
     private void OnUpdateLocationsClicked(object sender, EventArgs e)
@@ -539,7 +549,7 @@ public partial class MainPage : ContentPage
             }
             else if (BluetoothManager.discoveredDevices.Count == 0)
             {
-                DeviceLabel.Text = "Aranet Device not yet found. This might take a while.";
+                DeviceLabel.Text = "Device not yet found. This might take a while.";
 
                 if (BluetoothManager.lastAttemptFailed)
                 {
@@ -821,6 +831,54 @@ public partial class MainPage : ContentPage
     private void OnLocationLabelTapped(object sender, TappedEventArgs e)
     {
         hideLocation = !hideLocation;
+    }
+
+    private void OnCO2MonitorPickerSelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (firstInit) return;
+        BluetoothManager.discoveredDevices = null;
+        string picked = CO2MonitorPicker.SelectedItem.ToString();
+        int index = CO2MonitorPicker.SelectedIndex;
+
+        Preferences.Set(SelectedMonitorPreferenceKey, index);
+        
+        if (picked != null)
+        {
+            if(picked == "Aranet")
+            {
+                monitorType = CO2MonitorType.Aranet;
+            }
+            else if(picked == "Airvalent")
+            {
+                monitorType = CO2MonitorType.Airvalent;
+            }
+        }        
+    }
+
+    private void LoadMonitorType()
+    {
+        if (Preferences.ContainsKey(SelectedMonitorPreferenceKey))
+        {
+            int savedIndex = Preferences.Get(SelectedMonitorPreferenceKey, -1);
+            if (savedIndex != -1 && savedIndex < CO2MonitorPicker.Items.Count)
+            {
+                CO2MonitorPicker.SelectedIndex = savedIndex;
+
+                if (CO2MonitorPicker.SelectedItem.ToString() == "Aranet")
+                {
+                    monitorType = CO2MonitorType.Aranet;
+                }
+                else if(CO2MonitorPicker.SelectedItem.ToString() == "Airvalent")
+                {
+                    monitorType = CO2MonitorType.Airvalent;
+                }
+            }
+        }
+        else
+        {
+            CO2MonitorPicker.SelectedIndex = 0; // Set default selected item if no preference is stored
+            monitorType = CO2MonitorType.Aranet;
+        }
     }
 
     public string GetNotesEditorText()

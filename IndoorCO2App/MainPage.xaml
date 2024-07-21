@@ -31,6 +31,19 @@
                 <ImageButton x:Name="ButtonBluetoothPermissions" Source="bluetoothscan.png" Clicked="OnRequestBluetoothPermissionsDialog" Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
             </HorizontalStackLayout>
 
+            <HorizontalStackLayout         
+                x:Name="CO2MonitorPickerStackLayout"
+                Spacing="10"
+                VerticalOptions="Start">
+                <Label x:Name="DevicePickerLabel" Text="CO2-Monitor:" FontSize="14" VerticalOptions="Center" />
+                <Picker x:Name="CO2MonitorPicker" VerticalOptions="Center" HorizontalOptions="FillAndExpand" SelectedIndexChanged="OnCO2MonitorPickerSelectedIndexChanged"> 
+                    <Picker.Items>
+                        <x:String>Aranet</x:String>
+                        <x:String>Airvalent</x:String>
+                    </Picker.Items>
+                </Picker>
+            </HorizontalStackLayout>
+
             <Label                
                 x:Name="StatusLabel"
                 Text="Status Text"                
