@@ -376,7 +376,7 @@ public partial class MainPage : ContentPage
 
     private void UpdateStartRecordingButton()
     {
-        if(gpsActive && gpsGranted && btGranted && btActive && OverpassModule.LocationData.Count > 0 && BluetoothManager.discoveredDevices.Count>0 && BluetoothManager.currentCO2Reading > 0)
+        if(gpsActive && gpsGranted && btGranted && btActive && OverpassModule.LocationData.Count > 0 && BluetoothManager.discoveredDevices!=null && BluetoothManager.discoveredDevices.Count>0 && BluetoothManager.currentCO2Reading > 0)
         {                        
             StartRecordingButton.IsEnabled = true;         
         }
@@ -386,7 +386,7 @@ public partial class MainPage : ContentPage
          
         }
 
-        if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.everFetchedLocations==true && OverpassModule.currentlyFetching==false && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
+        if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.everFetchedLocations==true && OverpassModule.currentlyFetching==false && BluetoothManager.discoveredDevices != null && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
         {        
             StartManualRecordingButton.IsEnabled = true;
         }
