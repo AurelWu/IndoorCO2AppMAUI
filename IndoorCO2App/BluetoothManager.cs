@@ -9,6 +9,7 @@ using Microsoft.Maui.Controls.PlatformConfiguration;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.iOS;
 
 namespace IndoorCO2App
@@ -22,6 +23,10 @@ namespace IndoorCO2App
         public static int currentCO2Reading = 0;
         public static int sensorUpdateInterval = 0;
         public static IReadOnlyList<IDevice> discoveredDevices;
+
+
+        public static Guid InkbirdServiceUUID = Guid.Parse("0000ffe0-0000-1000-8000-00805f9b34fb");
+        public static Guid InkbirdCO2NotifyCharacteristic = Guid.Parse("0000ffe4-0000-1000-8000-00805f9b34fb");
 
         //Airvalent Approach still experimental and might not be the best
         //Tested only with Firmware Version: v1.41
@@ -62,8 +67,10 @@ namespace IndoorCO2App
         public static int gattStatus;
         public static bool currentlyUpdating; //not yet used as updates seem to be reasonable fast
         public static bool lastAttemptFailed = false;
+        public static bool InkbirdAlreadyHookedUp = false;
 
         public static Dictionary<CO2MonitorType,Guid> serviceUUIDByMonitorType;
+        public static ICharacteristic inkbirdCO2NotifyCharacteristic;
 
         internal async static void Init()
         {
@@ -77,8 +84,9 @@ namespace IndoorCO2App
 #endif
 
             serviceUUIDByMonitorType = new Dictionary<CO2MonitorType, Guid>();
-            serviceUUIDByMonitorType.Add(CO2MonitorType.Aranet, AranetServiceUUID);
+            serviceUUIDByMonitorType.Add(CO2MonitorType.Aranet4, AranetServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.Airvalent, AirvalentServiceUUID);
+            serviceUUIDByMonitorType.Add(CO2MonitorType.InkbirdIAMT1, InkbirdServiceUUID);
             recordedData = new List<SensorData>();
             ble = CrossBluetoothLE.Current;
             discoveredDevices = new List<IDevice>(); // we init a dummy to avoid null checks
@@ -132,6 +140,7 @@ namespace IndoorCO2App
             recordedData = new List<SensorData>();
             submissionData = new SubmissionData(UserIDManager.GetEncryptedID(deviceID), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
             startingTime = startTime;
+            InkbirdAlreadyHookedUp = false;
         }
 
         public static void StartNewManualRecording(LocationData location, long startTime)
@@ -140,11 +149,12 @@ namespace IndoorCO2App
             recordedData = new List<SensorData>();
             submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(deviceID),startTime);
             startingTime = startTime;
+            InkbirdAlreadyHookedUp = false;
         }
 
         public static void StopRecording()
         {
-            isRecording = false; 
+            isRecording = false;            
         }
 
         public static void FinishRecording(int start,int end,bool manualMode, string locationNameManual, string locationAddressManual)
@@ -165,7 +175,9 @@ namespace IndoorCO2App
                 submissionDataManual.LocationAddress = locationAddressManual;
                 ApiGatewayCaller.SendJsonToApiGateway(submissionDataManual.ToJson(start, end),true);
             }
+                       
             
+
         }
 
         internal static async void ScanForDevices(CO2MonitorType monitorType)
@@ -189,7 +201,10 @@ namespace IndoorCO2App
             
             if (ble == null) return; // if still null after trying to Init we abort
             var scanFilterOptions = new ScanFilterOptions();
-            scanFilterOptions.ServiceUuids = new[] { serviceUUID };
+            if(monitorType != CO2MonitorType.InkbirdIAMT1)
+            {
+                scanFilterOptions.ServiceUuids = new[] { serviceUUID };
+            }            
             adapter.ScanMatchMode = ScanMatchMode.STICKY;
             adapter.ScanMode = ScanMode.LowLatency;
 
@@ -198,7 +213,15 @@ namespace IndoorCO2App
                 await adapter.StartScanningForDevicesAsync(scanFilterOptions);
                 await adapter.StopScanningForDevicesAsync();
                 discoveredDevices = adapter.DiscoveredDevices;
-                if(discoveredDevices.Count > 0)
+                if(monitorType == CO2MonitorType.InkbirdIAMT1)
+                {
+                    List<IDevice> inkbirdFilter = discoveredDevices.ToList();
+                    inkbirdFilter.RemoveAll(x => !x.Name.Contains("Inkbird"));
+                    discoveredDevices = inkbirdFilter;
+                }
+                
+
+                if (discoveredDevices.Count > 0)
                 {
                     rssi = discoveredDevices[0].Rssi;
                 }
@@ -210,7 +233,21 @@ namespace IndoorCO2App
                 await adapter.StartScanningForDevicesAsync(scanFilterOptions);
                 await adapter.StopScanningForDevicesAsync();
                 discoveredDevices = adapter.DiscoveredDevices;
-                if(discoveredDevices.Count>0)
+                if (monitorType == CO2MonitorType.InkbirdIAMT1)
+                {
+                    List<IDevice> unfilteredDevices = discoveredDevices.ToList();
+                    List<IDevice> filteredDevices = new List<IDevice>();
+                    for (int i = 0; i < unfilteredDevices.Count; i++)
+                    {
+                        var d = unfilteredDevices[i];
+                        if(d.Name!= null && d.Name.Contains("Ink@IAM-T1"))
+                        {
+                            filteredDevices.Add(d);
+                        }
+                    }                    
+                    discoveredDevices = filteredDevices;
+                }
+                if (discoveredDevices.Count>0)
                 {
                     rssi = discoveredDevices[0].Rssi;
                 }                
@@ -240,6 +277,12 @@ namespace IndoorCO2App
                 await adapter.StartScanningForDevicesAsync(scanFilterOptions);
                 await adapter.StopScanningForDevicesAsync();
                 discoveredDevices = adapter.DiscoveredDevices;
+                if (monitorType == CO2MonitorType.InkbirdIAMT1)
+                {
+                    List<IDevice> inkbirdFilter = discoveredDevices.ToList();
+                    inkbirdFilter.RemoveAll(x => !x.Name.Contains("Inkbird"));
+                    discoveredDevices = inkbirdFilter;
+                }
                 if (discoveredDevices.Count > 0)
                 {
                     rssi = discoveredDevices[0].Rssi;
@@ -265,7 +308,7 @@ namespace IndoorCO2App
 
                 if (service != null)
                 {
-                    if (monitorType == CO2MonitorType.Aranet)
+                    if (monitorType == CO2MonitorType.Aranet4)
                     {
                         ICharacteristic aranet4CharacteristicLive = await service.GetCharacteristicAsync(Aranet_CharacteristicUUID);
                         ICharacteristic aranet4CharacteristicTotalDataPoints = await service.GetCharacteristicAsync(ARANET_TOTAL_READINGS_CHARACTERISTIC_UUID);
@@ -483,6 +526,18 @@ namespace IndoorCO2App
                         //=> trim to start of recording
                         //:-)                        
                     }
+                    else if (monitorType== CO2MonitorType.InkbirdIAMT1)
+                    {
+                        sensorUpdateInterval = 60;
+                        if (InkbirdAlreadyHookedUp) return;
+                        inkbirdCO2NotifyCharacteristic = await service.GetCharacteristicAsync(InkbirdCO2NotifyCharacteristic);
+                        inkbirdCO2NotifyCharacteristic.ValueUpdated -= OnInkbirdCO2haracteristicValueChanged; //if already had been subscribed - not sure if that works?
+                        inkbirdCO2NotifyCharacteristic.ValueUpdated += OnInkbirdCO2haracteristicValueChanged;
+                        
+                        //await characteristic.StartUpdatesAsync();
+                        await inkbirdCO2NotifyCharacteristic.StartUpdatesAsync();
+                        InkbirdAlreadyHookedUp = true;
+                    }
                 }
             }
             catch
@@ -532,6 +587,25 @@ namespace IndoorCO2App
         static int ConvertSecondsToFullMinutes(int seconds)
         {
             return (int)Math.Ceiling(seconds / 60.0);
+        }
+
+        public static void OnInkbirdCO2haracteristicValueChanged(object sender, CharacteristicUpdatedEventArgs e)
+        {
+            if (sender == null) return;
+            var data = e.Characteristic.Value;
+            if (data == null) return;
+            if(data.Length <11) return;
+            byte fb = data[9];
+            byte sb = data[10];
+            byte[] c = new byte[] { sb, fb }; 
+            ushort CO2LiveValue = BitConverter.ToUInt16(c,0);
+            currentCO2Reading = CO2LiveValue;
+            if(isRecording)
+            {
+                recordedData.Add(new SensorData(CO2LiveValue, 0));
+            }
+            
+
         }
     }
 }

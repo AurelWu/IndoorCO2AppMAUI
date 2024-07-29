@@ -40,6 +40,7 @@
                     <Picker.Items>
                         <x:String>Aranet</x:String>
                         <x:String>Airvalent</x:String>
+                        <x:String>Inkbird IAM-T1</x:String>
                     </Picker.Items>
                 </Picker>
             </HorizontalStackLayout>

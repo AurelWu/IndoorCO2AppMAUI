@@ -58,7 +58,7 @@ public partial class MainPage : ContentPage
     public MainPage()
 	{
         //monitorType = CO2MonitorType.Aranet; //HARDCODED FOR NOW!
-        monitorType = CO2MonitorType.Aranet; //HARDCODED FOR NOW!
+        monitorType = CO2MonitorType.Aranet4; //HARDCODED FOR NOW!
         MainPageSingleton = this;
         Locations = new List<LocationData>();        
         //TODO => Overpass search range based on radio button instead of hardcoded 100
@@ -846,11 +846,15 @@ public partial class MainPage : ContentPage
         {
             if(picked == "Aranet")
             {
-                monitorType = CO2MonitorType.Aranet;
+                monitorType = CO2MonitorType.Aranet4;
             }
             else if(picked == "Airvalent")
             {
                 monitorType = CO2MonitorType.Airvalent;
+            }
+            else if(picked == "Inkbird IAM-T1")
+            {
+                monitorType = CO2MonitorType.InkbirdIAMT1;
             }
         }        
     }
@@ -866,18 +870,22 @@ public partial class MainPage : ContentPage
 
                 if (CO2MonitorPicker.SelectedItem.ToString() == "Aranet")
                 {
-                    monitorType = CO2MonitorType.Aranet;
+                    monitorType = CO2MonitorType.Aranet4;
                 }
-                else if(CO2MonitorPicker.SelectedItem.ToString() == "Airvalent")
+                else if (CO2MonitorPicker.SelectedItem.ToString() == "Airvalent")
                 {
                     monitorType = CO2MonitorType.Airvalent;
+                }
+                else if (CO2MonitorPicker.SelectedItem.ToString() == "Inkbird IAM-T1")
+                {
+                    monitorType = CO2MonitorType.InkbirdIAMT1;
                 }
             }
         }
         else
         {
             CO2MonitorPicker.SelectedIndex = 0; // Set default selected item if no preference is stored
-            monitorType = CO2MonitorType.Aranet;
+            monitorType = CO2MonitorType.Aranet4;
         }
     }
 

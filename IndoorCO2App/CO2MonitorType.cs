@@ -8,8 +8,8 @@ namespace IndoorCO2App
 {
     internal enum CO2MonitorType
     {
-        Aranet,
+        Aranet4,
         Airvalent,
-        Inkbird,                
+        InkbirdIAMT1,                
     }
 }
