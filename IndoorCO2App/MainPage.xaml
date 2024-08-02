@@ -173,7 +173,7 @@
             <Button
                 x:Name="UpdateLocationsButton"
                 Text="Update Locations"
-                SemanticProperties.Hint="UpdateLocationsButton"
+                SemanticProperties.Hint="Update Locations Button"
                 Clicked="OnUpdateLocationsClicked"
                 HorizontalOptions="Center" />
 
@@ -185,6 +185,13 @@
                 <Picker x:Name="LocationPicker" VerticalOptions="Center">
                 </Picker>
             </VerticalStackLayout>
+
+            <Button
+                x:Name="ResumeRecordingButton"
+                Text="Resume Recording"
+                SemanticProperties.Hint="Resume Recording Button"
+                Clicked="OnResumeRecordingClicked"
+                HorizontalOptions="Center" />
 
             <Button
                 x:Name="StartRecordingButton"
@@ -199,6 +206,20 @@
                 SemanticProperties.Hint="Start Manual Recording Button"
                 Clicked="OnStartManualRecordingClicked"
                 HorizontalOptions="Center" />
+
+            <HorizontalStackLayout
+                HorizontalOptions="Center">
+                <Label
+                    x:Name="PrerecordingLabel"
+                    Text="Include 15m before Recording " 
+               VerticalOptions="CenterAndExpand" 
+               HorizontalOptions="CenterAndExpand" />
+
+                <!-- Switch Control -->
+                <Switch x:Name="PrerecordingSwitch"                        
+                Toggled="OnPrerecordingSwitchToggled" />
+            </HorizontalStackLayout>
+
 
             <Button
                 x:Name="OpenMapButton"
@@ -369,7 +390,7 @@ Padding="0">
             </Grid>
 
             <HorizontalStackLayout
-                x:Name="StackCheckboxesDoorVentilation">
+                x:Name="StackCheckboxesDoor">
                 <Label Text="Open Doors/Windows"
                VerticalOptions="CenterAndExpand" 
                HorizontalOptions="CenterAndExpand" />
@@ -378,15 +399,20 @@ Padding="0">
                   IsChecked="False"
                   VerticalOptions="CenterAndExpand"
                   HorizontalOptions="CenterAndExpand"/>
+            </HorizontalStackLayout>
+            
+            <HorizontalStackLayout                
+                x:Name="StackCheckboxesVentilation">
                 <Label Text="Ventilation System"
                 VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                HorizontalOptions="CenterAndExpand"/>
                 <CheckBox x:Name="CheckBoxVentilation"
                    IsChecked="False"
                    CheckedChanged="CheckBoxVentilation_CheckedChanged"
                    VerticalOptions="CenterAndExpand"
                    HorizontalOptions="CenterAndExpand" />
             </HorizontalStackLayout>
+
 
 
 

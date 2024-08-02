@@ -19,7 +19,7 @@ namespace IndoorCO2App
         public static IBluetoothLE ble;
         public static IAdapter adapter;
         public static BluetoothState state;
-        public static int prerecordingLength;
+        public static int prerecordingLength =0;
         public static int currentCO2Reading = 0;
         public static int sensorUpdateInterval = 0;
         public static IReadOnlyList<IDevice> discoveredDevices;
@@ -134,22 +134,39 @@ namespace IndoorCO2App
             
         }
 
-        public static void StartNewRecording(LocationData location, long startTime)
+        public static void StartNewRecording(LocationData location, long startTime, bool prerecording)
         {
             isRecording = true;
             recordedData = new List<SensorData>();
             submissionData = new SubmissionData(UserIDManager.GetEncryptedID(deviceID), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
             startingTime = startTime;
             InkbirdAlreadyHookedUp = false;
+            if (prerecording)
+            {
+                prerecordingLength = 15;
+            }
+            else 
+            {
+                prerecordingLength = 0;
+            }
         }
 
-        public static void StartNewManualRecording(LocationData location, long startTime)
+        public static void StartNewManualRecording(LocationData location, long startTime, bool prerecording)
         {
             isRecording = true;
             recordedData = new List<SensorData>();
             submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(deviceID),startTime);
             startingTime = startTime;
             InkbirdAlreadyHookedUp = false;
+            if (prerecording)
+            {
+                prerecordingLength = 15;
+            }
+            else
+            {
+                prerecordingLength = 0;
+            }
+            
         }
 
         public static void StopRecording()
@@ -385,7 +402,7 @@ namespace IndoorCO2App
                             {
                                 //ushort timeSinceRecordingStart = 0;
                                 //TODO calculalte actual timeSinceRecordingstart and always use the ceiling
-                                ushort start = (ushort)(totalDataPoints - (0 + elapsedMinutes)); //change to higher value to grab a bit of historical data
+                                ushort start = (ushort)(totalDataPoints - (prerecordingLength + elapsedMinutes)); //change to higher value to grab a bit of historical data
                                 if (start < 0) start = 0;
                                 var requestData = AranetPackDataRequestCO2History(start);
                                 int response = -999;
@@ -430,6 +447,8 @@ namespace IndoorCO2App
                                 {
                                     recordedData.Add(new SensorData(e, 0));
                                 }
+                                RecoveryData.timeOfLastUpdate = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                                RecoveryData.WriteToPreferences();
                                 //WE keep a few historical data points which we transmit so we can also get data if sensor is calibrated okay but in UI it should only start with actual recoding
                             }
                         }                        
@@ -519,6 +538,8 @@ namespace IndoorCO2App
                         {
                             currentCO2Reading = recordedData.Last().CO2ppm;
                         }
+                        RecoveryData.timeOfLastUpdate = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                        RecoveryData.WriteToPreferences();
 
                         //write to HistoryPointer if chunkCount >0
                         //collect all data

@@ -7,7 +7,7 @@ namespace IndoorCO2App
     public static class UserIDManager
     {
         private const string PrefUserID = "user_id";
-        private const string PrefName = "IndoorDataCollectorUserID";
+        //private const string PrefName = "IndoorDataCollectorUserID";
 
         public static string GetUserID()
         {
@@ -30,7 +30,7 @@ namespace IndoorCO2App
 
         private static void SaveUserID(string userID)
         {
-            Preferences.Set(PrefUserID, userID);
+            Preferences.Set(PrefUserID, userID);            
         }
 
         public static string GetEncryptedID(string deviceID)

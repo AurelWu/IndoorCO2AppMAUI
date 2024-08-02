@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace IndoorCO2App
 {
@@ -35,28 +36,30 @@ namespace IndoorCO2App
             this.LocationName = "";
             this.LocationAddress = "";
         }
-        public string ToJson(int RangeSliderMin, int RangeSliderMax)
+        public string ToJson(int rangeSliderMin, int rangeSliderMax)
         {
-               
-            JsonObject json = new JsonObject();
-            int arraySize = (RangeSliderMax - RangeSliderMin) + 1;
-            String[] ppmArray = new String[arraySize];
 
+            JObject json = new JObject();
+            int arraySize = (rangeSliderMax - rangeSliderMin);
+            string[] ppmArray = new string[arraySize];
+            string[] timestampArray = new string[arraySize];
 
-            //String[] timestampArray = new String[arraySize];
-            if (RangeSliderMax + 1 > sensorData.Count())
+            if (rangeSliderMin + 1 > sensorData.Count)
             {
-                throw new ArgumentOutOfRangeException("RangeSliderMax +1 > SensorData Array - this should not happen");
+                throw new IndexOutOfRangeException("RangeSliderMin +1 > SensorData Array - this should not happen");
             }
 
+            if (rangeSliderMax > sensorData.Count)
+            {
+                throw new IndexOutOfRangeException("RangeSliderMax +1 > SensorData Array - this should not happen");
+            }
 
-            //
             int arrayIndex = 0;
-            ////TODO: use limits defined by RangeSlider
-            for (int i = RangeSliderMin; i < RangeSliderMax + 1; i++)
+            for (int i = rangeSliderMin; i < rangeSliderMax; i++)
             {
                 SensorData data = sensorData[i];
                 ppmArray[arrayIndex] = data.CO2ppm.ToString();
+                timestampArray[arrayIndex] = data.timeStamp.ToString();
                 arrayIndex++;
             }
 

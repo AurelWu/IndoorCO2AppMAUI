@@ -25,6 +25,7 @@ public partial class MainPage : ContentPage
     private const string SelectedMonitorPreferenceKey = "SelectedMonitorIndex";
     bool firstInit = true;
     public bool manualRecordingMode = false;
+    public bool prerecording = false;
     bool hideLocation = true;
 
     bool startTrimSliderHasBeenUsed = false;
@@ -51,29 +52,21 @@ public partial class MainPage : ContentPage
     public static bool hasOpenWindowsDoors;
     public static bool hasVentilationSystem;
     internal CO2MonitorType monitorType;
-    //public static IWakeLockService wakeLockService;
-
-    //public const string CHANNEL_ID = "com.companyname.indoorco2app.channel";
+    
 
     public MainPage()
-	{
-        //monitorType = CO2MonitorType.Aranet; //HARDCODED FOR NOW!
-        monitorType = CO2MonitorType.Aranet4; //HARDCODED FOR NOW!
+	{        
+        monitorType = CO2MonitorType.Aranet4; 
         MainPageSingleton = this;
         Locations = new List<LocationData>();        
-        //TODO => Overpass search range based on radio button instead of hardcoded 100
-        //TODO: => record data when recording mode
-        //TODO: => draw Linechart when recording
-        //TODO: => add cancel button when recording (with confirmation)
-        //TODO: => add submit Data Button (with info if success or not stuff)
-        //TODO: => Data submission
+
 
         InitializeComponent();
+        RecoveryData.ReadFromPreferences();
         CO2MonitorPicker.SelectedIndex = 0;
         LoadMonitorType();
         firstInit = false;
-
-        //TODO: if we have a stored value for the selection then we take that instead
+        
 
         BluetoothManager.Init();
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(0.4));
@@ -94,6 +87,7 @@ public partial class MainPage : ContentPage
         var buttonWidth25Percent = screenWidth * 0.25;
 
         // Set the button's minimum width
+        ResumeRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
         StartRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
         StartManualRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
         UpdateLocationsButton.MinimumWidthRequest = buttonWidth70Percent;
@@ -123,6 +117,7 @@ public partial class MainPage : ContentPage
         LocationLabel.IsVisible = false;
         SearchRangeStackLayout.IsVisible = false;
         LocationStackLayout.IsVisible = false;
+        ResumeRecordingButton.IsVisible = false;
         StartRecordingButton.IsVisible = false;
         StartManualRecordingButton.IsVisible = false;
         OpenImprintButton.IsVisible = false;
@@ -130,13 +125,16 @@ public partial class MainPage : ContentPage
         UpdateLocationsButton.IsVisible = false;
         //StackLayoutTrimSliderStart.IsVisible = true;
         //StackLayoutTrimSliderEnd.IsVisible = true;        
-        StackCheckboxesDoorVentilation.IsVisible = true;
+        StackCheckboxesDoor.IsVisible = true;
+        StackCheckboxesVentilation.IsVisible = true;
         StackNotes.IsVisible = true;
         lineChartView.IsVisible = true;
         startTrimSlider.IsVisible = true;
         endTrimSlider.IsVisible = true;
         TrimSliderInfoText.IsVisible = true;
         CO2MonitorPickerStackLayout.IsVisible = false;
+        PrerecordingSwitch.IsVisible = false;
+        PrerecordingLabel.IsVisible = false;
 
         startTrimSliderHasBeenUsed = false;
         endTrimSliderHasBeenUsed = false;
@@ -157,6 +155,7 @@ public partial class MainPage : ContentPage
         LocationLabel.IsVisible = true;
         SearchRangeStackLayout.IsVisible = false;
         LocationStackLayout.IsVisible = false;
+        ResumeRecordingButton.IsVisible = false;
         StartRecordingButton.IsVisible = false;
         StartManualRecordingButton.IsVisible = false;
         OpenImprintButton.IsVisible = false;
@@ -164,7 +163,8 @@ public partial class MainPage : ContentPage
         UpdateLocationsButton.IsVisible = false;
         //StackLayoutTrimSliderStart.IsVisible = true;
         //StackLayoutTrimSliderEnd.IsVisible = true;        
-        StackCheckboxesDoorVentilation.IsVisible = true;
+        StackCheckboxesDoor.IsVisible = true;
+        StackCheckboxesVentilation.IsVisible = true;
         StackNotes.IsVisible = true;
         StackManualName.IsVisible = true;
         StackManualAddress.IsVisible = true;
@@ -175,6 +175,8 @@ public partial class MainPage : ContentPage
         endTrimSlider.IsVisible = true;
         TrimSliderInfoText.IsVisible = true;
         CO2MonitorPickerStackLayout.IsVisible = false;
+        PrerecordingSwitch.IsVisible = false;
+        PrerecordingLabel.IsVisible = false;
 
         startTrimSliderHasBeenUsed = false;
         endTrimSliderHasBeenUsed = false;
@@ -199,7 +201,8 @@ public partial class MainPage : ContentPage
         UpdateLocationsButton.IsVisible = true;
         //StackLayoutTrimSliderStart.IsVisible = false;
         //StackLayoutTrimSliderEnd.IsVisible = false;        
-        StackCheckboxesDoorVentilation.IsVisible = false;
+        StackCheckboxesDoor.IsVisible = false;
+        StackCheckboxesVentilation.IsVisible = false;
         StackNotes.IsVisible = false; ;
         StackManualName.IsVisible = false;
         StackManualAddress.IsVisible = false;
@@ -208,6 +211,12 @@ public partial class MainPage : ContentPage
         endTrimSlider.IsVisible = false;
         TrimSliderInfoText.IsVisible = false;
         CO2MonitorPickerStackLayout.IsVisible = true;
+        if(RecoveryData.locationID==0)
+        {
+            ResumeRecordingButton.IsVisible = false;
+        }
+        PrerecordingSwitch.IsVisible = true;
+        PrerecordingLabel.IsVisible = true;
     }
 
     private void OnUpdateLocationsClicked(object sender, EventArgs e)
@@ -216,7 +225,7 @@ public partial class MainPage : ContentPage
         OverpassModule.FetchNearbyBuildingsAsync(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange,this); //TODO => 
     }
 
-    private void StartRecording(bool manualMode)
+    private void StartRecording(bool manualMode, bool resumedRecording)
     {
         BluetoothManager.recordedData = new List<SensorData>();
         this.manualRecordingMode = manualMode;
@@ -227,25 +236,49 @@ public partial class MainPage : ContentPage
         endTrimSliderHasBeenUsed = false;
         previousDataCount = 0;
         //Console.WriteLine(LocationPicker);
-        if (LocationPicker != null && Locations.Count > 0 && !manualMode)
+        if (!manualMode)
         {
-            if (LocationPicker.SelectedItem != null)
+            if (!resumedRecording && LocationPicker != null && LocationPicker.SelectedItem != null && Locations.Count > 0)
             {
                 selectedLocation = (LocationData)LocationPicker.SelectedItem;
+                SwitchToRecordingUI();
+                long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                BluetoothManager.StartNewRecording(selectedLocation, startTime,prerecording);
+                RecoveryData.startTime = startTime;
+                RecoveryData.timeOfLastUpdate = startTime;
+                RecoveryData.locationID = selectedLocation.ID;
+                RecoveryData.locationType = selectedLocation.type;
+                RecoveryData.locationName = selectedLocation.Name;
+                RecoveryData.locationLat = selectedLocation.latitude;
+                RecoveryData.locationLon = selectedLocation.longitude;
+                RecoveryData.WriteToPreferences();
+
             }
-            SwitchToRecordingUI();            
-            BluetoothManager.StartNewRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+            if (resumedRecording)
+            {
+                LocationData ld = new LocationData(RecoveryData.locationType, RecoveryData.locationID, RecoveryData.locationName, RecoveryData.locationLat, RecoveryData.locationLon, RecoveryData.locationLat, RecoveryData.locationLon);
+                selectedLocation = ld;
+                SwitchToRecordingUI();
+                BluetoothManager.StartNewRecording(selectedLocation, RecoveryData.startTime,false);
+            }
+
+            
         }
         else if (manualMode)
         {
             SwitchToManualRecordingUI();
-            BluetoothManager.StartNewManualRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+            BluetoothManager.StartNewManualRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),prerecording);
         }
     }
 
     private void OnStartRecordingClicked(object sender, EventArgs e)
     {
-        StartRecording(false);
+        StartRecording(false,false);
+    }
+
+    private void OnResumeRecordingClicked(object sender, EventArgs e)
+    {
+        StartRecording(false, true);
     }
 
 
@@ -258,7 +291,7 @@ public partial class MainPage : ContentPage
         bool result = await DisplayAlert("Manual Recording Mode", msg, "Understood", "Cancel");
         if (result==true)
         {            
-            StartRecording(true);
+            StartRecording(true,false);
         }
         else
         {
@@ -296,6 +329,7 @@ public partial class MainPage : ContentPage
     private void CancelRecording()
     {
         BluetoothManager.StopRecording();
+        RecoveryData.ResetRecoveryData();        
         SwitchToStandardUI();
     }
 
@@ -742,10 +776,11 @@ public partial class MainPage : ContentPage
         FinishRecordingButton.Text = "Transmission successful!";
         OverpassModule.lastFetchWasSuccess = false;
         OverpassModule.lastFetchWasSuccessButNoResults = false;
-        OverpassModule.everFetchedLocations = false;
+        OverpassModule.everFetchedLocations = false;        
 
         Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(4), () =>
         {
+            RecoveryData.ResetRecoveryData();
             SwitchToStandardUI();
         });
         //Submitting seems to work but Lambda doesnt write to DB so maybe message not correct yet? Compare with android message        
@@ -857,6 +892,11 @@ public partial class MainPage : ContentPage
                 monitorType = CO2MonitorType.InkbirdIAMT1;
             }
         }        
+    }
+
+    public void OnPrerecordingSwitchToggled(object sender, EventArgs e)
+    {        
+        prerecording = PrerecordingSwitch.IsToggled;
     }
 
     private void LoadMonitorType()
