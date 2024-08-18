@@ -10,11 +10,24 @@ namespace IndoorCO2App_Android
         public static int endTrimSliderValue = 1;
         Dictionary<VisualElement, MenuMode> MenuModesOfUIElements;
 
+        public static bool hasOpenWindowsDoors;
+        public static bool hasVentilationSystem;
+        public static MainPage MainPageSingleton;
+
         public MainPage()
         {
             InitializeComponent();
+            CreateMainPageSingleton();
             InitUIElements();
             ChangeToStandardUI();
+        }
+
+        public void CreateMainPageSingleton()
+        {
+            if (MainPageSingleton == null)
+            {
+                MainPageSingleton = this;
+            }
         }
 
         private void ChangeToUI(MenuMode mode)
@@ -51,6 +64,7 @@ namespace IndoorCO2App_Android
 
         public void InitUIElements()
         {
+            //FindByName avoids IDE Error in VS 2022 which doesn't understand that it is defined in XAML - change once that is fixed
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
             MenuModesOfUIElements.Add(this.FindByName<ImageButton>("ButtonGPSStatus"), MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard);
             MenuModesOfUIElements.Add(this.FindByName<ImageButton>("ButtonGPSPermission"), MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard);
@@ -82,6 +96,27 @@ namespace IndoorCO2App_Android
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesDoor"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesVentilation"), MenuMode.Recording | MenuMode.ManualRecording);
         }
-    }
 
+        public string GetNotesEditorText()
+        {
+            //FindByName avoids IDE Error in VS 2022 which doesn't understand that it is defined in XAML - change once that is fixed
+            Editor ed = this.FindByName<Editor>("NotesEditor");
+            if (ed.Text == null) return string.Empty;
+            return ed.Text;
+        }
+
+        public void OnTransmissionFailed(string msg)
+        {
+           throw new System.NotImplementedException();
+        }
+        public void OnTransmissionSuccess(string msg)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void UpdateLocationPicker()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }
