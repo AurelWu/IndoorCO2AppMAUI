@@ -38,6 +38,8 @@ namespace IndoorCO2App_Android
                 $"nwr(around:{rString},{latString},{lonString})[leisure=bowling_alley];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=sports_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=sports_hall];" +
+                $"nwr(around:{rString},{latString},{lonString})[sport=swimming];" +
+                $"nwr(around:{rString},{latString},{lonString})[leisure=swimming_pool];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=events_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=bar];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=place_of_worship];" +

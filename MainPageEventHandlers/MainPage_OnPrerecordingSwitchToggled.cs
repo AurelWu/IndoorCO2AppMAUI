@@ -6,7 +6,7 @@ namespace IndoorCO2App_Android
     {
         private void OnPrerecordingSwitchToggled(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            prerecording = _PrerecordingSwitch.IsToggled;
         }
 
     }

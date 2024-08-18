@@ -6,7 +6,7 @@ namespace IndoorCO2App_Android
     {
         private void OnSliderStartValueChanged(object sender, ValueChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            startTrimSliderHasBeenUsed = true;
         }
     }
 

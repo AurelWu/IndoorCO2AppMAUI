@@ -6,7 +6,7 @@ namespace IndoorCO2App_Android
     {
         private async void OnRequestBluetoothPermissionsDialog(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var status = await BluetoothHelper.RequestAsync();
         }
 
     }

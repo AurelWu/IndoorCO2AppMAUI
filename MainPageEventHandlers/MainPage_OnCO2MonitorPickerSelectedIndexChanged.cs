@@ -6,7 +6,28 @@ namespace IndoorCO2App_Android
     {
         private void OnCO2MonitorPickerSelectedIndexChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (firstInit) return;
+            BluetoothManager.discoveredDevices = null;
+            string picked = _CO2DevicePicker.SelectedItem.ToString();
+            int index = _CO2DevicePicker.SelectedIndex;
+
+            Preferences.Set(SelectedMonitorPreferenceKey, index);
+
+            if (picked != null)
+            {
+                if (picked == "Aranet")
+                {
+                    monitorType = CO2MonitorType.Aranet4;
+                }
+                else if (picked == "Airvalent")
+                {
+                    monitorType = CO2MonitorType.Airvalent;
+                }
+                else if (picked == "Inkbird IAM-T1")
+                {
+                    monitorType = CO2MonitorType.InkbirdIAMT1;
+                }
+            }
         }
 
     }

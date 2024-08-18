@@ -6,7 +6,7 @@ namespace IndoorCO2App_Android
     {
         private async void OnRequestBluetoothEnableDialog(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            BluetoothHelper.RequestBluetoothEnable();
         }
 
     }

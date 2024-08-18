@@ -95,6 +95,9 @@
 	  <Compile Update="MainPageEventHandlers\MainPage_OnUpdateLocationsClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
+	  <Compile Update="MainPage_UI.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnRadioButtonCheckedChanged.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>

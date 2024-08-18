@@ -4,12 +4,14 @@ namespace IndoorCO2App_Android
 {
     public partial class MainPage : ContentPage
     {
-        private void OnRequestGPSEnableDialog(object sender, EventArgs e)
+        private async void OnRequestGPSEnableDialog(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-
+#if ANDROID
+            bool isActive = SpatialManager.CheckIfGpsIsEnabled();
+            if (isActive) return; // won't do anything already active
+            bool result = await SpatialManager.ShowEnableGPSDialogAsync();
+#endif
         }
 
     }
-
 }

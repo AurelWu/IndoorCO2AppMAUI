@@ -4,7 +4,7 @@
              xmlns:controls="clr-namespace:IndoorCO2App_Android.Controls"
              x:Class="IndoorCO2App_Android.MainPage">
 
-
+    <ScrollView>
 
         <VerticalStackLayout
             Spacing="22"
@@ -423,6 +423,7 @@ Padding="0">
 
 
         </VerticalStackLayout>
+    </ScrollView>
 
     <ContentPage.Resources>
         <ControlTemplate x:Key="RadioButtonTemplate">

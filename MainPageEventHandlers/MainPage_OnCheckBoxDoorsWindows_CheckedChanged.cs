@@ -6,7 +6,7 @@ namespace IndoorCO2App_Android
     {
         private void OnCheckBoxDoorsWindows_CheckedChanged(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            hasVentilationSystem = _CheckBoxVentilation.IsChecked;
         }
     }
 

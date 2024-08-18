@@ -4,12 +4,13 @@ namespace IndoorCO2App_Android
 {
     public partial class MainPage : ContentPage
     {
-        private void OnRequestGPSPermissionDialog(object sender, EventArgs e)
+        private async void OnRequestGPSPermissionDialog(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-
+#if ANDROID
+            bool granted = await SpatialManager.IsLocationPermissionGrantedAsync();
+            if (granted) return; // won't do anything if we already got permission;
+#endif
         }
-
     }
-
 }
+

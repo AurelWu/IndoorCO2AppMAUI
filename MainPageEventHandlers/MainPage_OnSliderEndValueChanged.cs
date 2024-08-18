@@ -6,7 +6,11 @@ namespace IndoorCO2App_Android
     {
         private void OnSliderEndValueChanged(object sender, ValueChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            endTrimSliderHasBeenUsed = true;
+            if (_EndTrimSlider.Value < _EndTrimSlider.Maximum)
+            {
+                endtrimSliderIsAtmax = false;
+            }
         }
     }
 
