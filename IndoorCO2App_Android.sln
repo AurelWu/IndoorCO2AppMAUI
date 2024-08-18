@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34916.146
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndoorCO2App_Android", "IndoorCO2App_Android.csproj", "{32D31AD7-BEFD-4176-BFA4-F2651CB7A62F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32D31AD7-BEFD-4176-BFA4-F2651CB7A62F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32D31AD7-BEFD-4176-BFA4-F2651CB7A62F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32D31AD7-BEFD-4176-BFA4-F2651CB7A62F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{32D31AD7-BEFD-4176-BFA4-F2651CB7A62F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32D31AD7-BEFD-4176-BFA4-F2651CB7A62F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32D31AD7-BEFD-4176-BFA4-F2651CB7A62F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17F41CCF-1F14-4DA4-85DE-9F0981AC9EC2}
+	EndGlobalSection
+EndGlobal
