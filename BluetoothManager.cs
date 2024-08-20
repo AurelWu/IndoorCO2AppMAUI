@@ -104,7 +104,6 @@ namespace IndoorCO2App_Android
 
             if (currentTime - previousUpdate > TimeSpan.FromSeconds(refreshTime))
             {
-            #if ANDROID
                 if (submissionDataManual != null && SpatialManager.currentLocation != null)
                 {
                     var lat = SpatialManager.currentLocation.Latitude;
@@ -112,7 +111,6 @@ namespace IndoorCO2App_Android
                     submissionDataManual.LatitudeData.Add(lat);
                     submissionDataManual.LongitudeData.Add(lon);
                 }
-            #endif
                 previousUpdate = currentTime;
                 try
                 {
@@ -202,6 +200,7 @@ namespace IndoorCO2App_Android
             }
             lastAttemptFailed = false;
             bool checkPermissions = BluetoothHelper.CheckStatus();
+            if (!checkPermissions) return;
             await BluetoothHelper.RequestAsync();
             if (ble == null)
             {

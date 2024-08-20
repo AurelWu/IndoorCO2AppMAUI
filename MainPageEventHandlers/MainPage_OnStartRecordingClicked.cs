@@ -6,7 +6,7 @@ namespace IndoorCO2App_Android
     {
         private void OnStartRecordingClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            StartRecording(false, false);
         }
 
     }

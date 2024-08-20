@@ -6,10 +6,7 @@ namespace IndoorCO2App_Android
     {
         private void OnUpdateLocationsClicked(object sender, EventArgs e)
         {
-#if ANDROID
             OverpassModule.FetchNearbyBuildingsAsync(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, this);
-
-#endif
         }
     }
 

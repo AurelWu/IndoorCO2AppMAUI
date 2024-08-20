@@ -1,6 +1,7 @@
 ﻿
 
 using IndoorCO2App_Android.Controls;
+using static Android.Provider.CallLog;
 
 
 namespace IndoorCO2App_Android
@@ -25,6 +26,8 @@ namespace IndoorCO2App_Android
         public bool hideLocation = true;
         public bool prerecording = false;
 
+        public static int previousDataCount = 0;
+
         private readonly PeriodicTimer _timer;
         private DateTime timeOfLastGPSUpdate = DateTime.MinValue;
 
@@ -33,8 +36,10 @@ namespace IndoorCO2App_Android
         public static MainPage MainPageSingleton;
         internal CO2MonitorType monitorType;
         List<LocationData> locations;
+        LocationData selectedLocation;
 
         bool firstInit = true;
+        public bool manualRecordingMode = false;
 
         public MainPage()
         {
@@ -45,6 +50,7 @@ namespace IndoorCO2App_Android
             ChangeToStandardUI();
 
             LoadMonitorType();
+            BluetoothManager.Init();
             firstInit = false;
 
             UpdateUI();
@@ -61,7 +67,7 @@ namespace IndoorCO2App_Android
                     UpdateUI();
 
                     //ENABLE AGAIN ONCE CORRECT
-                    //BluetoothManager.Update(monitorType);
+                    BluetoothManager.Update(monitorType);
 
                     if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))
                     {
@@ -85,7 +91,62 @@ namespace IndoorCO2App_Android
                 MainPageSingleton = this;
             }
         }
-        
+
+
+        private void StartRecording(bool manualMode, bool resumedRecording)
+        {
+            BluetoothManager.recordedData = new List<SensorData>();
+            this.manualRecordingMode = manualMode;
+            _EndTrimSlider.Minimum = 0;
+            _EndTrimSlider.Maximum = 1;
+            _StartTrimSlider.Maximum = 1;
+            startTrimSliderHasBeenUsed = false;
+            endTrimSliderHasBeenUsed = false;
+            previousDataCount = 0;
+            //Console.WriteLine(LocationPicker);
+            if (!manualMode)
+            {
+                if (!resumedRecording && _LocationPicker != null && _LocationPicker.SelectedItem != null && locations.Count > 0)
+                {
+                    selectedLocation = (LocationData)_LocationPicker.SelectedItem;
+                    ChangeToRecordingUI();
+                    long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                    BluetoothManager.StartNewRecording(selectedLocation, startTime, prerecording);
+                    RecoveryData.startTime = startTime;
+                    RecoveryData.timeOfLastUpdate = startTime;
+                    RecoveryData.locationID = selectedLocation.ID;
+                    RecoveryData.locationType = selectedLocation.type;
+                    RecoveryData.locationName = selectedLocation.Name;
+                    RecoveryData.locationLat = selectedLocation.latitude;
+                    RecoveryData.locationLon = selectedLocation.longitude;
+                    RecoveryData.WriteToPreferences();
+
+                }
+                if (resumedRecording)
+                {
+                    LocationData ld = new LocationData(RecoveryData.locationType, RecoveryData.locationID, RecoveryData.locationName, RecoveryData.locationLat, RecoveryData.locationLon, RecoveryData.locationLat, RecoveryData.locationLon);
+                    selectedLocation = ld;
+                    ChangeToRecordingUI();
+                    BluetoothManager.StartNewRecording(selectedLocation, RecoveryData.startTime, false);
+                }
+
+
+            }
+            else if (manualMode)
+            {
+                ChangeToManualRecordingUI(); ;
+                BluetoothManager.StartNewManualRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), prerecording);
+            }
+        }
+
+        private void CancelRecording()
+        {
+            BluetoothManager.StopRecording();
+            RecoveryData.ResetRecoveryData();
+            ChangeToStandardUI();
+        }
+
+
         public string GetNotesEditorText()
         {
             //FindByName avoids IDE Error in VS 2022 which doesn't understand that it is defined in XAML - change once that is fixed

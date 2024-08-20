@@ -36,7 +36,7 @@ namespace IndoorCO2App_Android
         };
 
             // Add BluetoothConnect and BluetoothScan permissions if on Android 13 or higher
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.S)
             {
                 permissions = permissions.Concat(new[]
                 {

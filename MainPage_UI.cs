@@ -14,6 +14,8 @@ namespace IndoorCO2App_Android
         public Label _StatusLabel;
         public Label _DeviceLabel;
         public Label _LocationLabel;
+        public Label _LocationLabelRecording;
+        public Label _LocationInfoLabel;
         public Button _UpdateLocationsButton;
         public Button _ResumeRecordingButton;
         public Button _StartRecordingButton;
@@ -34,6 +36,10 @@ namespace IndoorCO2App_Android
         public CheckBox _CheckBoxVentilation;
         public Switch _PrerecordingSwitch;
         public Slider _EndTrimSlider;
+        public Slider _StartTrimSlider;
+        public Editor _ManualNameEditor;
+        public Editor _ManualAddressEditor;
+
 
 
 
@@ -47,6 +53,8 @@ namespace IndoorCO2App_Android
             _StatusLabel = this.FindByName<Label>("StatusLabel");
             _DeviceLabel = this.FindByName<Label>("DeviceLabel");
             _LocationLabel = this.FindByName<Label>("LocationLabel");
+            _LocationLabelRecording = this.FindByName<Label>("LocationLabelRecording");
+            _LocationInfoLabel = this.FindByName<Label>("LocationInfoLabel");
             _UpdateLocationsButton = this.FindByName<Button>("UpdateLocationsButton");
             _ResumeRecordingButton = this.FindByName<Button>("ResumeRecordingButton");
             _StartRecordingButton = this.FindByName<Button>("StartRecordingButton");
@@ -67,6 +75,9 @@ namespace IndoorCO2App_Android
             _CheckBoxVentilation = this.FindByName<CheckBox>("CheckBoxVentilation");
             _PrerecordingSwitch = this.FindByName<Switch>("PrerecordingSwitch");
             _EndTrimSlider = this.FindByName<Slider>("endTrimSlider");
+            _StartTrimSlider = this.FindByName<Slider>("startTrimSlider");
+            _ManualAddressEditor = this.FindByName<Editor>("ManualAddressEditor");
+            _ManualNameEditor = this.FindByName<Editor>("ManualNameEditor");
 
 
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
@@ -89,10 +100,10 @@ namespace IndoorCO2App_Android
             MenuModesOfUIElements.Add(_OpenMapButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(_OpenImprintButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(this.FindByName<Button>("DeleteLastSubmissionButton"), MenuMode.Standard);
-            MenuModesOfUIElements.Add(this.FindByName<Label>("LocationLabelRecording"), MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(_LocationLabelRecording, MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("RecordingModeButtonStackLayout"), MenuMode.Recording | MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualName"), MenuMode.Recording | MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualAddress"), MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualName"), MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualAddress"), MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(_LineChartView, MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<Label>("RecordedDataLabel"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("TrimSliderLayout"), MenuMode.Recording | MenuMode.ManualRecording);
@@ -139,12 +150,134 @@ namespace IndoorCO2App_Android
             UpdateBluetoothPermissionsButton();
 
             UpdateLocationLabel();
+            UpdateLocationRecordingLabel();
+            UpdateLocationInfoLabel();
+
+            UpdateLineChart();
+
+            UpdateStatusLabel();
+            UpdateDeviceLabel();
+
+            UpdateStartRecordingButton();
+            UpdateFinishRecordingButton();
+        }
+
+        private void UpdateStartRecordingButton()
+        {
+            if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.LocationData.Count > 0 && BluetoothManager.discoveredDevices != null && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
+            {
+                _StartRecordingButton.IsEnabled = true;
+            }
+            else
+            {
+                _StartRecordingButton.IsEnabled = false;
+
+            }
+
+            if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.everFetchedLocations == true && OverpassModule.currentlyFetching == false && BluetoothManager.discoveredDevices != null && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
+            {
+                _StartManualRecordingButton.IsEnabled = true;
+            }
+            else
+            {
+                _StartManualRecordingButton.IsEnabled = false;
+            }
+        }
+
+        private void UpdateFinishRecordingButton()
+        {
+            int original = BluetoothManager.recordedData.Count;
+            int trimStart = (int)Math.Floor(_StartTrimSlider.Value);
+            int trimEnd = (int)Math.Floor(_EndTrimSlider.Value);
+            if (trimEnd - trimStart >= 5 && BluetoothManager.isRecording)
+            {
+                if (manualRecordingMode && (_ManualNameEditor.Text.Length < 1 || _ManualAddressEditor.Text.Length < 1))
+                {
+                    _FinishRecordingButton.IsEnabled = false;
+                    _FinishRecordingButton.Text = "Submit Data (needs Address & Name)";
+                }
+                else
+                {
+                    _FinishRecordingButton.IsEnabled = true;
+                    _FinishRecordingButton.Text = "Submit Data";
+                }
+            }
+            else if (BluetoothManager.isRecording)
+            {
+                _FinishRecordingButton.IsEnabled = false;
+                _FinishRecordingButton.Text = "Submit Data (needs 5 Minutes of Data)";
+            }
+
+
+        }
+
+        private void UpdateDeviceLabel()
+        {
+            try
+            {
+                if (!btGranted || !btActive)
+                {
+                    _DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch Sensor Data";
+                }
+                else if (BluetoothManager.discoveredDevices.Count == 0)
+                {
+                    _DeviceLabel.Text = "Device not yet found. This might take a while.";
+
+                    if (BluetoothManager.lastAttemptFailed)
+                    {
+                        _DeviceLabel.Text += " | previous update failed";
+                    }
+                }
+                else if (BluetoothManager.sensorUpdateInterval > 60)
+                {
+                    _DeviceLabel.Text = "Device found but Update Interval not set to 1 Minute, change to 1 Minute using official App. next attempt in " + BluetoothManager.timeToNextUpdate + "s";
+                }
+                else if (BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
+                {
+                    _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  initiating Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                    if (BluetoothManager.lastAttemptFailed)
+                    {
+                        _DeviceLabel.Text += " | previous update failed";
+                    }
+                }
+                else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
+                {
+                    _DeviceLabel.Text = "Sensor found, but the required 'Smart Home Integration' is disabled.\r\n Please enable it using the official Aranet App (use the Gears Icon)";
+                }
+                else if (BluetoothManager.currentCO2Reading == 0)
+                {
+                    _DeviceLabel.Text = "initiating first Update in:" + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                    if (BluetoothManager.lastAttemptFailed)
+                    {
+                        _DeviceLabel.Text += " | previous update failed";
+                    }
+                }
+            }
+            catch
+            {
+                _DeviceLabel.Text = "update failed - next attempt in: " + BluetoothManager.timeToNextUpdate;
+                //Debug.WriteLine("UpdateDeviceLabel - exception caught");
+            }
+
+
+        }
+
+        private void UpdateStatusLabel()
+        {
+            {
+                _StatusLabel.Text = ("");
+                if (!gpsActive) _StatusLabel.Text += "GPS not enabled | ";
+                if (!gpsGranted) _StatusLabel.Text += "Location Permission missing |";
+                if (!btActive) _StatusLabel.Text += "Bluetooth not enabled |";
+                if (!btGranted) _StatusLabel.Text += "Bluetooth permission not granted";
+                if (gpsActive && gpsGranted && btActive && btGranted) _StatusLabel.Text = "GPS & Bluetoooth Permissions and Status okay";
+            }
         }
 
         public void UpdateGPSStatusButton()
         {
-#if ANDROID
-            var gpsActive = SpatialManager.CheckIfGpsIsEnabled();
+
+            gpsActive = SpatialManager.CheckIfGpsIsEnabled();
             if (gpsActive)
             {
                 _GPSStatusButton.BackgroundColor = Color.Parse("Green");
@@ -153,12 +286,12 @@ namespace IndoorCO2App_Android
             {
                 _GPSStatusButton.BackgroundColor = Color.Parse("Red");
             }
-#endif
+
         }
 
         private async void UpdateGPSPermissionButton()
         {
-#if ANDROID
+
             gpsGranted = await SpatialManager.IsLocationPermissionGrantedAsync();
             if (gpsGranted)
             {
@@ -168,12 +301,12 @@ namespace IndoorCO2App_Android
             {
                 _GPSPermissionButton.BackgroundColor = Color.Parse("Red");
             }
-#endif
+
         }
 
         private void UpdateBluetoothStatusButton()
         {
-        #if ANDROID
+
             btActive = BluetoothHelper.CheckIfBTEnabled();
             if (btActive)
             {
@@ -183,12 +316,12 @@ namespace IndoorCO2App_Android
             {
                 _BluetoothEnabledButton.BackgroundColor = Color.Parse("Red");
             }
-        #endif
+
         }
 
         private void UpdateBluetoothPermissionsButton()
         {
-#if ANDROID
+
             btGranted = BluetoothHelper.CheckStatus();
             if (btGranted)
             {
@@ -198,7 +331,7 @@ namespace IndoorCO2App_Android
             {
                 _BluetoothPermissionsButton.BackgroundColor = Color.Parse("Red");
             }
-#endif
+
         }
 
         private void UpdateLocationLabel()
@@ -209,24 +342,110 @@ namespace IndoorCO2App_Android
                 {
                     if (!hideLocation)
                     {
-                        LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.######") + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.######") + " (tap to hide)";
+                        _LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.######") + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.######") + " (tap to hide)";
                     }
                     else
                     {
-                        LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.#") + "****" + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.#" + "****") + " (tap to show)";
+                        _LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.#") + "****" + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.#" + "****") + " (tap to show)";
                     }
                 }
                 else
                 {
-                    LocationLabel.Text = "GPS enabled and Location permissions granted. Getting first Location Info. This might take a minute";
+                    _LocationLabel.Text = "GPS enabled and Location permissions granted. Getting first Location Info. This might take a minute";
                 }
             }
             else
             {
-                LocationLabel.Text = ("");
-                if (!gpsActive) LocationLabel.Text += ("GPS not enabled ");
-                if (!gpsGranted) LocationLabel.Text += ("Location Permission missing");
+                _LocationLabel.Text = ("");
+                if (!gpsActive) _LocationLabel.Text += ("GPS not enabled ");
+                if (!gpsGranted) _LocationLabel.Text += ("Location Permission missing");
             }
+        }
+
+        private void UpdateLocationRecordingLabel()
+        {
+            if (selectedLocation != null)
+            {
+                _LocationLabelRecording.Text = "Location: " + selectedLocation.Name;
+            }
+            else
+            {
+                _LocationLabelRecording.Text = "No Location Selected";
+            }
+        }
+
+        private void UpdateLocationInfoLabel()
+        {
+            if (OverpassModule.everFetchedLocations == false)
+            {
+                _LocationInfoLabel.Text = "Press Update Locations to get nearby locations";
+            }
+            else if (OverpassModule.lastFetchWasSuccessButNoResults)
+            {
+                _LocationInfoLabel.Text = "No locations in range";
+            }
+            else if (OverpassModule.lastFetchWasSuccess)
+            {
+                _LocationInfoLabel.Text = "Select Location:";
+            }
+            else if (OverpassModule.lastFetchWasSuccess == false && !OverpassModule.currentlyFetching)
+            {
+                _LocationInfoLabel.Text = "Update locations request failed, try again later";
+            }
+            else if (OverpassModule.currentlyFetching)
+            {
+                _LocationInfoLabel.Text = "currently retrieving nearby locations";
+            }
+        }
+
+        private void UpdateLineChart()
+        {
+            _LineChartView.SetData(BluetoothManager.recordedData);
+            int maxSliderVal = BluetoothManager.recordedData.Count;
+
+            _StartTrimSlider.Minimum = 0;
+            _StartTrimSlider.Maximum = maxSliderVal;
+            _EndTrimSlider.Minimum = 0;
+
+
+            if (_EndTrimSlider.Maximum == 0)
+            {
+                _EndTrimSlider.Maximum = 1;
+                _EndTrimSlider.Value = 1;
+            }
+            else if (maxSliderVal > 0)
+            {
+                _EndTrimSlider.Maximum = maxSliderVal;
+
+            }
+
+            if (maxSliderVal > previousDataCount)
+            {
+                int max = Math.Max(1, maxSliderVal);
+                previousDataCount = maxSliderVal;
+                if (_EndTrimSlider.Value == max - 1) _EndTrimSlider.Value = max;
+            }
+
+            if (!endTrimSliderHasBeenUsed && maxSliderVal > 0)
+            {
+                _EndTrimSlider.Value = _EndTrimSlider.Maximum;
+            }
+            if (endtrimSliderIsAtmax)
+            {
+                _EndTrimSlider.Value = _EndTrimSlider.Maximum;
+            }
+
+            if (_EndTrimSlider.Value == _EndTrimSlider.Maximum)
+            {
+                endtrimSliderIsAtmax = true;
+            }
+            else
+            {
+                endtrimSliderIsAtmax = false;
+            }
+
+            startTrimSliderValue = (int)_StartTrimSlider.Value;
+            endTrimSliderValue = (int)_EndTrimSlider.Value;
         }
 
 

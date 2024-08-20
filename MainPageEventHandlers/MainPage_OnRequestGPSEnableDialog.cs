@@ -6,11 +6,9 @@ namespace IndoorCO2App_Android
     {
         private async void OnRequestGPSEnableDialog(object sender, EventArgs e)
         {
-#if ANDROID
             bool isActive = SpatialManager.CheckIfGpsIsEnabled();
             if (isActive) return; // won't do anything already active
             bool result = await SpatialManager.ShowEnableGPSDialogAsync();
-#endif
         }
 
     }
