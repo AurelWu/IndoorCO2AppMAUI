@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+using Syncfusion.Maui.Core.Hosting;
+using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
+using Microsoft.Extensions.Configuration;
 
 namespace IndoorCO2App_Android
 {
@@ -7,9 +9,12 @@ namespace IndoorCO2App_Android
     {
         public static MauiApp CreateMauiApp()
         {
-            var builder = MauiApp.CreateBuilder();
+
+            var builder = MauiApp.CreateBuilder();      
+
             builder
                 .UseMauiApp<App>()
+            .ConfigureSyncfusionCore()
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {

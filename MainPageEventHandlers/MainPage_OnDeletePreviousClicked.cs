@@ -22,7 +22,25 @@ namespace IndoorCO2App_Android
             using var client = new HttpClient();
             using var response = await client.PostAsync("https://sl5m6xu9qf.execute-api.eu-central-1.amazonaws.com/GetLastSubmission", content);
             string r = await response.Content.ReadAsStringAsync();
-            LastSubmissionInfo submissionInfo = JsonConvert.DeserializeObject<LastSubmissionInfo>(r);
+            LastSubmissionInfo submissionInfo = null;
+            if (r != null && r.Length > 1)
+            {
+                try
+                {
+                    submissionInfo = JsonConvert.DeserializeObject<LastSubmissionInfo>(r);
+                }
+                catch (Exception)
+                {
+                    await DisplayAlert("No Entry Found", "No deletable entry in database. To delete entries older than 24 hours, send an email to aurelwuensch@proton.me", "OK");
+                    return;
+                }
+            }
+            
+            if(submissionInfo== null)
+            {
+                await DisplayAlert("No Entry Found", "No deletable entry in database. To delete entries older than 24 hours, send an email to aurelwuensch@proton.me", "OK");
+                return;
+            }
 
             DateTime dateTime = DateTimeOffset.FromUnixTimeMilliseconds(submissionInfo.startTime).UtcDateTime;
 
@@ -30,7 +48,7 @@ namespace IndoorCO2App_Android
             DateTime localDateTime = dateTime.ToLocalTime();
 
             _DeleteLastSubmissionButton.Text = "Delete Previous Submission";
-            if (r.Length > 1)
+            if (r!=null && r.Length > 1)
             {
                 bool result = await DisplayAlert("Entry found", $"your last Entry is: {submissionInfo.locationName} from {localDateTime.ToString()}", "Delete", "Cancel");
                 if (result)

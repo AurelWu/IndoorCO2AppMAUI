@@ -1,5 +1,6 @@
 ﻿
 using IndoorCO2App_Android.Controls;
+using Syncfusion.Maui.Sliders;
 
 namespace IndoorCO2App_Android
 {
@@ -35,10 +36,12 @@ namespace IndoorCO2App_Android
         public CheckBox _CheckBoxDoorsWindows;
         public CheckBox _CheckBoxVentilation;
         public Switch _PrerecordingSwitch;
-        public Slider _EndTrimSlider;
-        public Slider _StartTrimSlider;
+        //public Slider _EndTrimSlider;
+        //public Slider _StartTrimSlider;
         public Editor _ManualNameEditor;
         public Editor _ManualAddressEditor;
+        public SfRangeSlider _TrimSlider;
+        public Editor _CO2DeviceNameFilterEditor;
 
 
 
@@ -46,6 +49,7 @@ namespace IndoorCO2App_Android
         public void InitUIElements()
         {
             //FindByName avoids IDE Error in VS 2022 which doesn't understand that it is defined in XAML - change once that is fixed
+            _TrimSlider = this.FindByName<SfRangeSlider>("TrimSlider");
             _GPSStatusButton = this.FindByName<ImageButton>("ButtonGPSStatus");
             _GPSPermissionButton = this.FindByName<ImageButton>("ButtonGPSPermission");
             _BluetoothEnabledButton = this.FindByName<ImageButton>("ButtonBluetoothStatus");
@@ -74,10 +78,13 @@ namespace IndoorCO2App_Android
             _CheckBoxDoorsWindows = this.FindByName<CheckBox>("CheckBoxDoorsWindows");
             _CheckBoxVentilation = this.FindByName<CheckBox>("CheckBoxVentilation");
             _PrerecordingSwitch = this.FindByName<Switch>("PrerecordingSwitch");
-            _EndTrimSlider = this.FindByName<Slider>("endTrimSlider");
-            _StartTrimSlider = this.FindByName<Slider>("startTrimSlider");
+            //_EndTrimSlider = this.FindByName<Slider>("endTrimSlider");
+            //_StartTrimSlider = this.FindByName<Slider>("startTrimSlider");
             _ManualAddressEditor = this.FindByName<Editor>("ManualAddressEditor");
             _ManualNameEditor = this.FindByName<Editor>("ManualNameEditor");
+            _ConfirmCancelRecordingButton.IsVisible = false;
+            _CO2DeviceNameFilterEditor = this.FindByName<Editor>("CO2DeviceNameFilterEditor");
+            _ResumeRecordingButton.IsVisible = false; //TODO Enable again once completely implemented
 
 
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
@@ -92,7 +99,7 @@ namespace IndoorCO2App_Android
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("SearchRangeStackLayout"), MenuMode.Standard);
             MenuModesOfUIElements.Add(_UpdateLocationsButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("LocationStackLayout"), MenuMode.Standard);
-            MenuModesOfUIElements.Add(_ResumeRecordingButton, MenuMode.Standard);
+            MenuModesOfUIElements.Add(_ResumeRecordingButton, 0); 
             MenuModesOfUIElements.Add(_StartRecordingButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(_StartManualRecordingButton, MenuMode.Standard);
             //MenuModesOfUIElements.Add(_FinishRecordingButton, MenuMode.Recording | MenuMode.ManualRecording); //stack is hidden so shouldnt be necessary?
@@ -101,27 +108,31 @@ namespace IndoorCO2App_Android
             MenuModesOfUIElements.Add(_OpenImprintButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(this.FindByName<Button>("DeleteLastSubmissionButton"), MenuMode.Standard);
             MenuModesOfUIElements.Add(_LocationLabelRecording, MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(_ConfirmCancelRecordingButton, 0);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("RecordingModeButtonStackLayout"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualName"), MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualAddress"), MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(_LineChartView, MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<Label>("RecordedDataLabel"), MenuMode.Recording | MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("TrimSliderLayout"), MenuMode.Recording | MenuMode.ManualRecording);
+            //MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("TrimSliderLayout"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<Label>("TrimSliderInfoText"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackNotes"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesDoor"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesVentilation"), MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackDeviceNameFilter"), MenuMode.Standard);
+            MenuModesOfUIElements.Add(_TrimSlider, MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(_CO2DeviceNameFilterEditor, MenuMode.Standard);
         }
 
         private void InitUILayout()
         {
             var screenWidth = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
-
+            var screenHeight = DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density;
             // Calculate 70% of the screen width
-            var buttonWidth70Percent = screenWidth * 0.7;
-            var buttonWidth60Percent = screenWidth * 0.6;
-            var buttonWidth50Percent = screenWidth * 0.5;
-            var buttonWidth30Percent = screenWidth * 0.3;
+            var buttonWidth70Percent = screenWidth * 0.70;
+            var buttonWidth60Percent = screenWidth * 0.60;
+            var buttonWidth50Percent = screenWidth * 0.50;
+            var buttonWidth30Percent = screenWidth * 0.30;
             var buttonWidth25Percent = screenWidth * 0.25;
 
             // Set the button's minimum width
@@ -139,6 +150,8 @@ namespace IndoorCO2App_Android
             _ConfirmCancelRecordingButton.MaximumWidthRequest = buttonWidth25Percent;
             _RadioButton100m.IsChecked = true;
             _DeleteLastSubmissionButton.MinimumWidthRequest = buttonWidth70Percent;
+            _LineChartView.MinimumHeightRequest = screenHeight * 0.20;
+            _TrimSlider.WidthRequest = _LineChartView.Width;
         }
 
 
@@ -187,9 +200,9 @@ namespace IndoorCO2App_Android
         private void UpdateFinishRecordingButton()
         {
             int original = BluetoothManager.recordedData.Count;
-            int trimStart = (int)Math.Floor(_StartTrimSlider.Value);
-            int trimEnd = (int)Math.Floor(_EndTrimSlider.Value);
-            if (trimEnd - trimStart >= 5 && BluetoothManager.isRecording)
+            int trimStart = (int)Math.Floor(_TrimSlider.RangeStart);
+            int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
+            if (trimEnd - trimStart >= 4 && BluetoothManager.isRecording)
             {
                 if (manualRecordingMode && (_ManualNameEditor.Text.Length < 1 || _ManualAddressEditor.Text.Length < 1))
                 {
@@ -221,7 +234,15 @@ namespace IndoorCO2App_Android
                 }
                 else if (BluetoothManager.discoveredDevices.Count == 0)
                 {
-                    _DeviceLabel.Text = "Device not yet found. This might take a while.";
+                    if(_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0)
+                    {
+                        _DeviceLabel.Text = $"Device not yet found. This might take a while. Namefilter set to: {_CO2DeviceNameFilterEditor.Text}";
+                    }
+                    else
+                    {
+                        _DeviceLabel.Text = $"Device not yet found. This might take a while";
+                    }
+                    
 
                     if (BluetoothManager.lastAttemptFailed)
                     {
@@ -234,7 +255,7 @@ namespace IndoorCO2App_Android
                 }
                 else if (BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
                 {
-                    _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  initiating Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                    _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
                     if (BluetoothManager.lastAttemptFailed)
                     {
                         _DeviceLabel.Text += " | previous update failed";
@@ -270,7 +291,7 @@ namespace IndoorCO2App_Android
                 if (!gpsGranted) _StatusLabel.Text += "Location Permission missing |";
                 if (!btActive) _StatusLabel.Text += "Bluetooth not enabled |";
                 if (!btGranted) _StatusLabel.Text += "Bluetooth permission not granted";
-                if (gpsActive && gpsGranted && btActive && btGranted) _StatusLabel.Text = "GPS & Bluetoooth Permissions and Status okay";
+                if (gpsActive && gpsGranted && btActive && btGranted) _StatusLabel.Text = "GPS & Bluetooth Permissions and Status okay";
             }
         }
 
@@ -400,22 +421,23 @@ namespace IndoorCO2App_Android
 
         private void UpdateLineChart()
         {
+            //TODO: RangeSliderMax is 1 when 2 elements ( 0, 1) but logic is based on 0,2 in some places still
             _LineChartView.SetData(BluetoothManager.recordedData);
-            int maxSliderVal = BluetoothManager.recordedData.Count;
+            int maxSliderVal = BluetoothManager.recordedData.Count - 1;
+            if (maxSliderVal < 0) maxSliderVal = 0;
+            _TrimSlider.Minimum = 0;
+            _TrimSlider.Maximum = maxSliderVal;
 
-            _StartTrimSlider.Minimum = 0;
-            _StartTrimSlider.Maximum = maxSliderVal;
-            _EndTrimSlider.Minimum = 0;
 
-
-            if (_EndTrimSlider.Maximum == 0)
+            if (_TrimSlider.Maximum == 0)
             {
-                _EndTrimSlider.Maximum = 1;
-                _EndTrimSlider.Value = 1;
+                _TrimSlider.Maximum = 1;
+                _TrimSlider.RangeStart = 0;
+                _TrimSlider.RangeEnd = 1;
             }
             else if (maxSliderVal > 0)
             {
-                _EndTrimSlider.Maximum = maxSliderVal;
+                _TrimSlider.Maximum = maxSliderVal;
 
             }
 
@@ -423,19 +445,19 @@ namespace IndoorCO2App_Android
             {
                 int max = Math.Max(1, maxSliderVal);
                 previousDataCount = maxSliderVal;
-                if (_EndTrimSlider.Value == max - 1) _EndTrimSlider.Value = max;
+                if (_TrimSlider.RangeEnd == max - 1) _TrimSlider.RangeEnd = max;
             }
 
             if (!endTrimSliderHasBeenUsed && maxSliderVal > 0)
             {
-                _EndTrimSlider.Value = _EndTrimSlider.Maximum;
+                _TrimSlider.RangeEnd = _TrimSlider.Maximum;
             }
-            if (endtrimSliderIsAtmax)
-            {
-                _EndTrimSlider.Value = _EndTrimSlider.Maximum;
-            }
+            //if (endtrimSliderIsAtmax)
+            //{
+            //_TrimSlider.RangeEnd = _TrimSlider.Maximum;
+            //}
 
-            if (_EndTrimSlider.Value == _EndTrimSlider.Maximum)
+            if (_TrimSlider.RangeEnd == _TrimSlider.Maximum)
             {
                 endtrimSliderIsAtmax = true;
             }
@@ -444,8 +466,8 @@ namespace IndoorCO2App_Android
                 endtrimSliderIsAtmax = false;
             }
 
-            startTrimSliderValue = (int)_StartTrimSlider.Value;
-            endTrimSliderValue = (int)_EndTrimSlider.Value;
+            startTrimSliderValue = (int)_TrimSlider.RangeStart;
+            endTrimSliderValue = (int)_TrimSlider.RangeEnd;
         }
 
 
@@ -469,7 +491,15 @@ namespace IndoorCO2App_Android
         public void ChangeToStandardUI()
         {
             ChangeToUI(MenuMode.Standard);
-        }
+            if (RecoveryData.locationID != 0)
+            {
+                _ResumeRecordingButton.IsVisible = true;
+            }
+            else
+            {
+                _ResumeRecordingButton.IsVisible = false;
+            }
+        }    
 
         public void ChangeToRecordingUI()
         {

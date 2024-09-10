@@ -48,6 +48,15 @@ namespace IndoorCO2App_Android
             return await ls.ShowEnableGpsDialogAsync();
         }
 
+        internal static void ResetLocation()
+        {
+            currentLocation = new Location();
+            if (OverpassModule.LocationData != null)
+            {
+                OverpassModule.LocationData.Clear();
+            }
+        }
+
         internal static async void UpdateLocation()
         {
             try

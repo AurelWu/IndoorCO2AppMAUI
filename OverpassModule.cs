@@ -34,6 +34,9 @@ namespace IndoorCO2App_Android
             return "[out:json];" +
                 "(" +
                 $"nwr(around:{rString},{latString},{lonString})[shop];" +
+                $"nwr(around:{rString},{latString},{lonString})[aeroway=aerodrome];" +
+                $"nwr(around:{rString},{latString},{lonString})[railway=station];" +
+                $"nwr(around:{rString},{latString},{lonString})[public_transport=station];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=fitness_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=bowling_alley];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=sports_centre];" +

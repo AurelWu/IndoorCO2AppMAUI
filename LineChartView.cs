@@ -115,7 +115,8 @@ namespace IndoorCO2App_Android.Controls
 
                     for (int i = 0; i < Data.Length; i++)
                     {
-                        if (i < MainPage.startTrimSliderValue + 1 || i >= MainPage.endTrimSliderValue)
+                        //if (i < MainPage.startTrimSliderValue + 1 || i >= MainPage.endTrimSliderValue)
+                        if (i < MainPage.startTrimSliderValue + 1 || i > MainPage.endTrimSliderValue)
                         {
                             canvas.StrokeDashPattern = new float[] { 1, 1 };
                             canvas.StrokeColor = Color.FromRgb(155, 155, 155);
@@ -136,7 +137,8 @@ namespace IndoorCO2App_Android.Controls
                         prevX = x;
                         prevY = y;
 
-                        if (i < MainPage.startTrimSliderValue || i >= MainPage.endTrimSliderValue)
+                        //if (i < MainPage.startTrimSliderValue || i >= MainPage.endTrimSliderValue)
+                        if (i < MainPage.startTrimSliderValue || i > MainPage.endTrimSliderValue)
                         {
                             canvas.FillColor = Color.FromRgb(155, 155, 155);
                         }

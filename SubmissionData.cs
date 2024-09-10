@@ -36,7 +36,7 @@ namespace IndoorCO2App_Android
         public string ToJson(int rangeSliderMin, int rangeSliderMax)
         {
             JObject json = new JObject();
-            int arraySize = (rangeSliderMax - rangeSliderMin);
+            int arraySize = ((rangeSliderMax+1) - rangeSliderMin);
             string[] ppmArray = new string[arraySize];
             string[] timestampArray = new string[arraySize];
 
@@ -51,7 +51,7 @@ namespace IndoorCO2App_Android
             }
 
             int arrayIndex = 0;
-            for (int i = rangeSliderMin; i < rangeSliderMax; i++)
+            for (int i = rangeSliderMin; i <= rangeSliderMax; i++)
             {
                 SensorData data = SensorData[i];
                 ppmArray[arrayIndex] = data.CO2ppm.ToString();

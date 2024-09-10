@@ -9,6 +9,7 @@ namespace IndoorCO2App_Android
     public partial class MainPage : ContentPage
     {
         private const string SelectedMonitorPreferenceKey = "SelectedMonitorIndex";
+        private const string DeviceNameFilterPreferenceKey = "NameFilterValue";
         public static int startTrimSliderValue = 0;
         public static int endTrimSliderValue = 1;
 
@@ -47,6 +48,8 @@ namespace IndoorCO2App_Android
             CreateMainPageSingleton();
             InitUIElements();
             InitUILayout();
+            RecoveryData.ReadFromPreferences();
+            _CO2DeviceNameFilterEditor.Text = Preferences.Get(DeviceNameFilterPreferenceKey, "");
             ChangeToStandardUI();
 
             LoadMonitorType();
@@ -66,8 +69,7 @@ namespace IndoorCO2App_Android
                 {
                     UpdateUI();
 
-                    //ENABLE AGAIN ONCE CORRECT
-                    BluetoothManager.Update(monitorType);
+                    BluetoothManager.Update(monitorType,_CO2DeviceNameFilterEditor.Text);
 
                     if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))
                     {
@@ -97,9 +99,8 @@ namespace IndoorCO2App_Android
         {
             BluetoothManager.recordedData = new List<SensorData>();
             this.manualRecordingMode = manualMode;
-            _EndTrimSlider.Minimum = 0;
-            _EndTrimSlider.Maximum = 1;
-            _StartTrimSlider.Maximum = 1;
+            _TrimSlider.Minimum = 0;
+            _TrimSlider.Maximum = 1;            
             startTrimSliderHasBeenUsed = false;
             endTrimSliderHasBeenUsed = false;
             previousDataCount = 0;
@@ -141,9 +142,17 @@ namespace IndoorCO2App_Android
 
         private void CancelRecording()
         {
+            ResetLocation();
             BluetoothManager.StopRecording();
             RecoveryData.ResetRecoveryData();
             ChangeToStandardUI();
+        }
+
+        private void ResetLocation()
+        {
+            SpatialManager.ResetLocation();
+            _LocationPicker.ItemsSource = null;
+            _LocationPicker.Items.Clear();
         }
 
 
@@ -157,11 +166,21 @@ namespace IndoorCO2App_Android
 
         public void OnTransmissionFailed(string msg)
         {
-           throw new System.NotImplementedException();
+            _FinishRecordingButton.Text = msg;
+            _FinishRecordingButton.IsEnabled = true;
         }
         public void OnTransmissionSuccess(string msg)
         {
-            throw new System.NotImplementedException();
+            _FinishRecordingButton.Text = "Transmission successful!";
+            OverpassModule.lastFetchWasSuccess = false;
+            OverpassModule.lastFetchWasSuccessButNoResults = false;
+            OverpassModule.everFetchedLocations = false;
+
+            Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(4), () =>
+            {
+                RecoveryData.ResetRecoveryData();
+                ChangeToUI(MenuMode.Standard);
+            });
         }
 
         public void UpdateLocationPicker()

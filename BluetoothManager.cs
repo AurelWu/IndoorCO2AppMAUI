@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Android.Companion;
+using Java.Util;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
@@ -52,6 +54,7 @@ namespace IndoorCO2App_Android
         public static DateTime previousUpdate = DateTime.MinValue;
         public static double timeToNextUpdate = 60;
         public static double refreshTime = 60;
+        public static double refreshTimeWhenNotSucess = 20;
 
         public static bool isRecording;
         public static long startingTime;
@@ -66,6 +69,7 @@ namespace IndoorCO2App_Android
         public static bool currentlyUpdating; //not yet used as updates seem to be reasonable fast
         public static bool lastAttemptFailed = false;
         public static bool InkbirdAlreadyHookedUp = false;
+        public static bool directConnectToBondedDevice = false;
 
         public static Dictionary<CO2MonitorType, Guid> serviceUUIDByMonitorType;
         public static ICharacteristic inkbirdCO2NotifyCharacteristic;
@@ -97,12 +101,23 @@ namespace IndoorCO2App_Android
 
         }
 
-        internal static void Update(CO2MonitorType monitorType)
+        internal static void Update(CO2MonitorType monitorType, string nameFilter)
         {
             DateTime currentTime = DateTime.Now;
             timeToNextUpdate = (int)(refreshTime - ((currentTime - previousUpdate).TotalSeconds));
 
-            if (currentTime - previousUpdate > TimeSpan.FromSeconds(refreshTime))
+            double updateFreq = refreshTime;
+            if(String.IsNullOrEmpty(deviceID))
+            {
+                updateFreq = refreshTimeWhenNotSucess;
+            }
+            if(lastAttemptFailed)
+            {
+                updateFreq = refreshTimeWhenNotSucess;
+            }
+
+
+            if (currentTime - previousUpdate > TimeSpan.FromSeconds(updateFreq))
             {
                 if (submissionDataManual != null && SpatialManager.currentLocation != null)
                 {
@@ -114,7 +129,7 @@ namespace IndoorCO2App_Android
                 previousUpdate = currentTime;
                 try
                 {
-                    ScanForDevices(monitorType);
+                    ScanForDevices(monitorType, nameFilter);
                 }
                 catch
                 {
@@ -164,7 +179,7 @@ namespace IndoorCO2App_Android
             isRecording = false;
         }
 
-        public static void FinishRecording(int start, int end, bool manualMode, string locationNameManual, string locationAddressManual)
+        public static async void FinishRecording(int start, int end, bool manualMode, string locationNameManual, string locationAddressManual)
         {
             //Add co2 measurements to submissionData
             //ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson());
@@ -172,7 +187,7 @@ namespace IndoorCO2App_Android
             {
                 isRecording = false;
                 submissionData.SensorData = recordedData;
-                ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start, end), false);
+                await ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start, end), false);
             }
             else
             {
@@ -180,15 +195,42 @@ namespace IndoorCO2App_Android
                 submissionDataManual.sensorData = recordedData;
                 submissionDataManual.LocationName = locationNameManual;
                 submissionDataManual.LocationAddress = locationAddressManual;
-                ApiGatewayCaller.SendJsonToApiGateway(submissionDataManual.ToJson(start, end), true);
+                await ApiGatewayCaller.SendJsonToApiGateway(submissionDataManual.ToJson(start, end), true);
             }
 
 
 
         }
 
-        internal static async void ScanForDevices(CO2MonitorType monitorType)
+        internal static async void ScanForDevices(CO2MonitorType monitorType, string nameFilter)
         {
+            //doesnt work like it should yet
+            //directConnectToBondedDevice = false;
+            //bool checkStatus = BluetoothHelper.CheckStatus();
+            //if (!checkStatus) return;
+            //var bonded = await CheckBondedDevicesForCO2Sensor(monitorType);
+            //if(bonded!=null && deviceID==null)
+            //{
+            //    rssi = bonded.Rssi;
+            //    try
+            //    {
+            //        
+            //        await adapter.ConnectToDeviceAsync(bonded);
+            //        lastAttemptFailed = false;
+            //        directConnectToBondedDevice = true;
+            //        ConnectToDevice(bonded, monitorType);
+            //        return;
+            //    }
+            //    catch
+            //    {
+            //        lastAttemptFailed = true;
+            //        discoveredDevices = null;
+            //        Console.WriteLine("Connecting to Device failed");
+            //        //if this fails we try the old way
+            //    }
+            //    
+            //}
+
             Guid serviceUUID;
             if (serviceUUIDByMonitorType.ContainsKey(monitorType))
             {
@@ -215,6 +257,7 @@ namespace IndoorCO2App_Android
             }
             adapter.ScanMatchMode = ScanMatchMode.STICKY;
             adapter.ScanMode = ScanMode.LowLatency;
+            adapter.ScanTimeout = 15000;
 
             if (discoveredDevices == null)
             {
@@ -255,6 +298,22 @@ namespace IndoorCO2App_Android
                     }
                     discoveredDevices = filteredDevices;
                 }
+                else if(nameFilter!=null && nameFilter.Length> 0)
+                {
+                    List<IDevice> unfilteredDevices = discoveredDevices.ToList();
+                    List<IDevice> filteredDevices = new List<IDevice>();
+                    for (int i = 0; i < unfilteredDevices.Count; i++)
+                    {
+                        var d = unfilteredDevices[i];
+                        if (d.Name != null && d.Name.Contains(nameFilter))
+                        {
+                            filteredDevices.Add(d);
+                            break;
+                        }
+                    }
+                    discoveredDevices = filteredDevices;
+                }
+
                 if (discoveredDevices.Count > 0)
                 {
                     rssi = discoveredDevices[0].Rssi;
@@ -280,22 +339,22 @@ namespace IndoorCO2App_Android
                 ConnectToDevice(discoveredDevices[0], monitorType);
             }
 
-            if (discoveredDevices == null)
-            {
-                await adapter.StartScanningForDevicesAsync(scanFilterOptions);
-                await adapter.StopScanningForDevicesAsync();
-                discoveredDevices = adapter.DiscoveredDevices;
-                if (monitorType == CO2MonitorType.InkbirdIAMT1)
-                {
-                    List<IDevice> inkbirdFilter = discoveredDevices.ToList();
-                    inkbirdFilter.RemoveAll(x => !x.Name.Contains("Inkbird"));
-                    discoveredDevices = inkbirdFilter;
-                }
-                if (discoveredDevices.Count > 0)
-                {
-                    rssi = discoveredDevices[0].Rssi;
-                }
-            }
+            //if (discoveredDevices == null)
+            //{
+            //    await adapter.StartScanningForDevicesAsync(scanFilterOptions);
+            //    await adapter.StopScanningForDevicesAsync();
+            //    discoveredDevices = adapter.DiscoveredDevices;
+            //    if (monitorType == CO2MonitorType.InkbirdIAMT1)
+            //    {
+            //        List<IDevice> inkbirdFilter = discoveredDevices.ToList();
+            //        inkbirdFilter.RemoveAll(x => !x.Name.Contains("Inkbird"));
+            //        discoveredDevices = inkbirdFilter;
+            //    }
+            //    if (discoveredDevices.Count > 0)
+            //    {
+            //        rssi = discoveredDevices[0].Rssi;
+            //    }
+            //}
         }
 
         internal static async void ConnectToDevice(IDevice device, CO2MonitorType monitorType)
@@ -312,7 +371,6 @@ namespace IndoorCO2App_Android
             {
                 IService service = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType]);
                 IReadOnlyList<IService> results = await device.GetServicesAsync();
-                //IService results = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType]);
 
                 if (service != null)
                 {
@@ -355,12 +413,6 @@ namespace IndoorCO2App_Android
                                 currentCO2Reading = (data[1] << 8) | (data[0] & 0xFF);
                                 sensorUpdateInterval = (data[10] << 8) | (data[9] & 0xFF);
 
-                                //SensorData sd = new SensorData(currentCO2Reading, 0);
-                                //if (isRecording)
-                                //{
-                                //    long timeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                                //    recordedData.Add(new SensorData(currentCO2Reading, timeStamp));
-                                //}
                             }
 
 
@@ -619,6 +671,50 @@ namespace IndoorCO2App_Android
             }
 
 
+        }
+
+        public async static Task<IDevice> CheckBondedDevicesForCO2Sensor(CO2MonitorType monitorType)
+        {
+            var uuid = serviceUUIDByMonitorType[monitorType];
+            // Ensure Bluetooth is turned on
+            bool allOk = BluetoothHelper.CheckStatus();
+            if (!allOk)
+            {
+                return null;
+            }
+
+            // Get bonded devices (paired devices)
+            var bondedDevices = adapter.BondedDevices;
+
+            foreach (var device in bondedDevices)
+            {
+                // Connect to the device
+                try
+                {
+                    await adapter.ConnectToDeviceAsync(device);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+                
+
+                // Discover services
+                var services = await device.GetServicesAsync();
+                foreach (var service in services)
+                {
+                    if (service.Id == uuid)
+                    {
+                        
+                            return device; // Return the device with the desired characteristic
+                    }
+                }
+
+                // Disconnect after checking
+                await adapter.DisconnectDeviceAsync(device);
+            }
+
+            return null; // No device found with the specific service characteristic
         }
     }
 }

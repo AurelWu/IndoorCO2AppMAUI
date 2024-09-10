@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sliders"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
              xmlns:controls="clr-namespace:IndoorCO2App_Android.Controls"
              x:Class="IndoorCO2App_Android.MainPage">
+
 
     <ScrollView>
 
@@ -161,9 +163,9 @@
                 <StackLayout Orientation="Horizontal">
                     <Label Text="50m" HorizontalOptions="Start" VerticalOptions="Center" />
                     <RadioButton x:Name="RadioButton50m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start"  CheckedChanged="OnRadioButtonCheckedChanged"  />
-                    <Label Text="100m" HorizontalOptions="Start" VerticalOptions="Center" />
+                    <Label Text=" 100m" HorizontalOptions="Start" VerticalOptions="Center" />
                     <RadioButton x:Name="RadioButton100m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" CheckedChanged="OnRadioButtonCheckedChanged"  />
-                    <Label Text="250m" HorizontalOptions="Start" VerticalOptions="Center" />
+                    <Label Text=" 250m" HorizontalOptions="Start" VerticalOptions="Center" />
                     <RadioButton x:Name="RadioButton250m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" CheckedChanged="OnRadioButtonCheckedChanged"  />
                 </StackLayout>
             </HorizontalStackLayout>
@@ -304,7 +306,7 @@
         VerticalTextAlignment="Start"
         BackgroundColor="Transparent" 
          Focused="OnEditorFocused"
-        Unfocused="OnEditorUnfocused" />
+        Completed="OnEntryCompleted" />
                 </Border>
             </Grid>
 
@@ -332,7 +334,7 @@ Padding="0">
     VerticalTextAlignment="Start"
     BackgroundColor="Transparent" 
      Focused="OnEditorFocused"
-    Unfocused="OnEditorUnfocused" />
+    Completed="OnEntryCompleted" />
                 </Border>
             </Grid>
 
@@ -352,12 +354,26 @@ Padding="0">
                 MaxLines="1"
                 HorizontalOptions="Start" />
 
-
-
-            <HorizontalStackLayout Spacing="0" HorizontalOptions="Center" x:Name="TrimSliderLayout" >
-                <Slider x:Name="startTrimSlider" WidthRequest="200" Minimum="0" Maximum="1" Value="0" MinimumTrackColor="{StaticResource Secondary}" MaximumTrackColor="{StaticResource Primary}" ValueChanged="OnSliderStartValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />
-                <Slider x:Name="endTrimSlider" WidthRequest="200" Minimum="0" Maximum="1" Value="1" MinimumTrackColor="{StaticResource Primary}" MaximumTrackColor="{StaticResource Secondary}" ValueChanged="OnSliderEndValueChanged" HorizontalOptions="Start" Margin="0,0,0,0" />
+            <slider:SfRangeSlider x:Name="TrimSlider" HorizontalOptions ="FillAndExpand"
+                                      Margin="0,0" 
+	                                  Minimum="1"
+                                      Maximum="10"
+                                      RangeStart="3"
+                                      RangeEnd="7"
+                                      ShowTicks="False"
+                                      ShowDividers="False"
+                                      StepSize="1"
+                                      Interval="1"
+                                      ValueChanged="OnTrimSliderValueChanged"
+                                      ValueChangeEnd="OnTrimSliderValueChanged">
+                                       
+            </slider:SfRangeSlider>
+            <!--
+            <HorizontalStackLayout Spacing="0" HorizontalOptions="CenterAndExpand" x:Name="TrimSliderLayout" Margin="10,0,10,0" >
+                <Slider x:Name="startTrimSlider" MinimumWidthRequest="150" HorizontalOptions="FillAndExpand"  Minimum="0" Maximum="1" Value="0" MinimumTrackColor="{StaticResource Secondary}" MaximumTrackColor="{StaticResource Primary}" ValueChanged="OnSliderStartValueChanged" Margin="0,0,0,0" />
+                <Slider x:Name="endTrimSlider" MinimumWidthRequest="150"  HorizontalOptions="FillAndExpand"  Minimum="0" Maximum="1" Value="1" MinimumTrackColor="{StaticResource Primary}" MaximumTrackColor="{StaticResource Secondary}" ValueChanged="OnSliderEndValueChanged"  Margin="0,0,0,0" />
             </HorizontalStackLayout>
+            -->
 
             <Label
                 x:Name="TrimSliderInfoText"
@@ -391,7 +407,7 @@ Padding="0">
                     VerticalTextAlignment="Start"
                     BackgroundColor="Transparent" 
                      Focused="OnEditorFocused"
-                    Unfocused="OnEditorUnfocused" />
+                    Completed="OnEntryCompleted" />
                 </Border>
             </Grid>
 
@@ -418,6 +434,35 @@ Padding="0">
                    VerticalOptions="CenterAndExpand"
                    HorizontalOptions="CenterAndExpand" />
             </HorizontalStackLayout>
+
+            <Grid
+    x:Name="StackDeviceNameFilter"    
+    RowDefinitions="50"
+    ColumnDefinitions="90,*"
+    RowSpacing="0"
+    ColumnSpacing="5"
+    HorizontalOptions="FillAndExpand"
+    Margin="5">
+                <Label
+        VerticalOptions="Center"
+        VerticalTextAlignment="Center"
+        Text="Filter Device by Name:"
+        Grid.Column="0" />
+                <Border                    
+    Stroke="{StaticResource Secondary}"
+    StrokeThickness="2"
+    Grid.Column="1"
+    Padding="0">
+
+                    <Editor
+x:Name="CO2DeviceNameFilterEditor"  
+VerticalTextAlignment="Start"
+BackgroundColor="Transparent" 
+TextChanged="OnDeviceNameFilterValueChanged"
+Focused="OnEditorFocused"
+Completed="OnEntryCompleted" />
+                </Border>
+            </Grid>
 
 
 
