@@ -298,7 +298,7 @@ namespace IndoorCO2App_Android
                     }
                     discoveredDevices = filteredDevices;
                 }
-                else if(nameFilter!=null && nameFilter.Length> 0)
+                else if(nameFilter!=null && namearFilter.Length> 0)
                 {
                     List<IDevice> unfilteredDevices = discoveredDevices.ToList();
                     List<IDevice> filteredDevices = new List<IDevice>();

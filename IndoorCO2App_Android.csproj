@@ -38,26 +38,26 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
-	  <ApplicationDisplayVersion>37.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>37</ApplicationVersion>
+	  <ApplicationDisplayVersion>39.0</ApplicationDisplayVersion>
+	  <ApplicationVersion>39</ApplicationVersion>
 	  <ApplicationId>com.aurelwu.indoorairqualitycollector</ApplicationId>
 	  <ApplicationTitle>IndoorCO2MapDataRecorder</ApplicationTitle>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
 	  <Debugger>Xamarin</Debugger>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
-	  <ApplicationDisplayVersion>37.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>37</ApplicationVersion>
+	  <ApplicationDisplayVersion>39.0</ApplicationDisplayVersion>
+	  <ApplicationVersion>39</ApplicationVersion>
 	  <ApplicationId>com.aurelwu.indoorairqualitycollector</ApplicationId>
 	  <ApplicationTitle>IndoorCO2MapDataRecorder</ApplicationTitle>
 	  <DebugSymbols>True</DebugSymbols>
 	  <AndroidKeyStore>False</AndroidKeyStore>
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	  <AndroidLinkTool>r8</AndroidLinkTool>
