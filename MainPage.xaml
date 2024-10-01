@@ -6,7 +6,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
              x:Class="IndoorCO2App_Android.MainPage">
 
 
-    <ScrollView>
+    <controls:FixedScrollView>
 
         <VerticalStackLayout
             Spacing="22"
@@ -468,7 +468,7 @@ Completed="OnEntryCompleted" />
 
     <Label x:Name="VersionLabel" Text="Version: 2024-10-01" FontSize="12" VerticalOptions="Center" />
         </VerticalStackLayout>
-    </ScrollView>
+    </controls:FixedScrollView>
 
     <ContentPage.Resources>
         <ControlTemplate x:Key="RadioButtonTemplate">
