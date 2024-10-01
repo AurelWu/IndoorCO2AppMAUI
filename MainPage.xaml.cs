@@ -1,13 +1,26 @@
 ﻿
-
 using IndoorCO2App_Android.Controls;
-using static Android.Provider.CallLog;
-
+using System.ComponentModel;
 
 namespace IndoorCO2App_Android
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage : ContentPage, INotifyPropertyChanged
     {
+        private string _appVersion;
+        public event PropertyChangedEventHandler PropertyChanged;
+        public string AppVersion
+        {
+            get => _appVersion;
+            set
+            {
+                if (_appVersion != value)
+                {
+                    _appVersion = value;
+                    OnPropertyChanged(nameof(AppVersion)); // Notify the UI that the property changed
+                }
+            }
+        }
+
         private const string SelectedMonitorPreferenceKey = "SelectedMonitorIndex";
         private const string DeviceNameFilterPreferenceKey = "NameFilterValue";
         public static int startTrimSliderValue = 0;
@@ -41,10 +54,12 @@ namespace IndoorCO2App_Android
 
         bool firstInit = true;
         public bool manualRecordingMode = false;
+        public IBluetoothHelper bluetoothHelper;
 
         public MainPage()
         {
             InitializeComponent();
+            AppVersion = GetAppVersion();
             CreateMainPageSingleton();
             InitUIElements();
             InitUILayout();
@@ -53,6 +68,14 @@ namespace IndoorCO2App_Android
             ChangeToStandardUI();
 
             LoadMonitorType();
+#if ANDROID
+            bluetoothHelper = new BluetoothHelper();            
+#endif
+#if IOS
+            bluetoothHelper = new BluetoothHelperApple();
+//TODO: add bluetoothHelper for iPhone
+#endif
+            //TODO: Add iPhone BluetoothHelper Implementation
             BluetoothManager.Init();
             firstInit = false;
 
@@ -69,13 +92,12 @@ namespace IndoorCO2App_Android
                 {
                     UpdateUI();
 
-                    BluetoothManager.Update(monitorType,_CO2DeviceNameFilterEditor.Text);
+                    BluetoothManager.Update(monitorType,_CO2DeviceNameFilterEditor.Text,bluetoothHelper);
 
                     if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))
                     {
-#if ANDROID
                         SpatialManager.UpdateLocation();
-#endif
+
                         timeOfLastGPSUpdate = DateTime.Now;
                     }
                 }
@@ -92,6 +114,11 @@ namespace IndoorCO2App_Android
             {
                 MainPageSingleton = this;
             }
+        }
+
+        public void BluetoothHelperSingleton()
+        {
+            
         }
 
 
@@ -185,7 +212,7 @@ namespace IndoorCO2App_Android
 
         public void UpdateLocationPicker()
         {
-#if ANDROID
+
             locations = OverpassModule.LocationData;
             if (locations.Count == 0)
             {
@@ -200,7 +227,6 @@ namespace IndoorCO2App_Android
             {
                 _LocationPicker.SelectedItem = locations[0];
             }
-#endif
         }
 
         private void LoadMonitorType()
@@ -231,6 +257,17 @@ namespace IndoorCO2App_Android
                 _CO2DevicePicker.SelectedIndex = 0; // Set default selected item if no preference is stored
                 monitorType = CO2MonitorType.Aranet4;
             }
+        }
+
+        private string GetAppVersion()
+        {
+            // Retrieve the app version
+            return "Version: " + VersionTracking.CurrentVersion;
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

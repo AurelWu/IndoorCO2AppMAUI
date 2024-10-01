@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace IndoorCO2App_Android
 {
-    internal class LocationService
+    internal class LocationService : ILocationService
     {
-        internal bool IsGpsEnabled()
+        public bool IsGpsEnabled()
         {
             LocationManager locationManager = (LocationManager)Android.App.Application.Context.GetSystemService(Context.LocationService);
             return locationManager.IsProviderEnabled(LocationManager.GpsProvider);
         }
 
-        internal async Task<bool> ShowEnableGpsDialogAsync()
+        public async Task<bool> ShowEnableGpsDialogAsync()
         {
             bool result = await App.Current.MainPage.DisplayAlert(
                 "Enable GPS",
@@ -34,3 +34,4 @@ namespace IndoorCO2App_Android
     }
 }
 #endif
+

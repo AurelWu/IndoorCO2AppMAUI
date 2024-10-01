@@ -6,10 +6,10 @@ namespace IndoorCO2App_Android
     {
         private async void OnRequestGPSPermissionDialog(object sender, EventArgs e)
         {
-#if ANDROID
+
             bool granted = await SpatialManager.IsLocationPermissionGrantedAsync();
             if (granted) return; // won't do anything if we already got permission;
-#endif
+
         }
     }
 }

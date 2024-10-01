@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-android34.0</TargetFrameworks>
+		<TargetFrameworks>net8.0-android34.0;net7.0-ios</TargetFrameworks>
 		<!-- <TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks> -->
 		<!-- 
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks> -->
@@ -26,6 +26,7 @@
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 
 		<UserSecretsId>52cfbcaf-df53-4fea-9d3f-680786743276</UserSecretsId>
 		<!--
@@ -35,6 +36,28 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		-->
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net7.0-ios'">
+		<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>
+		<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
+		<ApplicationDisplayVersion>39.0</ApplicationDisplayVersion>
+		<ApplicationVersion>39</ApplicationVersion>
+		<MtouchUseLlvm>True</MtouchUseLlvm>
+		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
+		<ApplicationDisplayVersion>39.0</ApplicationDisplayVersion>
+		<ApplicationVersion>39</ApplicationVersion>
+		<MtouchUseLlvm>False</MtouchUseLlvm>
+		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
@@ -48,6 +71,7 @@
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
 	  <Debugger>Xamarin</Debugger>
+	  <Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">

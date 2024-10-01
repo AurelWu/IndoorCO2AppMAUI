@@ -7,14 +7,13 @@ using AndroidX.Core.Content;
 using Microsoft.Maui.ApplicationModel;
 using System.Threading.Tasks;
 using Application = Android.App.Application;
-#endif
 
 namespace IndoorCO2App_Android
 {
 
-    public class BluetoothHelper
+    public class BluetoothHelper : IBluetoothHelper
     {
-        public static bool CheckStatus()
+        public bool CheckStatus()
         {
 
             // Check if the permissions for Bluetooth and Location are granted
@@ -34,7 +33,7 @@ namespace IndoorCO2App_Android
             return bluetoothPermission && bluetoothAdminPermission && locationPermission && bluetoothConnectPermission && bluetoothScanPermission;
         }
 
-        public static async Task<PermissionStatus> RequestAsync()
+        public async Task<PermissionStatus> RequestAsync()
         {
             // Check if the permissions are already granted
             if (CheckStatus())
@@ -72,7 +71,7 @@ namespace IndoorCO2App_Android
 
         }
 
-        private bool HasPermissionInManifest(string permission)
+        public bool HasPermissionInManifest(string permission)
         {
 
             var packageInfo = Application.Context.PackageManager.GetPackageInfo(Application.Context.PackageName, PackageInfoFlags.Permissions);
@@ -84,7 +83,7 @@ namespace IndoorCO2App_Android
             return false;
         }
 
-        public static void RequestBluetoothEnable()
+        public void RequestBluetoothEnable()
         {
 
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
@@ -107,7 +106,7 @@ namespace IndoorCO2App_Android
             }
         }
 
-        public static bool CheckIfBTEnabled()
+        public bool CheckIfBTEnabled()
         {
 
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
@@ -130,6 +129,7 @@ namespace IndoorCO2App_Android
 
     }
 }
+#endif
 
 
 

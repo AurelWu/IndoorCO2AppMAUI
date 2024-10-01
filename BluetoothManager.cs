@@ -5,8 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Android.Companion;
-using Java.Util;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
@@ -74,6 +72,7 @@ namespace IndoorCO2App_Android
         public static Dictionary<CO2MonitorType, Guid> serviceUUIDByMonitorType;
         public static ICharacteristic inkbirdCO2NotifyCharacteristic;
 
+
         internal async static void Init()
         {
 
@@ -101,7 +100,7 @@ namespace IndoorCO2App_Android
 
         }
 
-        internal static void Update(CO2MonitorType monitorType, string nameFilter)
+        internal static void Update(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
         {
             DateTime currentTime = DateTime.Now;
             timeToNextUpdate = (int)(refreshTime - ((currentTime - previousUpdate).TotalSeconds));
@@ -129,7 +128,7 @@ namespace IndoorCO2App_Android
                 previousUpdate = currentTime;
                 try
                 {
-                    ScanForDevices(monitorType, nameFilter);
+                    ScanForDevices(monitorType, nameFilter, bluetoothHelper);
                 }
                 catch
                 {
@@ -202,7 +201,7 @@ namespace IndoorCO2App_Android
 
         }
 
-        internal static async void ScanForDevices(CO2MonitorType monitorType, string nameFilter)
+        internal static async void ScanForDevices(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
         {
             //doesnt work like it should yet
             //directConnectToBondedDevice = false;
@@ -241,9 +240,9 @@ namespace IndoorCO2App_Android
                 throw new System.NotImplementedException("monitorType not supported");
             }
             lastAttemptFailed = false;
-            bool checkPermissions = BluetoothHelper.CheckStatus();
+            bool checkPermissions = bluetoothHelper.CheckStatus();
             if (!checkPermissions) return;
-            await BluetoothHelper.RequestAsync();
+            await bluetoothHelper.RequestAsync();
             if (ble == null)
             {
                 Init();
@@ -673,11 +672,11 @@ namespace IndoorCO2App_Android
 
         }
 
-        public async static Task<IDevice> CheckBondedDevicesForCO2Sensor(CO2MonitorType monitorType)
+        public async static Task<IDevice> CheckBondedDevicesForCO2Sensor(CO2MonitorType monitorType, IBluetoothHelper bluetoothHelper)
         {
             var uuid = serviceUUIDByMonitorType[monitorType];
             // Ensure Bluetooth is turned on
-            bool allOk = BluetoothHelper.CheckStatus();
+            bool allOk = bluetoothHelper.CheckStatus();
             if (!allOk)
             {
                 return null;
@@ -718,3 +717,4 @@ namespace IndoorCO2App_Android
         }
     }
 }
+

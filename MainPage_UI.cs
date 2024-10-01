@@ -17,6 +17,7 @@ namespace IndoorCO2App_Android
         public Label _LocationLabel;
         public Label _LocationLabelRecording;
         public Label _LocationInfoLabel;
+        public Label _VersionLabel;
         public Button _UpdateLocationsButton;
         public Button _ResumeRecordingButton;
         public Button _StartRecordingButton;
@@ -59,6 +60,7 @@ namespace IndoorCO2App_Android
             _LocationLabel = this.FindByName<Label>("LocationLabel");
             _LocationLabelRecording = this.FindByName<Label>("LocationLabelRecording");
             _LocationInfoLabel = this.FindByName<Label>("LocationInfoLabel");
+            _VersionLabel = this.FindByName<Label>("VersionLabel"); 
             _UpdateLocationsButton = this.FindByName<Button>("UpdateLocationsButton");
             _ResumeRecordingButton = this.FindByName<Button>("ResumeRecordingButton");
             _StartRecordingButton = this.FindByName<Button>("StartRecordingButton");
@@ -122,6 +124,7 @@ namespace IndoorCO2App_Android
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackDeviceNameFilter"), MenuMode.Standard);
             MenuModesOfUIElements.Add(_TrimSlider, MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(_CO2DeviceNameFilterEditor, MenuMode.Standard);
+            MenuModesOfUIElements.Add(_VersionLabel, MenuMode.Standard);
         }
 
         private void InitUILayout()
@@ -157,6 +160,7 @@ namespace IndoorCO2App_Android
 
         public void UpdateUI()
         {
+            VersionLabel.Text = AppVersion;
             UpdateGPSStatusButton();
             UpdateGPSPermissionButton();
             UpdateBluetoothStatusButton();
@@ -328,7 +332,7 @@ namespace IndoorCO2App_Android
         private void UpdateBluetoothStatusButton()
         {
 
-            btActive = BluetoothHelper.CheckIfBTEnabled();
+            btActive = bluetoothHelper.CheckIfBTEnabled();
             if (btActive)
             {
                 _BluetoothEnabledButton.BackgroundColor = Color.Parse("Green");
@@ -343,7 +347,7 @@ namespace IndoorCO2App_Android
         private void UpdateBluetoothPermissionsButton()
         {
 
-            btGranted = BluetoothHelper.CheckStatus();
+            btGranted = bluetoothHelper.CheckStatus();
             if (btGranted)
             {
                 _BluetoothPermissionsButton.BackgroundColor = Color.Parse("Green");

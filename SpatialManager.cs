@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 
 namespace IndoorCO2App_Android
 {
     internal static class SpatialManager
     {
-#if ANDROID
         internal static Location currentLocation;
         internal static bool locationUpdateSuccessful;
         // Method to check if location permission is granted
-        static LocationService ls;
+        static ILocationService ls;
         static SpatialManager()
         {
+#if ANDROID
             ls = new LocationService();
+#endif
+#if IOS
+            ls = new LocationServiceApple();
+#endif
             currentLocation = new Location();
         }
 
@@ -72,23 +78,27 @@ namespace IndoorCO2App_Android
 
             catch (FeatureNotSupportedException fnsEx)
             {
+                Debug.Print(fnsEx.Message);
                 locationUpdateSuccessful = false;
             }
             catch (FeatureNotEnabledException fneEx)
             {
+
+                Debug.Print(fneEx.Message);
                 locationUpdateSuccessful = false;
             }
             catch (PermissionException pEx)
             {
+                Debug.Print(pEx.Message);
                 locationUpdateSuccessful = false;
             }
             catch (Exception ex)
             {
+                Debug.Print(ex.Message);
                 locationUpdateSuccessful = false;
             }
 
         }
-#endif
     }
 }
 
