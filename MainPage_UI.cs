@@ -43,6 +43,7 @@ namespace IndoorCO2App_Android
         public Editor _ManualAddressEditor;
         public SfRangeSlider _TrimSlider;
         public Editor _CO2DeviceNameFilterEditor;
+        public Button _DebugLogButton;
 
 
 
@@ -87,6 +88,7 @@ namespace IndoorCO2App_Android
             _ConfirmCancelRecordingButton.IsVisible = false;
             _CO2DeviceNameFilterEditor = this.FindByName<Editor>("CO2DeviceNameFilterEditor");
             _ResumeRecordingButton.IsVisible = false; //TODO Enable again once completely implemented
+            _DebugLogButton = this.FindByName<Button>("DebugLogButton");
 
 
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
@@ -125,6 +127,7 @@ namespace IndoorCO2App_Android
             MenuModesOfUIElements.Add(_TrimSlider, MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(_CO2DeviceNameFilterEditor, MenuMode.Standard);
             MenuModesOfUIElements.Add(_VersionLabel, MenuMode.Standard);
+            MenuModesOfUIElements.Add(_DebugLogButton, MenuMode.Standard);
         }
 
         private void InitUILayout()
@@ -445,11 +448,11 @@ namespace IndoorCO2App_Android
 
             }
 
-            if (maxSliderVal > previousDataCount)
+            if (maxSliderVal >= previousDataCount) //maybe must be > instead of >=
             {
-                int max = Math.Max(1, maxSliderVal);
+                int max = Math.Max(1, maxSliderVal);                
+                if (_TrimSlider.RangeEnd == max - 1 || previousDataCount==_TrimSlider.RangeEnd || endtrimSliderIsAtmax) _TrimSlider.RangeEnd = max;
                 previousDataCount = maxSliderVal;
-                if (_TrimSlider.RangeEnd == max - 1) _TrimSlider.RangeEnd = max;
             }
 
             if (!endTrimSliderHasBeenUsed && maxSliderVal > 0)

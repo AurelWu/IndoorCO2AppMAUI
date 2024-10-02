@@ -450,7 +450,9 @@ namespace IndoorCO2App_Android
                                 int response = -999;
                                 try
                                 {
+                                    Logger.circularBuffer.Add("Requesting History from Aranet: " + requestData);
                                     response = await aranet4CharacteristicWriter.WriteAsync(requestData);
+                                    Logger.circularBuffer.Add("Response to Request: " + response);
                                 }
                                 catch
                                 {
@@ -463,6 +465,8 @@ namespace IndoorCO2App_Android
                                 try
                                 {
                                     history = await aranet4CharacteristicHistoryV2.ReadAsync();
+                                    Logger.circularBuffer.Add("ReadingHistoryV2|data Size: " + history.data.Length);
+                                    Logger.circularBuffer.Add("ReadingHistoryV2|result Code: " + history.resultCode);
                                 }
                                 catch
                                 {
@@ -484,6 +488,7 @@ namespace IndoorCO2App_Android
                                     co2dataArray[i] = BitConverter.ToUInt16(historyDataRaw, 10 + (i * 2));
                                 }
                                 Console.WriteLine("historyArrayLength: " + co2dataArray.Length);
+                                //TODO => dont clear if something went wrong but for now we want to find out what sometimes goes wrong first.
                                 recordedData.Clear();
                                 foreach (var e in co2dataArray)
                                 {

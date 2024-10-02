@@ -83,6 +83,7 @@ namespace IndoorCO2App_Android
                 $"nwr(around:{rString},{latString},{lonString})[amenity=dentist];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=doctors];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=pharmacy];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=veterinary];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=social_facility];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=bank];" +
                 $"nwr(around:{rString},{latString},{lonString})[healthcare];" +

@@ -111,6 +111,7 @@
 		<PackageReference Include="DotNetEnv" Version="3.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Utilities" Version="17.11.40262" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Plugin.BLE" Version="3.1.0" />
 		<PackageReference Include="Syncfusion.Maui.Sliders" Version="26.2.11" />
@@ -124,6 +125,9 @@
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnDeletePreviousClicked.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="MainPageEventHandlers\MainPage_OnDebugLogButtonClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnEntryCompleted.cs">

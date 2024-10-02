@@ -465,8 +465,13 @@ Completed="OnEntryCompleted" />
             </Grid>
 
 
-
-    <Label x:Name="VersionLabel" Text="Version: 2024-10-01" FontSize="12" VerticalOptions="Center" />
+            <Button
+    x:Name="DebugLogButton"
+    Text="Copy Debug Log to Clipboard"
+    SemanticProperties.Hint="Copy Debug Log to Clipboard Button"
+    Clicked="OnDebugLogButtonClicked"
+    HorizontalOptions="Center" />
+            <Label x:Name="VersionLabel" Text="Version: 2024-10-01" FontSize="12" VerticalOptions="Center" />
         </VerticalStackLayout>
     </controls:FixedScrollView>
 
