@@ -78,23 +78,23 @@ namespace IndoorCO2App_Android
 
             catch (FeatureNotSupportedException fnsEx)
             {
-                Debug.Print(fnsEx.Message);
+                Logger.circularBuffer.Add(fnsEx.Message);                
                 locationUpdateSuccessful = false;
             }
             catch (FeatureNotEnabledException fneEx)
             {
 
-                Debug.Print(fneEx.Message);
+                Logger.circularBuffer.Add(fneEx.Message);
                 locationUpdateSuccessful = false;
             }
             catch (PermissionException pEx)
             {
-                Debug.Print(pEx.Message);
+                Logger.circularBuffer.Add(pEx.Message);
                 locationUpdateSuccessful = false;
             }
             catch (Exception ex)
             {
-                Debug.Print(ex.Message);
+                Logger.circularBuffer.Add(ex.Message);
                 locationUpdateSuccessful = false;
             }
 

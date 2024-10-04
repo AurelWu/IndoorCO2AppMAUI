@@ -127,7 +127,7 @@ namespace IndoorCO2App_Android
             MenuModesOfUIElements.Add(_TrimSlider, MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(_CO2DeviceNameFilterEditor, MenuMode.Standard);
             MenuModesOfUIElements.Add(_VersionLabel, MenuMode.Standard);
-            MenuModesOfUIElements.Add(_DebugLogButton, MenuMode.Standard);
+            MenuModesOfUIElements.Add(_DebugLogButton, MenuMode.Standard | MenuMode.Recording | MenuMode.ManualRecording);
         }
 
         private void InitUILayout()
@@ -379,7 +379,7 @@ namespace IndoorCO2App_Android
                 }
                 else
                 {
-                    _LocationLabel.Text = "GPS enabled and Location permissions granted. Getting first Location Info. This might take a minute";
+                    _LocationLabel.Text = "GPS enabled & Location permissions granted. Getting Location Info. Might take a minute";
                 }
             }
             else
@@ -448,7 +448,7 @@ namespace IndoorCO2App_Android
 
             }
 
-            if (maxSliderVal >= previousDataCount) //maybe must be > instead of >=
+            if (maxSliderVal > previousDataCount) //maybe must be > instead of >=
             {
                 int max = Math.Max(1, maxSliderVal);                
                 if (_TrimSlider.RangeEnd == max - 1 || previousDataCount==_TrimSlider.RangeEnd || endtrimSliderIsAtmax) _TrimSlider.RangeEnd = max;

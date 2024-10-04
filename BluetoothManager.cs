@@ -430,6 +430,12 @@ namespace IndoorCO2App_Android
                                 var result = await aranet4CharacteristicTotalDataPoints.ReadAsync();
                                 byte[] totalDataPointsRaw = result.data;
                                 totalDataPoints = (totalDataPointsRaw[1] << 8) | (totalDataPointsRaw[0] & 0xFF);
+                                if(isRecording)
+                                {
+                                    Logger.circularBuffer.Add("************");
+                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Aranet|TotalDataPoints: " + totalDataPoints);
+                                }
+                                
                             }
                             catch
                             {
@@ -448,11 +454,13 @@ namespace IndoorCO2App_Android
                                 if (start < 0) start = 0;
                                 var requestData = AranetPackDataRequestCO2History(start);
                                 int response = -999;
+                                int retryCounter = 0;
+                                RETRYREAD:
                                 try
                                 {
-                                    Logger.circularBuffer.Add("Requesting History from Aranet: " + requestData);
+                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString()+ "|Aranet|Requesting History with startIndex: " +start);
                                     response = await aranet4CharacteristicWriter.WriteAsync(requestData);
-                                    Logger.circularBuffer.Add("Response to Request: " + response);
+                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Aranet|Response to Request: " + response);
                                 }
                                 catch
                                 {
@@ -464,9 +472,17 @@ namespace IndoorCO2App_Android
                                 (byte[] data, int resultCode) history;
                                 try
                                 {
+                                    await Task.Delay(35);
                                     history = await aranet4CharacteristicHistoryV2.ReadAsync();
-                                    Logger.circularBuffer.Add("ReadingHistoryV2|data Size: " + history.data.Length);
-                                    Logger.circularBuffer.Add("ReadingHistoryV2|result Code: " + history.resultCode);
+                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Aranet|ReadingHistoryV2|data Size: " + history.data.Length);
+                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Aranet|ReadingHistoryV2|result Code: " + history.resultCode);
+                                    if(history.data.Length<=10 && retryCounter<10)
+                                    {
+                                        retryCounter++;
+                                        Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() +"|Aranet|Historyread Retry: " + retryCounter);
+                                        await Task.Delay(35);
+                                        goto RETRYREAD;
+                                    }
                                 }
                                 catch
                                 {
@@ -487,7 +503,7 @@ namespace IndoorCO2App_Android
                                 {
                                     co2dataArray[i] = BitConverter.ToUInt16(historyDataRaw, 10 + (i * 2));
                                 }
-                                Console.WriteLine("historyArrayLength: " + co2dataArray.Length);
+                                Logger.circularBuffer.Add("Aranet|historyArrayLength: " + co2dataArray.Length);
                                 //TODO => dont clear if something went wrong but for now we want to find out what sometimes goes wrong first.
                                 recordedData.Clear();
                                 foreach (var e in co2dataArray)
@@ -531,7 +547,7 @@ namespace IndoorCO2App_Android
                             try
                             {
                                 response = await airValentHistoryPointer.WriteAsync(msg);
-                                System.Diagnostics.Debug.WriteLine(response);
+                                Logger.circularBuffer.Add("airvalen|Response|HistoryRequest: " + response);
 
                             }
                             catch
@@ -632,7 +648,7 @@ namespace IndoorCO2App_Android
                 byte[] data = memoryStream.ToArray();
 
 
-                System.Diagnostics.Debug.WriteLine("Sent data: " + BitConverter.ToString(data));
+                //System.Diagnostics.Debug.WriteLine("Sent data: " + BitConverter.ToString(data));
                 return memoryStream.ToArray();
             }
         }

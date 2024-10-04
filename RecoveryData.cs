@@ -33,11 +33,12 @@ namespace IndoorCO2App_Android
                 locationID = long.Parse(Preferences.Get(prefRecoveryLocationID, "0"));
                 locationType = Preferences.Get(prefRecoveryLocationType, "");
                 locationName = Preferences.Get(prefRecoveryLocationName, "");
-                locationLat = Preferences.Get(prefRecoveryLocationLat, 0);
-                locationLon = Preferences.Get(prefRecoveryLocationLon, 0);
+                locationLat = double.Parse(Preferences.Get(prefRecoveryLocationLat, "0"));
+                locationLon = double.Parse(Preferences.Get(prefRecoveryLocationLon, "0"));
             }
             catch (Exception e)
             {
+                //Logger.circularBuffer.Add("Error Retrieving stored Data");
                 string x = e.ToString();
                 ResetRecoveryData();
             }
@@ -51,8 +52,8 @@ namespace IndoorCO2App_Android
             Preferences.Set(prefRecoveryLocationID, locationID.ToString());
             Preferences.Set(prefRecoveryLocationType, locationType);
             Preferences.Set(prefRecoveryLocationName, locationName);
-            Preferences.Set(prefRecoveryLocationLat, locationLat);
-            Preferences.Set(prefRecoveryLocationLon, locationLon);
+            Preferences.Set(prefRecoveryLocationLat, locationLat.ToString());
+            Preferences.Set(prefRecoveryLocationLon, locationLon.ToString());
         }
 
         public static void ResetRecoveryData()
@@ -62,8 +63,8 @@ namespace IndoorCO2App_Android
             Preferences.Set(prefRecoveryLocationID, "0");
             Preferences.Set(prefRecoveryLocationType, "");
             Preferences.Set(prefRecoveryLocationName, "");
-            Preferences.Set(prefRecoveryLocationLat, 0);
-            Preferences.Set(prefRecoveryLocationLon, 0);
+            Preferences.Set(prefRecoveryLocationLat, "0");
+            Preferences.Set(prefRecoveryLocationLon, "0");
             startTime = 0;
             timeOfLastUpdate = 0;
             locationID = 0;
