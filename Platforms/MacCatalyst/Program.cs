@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     public class Program
     {

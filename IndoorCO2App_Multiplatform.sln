@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndoorCO2App_Android", "IndoorCO2App_Android.csproj", "{32D31AD7-BEFD-4176-BFA4-F2651CB7A62F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IndoorCO2App_Multiplatform", "IndoorCO2App_Multiplatform.csproj", "{32D31AD7-BEFD-4176-BFA4-F2651CB7A62F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

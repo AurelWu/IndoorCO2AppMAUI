@@ -2,7 +2,7 @@ using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 using System;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     internal class Program : MauiApplication
     {
