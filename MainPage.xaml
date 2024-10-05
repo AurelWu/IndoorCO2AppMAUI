@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sliders"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
-             xmlns:controls="clr-namespace:IndoorCO2App_Android.Controls"
-             x:Class="IndoorCO2App_Android.MainPage">
+             xmlns:controls="clr-namespace:IndoorCO2App_Multiplatform.Controls"
+             x:Class="IndoorCO2App_Multiplatform.MainPage">
 
 
     <controls:FixedScrollView>

@@ -5,7 +5,7 @@ using Android.Locations;
 using Android.Provider;
 using System.Threading.Tasks;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     internal class LocationService : ILocationService
     {

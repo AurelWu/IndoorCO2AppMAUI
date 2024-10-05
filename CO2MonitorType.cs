@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     internal enum CO2MonitorType
     {

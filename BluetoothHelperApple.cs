@@ -6,7 +6,7 @@ using Microsoft.Maui.ApplicationModel;
 using System.Threading.Tasks;
 using UIKit;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     public class BluetoothHelperApple : IBluetoothHelper
     {

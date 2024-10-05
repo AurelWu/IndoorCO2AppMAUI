@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     public static class EncryptionManager
     {

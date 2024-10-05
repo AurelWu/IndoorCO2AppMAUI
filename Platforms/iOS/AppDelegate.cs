@@ -1,7 +1,7 @@
 ﻿using Foundation;
 
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

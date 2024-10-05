@@ -1,8 +1,8 @@
 ﻿
-using IndoorCO2App_Android.Controls;
+using IndoorCO2App_Multiplatform.Controls;
 using Syncfusion.Maui.Sliders;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {

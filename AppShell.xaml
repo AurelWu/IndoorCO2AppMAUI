@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-    x:Class="IndoorCO2App_Android.AppShell"
+    x:Class="IndoorCO2App_Multiplatform.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:IndoorCO2App_Android"
+    xmlns:local="clr-namespace:IndoorCO2App_Multiplatform"
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent

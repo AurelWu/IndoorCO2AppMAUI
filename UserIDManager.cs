@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Maui.Storage;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     public static class UserIDManager
     {

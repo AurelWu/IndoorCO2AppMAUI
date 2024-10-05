@@ -4,7 +4,7 @@ using Foundation;
 using System.Threading.Tasks;
 using UIKit;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     internal class LocationServiceApple : ILocationService
     {

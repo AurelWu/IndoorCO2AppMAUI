@@ -7,7 +7,7 @@ using Plugin.BLE;
 
 
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     internal class SensorData
     {

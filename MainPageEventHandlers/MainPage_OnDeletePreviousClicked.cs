@@ -4,7 +4,7 @@ using IndoorCO2App;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {

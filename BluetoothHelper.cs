@@ -8,7 +8,7 @@ using Microsoft.Maui.ApplicationModel;
 using System.Threading.Tasks;
 using Application = Android.App.Application;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
 
     public class BluetoothHelper : IBluetoothHelper

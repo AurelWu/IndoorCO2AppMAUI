@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Maui;
-using IndoorCO2App_Android;
+using IndoorCO2App_Multiplatform;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IndoorCO2App_Android.Controls
+namespace IndoorCO2App_Multiplatform.Controls
 {
 
 

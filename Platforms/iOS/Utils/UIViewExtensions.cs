@@ -1,7 +1,7 @@
 ﻿using CoreGraphics;
 using UIKit;
 
-namespace IndoorCO2App_Android.Platforms.iOS.Utils
+namespace IndoorCO2App_Multiplatform.Platforms.iOS.Utils
 {
     // Helper extensions to compute how much shift the UI up
     // when the keyboard shows to avoid hiding input fields.

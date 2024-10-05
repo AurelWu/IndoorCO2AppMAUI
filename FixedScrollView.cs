@@ -1,12 +1,12 @@
 ﻿#if IOS
 using Microsoft.Maui.Platform;
-using IndoorCO2App_Android.Platforms.iOS.Utils;
+using IndoorCO2App_Multiplatform.Platforms.iOS.Utils;
 using UIKit;
 using CoreGraphics;
 #endif
 
 
-namespace IndoorCO2App_Android.Controls
+namespace IndoorCO2App_Multiplatform.Controls
 {
     public class FixedScrollView : ScrollView
     {

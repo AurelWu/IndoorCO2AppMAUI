@@ -2,7 +2,7 @@
 
 using Microsoft.VisualStudio.Utilities;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {

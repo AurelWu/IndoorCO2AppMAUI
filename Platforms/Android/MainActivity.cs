@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Permission = Android.Content.PM.Permission;
 using Android.OS;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
     public class MainActivity : MauiAppCompatActivity

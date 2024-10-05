@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     [Application]
     public class MainApplication : MauiApplication

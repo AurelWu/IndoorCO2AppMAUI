@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     public static class MauiProgram
     {
