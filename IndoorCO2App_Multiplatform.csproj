@@ -15,10 +15,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>IndoorCO2App_Android</ApplicationTitle>
+		<ApplicationTitle>IndoorCO2DataRecorder</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.indoorco2app_android</ApplicationId>
+		<!-- <ApplicationId>com.companyname.indoorco2app_android</ApplicationId>-->
+		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
 		<ApplicationIdGuid>fc85f5be-5db1-417c-b04f-0a25963c421c</ApplicationIdGuid>
 
 		<!-- Versions -->
