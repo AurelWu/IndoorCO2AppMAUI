@@ -42,5 +42,9 @@
 	<array>
 		<string>bluetooth-central</string>
 	</array>
+	<key>CFBundleShortVersionString</key>
+	<string>28.0</string>
+	<key>CFBundleVersion</key>
+	<string>28</string>
 </dict>
 </plist>
