@@ -6,6 +6,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public class SubmissionData
     {
+        internal string SensorType { get; set; }
         internal string SensorID { get; set; }
         internal string NwrType { get; set; }
         internal long NwrID { get; set; }
@@ -19,8 +20,9 @@ namespace IndoorCO2App_Multiplatform
         internal string OccupancyLevel { get; set; }
         internal string AdditionalNotes { get; set; }
 
-        public SubmissionData(string sensorID, string nwrType, long nwrID, string nwrName, double nwrLat, double nwrLon, long startTime)
+        public SubmissionData(string sensorType, string sensorID, string nwrType, long nwrID, string nwrName, double nwrLat, double nwrLon, long startTime)
         {
+            SensorType = sensorType;
             SensorID = sensorID;
             NwrType = nwrType;
             NwrID = nwrID;
@@ -63,7 +65,8 @@ namespace IndoorCO2App_Multiplatform
             VentilationSystem = MainPage.hasVentilationSystem;
             AdditionalNotes = MainPage.MainPageSingleton.GetNotesEditorText();
 
-            json["d"] = SensorID;
+            //TODO: =
+            json["d"] = SensorType.ToString() +"_"+ SensorID;
             json["p"] = NwrType;
             json["i"] = NwrID;
             json["n"] = NwrName;

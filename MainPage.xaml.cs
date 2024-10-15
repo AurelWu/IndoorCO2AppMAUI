@@ -139,7 +139,7 @@ namespace IndoorCO2App_Multiplatform
                     selectedLocation = (LocationData)_LocationPicker.SelectedItem;
                     ChangeToRecordingUI();
                     long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                    BluetoothManager.StartNewRecording(selectedLocation, startTime, prerecording);
+                    BluetoothManager.StartNewRecording(monitorType, selectedLocation, startTime, prerecording);
                     RecoveryData.startTime = startTime;
                     RecoveryData.timeOfLastUpdate = startTime;
                     RecoveryData.locationID = selectedLocation.ID;
@@ -155,7 +155,7 @@ namespace IndoorCO2App_Multiplatform
                     LocationData ld = new LocationData(RecoveryData.locationType, RecoveryData.locationID, RecoveryData.locationName, RecoveryData.locationLat, RecoveryData.locationLon, RecoveryData.locationLat, RecoveryData.locationLon);
                     selectedLocation = ld;
                     ChangeToRecordingUI();
-                    BluetoothManager.StartNewRecording(selectedLocation, RecoveryData.startTime, false);
+                    BluetoothManager.StartNewRecording(monitorType, selectedLocation, RecoveryData.startTime, false);
                 }
 
 
@@ -180,6 +180,12 @@ namespace IndoorCO2App_Multiplatform
             SpatialManager.ResetLocation();
             _LocationPicker.ItemsSource = null;
             _LocationPicker.Items.Clear();
+            
+        }
+        private void ResetNotes()
+        {
+            Editor ed = this.FindByName<Editor>("NotesEditor");
+            ed.Text = "";
         }
 
 
@@ -202,6 +208,7 @@ namespace IndoorCO2App_Multiplatform
             OverpassModule.lastFetchWasSuccess = false;
             OverpassModule.lastFetchWasSuccessButNoResults = false;
             OverpassModule.everFetchedLocations = false;
+            ResetNotes();
 
             Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(4), () =>
             {

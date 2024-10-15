@@ -138,11 +138,11 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        public static void StartNewRecording(LocationData location, long startTime, bool prerecording)
+        public static void StartNewRecording(CO2MonitorType monitorType, LocationData location, long startTime, bool prerecording)
         {
             isRecording = true;
             recordedData = new List<SensorData>();
-            submissionData = new SubmissionData(UserIDManager.GetEncryptedID(deviceID), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
+            submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
             startingTime = startTime;
             InkbirdAlreadyHookedUp = false;
             if (prerecording)
@@ -506,9 +506,11 @@ namespace IndoorCO2App_Multiplatform
                                 Logger.circularBuffer.Add("Aranet|historyArrayLength: " + co2dataArray.Length);
                                 //TODO => dont clear if something went wrong but for now we want to find out what sometimes goes wrong first.
                                 recordedData.Clear();
+                                int t = 0;
                                 foreach (var e in co2dataArray)
                                 {
-                                    recordedData.Add(new SensorData(e, 0));
+                                    recordedData.Add(new SensorData(e, t));
+                                    t++;
                                 }
                                 RecoveryData.timeOfLastUpdate = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                                 RecoveryData.WriteToPreferences();
@@ -547,7 +549,7 @@ namespace IndoorCO2App_Multiplatform
                             try
                             {
                                 response = await airValentHistoryPointer.WriteAsync(msg);
-                                Logger.circularBuffer.Add("airvalen|Response|HistoryRequest: " + response);
+                                Logger.circularBuffer.Add("airvalent|Response|HistoryRequest: " + response);
 
                             }
                             catch
@@ -593,9 +595,11 @@ namespace IndoorCO2App_Multiplatform
                         valuesTaken.Reverse(); // we reverse the order again so its sorted from oldest to newest again
 
                         recordedData.Clear();
+                        int t = 0;
                         foreach (var e in valuesTaken)
                         {
-                            recordedData.Add(new SensorData(e, 0));
+                            recordedData.Add(new SensorData(e, t));
+                            t++;
                         }
                         if (recordedData.Count > 0)
                         {
@@ -687,7 +691,8 @@ namespace IndoorCO2App_Multiplatform
             currentCO2Reading = CO2LiveValue;
             if (isRecording)
             {
-                recordedData.Add(new SensorData(CO2LiveValue, 0));
+                int t = recordedData.Count;
+                recordedData.Add(new SensorData(CO2LiveValue, t));
             }
 
 
