@@ -11,5 +11,6 @@ namespace IndoorCO2App_Multiplatform
         Aranet4,
         Airvalent,
         InkbirdIAMT1,
+        AirCoda,
     }
 }

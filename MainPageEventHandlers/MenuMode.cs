@@ -11,6 +11,9 @@ namespace IndoorCO2App_Multiplatform
     {
         Standard = 1,
         Recording = 2,
-        ManualRecording = 4
+        ManualRecording = 4,
+        TransportRecording = 8,
+        TransportSelection = 16,
+
     }
 }

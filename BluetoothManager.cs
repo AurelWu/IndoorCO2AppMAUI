@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls.PlatformConfiguration;
+using Microsoft.VisualStudio.Composition;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
@@ -55,10 +56,12 @@ namespace IndoorCO2App_Multiplatform
         public static double refreshTimeWhenNotSucess = 20;
 
         public static bool isRecording;
+        public static bool isTransportRecording;
         public static long startingTime;
         public static List<SensorData> recordedData;
         public static SubmissionData submissionData;
         public static SubmissionDataManual submissionDataManual;
+        public static SubmissionDataTransport submissionDataTransport;
         public static string deviceID;
         public static bool isGattA2DP;
         public static int rssi;
@@ -80,6 +83,7 @@ namespace IndoorCO2App_Multiplatform
             serviceUUIDByMonitorType.Add(CO2MonitorType.Aranet4, AranetServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.Airvalent, AirvalentServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.InkbirdIAMT1, InkbirdServiceUUID);
+            serviceUUIDByMonitorType.Add(CO2MonitorType.AirCoda, InkbirdServiceUUID);
             recordedData = new List<SensorData>();
             ble = CrossBluetoothLE.Current;
             discoveredDevices = new List<IDevice>(); // we init a dummy to avoid null checks
@@ -158,6 +162,7 @@ namespace IndoorCO2App_Multiplatform
         public static void StartNewManualRecording(LocationData location, long startTime, bool prerecording)
         {
             isRecording = true;
+            isTransportRecording = false;
             recordedData = new List<SensorData>();
             submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(deviceID), startTime);
             startingTime = startTime;
@@ -170,7 +175,19 @@ namespace IndoorCO2App_Multiplatform
             {
                 prerecordingLength = 0;
             }
+        }
 
+        public static void StartTransportRecording(long startTime, bool prerecording)
+        {
+            isRecording = true;
+            isTransportRecording = true;
+            recordedData = new List<SensorData>();
+            submissionDataTransport = new SubmissionDataTransport(UserIDManager.GetEncryptedID(deviceID), startTime);
+            startingTime = startTime;
+            InkbirdAlreadyHookedUp = false;
+            prerecordingLength = 0; // no prerecording for now
+
+            //throw new System.NotImplementedException();
         }
 
         public static void StopRecording()
@@ -178,23 +195,27 @@ namespace IndoorCO2App_Multiplatform
             isRecording = false;
         }
 
-        public static async void FinishRecording(int start, int end, bool manualMode, string locationNameManual, string locationAddressManual)
+        public static async void FinishRecording(int start, int end, bool manualMode, bool transportRecording, string locationNameManual, string locationAddressManual)
         {
             //Add co2 measurements to submissionData
             //ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson());
-            if (!manualMode)
+            if (!manualMode && !transportRecording)
             {
                 isRecording = false;
                 submissionData.SensorData = recordedData;
                 await ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start, end), false);
             }
-            else
+            else if(manualMode && transportRecording) 
             {
                 isRecording = false;
                 submissionDataManual.sensorData = recordedData;
                 submissionDataManual.LocationName = locationNameManual;
                 submissionDataManual.LocationAddress = locationAddressManual;
                 await ApiGatewayCaller.SendJsonToApiGateway(submissionDataManual.ToJson(start, end), true);
+            }
+            else if(!manualMode && transportRecording)
+            {
+                Debug.WriteLine("TransportMode Data submission not implemented yet");
             }
 
 
@@ -269,6 +290,12 @@ namespace IndoorCO2App_Multiplatform
                     inkbirdFilter.RemoveAll(x => !x.Name.Contains("Inkbird"));
                     discoveredDevices = inkbirdFilter;
                 }
+                else if(monitorType == CO2MonitorType.AirCoda)
+                {
+                    List<IDevice> airCodaFilter = discoveredDevices.ToList();
+                    airCodaFilter.RemoveAll(x => !x.Name.ToLower().Contains("aircoda"));
+                    discoveredDevices = airCodaFilter;
+                }
 
 
                 if (discoveredDevices.Count > 0)
@@ -297,6 +324,13 @@ namespace IndoorCO2App_Multiplatform
                     }
                     discoveredDevices = filteredDevices;
                 }
+                else if (monitorType == CO2MonitorType.AirCoda)
+                {
+                    List<IDevice> airCodaFilter = discoveredDevices.ToList();
+                    airCodaFilter.RemoveAll(x => !x.Name.ToLower().Contains("aircoda"));
+                    discoveredDevices = airCodaFilter;
+                }
+
                 else if(nameFilter!=null && nameFilter.Length> 0)
                 {
                     List<IDevice> unfilteredDevices = discoveredDevices.ToList();
@@ -360,7 +394,20 @@ namespace IndoorCO2App_Multiplatform
         {
             long cur = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             int elapsedSeconds = (int)Math.Ceiling((cur - startingTime) / 1000d);
-            int elapsedMinutes = ConvertSecondsToFullMinutes(elapsedSeconds);
+            int elapsedIntervals = ConvertSecondsToFullMinutes(elapsedSeconds);
+            if(sensorUpdateInterval == 120)
+            {
+                elapsedIntervals = elapsedIntervals / 2;
+            }
+            else if(sensorUpdateInterval == 300)
+            {
+                elapsedIntervals = elapsedIntervals / 5;
+            }
+            else if(sensorUpdateInterval == 600)
+            {
+                elapsedIntervals = elapsedIntervals / 10;
+            }
+            //TODO if interval is 
 
             deviceID = device.Id.ToString();
             rssi = device.Rssi;
@@ -450,7 +497,7 @@ namespace IndoorCO2App_Multiplatform
                             {
                                 //ushort timeSinceRecordingStart = 0;
                                 //TODO calculalte actual timeSinceRecordingstart and always use the ceiling
-                                ushort start = (ushort)(totalDataPoints - (prerecordingLength + elapsedMinutes)); //change to higher value to grab a bit of historical data
+                                ushort start = (ushort)(totalDataPoints - (prerecordingLength + elapsedIntervals)); //change to higher value to grab a bit of historical data
                                 if (start < 0) start = 0;
                                 var requestData = AranetPackDataRequestCO2History(start);
                                 int response = -999;
@@ -510,7 +557,22 @@ namespace IndoorCO2App_Multiplatform
                                 foreach (var e in co2dataArray)
                                 {
                                     recordedData.Add(new SensorData(e, t));
-                                    t++;
+                                    if(sensorUpdateInterval==60)
+                                    {
+                                        t++;
+                                    }
+                                    else if(sensorUpdateInterval==120)
+                                    {
+                                        t+= 2;
+                                    }
+                                    else if(sensorUpdateInterval==300)
+                                    {
+                                        t += 5;
+                                    }
+                                    else if(sensorUpdateInterval==600)
+                                    {
+                                        t+= 10;
+                                    }                                    
                                 }
                                 RecoveryData.timeOfLastUpdate = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                                 RecoveryData.WriteToPreferences();
@@ -579,8 +641,8 @@ namespace IndoorCO2App_Multiplatform
                             co2values.Add(co2Value);
                         }
 
-                        int amountOfValuesToTake = elapsedMinutes + 1 + prerecordingLength; //we always take at least 1
-                        if (elapsedMinutes > 120) elapsedMinutes = 120;
+                        int amountOfValuesToTake = elapsedIntervals + 1 + prerecordingLength; //we always take at least 1
+                        if (elapsedIntervals > 120) elapsedIntervals = 120;
                         if (amountOfValuesToTake > co2values.Count)
                         {
                             amountOfValuesToTake = co2values.Count;
@@ -599,7 +661,22 @@ namespace IndoorCO2App_Multiplatform
                         foreach (var e in valuesTaken)
                         {
                             recordedData.Add(new SensorData(e, t));
-                            t++;
+                            if (sensorUpdateInterval == 60)
+                            {
+                                t++;
+                            }
+                            else if (sensorUpdateInterval == 120)
+                            {
+                                t += 2;
+                            }
+                            else if (sensorUpdateInterval == 300)
+                            {
+                                t += 5;
+                            }
+                            else if (sensorUpdateInterval == 600)
+                            {
+                                t += 10;
+                            };
                         }
                         if (recordedData.Count > 0)
                         {
@@ -680,23 +757,30 @@ namespace IndoorCO2App_Multiplatform
 
         public static void OnInkbirdCO2haracteristicValueChanged(object sender, CharacteristicUpdatedEventArgs e)
         {
+            
             if (sender == null) return;
             var data = e.Characteristic.Value;
             if (data == null) return;
             if (data.Length < 11) return;
+            if (data.Length != 16) return;
+            Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Ink|Data: " + ByteArrayToString(data));
             byte fb = data[9];
             byte sb = data[10];
             byte[] c = new byte[] { sb, fb };
             ushort CO2LiveValue = BitConverter.ToUInt16(c, 0);
+            if(CO2LiveValue<100 || CO2LiveValue >=10000)
+            {
+                return;
+            }
             currentCO2Reading = CO2LiveValue;
             if (isRecording)
             {
                 int t = recordedData.Count;
                 recordedData.Add(new SensorData(CO2LiveValue, t));
             }
-
-
         }
+
+
 
         public async static Task<IDevice> CheckBondedDevicesForCO2Sensor(CO2MonitorType monitorType, IBluetoothHelper bluetoothHelper)
         {
@@ -740,6 +824,12 @@ namespace IndoorCO2App_Multiplatform
             }
 
             return null; // No device found with the specific service characteristic
+        }
+
+
+        public static string ByteArrayToString(byte[] ba)
+        {
+            return BitConverter.ToString(ba).Replace("-", "");
         }
     }
 }

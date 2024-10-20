@@ -50,10 +50,14 @@ namespace IndoorCO2App_Multiplatform
         public static MainPage MainPageSingleton;
         internal CO2MonitorType monitorType;
         List<LocationData> locations;
+        List<LocationData> transitOriginLocations;
+        List<LocationData> transitTargetLocations;
+        List<string> transitLinesLocations;
         LocationData selectedLocation;
 
         bool firstInit = true;
         public bool manualRecordingMode = false;
+        public bool transportRecordingMode = false;
         public IBluetoothHelper bluetoothHelper;
 
         public MainPage()
@@ -122,8 +126,9 @@ namespace IndoorCO2App_Multiplatform
         }
 
 
-        private void StartRecording(bool manualMode, bool resumedRecording)
+        private void StartRecording(bool manualMode, bool resumedRecording, bool transportRecordingMode)
         {
+            this.transportRecordingMode = transportRecordingMode;
             BluetoothManager.recordedData = new List<SensorData>();
             this.manualRecordingMode = manualMode;
             _TrimSlider.Minimum = 0;
@@ -167,19 +172,35 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
+        private void StartTransportRecording()
+        {
+            BluetoothManager.recordedData = new List<SensorData>();
+            this.manualRecordingMode = false;
+            _TrimSlider.Minimum = 0;
+            _TrimSlider.Maximum = 1;
+            startTrimSliderHasBeenUsed = false;
+            endTrimSliderHasBeenUsed = false;
+            previousDataCount = 0;
+            long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            ChangeToTransportRecordingUI();
+            BluetoothManager.StartTransportRecording(startTime, prerecording);
+        }
+
         private void CancelRecording()
         {
-            ResetLocation();
+            ResetRecordingState();
             BluetoothManager.StopRecording();
             RecoveryData.ResetRecoveryData();
             ChangeToStandardUI();
         }
 
-        private void ResetLocation()
+        private void ResetRecordingState()
         {
             SpatialManager.ResetLocation();
             _LocationPicker.ItemsSource = null;
             _LocationPicker.Items.Clear();
+            _CheckBoxDoorsWindows.IsChecked = false;
+            _CheckBoxVentilation.IsChecked = false;
             
         }
         private void ResetNotes()
@@ -233,6 +254,35 @@ namespace IndoorCO2App_Multiplatform
             if (locations.Count > 0)
             {
                 _LocationPicker.SelectedItem = locations[0];
+            }
+        }
+
+        public void UpdateTransitOriginPicker()
+        {
+            transitOriginLocations = OverpassModule.TransportStartLocationData;
+            if(transitOriginLocations.Count == 0)
+            {
+                return;
+            }
+            //TODO create TransitOriginLocationPicker and assign stuff here
+        }
+
+        public void UpdateTransitDestinationPicker()
+        {
+            transitTargetLocations = OverpassModule.TransportDestinationLocationData;
+            if (transitTargetLocations.Count == 0)
+            {
+                return;
+            }
+            //TODO create TransitDestinationLocationPicker and assign stuff here
+        }
+
+        public void UpdateTransitLinesPicker()
+        {
+            transitLinesLocations = OverpassModule.TransportLineNames;
+            if(transitLinesLocations.Count == 0)
+            {
+                return;
             }
         }
 

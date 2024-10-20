@@ -41,6 +41,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                         <x:String>Aranet</x:String>
                         <x:String>Airvalent</x:String>
                         <x:String>Inkbird IAM-T1</x:String>
+                        <x:String>airCoda</x:String>
                     </Picker.Items>
                 </Picker>
             </HorizontalStackLayout>
@@ -153,6 +154,12 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                        />
                 
             </ScrollView> -->
+            <HorizontalStackLayout Padding="10" HorizontalOptions="Center" >
+
+                <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClicked" BackgroundColor="LightBlue" />
+                <Button x:Name="ButtonTransitMode" Text="Transit" Clicked="OnLocationModeClicked" BackgroundColor="LightGray" />
+
+            </HorizontalStackLayout>
 
 
             <HorizontalStackLayout
@@ -186,6 +193,26 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 </Picker>
             </VerticalStackLayout>
 
+            <VerticalStackLayout         
+            x:Name="TransitOriginStackLayout"
+            Spacing="10"
+            VerticalOptions="Start">
+                <Label x:Name="TransitOriginInfoLabel" Text="Select Transit Origin:" FontSize="14" VerticalOptions="Center" />
+                <Picker x:Name="TransitOriginPicker" VerticalOptions="Center">
+                </Picker>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout         
+                x:Name="TransitLineStackLayout"
+                Spacing="10"
+                VerticalOptions="Start">
+                <Label x:Name="TransitLineInfoLabel" Text="Select Transit Line:" FontSize="14" VerticalOptions="Center" />
+                <Picker x:Name="TransitLinePicker" VerticalOptions="Center">
+                </Picker>
+            </VerticalStackLayout>
+
+
+
             <Button
                 x:Name="ResumeRecordingButton"
                 Text="Resume Recording"
@@ -205,6 +232,13 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 Text="Start Manual Recording"
                 SemanticProperties.Hint="Start Manual Recording Button"
                 Clicked="OnStartManualRecordingClicked"
+                HorizontalOptions="Center" />
+
+            <Button
+                x:Name="StartTransportRecordingButton"
+                Text="Start Transit Recording"
+                SemanticProperties.Hint="Start Transport Recording Button"
+                Clicked="OnStartTransportRecordingClicked"
                 HorizontalOptions="Center" />
 
             <HorizontalStackLayout

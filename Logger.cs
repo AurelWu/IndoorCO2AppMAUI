@@ -9,7 +9,7 @@ namespace IndoorCO2App_Multiplatform
 {
     internal static class Logger
     {
-        public static CircularBuffer<string> circularBuffer = new CircularBuffer<string>(50000);
+        public static CircularBuffer<string> circularBuffer = new CircularBuffer<string>(500000);
 
         public static void CopyLogToClipboard()
         {

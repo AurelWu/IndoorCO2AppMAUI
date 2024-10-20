@@ -30,6 +30,8 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 
 		<UserSecretsId>52cfbcaf-df53-4fea-9d3f-680786743276</UserSecretsId>
+
+		<PublishAot>False</PublishAot>
 		<!--
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
@@ -51,6 +53,10 @@
 		<MtouchUseLlvm>True</MtouchUseLlvm>
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 		<Optimize>False</Optimize>
+		<OptimizePNGs>False</OptimizePNGs>
+		<DebugType>portable</DebugType>
+		<BuildIpa>False</BuildIpa>
+		<MtouchLink>Full</MtouchLink>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
@@ -73,6 +79,7 @@
 	  <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
 	  <Debugger>Xamarin</Debugger>
 	  <Optimize>False</Optimize>
+	  <DebugType>portable</DebugType>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
@@ -87,6 +94,10 @@
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	  <AndroidLinkTool>r8</AndroidLinkTool>
 	  <Debugger>Xamarin</Debugger>
+	  <Optimize>False</Optimize>
+	  <DebugType>portable</DebugType>
+	  <RunAOTCompilation>False</RunAOTCompilation>
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -119,6 +130,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="MainPageEventHandlers\MainPage_OnCheckBoxDoorsWindows_CheckedChanged - Kopieren.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnCheckBoxVentilation_CheckedChanged.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
@@ -143,10 +157,13 @@
 	  <Compile Update="MainPageEventHandlers\MainPage_OnEditorFocused.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
-	  <Compile Update="MainPageEventHandlers\MainPage_OnCheckBoxDoorsWindows_CheckedChanged.cs">
+	  <Compile Update="MainPageEventHandlers\MainPage_OnLocationModeClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnRequestCancelRecordingClicked.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="MainPageEventHandlers\MainPage_OnStartTransportRecordingClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnTrimSliderValueChanged.cs">

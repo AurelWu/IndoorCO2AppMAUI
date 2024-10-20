@@ -23,6 +23,7 @@ namespace IndoorCO2App_Multiplatform
         public Button _StartRecordingButton;
         public Button _FinishRecordingButton;
         public Button _StartManualRecordingButton;
+        public Button _StartTransportRecordingButton;
         public LineChartView _LineChartView;
         public Picker _CO2DevicePicker;
         public Picker _LocationPicker;
@@ -44,8 +45,10 @@ namespace IndoorCO2App_Multiplatform
         public SfRangeSlider _TrimSlider;
         public Editor _CO2DeviceNameFilterEditor;
         public Button _DebugLogButton;
+        public Button _BuildingModeButton;
+        public Button _TransitModeButton;
 
-
+        internal MenuMode currentMenuMode;
 
 
         public void InitUIElements()
@@ -66,6 +69,8 @@ namespace IndoorCO2App_Multiplatform
             _ResumeRecordingButton = this.FindByName<Button>("ResumeRecordingButton");
             _StartRecordingButton = this.FindByName<Button>("StartRecordingButton");
             _StartManualRecordingButton = this.FindByName<Button>("StartManualRecordingButton");
+            _StartTransportRecordingButton = this.FindByName<Button>("StartTransportRecordingButton");
+
             _LineChartView = this.FindByName<LineChartView>("lineChartView");
             _CO2DevicePicker = this.FindByName<Picker>("CO2MonitorPicker");
             _LocationPicker = this.FindByName<Picker>("LocationPicker");
@@ -90,19 +95,24 @@ namespace IndoorCO2App_Multiplatform
             _ResumeRecordingButton.IsVisible = false; //TODO Enable again once completely implemented
             _DebugLogButton = this.FindByName<Button>("DebugLogButton");
 
+            _BuildingModeButton = this.FindByName<Button>("ButtonBuildingMode");
+            _TransitModeButton = this.FindByName<Button>("ButtonTransitMode");
+
 
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
-            MenuModesOfUIElements.Add(_GPSStatusButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard);
-            MenuModesOfUIElements.Add(_GPSPermissionButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard);
-            MenuModesOfUIElements.Add(_BluetoothEnabledButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard);
-            MenuModesOfUIElements.Add(_BluetoothPermissionsButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard);
-            MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("CO2MonitorPickerStackLayout"), MenuMode.Standard);
-            MenuModesOfUIElements.Add(_StatusLabel, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard);
-            MenuModesOfUIElements.Add(_DeviceLabel, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard);
-            MenuModesOfUIElements.Add(_LocationLabel, MenuMode.Standard);
-            MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("SearchRangeStackLayout"), MenuMode.Standard);
-            MenuModesOfUIElements.Add(_UpdateLocationsButton, MenuMode.Standard);
+            MenuModesOfUIElements.Add(_GPSStatusButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection );
+            MenuModesOfUIElements.Add(_GPSPermissionButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_BluetoothEnabledButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_BluetoothPermissionsButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("CO2MonitorPickerStackLayout"), MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_StatusLabel, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_DeviceLabel, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_LocationLabel, MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("SearchRangeStackLayout"), MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_UpdateLocationsButton, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("LocationStackLayout"), MenuMode.Standard);
+            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitOriginStackLayout"), MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitLineStackLayout"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_ResumeRecordingButton, 0); 
             MenuModesOfUIElements.Add(_StartRecordingButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(_StartManualRecordingButton, MenuMode.Standard);
@@ -113,21 +123,24 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<Button>("DeleteLastSubmissionButton"), MenuMode.Standard);
             MenuModesOfUIElements.Add(_LocationLabelRecording, MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(_ConfirmCancelRecordingButton, 0);
-            MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("RecordingModeButtonStackLayout"), MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("RecordingModeButtonStackLayout"), MenuMode.Recording | MenuMode.ManualRecording |MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualName"), MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualAddress"), MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(_LineChartView, MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(_LineChartView, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<Label>("RecordedDataLabel"), MenuMode.Recording | MenuMode.ManualRecording);
             //MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("TrimSliderLayout"), MenuMode.Recording | MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(this.FindByName<Label>("TrimSliderInfoText"), MenuMode.Recording | MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackNotes"), MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(this.FindByName<Label>("TrimSliderInfoText"), MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
+            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackNotes"), MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesDoor"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesVentilation"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackDeviceNameFilter"), MenuMode.Standard);
-            MenuModesOfUIElements.Add(_TrimSlider, MenuMode.Recording | MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(_CO2DeviceNameFilterEditor, MenuMode.Standard);
-            MenuModesOfUIElements.Add(_VersionLabel, MenuMode.Standard);
-            MenuModesOfUIElements.Add(_DebugLogButton, MenuMode.Standard | MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(_TrimSlider, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
+            MenuModesOfUIElements.Add(_CO2DeviceNameFilterEditor, MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_VersionLabel, MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_DebugLogButton, MenuMode.Standard | MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_StartTransportRecordingButton, MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_BuildingModeButton, MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_TransitModeButton, MenuMode.Standard | MenuMode.TransportSelection);
         }
 
         private void InitUILayout()
@@ -138,6 +151,7 @@ namespace IndoorCO2App_Multiplatform
             var buttonWidth70Percent = screenWidth * 0.70;
             var buttonWidth60Percent = screenWidth * 0.60;
             var buttonWidth50Percent = screenWidth * 0.50;
+            var buttonWidth40Percent = screenWidth * 0.40;
             var buttonWidth30Percent = screenWidth * 0.30;
             var buttonWidth25Percent = screenWidth * 0.25;
 
@@ -145,6 +159,7 @@ namespace IndoorCO2App_Multiplatform
             _ResumeRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
             _StartRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
             _StartManualRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
+            _StartTransportRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
             _UpdateLocationsButton.MinimumWidthRequest = buttonWidth70Percent;
             _OpenMapButton.MinimumWidthRequest = buttonWidth70Percent;
             _OpenImprintButton.MinimumWidthRequest = buttonWidth70Percent;
@@ -158,6 +173,8 @@ namespace IndoorCO2App_Multiplatform
             _DeleteLastSubmissionButton.MinimumWidthRequest = buttonWidth70Percent;
             _LineChartView.MinimumHeightRequest = screenHeight * 0.20;
             _TrimSlider.WidthRequest = _LineChartView.Width;
+            _TransitModeButton.MinimumWidthRequest = buttonWidth40Percent;
+            _BuildingModeButton.MinimumWidthRequest = buttonWidth40Percent;
         }
 
 
@@ -256,10 +273,10 @@ namespace IndoorCO2App_Multiplatform
                         _DeviceLabel.Text += " | previous update failed";
                     }
                 }
-                else if (BluetoothManager.sensorUpdateInterval > 60)
-                {
-                    _DeviceLabel.Text = "Device found but Update Interval not set to 1 Minute, change to 1 Minute using official App. next attempt in " + BluetoothManager.timeToNextUpdate + "s";
-                }
+                //else if (BluetoothManager.sensorUpdateInterval > 60)
+                //{
+                //    _DeviceLabel.Text = "Device found but Update Interval not set to 1 Minute, change to 1 Minute using official App. next attempt in " + BluetoothManager.timeToNextUpdate + "s";
+                //}
                 else if (BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
                 {
                     _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
@@ -480,6 +497,7 @@ namespace IndoorCO2App_Multiplatform
 
         private void ChangeToUI(MenuMode mode)
         {
+            currentMenuMode = mode;
             foreach (var element in MenuModesOfUIElements)
             {
                 var k = element.Key;
@@ -516,6 +534,16 @@ namespace IndoorCO2App_Multiplatform
         public void ChangeToManualRecordingUI()
         {
             ChangeToUI(MenuMode.ManualRecording);
+        }
+
+        public void ChangeToTransportRecordingUI()
+        {
+            ChangeToUI(MenuMode.TransportRecording);
+        }
+
+        public void ChangeToTransportSelectionUI()
+        {
+            ChangeToUI(MenuMode.TransportSelection);
         }
     }
 

@@ -11,7 +11,7 @@ namespace IndoorCO2App_Multiplatform
             bool result = await DisplayAlert("Manual Recording Mode", msg, "Understood", "Cancel");
             if (result == true)
             {
-                StartRecording(true, false);
+                StartRecording(true, false,false);
             }
         }
     }
