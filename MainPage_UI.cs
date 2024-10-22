@@ -27,6 +27,9 @@ namespace IndoorCO2App_Multiplatform
         public LineChartView _LineChartView;
         public Picker _CO2DevicePicker;
         public Picker _LocationPicker;
+        public Picker _TransitOriginPicker;
+        public Picker _TransitDestinationPicker;
+        public Picker _TransitLinePicker;
         public RadioButton _RadioButton50m;
         public RadioButton _RadioButton100m;
         public RadioButton _RadioButton250m;
@@ -74,6 +77,10 @@ namespace IndoorCO2App_Multiplatform
             _LineChartView = this.FindByName<LineChartView>("lineChartView");
             _CO2DevicePicker = this.FindByName<Picker>("CO2MonitorPicker");
             _LocationPicker = this.FindByName<Picker>("LocationPicker");
+            _TransitOriginPicker = this.FindByName<Picker>("TransitOriginPicker");
+            _TransitDestinationPicker = this.FindByName<Picker>("TransitDestinationPicker");
+            _TransitLinePicker = this.FindByName<Picker>("TransitLinePicker");
+
             _RadioButton50m = this.FindByName<RadioButton>("RadioButton50m");
             _RadioButton100m = this.FindByName<RadioButton>("RadioButton100m");
             _RadioButton250m = this.FindByName<RadioButton>("RadioButton250m");
@@ -109,9 +116,10 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(_DeviceLabel, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_LocationLabel, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("SearchRangeStackLayout"), MenuMode.Standard | MenuMode.TransportSelection);
-            MenuModesOfUIElements.Add(_UpdateLocationsButton, MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_UpdateLocationsButton, MenuMode.Standard | MenuMode.TransportSelection | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("LocationStackLayout"), MenuMode.Standard);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitOriginStackLayout"), MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitDestinationStackLayout"), MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitLineStackLayout"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_ResumeRecordingButton, 0); 
             MenuModesOfUIElements.Add(_StartRecordingButton, MenuMode.Standard);

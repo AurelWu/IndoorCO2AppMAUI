@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using IndoorCO2App_Android;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.VisualStudio.Composition;
 using Plugin.BLE;
@@ -24,6 +25,7 @@ namespace IndoorCO2App_Multiplatform
         public static int sensorUpdateInterval = 0;
         public static IReadOnlyList<IDevice> discoveredDevices;
 
+        public static Guid aircodaUUID = Guid.Parse("0000feaa-0000-1000-8000-00805f9b34fb");
 
         public static Guid InkbirdServiceUUID = Guid.Parse("0000ffe0-0000-1000-8000-00805f9b34fb");
         public static Guid InkbirdCO2NotifyCharacteristic = Guid.Parse("0000ffe4-0000-1000-8000-00805f9b34fb");
@@ -129,6 +131,15 @@ namespace IndoorCO2App_Multiplatform
                     submissionDataManual.LatitudeData.Add(lat);
                     submissionDataManual.LongitudeData.Add(lon);
                 }
+
+                if (submissionDataTransport != null && SpatialManager.currentLocation != null)
+                {
+                    var lat = SpatialManager.currentLocation.Latitude;
+                    var lon = SpatialManager.currentLocation.Longitude;
+                    submissionDataManual.LatitudeData.Add(lat);
+                    submissionDataManual.LongitudeData.Add(lon);
+                }
+
                 previousUpdate = currentTime;
                 try
                 {
@@ -177,12 +188,12 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public static void StartTransportRecording(long startTime, bool prerecording)
+        public static void StartTransportRecording(long startTime, bool prerecording, LocationData startLocation, TransitLineData transitLineData)
         {
             isRecording = true;
             isTransportRecording = true;
             recordedData = new List<SensorData>();
-            submissionDataTransport = new SubmissionDataTransport(UserIDManager.GetEncryptedID(deviceID), startTime);
+            submissionDataTransport = new SubmissionDataTransport(UserIDManager.GetEncryptedID(deviceID), startTime,transitLineData.ID,transitLineData.Name,startLocation.ID,startLocation.Name);
             startingTime = startTime;
             InkbirdAlreadyHookedUp = false;
             prerecordingLength = 0; // no prerecording for now
@@ -195,25 +206,25 @@ namespace IndoorCO2App_Multiplatform
             isRecording = false;
         }
 
-        public static async void FinishRecording(int start, int end, bool manualMode, bool transportRecording, string locationNameManual, string locationAddressManual)
+        public static async void FinishRecording(int start, int end, SubmissionMode submissionMode, string locationNameManual, string locationAddressManual)
         {
             //Add co2 measurements to submissionData
             //ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson());
-            if (!manualMode && !transportRecording)
+            if (submissionMode== SubmissionMode.Building)
             {
                 isRecording = false;
                 submissionData.SensorData = recordedData;
-                await ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start, end), false);
+                await ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start, end), SubmissionMode.Building);
             }
-            else if(manualMode && transportRecording) 
+            else if(submissionMode== SubmissionMode.BuildingManual) 
             {
                 isRecording = false;
                 submissionDataManual.sensorData = recordedData;
                 submissionDataManual.LocationName = locationNameManual;
                 submissionDataManual.LocationAddress = locationAddressManual;
-                await ApiGatewayCaller.SendJsonToApiGateway(submissionDataManual.ToJson(start, end), true);
+                await ApiGatewayCaller.SendJsonToApiGateway(submissionDataManual.ToJson(start, end), SubmissionMode.BuildingManual);
             }
-            else if(!manualMode && transportRecording)
+            else if(submissionMode== SubmissionMode.Transit)
             {
                 Debug.WriteLine("TransportMode Data submission not implemented yet");
             }

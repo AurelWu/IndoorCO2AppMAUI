@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using IndoorCO2App_Android;
 using Newtonsoft.Json;
 
 namespace IndoorCO2App_Multiplatform
@@ -14,7 +16,7 @@ namespace IndoorCO2App_Multiplatform
         };
 
         // Modify sendJsonToApiGateway to accept callback
-        public static async Task SendJsonToApiGateway(string json, bool manualMode)
+        public static async Task SendJsonToApiGateway(string json, SubmissionMode submissionMode)
         {
             var successState = string.Empty;
 
@@ -22,14 +24,20 @@ namespace IndoorCO2App_Multiplatform
             {
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response;
-                if (!manualMode)
+                if (submissionMode == SubmissionMode.Building)
                 {
                     response = await client.PostAsync("https://wzugdkxj15.execute-api.eu-central-1.amazonaws.com/Standard/CO2", content);
                 }
-                else
+                else if (submissionMode == SubmissionMode.BuildingManual)
                 {
                     response = await client.PostAsync("https://40zfjhm5tg.execute-api.eu-central-1.amazonaws.com/SendManualCO2Data", content);
                 }
+                //else if (submissionMode == SubmissionMode.Transit)
+                //{
+                //    //response = await client.PostAsync("TODO");
+                //}
+                else return;
+
 
                 if (response.IsSuccessStatusCode)
                 {

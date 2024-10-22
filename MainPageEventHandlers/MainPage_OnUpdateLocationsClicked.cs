@@ -10,9 +10,13 @@ namespace IndoorCO2App_Multiplatform
             {
                 OverpassModule.FetchNearbyBuildingsAsync(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, this);
             }
-            else if (currentMenuMode.HasFlag(MenuMode.TransportRecording | MenuMode.TransportSelection))
+            else if (currentMenuMode.HasFlag(MenuMode.TransportSelection))
             {
-                //TODO
+                OverpassModule.FetchNearbyTransitAsync(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, this, true);
+            }
+            else if (currentMenuMode.HasFlag(MenuMode.TransportRecording))
+            {
+                OverpassModule.FetchNearbyTransitAsync(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, this, false);
             }
         }
     }

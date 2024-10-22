@@ -1,4 +1,5 @@
 ﻿
+using IndoorCO2App_Android;
 using IndoorCO2App_Multiplatform.Controls;
 using System.ComponentModel;
 
@@ -52,12 +53,15 @@ namespace IndoorCO2App_Multiplatform
         List<LocationData> locations;
         List<LocationData> transitOriginLocations;
         List<LocationData> transitTargetLocations;
-        List<string> transitLinesLocations;
+        List<TransitLineData> transitLines;
         LocationData selectedLocation;
+        LocationData selectedTransitOriginLocation;
+        LocationData selectedTransitTargetLocation;
+        TransitLineData selectedTransitLine;
 
         bool firstInit = true;
-        public bool manualRecordingMode = false;
-        public bool transportRecordingMode = false;
+        public SubmissionMode submissionMode;
+        //public bool transportRecordingMode = false;
         public IBluetoothHelper bluetoothHelper;
 
         public MainPage()
@@ -126,18 +130,17 @@ namespace IndoorCO2App_Multiplatform
         }
 
 
-        private void StartRecording(bool manualMode, bool resumedRecording, bool transportRecordingMode)
+        private void StartRecording(SubmissionMode submissionMode, bool resumedRecording)
         {
-            this.transportRecordingMode = transportRecordingMode;
+            this.submissionMode = submissionMode;
             BluetoothManager.recordedData = new List<SensorData>();
-            this.manualRecordingMode = manualMode;
             _TrimSlider.Minimum = 0;
             _TrimSlider.Maximum = 1;            
             startTrimSliderHasBeenUsed = false;
             endTrimSliderHasBeenUsed = false;
             previousDataCount = 0;
             //Console.WriteLine(LocationPicker);
-            if (!manualMode)
+            if (submissionMode== SubmissionMode.Building)
             {
                 if (!resumedRecording && _LocationPicker != null && _LocationPicker.SelectedItem != null && locations.Count > 0)
                 {
@@ -165,17 +168,18 @@ namespace IndoorCO2App_Multiplatform
 
 
             }
-            else if (manualMode)
+            else if (submissionMode== SubmissionMode.BuildingManual)
             {
                 ChangeToManualRecordingUI(); ;
                 BluetoothManager.StartNewManualRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), prerecording);
-            }
+            }            
         }
 
         private void StartTransportRecording()
         {
-            BluetoothManager.recordedData = new List<SensorData>();
-            this.manualRecordingMode = false;
+            selectedTransitOriginLocation = (LocationData)_TransitOriginPicker.SelectedItem;
+            selectedTransitLine = (TransitLineData) _TransitLinePicker.SelectedItem;
+            BluetoothManager.recordedData = new List<SensorData>();            
             _TrimSlider.Minimum = 0;
             _TrimSlider.Maximum = 1;
             startTrimSliderHasBeenUsed = false;
@@ -183,7 +187,7 @@ namespace IndoorCO2App_Multiplatform
             previousDataCount = 0;
             long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             ChangeToTransportRecordingUI();
-            BluetoothManager.StartTransportRecording(startTime, prerecording);
+            BluetoothManager.StartTransportRecording(startTime, prerecording,selectedTransitOriginLocation,selectedTransitLine);
         }
 
         private void CancelRecording()
@@ -264,6 +268,13 @@ namespace IndoorCO2App_Multiplatform
             {
                 return;
             }
+            _TransitOriginPicker.ItemsSource = null;
+            _TransitOriginPicker.Items.Clear();
+            _TransitOriginPicker.ItemsSource = transitOriginLocations;
+            if(transitOriginLocations.Count > 0)
+            {
+                _TransitOriginPicker.SelectedItem =transitOriginLocations[0];
+            }
             //TODO create TransitOriginLocationPicker and assign stuff here
         }
 
@@ -274,15 +285,29 @@ namespace IndoorCO2App_Multiplatform
             {
                 return;
             }
+            _TransitDestinationPicker.ItemsSource = null;
+            _TransitDestinationPicker.Items.Clear();
+            _TransitDestinationPicker.ItemsSource = transitTargetLocations;
+            if (transitOriginLocations.Count > 0)
+            {
+                _TransitDestinationPicker.SelectedItem = transitTargetLocations[0];
+            }
             //TODO create TransitDestinationLocationPicker and assign stuff here
         }
 
         public void UpdateTransitLinesPicker()
         {
-            transitLinesLocations = OverpassModule.TransportLineNames;
-            if(transitLinesLocations.Count == 0)
+            transitLines = OverpassModule.TransitLines;
+            if(transitLines.Count == 0)
             {
                 return;
+            }
+            _TransitLinePicker.ItemsSource = null;
+            _TransitLinePicker.Items.Clear();
+            _TransitLinePicker.ItemsSource= transitLines;
+            if (transitLines.Count > 0)
+            {
+                _TransitLinePicker.SelectedItem = transitTargetLocations[0];
             }
         }
 

@@ -203,6 +203,15 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             </VerticalStackLayout>
 
             <VerticalStackLayout         
+            x:Name="TransitDestinationStackLayout"
+            Spacing="10"
+            VerticalOptions="Start">
+                <Label x:Name="TransitDestinationInfoLabel" Text="Select Transit Destination:" FontSize="14" VerticalOptions="Center" />
+                <Picker x:Name="TransitDestinationPicker" VerticalOptions="Center">
+                </Picker>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout         
                 x:Name="TransitLineStackLayout"
                 Spacing="10"
                 VerticalOptions="Start">
