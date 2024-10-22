@@ -136,8 +136,8 @@ namespace IndoorCO2App_Multiplatform
                 {
                     var lat = SpatialManager.currentLocation.Latitude;
                     var lon = SpatialManager.currentLocation.Longitude;
-                    submissionDataManual.LatitudeData.Add(lat);
-                    submissionDataManual.LongitudeData.Add(lon);
+                    submissionDataTransport.LatitudeData.Add(lat);
+                    submissionDataTransport.LongitudeData.Add(lon);
                 }
 
                 previousUpdate = currentTime;
@@ -188,12 +188,12 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public static void StartTransportRecording(long startTime, bool prerecording, LocationData startLocation, TransitLineData transitLineData)
+        public static void StartTransportRecording(CO2MonitorType monitorType,long startTime, bool prerecording, LocationData startLocation, TransitLineData transitLineData)
         {
             isRecording = true;
             isTransportRecording = true;
             recordedData = new List<SensorData>();
-            submissionDataTransport = new SubmissionDataTransport(UserIDManager.GetEncryptedID(deviceID), startTime,transitLineData.ID,transitLineData.Name,startLocation.ID,startLocation.Name);
+            submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.type,startLocation.Name);
             startingTime = startTime;
             InkbirdAlreadyHookedUp = false;
             prerecordingLength = 0; // no prerecording for now
@@ -226,11 +226,16 @@ namespace IndoorCO2App_Multiplatform
             }
             else if(submissionMode== SubmissionMode.Transit)
             {
-                Debug.WriteLine("TransportMode Data submission not implemented yet");
+                isRecording = false;
+                submissionDataTransport.sensorData = recordedData;
+                if(MainPage.MainPageSingleton.selectedTransitTargetLocation != null)
+                {
+                    submissionDataTransport.EndPointID = MainPage.MainPageSingleton.selectedTransitTargetLocation.ID;
+                    submissionDataTransport.EndPointNWRType = MainPage.MainPageSingleton.selectedTransitTargetLocation.type;
+                    
+                }
+                await ApiGatewayCaller.SendJsonToApiGateway(submissionDataTransport.ToJson(start, end), SubmissionMode.Transit);
             }
-
-
-
         }
 
         internal static async void ScanForDevices(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)

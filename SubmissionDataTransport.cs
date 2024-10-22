@@ -26,25 +26,30 @@ namespace IndoorCO2App_Multiplatform
         //public string TransportMode;
         public long TransportID;
         public string TransportNWRType;
+        public string TransportName;
         public long StartingPointID;
         public string StartingNWRType;
+        public string StartingPointName;
         public long EndPointID;
         public string EndPointNWRType;
 
 
-        public SubmissionDataTransport(string sensorID, long startTime, long transportID, string transportNWRType, long startingPointID, string startingPointNWRType)
+        public SubmissionDataTransport(string sensorType,string sensorID, long startTime, long transportID, string transportNWRType, string transportName, long startingPointID, string startingPointNWRType, string startingPointName)
         {
-            this.sensorID = sensorID;
+            this.sensorID = sensorType.ToString() + "_" + sensorID;
             this.startTime = startTime;
             this.LatitudeData = new List<Double>();
             this.LongitudeData = new List<Double>();
             //this.TransportMode = "";
             this.TransportID = transportID;
+            this.TransportName = transportName;
             this.StartingPointID = startingPointID;
+            this.StartingPointName = startingPointName;
             this.EndPointID = 0;
             this.TransportNWRType = transportNWRType;
             this.StartingNWRType = startingPointNWRType;
             this.EndPointNWRType = "";
+            AdditionalNotes = String.Empty;
         }
         public string ToJson(int rangeSliderMin, int rangeSliderMax)
         {
@@ -78,21 +83,21 @@ namespace IndoorCO2App_Multiplatform
             {
                 json.Add("d", sensorID);
                 json.Add("b", startTime);
-                json.Add("si", StartingPointID);
                 json.Add("st", StartingNWRType);
-                json.Add("di", EndPointID);
+                json.Add("si", StartingPointID);
                 json.Add("dt", EndPointNWRType);
-                json.Add("li", TransportID);
+                json.Add("di", EndPointID);
                 json.Add("lt", TransportNWRType);
+                json.Add("li", TransportID);
                 //json.Add("ad", LocationAddress);
                 //json.Add("w", openWindowsDoors);
                 //json.Add("v", ventilationSystem);
                 //json.Add("o", OccupancyLevel);
-                json.Add("a", AdditionalNotes);
                 json.Add("c", Converter.ArrayToString(ppmArray, ";"));
+                json.Add("t", string.Join(";", timestampArray));
                 json.Add("la", string.Join(";", LatitudeData));
                 json.Add("lo", string.Join(";", LongitudeData));
-                json.Add("t", string.Join(";", timestampArray));
+                json.Add("a", AdditionalNotes);
             }
             catch (JsonException e)
             {

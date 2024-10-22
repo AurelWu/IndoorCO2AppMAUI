@@ -6,7 +6,7 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnResumeRecordingClicked(object sender, EventArgs e)
         {
-            StartRecording(false, true, false);
+            StartRecording(submissionMode, false);
         }
     }
 

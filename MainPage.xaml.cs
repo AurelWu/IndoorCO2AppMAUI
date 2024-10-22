@@ -54,10 +54,10 @@ namespace IndoorCO2App_Multiplatform
         List<LocationData> transitOriginLocations;
         List<LocationData> transitTargetLocations;
         List<TransitLineData> transitLines;
-        LocationData selectedLocation;
-        LocationData selectedTransitOriginLocation;
-        LocationData selectedTransitTargetLocation;
-        TransitLineData selectedTransitLine;
+        internal LocationData selectedLocation;
+        internal LocationData selectedTransitOriginLocation;
+        internal LocationData selectedTransitTargetLocation;
+        internal TransitLineData selectedTransitLine;
 
         bool firstInit = true;
         public SubmissionMode submissionMode;
@@ -177,6 +177,7 @@ namespace IndoorCO2App_Multiplatform
 
         private void StartTransportRecording()
         {
+            submissionMode = SubmissionMode.Transit;
             selectedTransitOriginLocation = (LocationData)_TransitOriginPicker.SelectedItem;
             selectedTransitLine = (TransitLineData) _TransitLinePicker.SelectedItem;
             BluetoothManager.recordedData = new List<SensorData>();            
@@ -187,7 +188,7 @@ namespace IndoorCO2App_Multiplatform
             previousDataCount = 0;
             long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             ChangeToTransportRecordingUI();
-            BluetoothManager.StartTransportRecording(startTime, prerecording,selectedTransitOriginLocation,selectedTransitLine);
+            BluetoothManager.StartTransportRecording(monitorType,startTime, prerecording,selectedTransitOriginLocation,selectedTransitLine);
         }
 
         private void CancelRecording()

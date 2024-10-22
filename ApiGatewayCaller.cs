@@ -32,10 +32,10 @@ namespace IndoorCO2App_Multiplatform
                 {
                     response = await client.PostAsync("https://40zfjhm5tg.execute-api.eu-central-1.amazonaws.com/SendManualCO2Data", content);
                 }
-                //else if (submissionMode == SubmissionMode.Transit)
-                //{
-                //    //response = await client.PostAsync("TODO");
-                //}
+                else if (submissionMode == SubmissionMode.Transit)
+                {
+                    response = await client.PostAsync("https://sokwze8jj1.execute-api.eu-central-1.amazonaws.com/SendTransitCO2DataToSQS", content);
+                }
                 else return;
 
 
