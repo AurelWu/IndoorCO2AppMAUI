@@ -117,7 +117,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(_LocationLabel, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("SearchRangeStackLayout"), MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_UpdateLocationsButton, MenuMode.Standard | MenuMode.TransportSelection | MenuMode.TransportRecording);
-            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("LocationStackLayout"), MenuMode.Standard | MenuMode.TransportSelection | MenuMode.TransportRecording);
+            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("LocationStackLayout"), MenuMode.Standard);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitOriginStackLayout"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitDestinationStackLayout"), MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitLineStackLayout"), MenuMode.TransportSelection);

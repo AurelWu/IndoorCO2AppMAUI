@@ -41,10 +41,10 @@
 		<string>bluetooth-central</string>
 	</array>
 	<key>CFBundleShortVersionString</key>
-	<string>28.0</string>
-	<key>CFBundleVersion</key>
-	<string>28</string>
+	<string>41.0</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
+	<key>CFBundleIdentifier</key>
+	<string></string>
 </dict>
 </plist>

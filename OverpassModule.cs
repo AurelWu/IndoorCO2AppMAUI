@@ -372,7 +372,10 @@ namespace IndoorCO2App_Multiplatform
                     TransitLines.Add(t);
                 }
             }
-            TransitLines.Sort(); //sorts alphabetically
+            if (TransitLines != null && TransitLines.Count > 0)
+            {
+                TransitLines = TransitLines.OrderBy(x=>x.Name).ToList(); //sorts alphabetically
+            }
             
         }
 
