@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-android34.0;net7.0-ios</TargetFrameworks>
+		<TargetFrameworks>net7.0-ios;net8.0-android</TargetFrameworks>
 		<!-- <TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks> -->
 		<!-- 
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks> -->
@@ -23,8 +23,8 @@
 		<ApplicationIdGuid>fc85f5be-5db1-417c-b04f-0a25963c421c</ApplicationIdGuid>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>42.0</ApplicationDisplayVersion>
+		<ApplicationVersion>42</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
@@ -67,6 +67,7 @@
 		<ApplicationVersion>42</ApplicationVersion>
 		<MtouchUseLlvm>False</MtouchUseLlvm>
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+		<Optimize>False</Optimize>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
@@ -76,7 +77,7 @@
 	  <ApplicationTitle>IndoorCO2MapDataRecorder</ApplicationTitle>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
 	  <Debugger>Xamarin</Debugger>
@@ -93,14 +94,14 @@
 	  <ApplicationVersion>42</ApplicationVersion>
 	  <ApplicationId>com.aurelwu.indoorairqualitycollector</ApplicationId>
 	  <ApplicationTitle>IndoorCO2MapDataRecorder</ApplicationTitle>
-	  <DebugSymbols>True</DebugSymbols>
+	  <DebugSymbols>False</DebugSymbols>
 	  <AndroidKeyStore>False</AndroidKeyStore>
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
-	  <AndroidLinkTool>r8</AndroidLinkTool>
+		<!-- <AndroidLinkTool>r8</AndroidLinkTool> -->
 	  <Debugger>Xamarin</Debugger>
-	  <Optimize>False</Optimize>
+	  <Optimize>True</Optimize>
 	  <DebugType>portable</DebugType>
 	  <RunAOTCompilation>False</RunAOTCompilation>
 	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>

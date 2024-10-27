@@ -41,7 +41,7 @@
 		<string>bluetooth-central</string>
 	</array>
 	<key>CFBundleShortVersionString</key>
-	<string>41.0</string>
+	<string>42.0</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>CFBundleIdentifier</key>
