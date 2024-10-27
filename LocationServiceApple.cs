@@ -13,6 +13,7 @@ namespace IndoorCO2App_Multiplatform
         public LocationServiceApple()
         {
             locationManager = new CLLocationManager();
+            //locationManager.AllowsBackgroundLocationUpdates = true;
         }
 
         public bool IsGpsEnabled()

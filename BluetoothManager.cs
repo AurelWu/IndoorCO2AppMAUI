@@ -157,7 +157,7 @@ namespace IndoorCO2App_Multiplatform
         {
             isRecording = true;
             recordedData = new List<SensorData>();
-            submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
+            submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,false), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
             startingTime = startTime;
             InkbirdAlreadyHookedUp = false;
             if (prerecording)
@@ -175,7 +175,7 @@ namespace IndoorCO2App_Multiplatform
             isRecording = true;
             isTransportRecording = false;
             recordedData = new List<SensorData>();
-            submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(deviceID), startTime);
+            submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(deviceID,false), startTime);
             startingTime = startTime;
             InkbirdAlreadyHookedUp = false;
             if (prerecording)
@@ -193,7 +193,7 @@ namespace IndoorCO2App_Multiplatform
             isRecording = true;
             isTransportRecording = true;
             recordedData = new List<SensorData>();
-            submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.type,startLocation.Name);
+            submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,true), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.type,startLocation.Name);
             startingTime = startTime;
             InkbirdAlreadyHookedUp = false;
             prerecordingLength = 0; // no prerecording for now
@@ -228,12 +228,22 @@ namespace IndoorCO2App_Multiplatform
             {
                 isRecording = false;
                 submissionDataTransport.sensorData = recordedData;
+                MainPage.MainPageSingleton.selectedTransitTargetLocation = (LocationData)MainPage.MainPageSingleton._TransitDestinationPicker.SelectedItem;
                 if(MainPage.MainPageSingleton.selectedTransitTargetLocation != null)
                 {
                     submissionDataTransport.EndPointID = MainPage.MainPageSingleton.selectedTransitTargetLocation.ID;
                     submissionDataTransport.EndPointNWRType = MainPage.MainPageSingleton.selectedTransitTargetLocation.type;
-                    
+                    submissionDataTransport.EndPointName = MainPage.MainPageSingleton.selectedTransitTargetLocation.Name;                    
                 }
+                if (MainPage.MainPageSingleton.selectedTransitTargetLocation == null)
+                {
+                    bool result = await MainPage.MainPageSingleton.DisplayTransitSubmissionNoDestinationConfirmationDialog();
+                    if(result==false)
+                    {
+                        return;
+                    }
+                }
+                
                 await ApiGatewayCaller.SendJsonToApiGateway(submissionDataTransport.ToJson(start, end), SubmissionMode.Transit);
             }
         }

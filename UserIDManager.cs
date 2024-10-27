@@ -33,9 +33,14 @@ namespace IndoorCO2App_Multiplatform
             Preferences.Set(PrefUserID, userID);
         }
 
-        public static string GetEncryptedID(string deviceID)
+        public static string GetEncryptedID(string deviceID, bool generateRandomID)
         {
-            string userID = GetUserID();
+            string userID = GenerateRandomID();
+            if(!generateRandomID)
+            {
+                userID = GetUserID();
+            }
+                        
             string concatenatedString = userID + deviceID;
             return EncryptionManager.EncryptString(concatenatedString);
         }

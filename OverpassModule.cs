@@ -372,9 +372,8 @@ namespace IndoorCO2App_Multiplatform
                     TransitLines.Add(t);
                 }
             }
-
-            //TODO: stops are (nearly) always at least twice in the result list (both sides of the road / track), and not yet sure how to distinguish
-            //For our purposes I think it would be okay to just always pick the one with the lower ID 
+            TransitLines.Sort(); //sorts alphabetically
+            
         }
 
 
@@ -413,7 +412,7 @@ namespace IndoorCO2App_Multiplatform
 
         public static async Task FetchNearbyTransitAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage, bool transitOrigin)
         {
-            //if (currentlyFetching) return;
+            if (currentlyFetching) return;
             currentlyFetching = true;
             lastFetchWasSuccess = false;
             lastFetchWasSuccessButNoResults = false;
@@ -435,7 +434,6 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else mainPage.UpdateTransitDestinationPicker();
                 mainPage.UpdateTransitLinesPicker();
-
 
                 lastFetchWasSuccess = true;                
             }

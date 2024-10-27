@@ -204,9 +204,14 @@ namespace IndoorCO2App_Multiplatform
             SpatialManager.ResetLocation();
             _LocationPicker.ItemsSource = null;
             _LocationPicker.Items.Clear();
+            _TransitDestinationPicker.ItemsSource = null;
+            _TransitDestinationPicker.Items.Clear();
+            _TransitOriginPicker.ItemsSource = null;
+            _TransitOriginPicker.Items.Clear();
+            _TransitLinePicker.ItemsSource = null;
+            _TransitLinePicker.Items.Clear();
             _CheckBoxDoorsWindows.IsChecked = false;
-            _CheckBoxVentilation.IsChecked = false;
-            
+            _CheckBoxVentilation.IsChecked = false;                        
         }
         private void ResetNotes()
         {
@@ -308,7 +313,7 @@ namespace IndoorCO2App_Multiplatform
             _TransitLinePicker.ItemsSource= transitLines;
             if (transitLines.Count > 0)
             {
-                _TransitLinePicker.SelectedItem = transitTargetLocations[0];
+                _TransitLinePicker.SelectedItem = transitLines[0];
             }
         }
 
@@ -351,6 +356,18 @@ namespace IndoorCO2App_Multiplatform
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public async Task<bool> DisplayTransitSubmissionNoDestinationConfirmationDialog()
+        {
+            bool answer = await Application.Current.MainPage.DisplayAlert(
+                "Submit without destination?", // Title
+                "Are you sure you want to submit without a destination?", // Message
+                "Confirm", // Confirm button
+                "Cancel" // Cancel button
+            );
+
+            return answer; // Returns true if 'Confirm' is pressed, false if 'Cancel' is pressed
         }
     }
 }

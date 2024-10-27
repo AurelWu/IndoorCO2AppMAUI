@@ -31,6 +31,7 @@ namespace IndoorCO2App_Multiplatform
         public string StartingNWRType;
         public string StartingPointName;
         public long EndPointID;
+        public string EndPointName;
         public string EndPointNWRType;
 
 
@@ -43,11 +44,12 @@ namespace IndoorCO2App_Multiplatform
             //this.TransportMode = "";
             this.TransportID = transportID;
             this.TransportName = transportName;
+            this.TransportNWRType = transportNWRType;
             this.StartingPointID = startingPointID;
             this.StartingPointName = startingPointName;
-            this.EndPointID = 0;
-            this.TransportNWRType = transportNWRType;
             this.StartingNWRType = startingPointNWRType;
+            this.EndPointID = 0;
+            this.EndPointName = "";                        
             this.EndPointNWRType = "";
             AdditionalNotes = String.Empty;
         }
@@ -77,7 +79,7 @@ namespace IndoorCO2App_Multiplatform
                 timestampArray[arrayIndex] = data.timeStamp.ToString();
                 arrayIndex++;
             }
-
+            AdditionalNotes = MainPage.MainPageSingleton.GetNotesEditorText();
             //
             try
             {
@@ -85,10 +87,13 @@ namespace IndoorCO2App_Multiplatform
                 json.Add("b", startTime);
                 json.Add("st", StartingNWRType);
                 json.Add("si", StartingPointID);
+                json.Add("sn", StartingPointName);
                 json.Add("dt", EndPointNWRType);
                 json.Add("di", EndPointID);
+                json.Add("dn", EndPointName);
                 json.Add("lt", TransportNWRType);
                 json.Add("li", TransportID);
+                json.Add("ln", TransportName);
                 //json.Add("ad", LocationAddress);
                 //json.Add("w", openWindowsDoors);
                 //json.Add("v", ventilationSystem);

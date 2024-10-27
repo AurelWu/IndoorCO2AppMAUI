@@ -154,7 +154,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                        />
                 
             </ScrollView> -->
-            <HorizontalStackLayout Padding="10" HorizontalOptions="Center" >
+            <HorizontalStackLayout Padding="10" HorizontalOptions="Center" Spacing="10" >
 
                 <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClicked" BackgroundColor="LightBlue" />
                 <Button x:Name="ButtonTransitMode" Text="Transit" Clicked="OnLocationModeClicked" BackgroundColor="LightGray" />

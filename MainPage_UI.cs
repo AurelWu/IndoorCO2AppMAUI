@@ -117,7 +117,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(_LocationLabel, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("SearchRangeStackLayout"), MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_UpdateLocationsButton, MenuMode.Standard | MenuMode.TransportSelection | MenuMode.TransportRecording);
-            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("LocationStackLayout"), MenuMode.Standard);
+            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("LocationStackLayout"), MenuMode.Standard | MenuMode.TransportSelection | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitOriginStackLayout"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitDestinationStackLayout"), MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitLineStackLayout"), MenuMode.TransportSelection);
@@ -204,6 +204,7 @@ namespace IndoorCO2App_Multiplatform
             UpdateDeviceLabel();
 
             UpdateStartRecordingButton();
+            UpdateStartTransitRecordingButton();
             UpdateFinishRecordingButton();
         }
 
@@ -226,6 +227,18 @@ namespace IndoorCO2App_Multiplatform
             else
             {
                 _StartManualRecordingButton.IsEnabled = false;
+            }
+        }
+
+        private void UpdateStartTransitRecordingButton()
+        {
+            if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.TransportStartLocationData.Count > 0 && OverpassModule.TransitLines.Count>0 && BluetoothManager.discoveredDevices != null && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
+            {
+                _StartTransportRecordingButton.IsEnabled = true;
+            }
+            else
+            {
+                _StartTransportRecordingButton.IsEnabled = false;
             }
         }
 
@@ -524,6 +537,9 @@ namespace IndoorCO2App_Multiplatform
         public void ChangeToStandardUI()
         {
             ChangeToUI(MenuMode.Standard);
+            _TransitModeButton.BackgroundColor = Colors.LightGray;
+            _BuildingModeButton.BackgroundColor = Colors.LightBlue;
+
             if (RecoveryData.locationID != 0)
             {
                 _ResumeRecordingButton.IsVisible = true;
