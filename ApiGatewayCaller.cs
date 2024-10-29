@@ -47,16 +47,24 @@ namespace IndoorCO2App_Multiplatform
                 {
                     successState = "failure";
                 }
+               
             }
             catch (HttpRequestException e)
             {
+                Logger.circularBuffer.Add($"Request error: {e.Message}");
                 Console.WriteLine($"Request error: {e.Message}");
                 successState = "failure";
             }
             catch (TaskCanceledException e)
             {
+                Logger.circularBuffer.Add($"Request error: {e.Message}");
                 Console.WriteLine($"Request timeout: {e.Message}");
                 successState = "timeout";
+            }
+            catch (Exception e)
+            {
+                Logger.circularBuffer.Add($"Request error: {e.Message}");
+                successState = "failure";
             }
 
             if (successState == "success")

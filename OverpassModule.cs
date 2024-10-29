@@ -37,6 +37,7 @@ namespace IndoorCO2App_Multiplatform
             if(startLocation)
             {
                 TransportStartLocationData.Clear();
+                TransitLines.Clear();
             }
             else
             {
@@ -343,7 +344,8 @@ namespace IndoorCO2App_Multiplatform
                 }
 
                 // Subway stop
-                else if (tags.TryGetProperty("public_transport", out var publicTransportProperty) && publicTransportProperty.GetString() == "subway")
+                else if (tags.TryGetProperty("railway", out var subwayProperty) && subwayProperty.GetString() == "station" &&
+                            tags.TryGetProperty("station", out var stationProperty) && stationProperty.GetString() == "subway")
                 {
                     var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
                     if (namesOfStops.Contains(name))
@@ -365,10 +367,10 @@ namespace IndoorCO2App_Multiplatform
                     }
                 }
                 // Subway line (relation)
-                else if (type == "relation" && tags.TryGetProperty("public_transport", out var transportType) && transportType.GetString() == "subway")
+                else if (type == "relation" && tags.TryGetProperty("route", out var subwayRouteProperty) && subwayRouteProperty.GetString() == "subway")
                 {
                     var lineName = tags.TryGetProperty("name", out var subwayLineNameProperty) ? subwayLineNameProperty.GetString() : "";
-                    TransitLineData t = new TransitLineData("subway",type, id, lineName);
+                    TransitLineData t = new TransitLineData("bus", type, id, lineName);
                     TransitLines.Add(t);
                 }
             }

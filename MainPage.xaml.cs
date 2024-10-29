@@ -210,6 +210,9 @@ namespace IndoorCO2App_Multiplatform
             _TransitOriginPicker.Items.Clear();
             _TransitLinePicker.ItemsSource = null;
             _TransitLinePicker.Items.Clear();
+            OverpassModule.TransitLines.Clear();
+            OverpassModule.TransportStartLocationData.Clear();
+            OverpassModule.TransportDestinationLocationData.Clear();
             _CheckBoxDoorsWindows.IsChecked = false;
             _CheckBoxVentilation.IsChecked = false;                        
         }
