@@ -55,7 +55,7 @@ namespace IndoorCO2App_Multiplatform
             }
 
             int arrayIndex = 0;
-            for (int i = rangeSliderMin; i < rangeSliderMax; i++)
+            for (int i = rangeSliderMin; i <= rangeSliderMax; i++)
             {
                 SensorData data = sensorData[i];
                 ppmArray[arrayIndex] = data.CO2ppm.ToString();

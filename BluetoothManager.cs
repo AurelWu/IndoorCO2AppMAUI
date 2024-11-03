@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using IndoorCO2App_Android;
 using Microsoft.Maui.Controls.PlatformConfiguration;
-using Microsoft.VisualStudio.Composition;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
+using Plugin.BLE.Abstractions.Extensions;
 
 namespace IndoorCO2App_Multiplatform
 {
@@ -25,7 +25,10 @@ namespace IndoorCO2App_Multiplatform
         public static int sensorUpdateInterval = 0;
         public static IReadOnlyList<IDevice> discoveredDevices;
 
-        public static Guid aircodaUUID = Guid.Parse("0000feaa-0000-1000-8000-00805f9b34fb");
+        public static Guid aircodaServiceUUID = Guid.Parse("0000fea0-0000-1000-8000-00805f9b34fb");
+        public static Guid airSpotServiceUUID = Guid.Parse("0000180a-0000-1000-8000-00805f9b34fb"); //TODO change to correct
+
+
 
         public static Guid InkbirdServiceUUID = Guid.Parse("0000ffe0-0000-1000-8000-00805f9b34fb");
         public static Guid InkbirdCO2NotifyCharacteristic = Guid.Parse("0000ffe4-0000-1000-8000-00805f9b34fb");
@@ -85,7 +88,8 @@ namespace IndoorCO2App_Multiplatform
             serviceUUIDByMonitorType.Add(CO2MonitorType.Aranet4, AranetServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.Airvalent, AirvalentServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.InkbirdIAMT1, InkbirdServiceUUID);
-            serviceUUIDByMonitorType.Add(CO2MonitorType.AirCoda, InkbirdServiceUUID);
+            serviceUUIDByMonitorType.Add(CO2MonitorType.AirCoda, aircodaServiceUUID);
+            serviceUUIDByMonitorType.Add(CO2MonitorType.AirSpot, aircodaServiceUUID);
             recordedData = new List<SensorData>();
             ble = CrossBluetoothLE.Current;
             discoveredDevices = new List<IDevice>(); // we init a dummy to avoid null checks
@@ -206,8 +210,9 @@ namespace IndoorCO2App_Multiplatform
             isRecording = false;
         }
 
-        public static async void FinishRecording(int start, int end, SubmissionMode submissionMode, string locationNameManual, string locationAddressManual)
+        public static async Task<bool> FinishRecording(int start, int end, SubmissionMode submissionMode, string locationNameManual, string locationAddressManual)
         {
+            bool success = false;
             //Add co2 measurements to submissionData
             //ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson());
             if (submissionMode== SubmissionMode.Building)
@@ -215,6 +220,7 @@ namespace IndoorCO2App_Multiplatform
                 isRecording = false;
                 submissionData.SensorData = recordedData;
                 await ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start, end), SubmissionMode.Building);
+                success = true;
             }
             else if(submissionMode== SubmissionMode.BuildingManual) 
             {
@@ -223,6 +229,7 @@ namespace IndoorCO2App_Multiplatform
                 submissionDataManual.LocationName = locationNameManual;
                 submissionDataManual.LocationAddress = locationAddressManual;
                 await ApiGatewayCaller.SendJsonToApiGateway(submissionDataManual.ToJson(start, end), SubmissionMode.BuildingManual);
+                success = true;
             }
             else if(submissionMode== SubmissionMode.Transit)
             {
@@ -235,17 +242,11 @@ namespace IndoorCO2App_Multiplatform
                     submissionDataTransport.EndPointNWRType = MainPage.MainPageSingleton.selectedTransitTargetLocation.type;
                     submissionDataTransport.EndPointName = MainPage.MainPageSingleton.selectedTransitTargetLocation.Name;                    
                 }
-                if (MainPage.MainPageSingleton.selectedTransitTargetLocation == null)
-                {
-                    bool result = await MainPage.MainPageSingleton.DisplayTransitSubmissionNoDestinationConfirmationDialog();
-                    if(result==false)
-                    {
-                        return;
-                    }
-                }
                 
                 await ApiGatewayCaller.SendJsonToApiGateway(submissionDataTransport.ToJson(start, end), SubmissionMode.Transit);
+                success = true;                
             }
+            return success;
         }
 
         internal static async void ScanForDevices(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
@@ -297,7 +298,7 @@ namespace IndoorCO2App_Multiplatform
 
             if (ble == null) return; // if still null after trying to Init we abort
             var scanFilterOptions = new ScanFilterOptions();
-            if (monitorType != CO2MonitorType.InkbirdIAMT1)
+            if (monitorType != CO2MonitorType.InkbirdIAMT1 && monitorType != CO2MonitorType.AirCoda && monitorType != CO2MonitorType.AirSpot)
             {
                 scanFilterOptions.ServiceUuids = new[] { serviceUUID };
             }
@@ -319,8 +320,16 @@ namespace IndoorCO2App_Multiplatform
                 else if(monitorType == CO2MonitorType.AirCoda)
                 {
                     List<IDevice> airCodaFilter = discoveredDevices.ToList();
+                    airCodaFilter.RemoveAll(x => x.Name == null);
                     airCodaFilter.RemoveAll(x => !x.Name.ToLower().Contains("aircoda"));
                     discoveredDevices = airCodaFilter;
+                }
+                else if (monitorType == CO2MonitorType.AirSpot)
+                {
+                    List<IDevice> airSpotFilter = discoveredDevices.ToList();
+                    airSpotFilter.RemoveAll(x => x.Name == null);
+                    airSpotFilter.RemoveAll(x => !x.Name.ToLower().Contains("airspot"));
+                    discoveredDevices = airSpotFilter;
                 }
 
 
@@ -336,6 +345,12 @@ namespace IndoorCO2App_Multiplatform
                 await adapter.StartScanningForDevicesAsync(scanFilterOptions);
                 await adapter.StopScanningForDevicesAsync();
                 discoveredDevices = adapter.DiscoveredDevices;
+
+                foreach(var d in discoveredDevices)
+                {
+                    Console.WriteLine(d.Name);
+                }
+
                 if (monitorType == CO2MonitorType.InkbirdIAMT1)
                 {
                     List<IDevice> unfilteredDevices = discoveredDevices.ToList();
@@ -353,8 +368,17 @@ namespace IndoorCO2App_Multiplatform
                 else if (monitorType == CO2MonitorType.AirCoda)
                 {
                     List<IDevice> airCodaFilter = discoveredDevices.ToList();
+                    airCodaFilter.RemoveAll(x => x.Name == null);
                     airCodaFilter.RemoveAll(x => !x.Name.ToLower().Contains("aircoda"));
                     discoveredDevices = airCodaFilter;
+                }
+
+                else if (monitorType == CO2MonitorType.AirSpot)
+                {
+                    List<IDevice> airSpotFilter = discoveredDevices.ToList();
+                    airSpotFilter.RemoveAll(x => x.Name == null);
+                    airSpotFilter.RemoveAll(x => !x.Name.ToLower().Contains("airspot"));
+                    discoveredDevices = airSpotFilter;
                 }
 
                 else if(nameFilter!=null && nameFilter.Length> 0)
@@ -443,6 +467,80 @@ namespace IndoorCO2App_Multiplatform
             {
                 IService service = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType]);
                 IReadOnlyList<IService> results = await device.GetServicesAsync();
+
+                //TEMP for debugging
+                if (monitorType == CO2MonitorType.AirCoda)
+                {
+                    var advertisement = device.AdvertisementRecords;
+
+                    foreach(var ad in advertisement)
+                    {
+                        Console.WriteLine("Advertisement Data:");
+                        string hexString = ad.Data.ToHexString();
+                        Console.WriteLine("Ad |" + ad.Type.ToString() + " | " + hexString);
+                    }
+
+                    var result = await device.GetServicesAsync();
+                    foreach (var r in results)
+                    {
+                        Logger.circularBuffer.Add(r.Id.ToString());
+                        Console.WriteLine(device.Name + "| Service: | " + r.Id.ToString());
+                    }
+
+                    var characteristics = await service.GetCharacteristicsAsync();
+                    foreach(var c in characteristics)
+                    {
+                        Logger.circularBuffer.Add(c.Id.ToString());
+                        Console.WriteLine(device.Name + " | " + "Characteristic: | " + c.Id.ToString());
+                    }
+                }
+
+                //TEMP for debugging
+                if (monitorType == CO2MonitorType.AirSpot)
+                {
+                    var advertisement = device.AdvertisementRecords;
+
+                    foreach (var ad in advertisement)
+                    {
+                        Console.WriteLine("Advertisement Data:");
+                        string hexString = ad.Data.ToHexString();
+                        Console.WriteLine(ad.Type.ToString() + " " + hexString);
+                        Console.WriteLine("-----------------");
+                    }
+                    Console.WriteLine("-----------------");
+                    var result = await device.GetServicesAsync();
+                    foreach (var r in results)
+                    {
+                        Console.WriteLine(device.Name + "| Service: | " + r.Id.ToString());
+                        Logger.circularBuffer.Add(r.Id.ToString());
+                        Console.WriteLine(r.Id.ToString());
+                    }
+                    Console.WriteLine("-----------------");
+                    foreach (var s in result)
+                    {
+                        
+                        Console.WriteLine("Service:" + s.Id.ToString());
+                        Console.WriteLine("");
+                        var characteristics = await s.GetCharacteristicsAsync();
+                        foreach (var c in characteristics)
+                        {
+                            Logger.circularBuffer.Add(c.Id.ToString());
+                            var cResult = await c.ReadAsync();
+                            byte[] resultData = null;
+                            string resultDataString = string.Empty;
+                            if(cResult.resultCode == 0)
+                            {
+                                resultData = cResult.data;
+                                resultDataString = resultData.ToHexString();
+                            }
+                            
+                            Console.WriteLine( device.Name + "|" + "service:" + s.Name + "| ID: " + s.Id+" | " +  "Characteristic: |" + c.Id.ToString() + "| Properties: " + c.Properties + Environment.NewLine + resultDataString + Environment.NewLine);                            
+                        }
+                        Console.WriteLine("-----------------");
+                    }
+                    
+                }
+                
 
                 if (service != null)
                 {
@@ -719,7 +817,7 @@ namespace IndoorCO2App_Multiplatform
                     }
                     else if (monitorType == CO2MonitorType.InkbirdIAMT1)
                     {
-                        sensorUpdateInterval = 60;
+                        sensorUpdateInterval = 60; //TODO => read actual interval!
                         if (InkbirdAlreadyHookedUp) return;
                         inkbirdCO2NotifyCharacteristic = await service.GetCharacteristicAsync(InkbirdCO2NotifyCharacteristic);
                         inkbirdCO2NotifyCharacteristic.ValueUpdated -= OnInkbirdCO2haracteristicValueChanged; //if already had been subscribed - not sure if that works?
@@ -729,6 +827,16 @@ namespace IndoorCO2App_Multiplatform
                         await inkbirdCO2NotifyCharacteristic.StartUpdatesAsync();
                         InkbirdAlreadyHookedUp = true;
 
+                    }
+
+                    else if (monitorType == CO2MonitorType.AirCoda)
+                    {
+                        var result = await service.GetCharacteristicsAsync();
+                        foreach(var r in results)
+                        {
+                            Logger.circularBuffer.Add(r.ToString());
+                            Console.WriteLine(r.ToString());
+                        }
                     }
                 }
             }

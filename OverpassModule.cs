@@ -370,7 +370,7 @@ namespace IndoorCO2App_Multiplatform
                 else if (type == "relation" && tags.TryGetProperty("route", out var subwayRouteProperty) && subwayRouteProperty.GetString() == "subway")
                 {
                     var lineName = tags.TryGetProperty("name", out var subwayLineNameProperty) ? subwayLineNameProperty.GetString() : "";
-                    TransitLineData t = new TransitLineData("bus", type, id, lineName);
+                    TransitLineData t = new TransitLineData("subway", type, id, lineName);
                     TransitLines.Add(t);
                 }
             }

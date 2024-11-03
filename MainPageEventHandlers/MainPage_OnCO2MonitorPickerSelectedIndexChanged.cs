@@ -31,6 +31,10 @@ namespace IndoorCO2App_Multiplatform
                 {
                     monitorType = CO2MonitorType.AirCoda;
                 }
+                else if(picked == "AirSpot Health")
+                {
+                    monitorType = CO2MonitorType.AirSpot;
+                }
             }
         }
 

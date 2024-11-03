@@ -41,6 +41,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                         <x:String>Aranet</x:String>
                         <x:String>Airvalent</x:String>
                         <x:String>Inkbird IAM-T1</x:String>
+                        <x:String>AirSpot Health</x:String>
                         <x:String>airCoda</x:String>
                     </Picker.Items>
                 </Picker>

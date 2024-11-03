@@ -188,6 +188,7 @@ namespace IndoorCO2App_Multiplatform
 
         public void UpdateUI()
         {
+            Application.Current.UserAppTheme = Application.Current.RequestedTheme;
             VersionLabel.Text = AppVersion;
             UpdateGPSStatusButton();
             UpdateGPSPermissionButton();
