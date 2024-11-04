@@ -30,6 +30,7 @@ namespace IndoorCO2App_Multiplatform
         public static bool startTrimSliderHasBeenUsed = false;
         public static bool endTrimSliderHasBeenUsed = false;
         public static bool endtrimSliderIsAtmax = false;
+        public static TransitFilterMode TransitFilter = TransitFilterMode.All;
 
         int searchRange = 100;
 
@@ -308,11 +309,12 @@ namespace IndoorCO2App_Multiplatform
 
         public void UpdateTransitLinesPicker()
         {
-            transitLines = OverpassModule.TransitLines;
-            if(transitLines.Count == 0)
-            {
-                return;
-            }
+            OverpassModule.UpdateFilteredTransitLines();
+            transitLines = OverpassModule.filteredTransitLines;
+            //if(transitLines.Count == 0)
+            //{
+            //    return;
+            //}
             _TransitLinePicker.ItemsSource = null;
             _TransitLinePicker.Items.Clear();
             _TransitLinePicker.ItemsSource= transitLines;

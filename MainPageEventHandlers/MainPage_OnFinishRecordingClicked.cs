@@ -10,6 +10,7 @@ namespace IndoorCO2App_Multiplatform
             if (submissionMode == SubmissionMode.Transit)
             {
                 selectedTransitTargetLocation = (LocationData)_TransitDestinationPicker.SelectedItem;
+                selectedTransitLine = (TransitLineData)_TransitLinePicker.SelectedItem;
                 if (selectedTransitTargetLocation == null)
                 {
                     bool result = await DisplayTransitSubmissionNoDestinationConfirmationDialog();

@@ -50,6 +50,10 @@ namespace IndoorCO2App_Multiplatform
         public Button _DebugLogButton;
         public Button _BuildingModeButton;
         public Button _TransitModeButton;
+        public Button _TransitFilterAllButton;
+        public Button _TransitFilterBusButton;
+        public Button _TransitFilterTramButton;
+        public Button _TransitFilterSubwayButton;
 
         internal MenuMode currentMenuMode;
 
@@ -104,6 +108,10 @@ namespace IndoorCO2App_Multiplatform
 
             _BuildingModeButton = this.FindByName<Button>("ButtonBuildingMode");
             _TransitModeButton = this.FindByName<Button>("ButtonTransitMode");
+            _TransitFilterAllButton = this.FindByName<Button>("ButtonAll"); ;
+            _TransitFilterBusButton = this.FindByName<Button>("ButtonBus"); ;
+            _TransitFilterTramButton = this.FindByName<Button>("ButtonTram"); ;
+            _TransitFilterSubwayButton = this.FindByName<Button>("ButtonSubway"); ;
 
 
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
@@ -120,7 +128,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("LocationStackLayout"), MenuMode.Standard);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitOriginStackLayout"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitDestinationStackLayout"), MenuMode.TransportRecording);
-            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitLineStackLayout"), MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitLineStackLayout"), MenuMode.TransportSelection | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_ResumeRecordingButton, 0); 
             MenuModesOfUIElements.Add(_StartRecordingButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(_StartManualRecordingButton, MenuMode.Standard);
@@ -149,6 +157,8 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(_StartTransportRecordingButton, MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_BuildingModeButton, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_TransitModeButton, MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(this.FindByName<Grid>("TransitFilterGrid"), MenuMode.TransportSelection | MenuMode.TransportRecording);
+
         }
 
         private void InitUILayout()
@@ -539,7 +549,7 @@ namespace IndoorCO2App_Multiplatform
         {
             ChangeToUI(MenuMode.Standard);
             _TransitModeButton.BackgroundColor = Colors.LightGray;
-            _BuildingModeButton.BackgroundColor = Colors.LightBlue;
+            _BuildingModeButton.BackgroundColor = Color.Parse("#512BD4");
 
             if (RecoveryData.locationID != 0)
             {

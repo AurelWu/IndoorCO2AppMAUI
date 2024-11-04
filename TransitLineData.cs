@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Sprache;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace IndoorCO2App_Multiplatform
@@ -25,7 +27,8 @@ namespace IndoorCO2App_Multiplatform
 
         public override string ToString()
         {
-            return $"{Name} | {VehicleType}";
+            string shortName = Regex.Replace(Name, @":\s*.*?=>\s*", ": ");
+            return $"{shortName} ";
         }
     }
 }

@@ -3,7 +3,9 @@
 xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sliders"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
              xmlns:controls="clr-namespace:IndoorCO2App_Multiplatform.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2021/maui/toolkit"
              x:Class="IndoorCO2App_Multiplatform.MainPage">
+    
 
 
     <controls:FixedScrollView>
@@ -157,7 +159,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             </ScrollView> -->
             <HorizontalStackLayout Padding="10" HorizontalOptions="Center" Spacing="10" >
 
-                <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClicked" BackgroundColor="LightBlue" />
+                <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClicked" BackgroundColor="#512BD4" />
                 <Button x:Name="ButtonTransitMode" Text="Transit" Clicked="OnLocationModeClicked" BackgroundColor="LightGray" />
 
             </HorizontalStackLayout>
@@ -211,6 +213,24 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 <Picker x:Name="TransitDestinationPicker" VerticalOptions="Center">
                 </Picker>
             </VerticalStackLayout>
+
+            <Grid x:Name="TransitFilterGrid"  ColumnSpacing="10" HorizontalOptions="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="ButtonAll" Text="All" Clicked="OnTransitFilterClicked"  BackgroundColor="#512BD4" Grid.Column="0" />
+                <Button x:Name="ButtonBus" Text="Bus" Clicked="OnTransitFilterClicked" BackgroundColor="LightGray" Grid.Column="1" />
+                <Button x:Name="ButtonTram" Text="Tram" Clicked="OnTransitFilterClicked" BackgroundColor="LightGray" Grid.Column="2" />
+                <Button x:Name="ButtonSubway" Text="Subway" Clicked="OnTransitFilterClicked" BackgroundColor="LightGray" Grid.Column="3" />
+                <!-- You can add more buttons as needed -->
+            </Grid>
+
+
+
 
             <VerticalStackLayout         
                 x:Name="TransitLineStackLayout"

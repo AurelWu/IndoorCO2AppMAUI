@@ -242,7 +242,10 @@ namespace IndoorCO2App_Multiplatform
                     submissionDataTransport.EndPointNWRType = MainPage.MainPageSingleton.selectedTransitTargetLocation.type;
                     submissionDataTransport.EndPointName = MainPage.MainPageSingleton.selectedTransitTargetLocation.Name;                    
                 }
-                
+                submissionDataTransport.TransportID = MainPage.MainPageSingleton.selectedTransitLine.ID;
+                submissionDataTransport.TransportNWRType = MainPage.MainPageSingleton.selectedTransitLine.NWRType;
+                submissionDataTransport.TransportName = MainPage.MainPageSingleton.selectedTransitLine.Name;
+
                 await ApiGatewayCaller.SendJsonToApiGateway(submissionDataTransport.ToJson(start, end), SubmissionMode.Transit);
                 success = true;                
             }

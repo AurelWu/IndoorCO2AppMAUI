@@ -57,7 +57,7 @@ namespace IndoorCO2App_Multiplatform
         {
 
             JObject json = new JObject();
-            int arraySize = (rangeSliderMax - rangeSliderMin);
+            int arraySize = ((rangeSliderMax + 1) - rangeSliderMin);
             string[] ppmArray = new string[arraySize];
             string[] timestampArray = new string[arraySize];
 

@@ -18,6 +18,7 @@ namespace IndoorCO2App_Multiplatform
         public static List<LocationData> TransportDestinationLocationData { get; private set; }
 
         public static List<TransitLineData> TransitLines { get; private set; }
+        public static List<TransitLineData> filteredTransitLines { get; private set; } 
 
         public static bool currentlyFetching = false;
         public static bool lastFetchWasSuccess = false;
@@ -176,89 +177,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 lastFetchWasSuccessButNoResults = false;
             }
-            //spatialManager.MainActivity.InvalidateLocations = true;  //dirty flag for some UI stuff, might not be needed or maybe might
         }
-
-        //private static void ParseTransitOverpassResponse(string response, double userLatitude, double userLongitude, bool isOrigin)
-        //{
-        //    var elements = JsonDocument.Parse(response).RootElement.GetProperty("elements");
-        //
-        //    foreach (var element in elements.EnumerateArray())
-        //    {
-        //        var type = element.GetProperty("type").GetString();
-        //        var id = element.GetProperty("id").GetInt64();
-        //
-        //        // Check if the element has a "center" property
-        //        JsonElement? center = element.TryGetProperty("center", out var centerProperty) ? centerProperty : null;
-        //        var lon = center != null ? center.Value.GetProperty("lon").GetDouble() : element.GetProperty("lon").GetDouble();
-        //        var lat = center != null ? center.Value.GetProperty("lat").GetDouble() : element.GetProperty("lat").GetDouble();
-        //
-        //        // Get the tags of the element
-        //        var tags = element.GetProperty("tags");
-        //
-        //        // Determine if it's a tram, bus, or subway stop, or a line, and process accordingly
-        //
-        //        // Tram stop
-        //        if (tags.TryGetProperty("railway", out var railwayProperty) && railwayProperty.GetString() == "tram_stop")
-        //        {
-        //            var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
-        //            var bd = new LocationData(type, id, name, lat, lon, userLatitude, userLongitude);
-        //            if (isOrigin)
-        //            {
-        //                TransportStartLocationData.Add(bd);
-        //            }
-        //            else TransportDestinationLocationData.Add(bd);
-        //            
-        //        }
-        //
-        //        // Tram line
-        //        else if (tags.TryGetProperty("tram:route", out var tramRouteProperty) && tags.TryGetProperty("name", out var tramLineNameProperty))
-        //        {
-        //            var lineName = tramLineNameProperty.GetString();
-        //            TransportLineNames.Add(lineName); 
-        //        }
-        //
-        //        // Bus stop
-        //        else if (tags.TryGetProperty("highway", out var highwayProperty) && highwayProperty.GetString() == "bus_stop")
-        //        {
-        //            var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
-        //            var bd = new LocationData(type, id, name, lat, lon, userLatitude, userLongitude);
-        //            if (isOrigin)
-        //            {
-        //                TransportStartLocationData.Add(bd);
-        //            }
-        //            else TransportDestinationLocationData.Add(bd);
-        //            
-        //        }
-        //
-        //        // Bus line
-        //        else if (tags.TryGetProperty("bus:route", out var busRouteProperty) && tags.TryGetProperty("name", out var busLineNameProperty))
-        //        {
-        //            var lineName = busLineNameProperty.GetString();
-        //            TransportLineNames.Add(lineName); 
-        //        }
-        //
-        //        // Subway stop
-        //        else if (tags.TryGetProperty("public_transport", out var publicTransportProperty) && publicTransportProperty.GetString() == "subway")
-        //        {
-        //            var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
-        //            var bd = new LocationData(type, id, name, lat, lon, userLatitude, userLongitude);
-        //            if (isOrigin)
-        //            {
-        //                TransportStartLocationData.Add(bd);
-        //            }
-        //            else TransportDestinationLocationData.Add(bd);
-        //        }
-        //
-        //        // Subway line
-        //        else if (tags.TryGetProperty("name", out var subwayLineNameProperty) && tags.TryGetProperty("public_transport", out var transportType) && transportType.GetString() == "subway")
-        //        {
-        //            var lineName = subwayLineNameProperty.GetString();
-        //            TransportLineNames.Add(lineName); 
-        //        }
-        //    }
-        //
-        //}
 
         private static void ParseTransitOverpassResponse(string response, double userLatitude, double userLongitude, bool isOrigin)
         {
@@ -378,7 +297,29 @@ namespace IndoorCO2App_Multiplatform
             {
                 TransitLines = TransitLines.OrderBy(x=>x.Name).ToList(); //sorts alphabetically
             }
-            
+            UpdateFilteredTransitLines();
+        }
+
+        public static void UpdateFilteredTransitLines()
+        {
+            if (TransitLines == null) return;
+            filteredTransitLines = new List<TransitLineData>();
+            if(MainPage.TransitFilter == TransitFilterMode.All)
+            {
+                filteredTransitLines = TransitLines;
+            }
+            else if(MainPage.TransitFilter == TransitFilterMode.Bus)
+            {
+                filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "bus").ToList();
+            }
+            else if (MainPage.TransitFilter == TransitFilterMode.Tram)
+            {
+                filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "tram").ToList();
+            }
+            else if (MainPage.TransitFilter == TransitFilterMode.Tram)
+            {
+                filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "subway").ToList();
+            }
         }
 
 
@@ -436,9 +377,10 @@ namespace IndoorCO2App_Multiplatform
                 if (transitOrigin)
                 {
                     mainPage.UpdateTransitOriginPicker();
+                    mainPage.UpdateTransitLinesPicker();
                 }
                 else mainPage.UpdateTransitDestinationPicker();
-                mainPage.UpdateTransitLinesPicker();
+
 
                 lastFetchWasSuccess = true;                
             }

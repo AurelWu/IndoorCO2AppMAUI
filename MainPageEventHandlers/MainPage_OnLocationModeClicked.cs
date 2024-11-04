@@ -12,9 +12,9 @@ namespace IndoorCO2App_Multiplatform
             _BuildingModeButton.BackgroundColor = Colors.LightGray;
 
             // Set the clicked button to active state
-            clickedButton.BackgroundColor = Colors.LightBlue;
+            clickedButton.BackgroundColor = Color.Parse("#512BD4");
 
-            if(clickedButton.Text=="Buildings")
+            if (clickedButton.Text=="Buildings")
             {
                 ChangeToStandardUI();
             }
