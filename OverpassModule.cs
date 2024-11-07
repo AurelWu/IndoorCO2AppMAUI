@@ -168,7 +168,18 @@ namespace IndoorCO2App_Multiplatform
                 LocationData.Add(bd);
             }
 
-            LocationData.Sort((point1, point2) => point1.distanceToGivenLocation.CompareTo(point2.distanceToGivenLocation));
+            LocationData.Sort((point1, point2) =>
+            {
+                bool isFavorite1 = MainPage.MainPageSingleton.favouredLocations.Contains(point1.type+"_"+point1.ID);
+                bool isFavorite2 = MainPage.MainPageSingleton.favouredLocations.Contains(point2.type + "_" + point2.ID);
+
+                // Sort favorites to the top
+                if (isFavorite1 && !isFavorite2) return -1;
+                if (!isFavorite1 && isFavorite2) return 1;
+
+                // If both are favorites or both are non-favorites, sort by distance
+                return point1.distanceToGivenLocation.CompareTo(point2.distanceToGivenLocation);
+            });
             if (LocationData.Count == 0)
             {
                 lastFetchWasSuccessButNoResults = true;
@@ -293,9 +304,13 @@ namespace IndoorCO2App_Multiplatform
                     TransitLines.Add(t);
                 }
             }
+            //MainPage.MainPageSingleton.favouredLocations 
             if (TransitLines != null && TransitLines.Count > 0)
             {
-                TransitLines = TransitLines.OrderBy(x=>x.Name).ToList(); //sorts alphabetically
+              TransitLines = TransitLines
+              .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.NWRType+"_"+x.ID.ToString()))  // Moves favorites to the top
+                .ThenBy(x => x.Name)  // Sorts alphabetically within favorites and non-favorites
+                .ToList();
             }
             UpdateFilteredTransitLines();
         }
@@ -316,7 +331,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "tram").ToList();
             }
-            else if (MainPage.TransitFilter == TransitFilterMode.Tram)
+            else if (MainPage.TransitFilter == TransitFilterMode.Subway)
             {
                 filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "subway").ToList();
             }
@@ -338,22 +353,41 @@ namespace IndoorCO2App_Multiplatform
             //var content = new StringContent("data=" + overpassQuery);
             var content = new StringContent("data=" + Uri.EscapeDataString(overpassQuery), Encoding.UTF8, "application/x-www-form-urlencoded");
             using var client = new HttpClient();
-            using var response = await client.PostAsync("https://overpass-api.de/api/interpreter", content);
-
-            if (response.IsSuccessStatusCode)
+            client.Timeout = TimeSpan.FromSeconds(10);
+            try
             {
-                var jsonData = await response.Content.ReadAsStringAsync();
-                ParseOverpassResponse(jsonData, userLatitude, userLongitude);
-                mainPage.UpdateLocationPicker();
-                lastFetchWasSuccess = true;
-                // Update UI on the main thread if necessary
+                using var response = await client.PostAsync("https://overpass-api.de/api/interpreter", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonData = await response.Content.ReadAsStringAsync();
+                    ParseOverpassResponse(jsonData, userLatitude, userLongitude);
+                    mainPage.UpdateLocationPicker();
+                    lastFetchWasSuccess = true;
+                    // Update UI on the main thread if necessary
+                }
+                else
+                {
+                    lastFetchWasSuccess = false;
+                    // Handle unsuccessful response
+                }
+                currentlyFetching = false;
             }
-            else
+            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
             {
                 lastFetchWasSuccess = false;
-                // Handle unsuccessful response
+                Console.WriteLine("The request timed out.");
             }
-            currentlyFetching = false;
+            catch (Exception ex)
+            {
+                lastFetchWasSuccess = false;
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            finally
+            {
+                currentlyFetching = false;
+            }
+
         }
 
         public static async Task FetchNearbyTransitAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage, bool transitOrigin)
@@ -366,30 +400,48 @@ namespace IndoorCO2App_Multiplatform
             var overpassQuery = BuildTransportOverpassQuery(userLatitude, userLongitude, searchRadius, transitOrigin);
             var content = new StringContent("data=" + Uri.EscapeDataString(overpassQuery), Encoding.UTF8, "application/x-www-form-urlencoded");
             using var client = new HttpClient();
-            using var response = await client.PostAsync("https://overpass-api.de/api/interpreter", content);
+            client.Timeout = TimeSpan.FromSeconds(10);
 
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var jsonData = await response.Content.ReadAsStringAsync();
-                //ParseOverpassResponse(jsonData, userLatitude, userLongitude);
-                //mainPage.UpdateLocationPicker();
-                ParseTransitOverpassResponse(jsonData, userLatitude, userLongitude, transitOrigin);
-                if (transitOrigin)
+                using var response = await client.PostAsync("https://overpass-api.de/api/interpreter", content);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    mainPage.UpdateTransitOriginPicker();
-                    mainPage.UpdateTransitLinesPicker();
+                    var jsonData = await response.Content.ReadAsStringAsync();
+                    //ParseOverpassResponse(jsonData, userLatitude, userLongitude);
+                    //mainPage.UpdateLocationPicker();
+                    ParseTransitOverpassResponse(jsonData, userLatitude, userLongitude, transitOrigin);
+                    if (transitOrigin)
+                    {
+                        mainPage.UpdateTransitOriginPicker();
+                        mainPage.UpdateTransitLinesPicker();
+                    }
+                    else mainPage.UpdateTransitDestinationPicker();
+
+
+                    lastFetchWasSuccess = true;
                 }
-                else mainPage.UpdateTransitDestinationPicker();
-
-
-                lastFetchWasSuccess = true;                
+                else
+                {
+                    lastFetchWasSuccess = false;
+                    // Handle unsuccessful response
+                }
             }
-            else
+            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
             {
                 lastFetchWasSuccess = false;
-                // Handle unsuccessful response
+                Console.WriteLine("The request timed out.");
             }
-            currentlyFetching = false;
+            catch (Exception ex)
+            {
+                lastFetchWasSuccess = false;
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            finally
+            {
+                currentlyFetching = false;
+            }
         }
     }
 }

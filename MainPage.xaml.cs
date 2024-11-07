@@ -64,18 +64,20 @@ namespace IndoorCO2App_Multiplatform
         public SubmissionMode submissionMode;
         //public bool transportRecordingMode = false;
         public IBluetoothHelper bluetoothHelper;
+        public HashSet<string> favouredLocations;
 
         public MainPage()
         {
+            favouredLocations = new HashSet<string>();            
             InitializeComponent();
             AppVersion = GetAppVersion();
             CreateMainPageSingleton();
             InitUIElements();
-            InitUILayout();
+            InitUILayout();            
             RecoveryData.ReadFromPreferences();
             _CO2DeviceNameFilterEditor.Text = Preferences.Get(DeviceNameFilterPreferenceKey, "");
             ChangeToStandardUI();
-
+            LoadFavouredLocations();
             LoadMonitorType();
 #if ANDROID
             bluetoothHelper = new BluetoothHelper();            
@@ -91,6 +93,11 @@ namespace IndoorCO2App_Multiplatform
             UpdateUI();
             _timer = new PeriodicTimer(TimeSpan.FromSeconds(0.4));
             Update();
+        }
+
+        private async void LoadFavouredLocations()
+        {
+            favouredLocations = await FileStorage.LoadHashSetAsync();
         }
 
         private async void Update()
@@ -276,10 +283,10 @@ namespace IndoorCO2App_Multiplatform
         public void UpdateTransitOriginPicker()
         {
             transitOriginLocations = OverpassModule.TransportStartLocationData;
-            if(transitOriginLocations.Count == 0)
-            {
-                return;
-            }
+            //if(transitOriginLocations.Count == 0)
+            //{
+            //    return;
+            //}
             _TransitOriginPicker.ItemsSource = null;
             _TransitOriginPicker.Items.Clear();
             _TransitOriginPicker.ItemsSource = transitOriginLocations;
@@ -293,10 +300,10 @@ namespace IndoorCO2App_Multiplatform
         public void UpdateTransitDestinationPicker()
         {
             transitTargetLocations = OverpassModule.TransportDestinationLocationData;
-            if (transitTargetLocations.Count == 0)
-            {
-                return;
-            }
+            //if (transitTargetLocations.Count == 0)
+            //{
+            //    return;
+            //}
             _TransitDestinationPicker.ItemsSource = null;
             _TransitDestinationPicker.Items.Clear();
             _TransitDestinationPicker.ItemsSource = transitTargetLocations;

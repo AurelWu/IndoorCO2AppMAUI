@@ -18,9 +18,14 @@ namespace IndoorCO2App_Multiplatform
             _TransitFilterBusButton.BackgroundColor = Colors.LightGray;
             _TransitFilterTramButton.BackgroundColor = Colors.LightGray;
             _TransitFilterSubwayButton.BackgroundColor = Colors.LightGray;
+            _TransitFilterAllButton.TextColor = Colors.Black;
+            _TransitFilterBusButton.TextColor = Colors.Black;
+            _TransitFilterTramButton.TextColor = Colors.Black;
+            _TransitFilterSubwayButton.TextColor = Colors.Black;
 
             // Set the clicked button to active state
             clickedButton.BackgroundColor = Color.Parse("#512BD4");
+            clickedButton.TextColor = Colors.White;
             //set filter to this text
             //this will not work well with translation!
             if (clickedButton.Text.ToLower()=="all")

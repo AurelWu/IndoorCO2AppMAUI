@@ -10,9 +10,12 @@ namespace IndoorCO2App_Multiplatform
             // Reset both buttons to inactive state
             _TransitModeButton.BackgroundColor = Colors.LightGray;
             _BuildingModeButton.BackgroundColor = Colors.LightGray;
+            _TransitModeButton.TextColor = Colors.Black;
+            _BuildingModeButton.TextColor = Colors.Black;
 
             // Set the clicked button to active state
             clickedButton.BackgroundColor = Color.Parse("#512BD4");
+            clickedButton.TextColor = Colors.White;
 
             if (clickedButton.Text=="Buildings")
             {

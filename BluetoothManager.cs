@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using IndoorCO2App_Android;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
@@ -26,8 +25,10 @@ namespace IndoorCO2App_Multiplatform
         public static IReadOnlyList<IDevice> discoveredDevices;
 
         public static Guid aircodaServiceUUID = Guid.Parse("0000fea0-0000-1000-8000-00805f9b34fb");
-        public static Guid airSpotServiceUUID = Guid.Parse("0000180a-0000-1000-8000-00805f9b34fb"); //TODO change to correct
 
+        static Guid airspotServiceGUID = new Guid("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+        static Guid airspotWriteCharacteristic = new Guid("6e400002-b5a3-f393-e0a9-e50e24dcca9e"); //probably write characteristic to change settings (and maybe request history?)
+        static Guid airspotNotifyCharacteristic = new Guid("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
 
 
         public static Guid InkbirdServiceUUID = Guid.Parse("0000ffe0-0000-1000-8000-00805f9b34fb");
@@ -59,6 +60,7 @@ namespace IndoorCO2App_Multiplatform
         public static double timeToNextUpdate = 60;
         public static double refreshTime = 60;
         public static double refreshTimeWhenNotSucess = 20;
+        public static DateTime timeOfLastNotifyUpdate = DateTime.MinValue;
 
         public static bool isRecording;
         public static bool isTransportRecording;
@@ -74,22 +76,22 @@ namespace IndoorCO2App_Multiplatform
         public static int gattStatus;
         public static bool currentlyUpdating; //not yet used as updates seem to be reasonable fast
         public static bool lastAttemptFailed = false;
-        public static bool InkbirdAlreadyHookedUp = false;
+        public static bool NotifyCharacteristicAlreadyHookedUp = false;
         public static bool directConnectToBondedDevice = false;
 
         public static Dictionary<CO2MonitorType, Guid> serviceUUIDByMonitorType;
         public static ICharacteristic inkbirdCO2NotifyCharacteristic;
+        public static ICharacteristic airspotCO2NotifyCharacteristic;
 
 
         internal async static void Init()
         {
-
             serviceUUIDByMonitorType = new Dictionary<CO2MonitorType, Guid>();
             serviceUUIDByMonitorType.Add(CO2MonitorType.Aranet4, AranetServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.Airvalent, AirvalentServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.InkbirdIAMT1, InkbirdServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.AirCoda, aircodaServiceUUID);
-            serviceUUIDByMonitorType.Add(CO2MonitorType.AirSpot, aircodaServiceUUID);
+            serviceUUIDByMonitorType.Add(CO2MonitorType.AirSpot, airspotServiceGUID);
             recordedData = new List<SensorData>();
             ble = CrossBluetoothLE.Current;
             discoveredDevices = new List<IDevice>(); // we init a dummy to avoid null checks
@@ -163,7 +165,7 @@ namespace IndoorCO2App_Multiplatform
             recordedData = new List<SensorData>();
             submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,false), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
             startingTime = startTime;
-            InkbirdAlreadyHookedUp = false;
+            NotifyCharacteristicAlreadyHookedUp = false;
             if (prerecording)
             {
                 prerecordingLength = 15;
@@ -181,7 +183,7 @@ namespace IndoorCO2App_Multiplatform
             recordedData = new List<SensorData>();
             submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(deviceID,false), startTime);
             startingTime = startTime;
-            InkbirdAlreadyHookedUp = false;
+            NotifyCharacteristicAlreadyHookedUp = false;
             if (prerecording)
             {
                 prerecordingLength = 15;
@@ -199,7 +201,7 @@ namespace IndoorCO2App_Multiplatform
             recordedData = new List<SensorData>();
             submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,true), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.type,startLocation.Name);
             startingTime = startTime;
-            InkbirdAlreadyHookedUp = false;
+            NotifyCharacteristicAlreadyHookedUp = false;
             prerecordingLength = 0; // no prerecording for now
 
             //throw new System.NotImplementedException();
@@ -497,54 +499,7 @@ namespace IndoorCO2App_Multiplatform
                         Console.WriteLine(device.Name + " | " + "Characteristic: | " + c.Id.ToString());
                     }
                 }
-
-                //TEMP for debugging
-                if (monitorType == CO2MonitorType.AirSpot)
-                {
-                    var advertisement = device.AdvertisementRecords;
-
-                    foreach (var ad in advertisement)
-                    {
-                        Console.WriteLine("Advertisement Data:");
-                        string hexString = ad.Data.ToHexString();
-                        Console.WriteLine(ad.Type.ToString() + " " + hexString);
-                        Console.WriteLine("-----------------");
-                    }
-                    Console.WriteLine("-----------------");
-                    var result = await device.GetServicesAsync();
-                    foreach (var r in results)
-                    {
-                        Console.WriteLine(device.Name + "| Service: | " + r.Id.ToString());
-                        Logger.circularBuffer.Add(r.Id.ToString());
-                        Console.WriteLine(r.Id.ToString());
-                    }
-                    Console.WriteLine("-----------------");
-                    foreach (var s in result)
-                    {
-                        
-                        Console.WriteLine("Service:" + s.Id.ToString());
-                        Console.WriteLine("");
-                        var characteristics = await s.GetCharacteristicsAsync();
-                        foreach (var c in characteristics)
-                        {
-                            Logger.circularBuffer.Add(c.Id.ToString());
-                            var cResult = await c.ReadAsync();
-                            byte[] resultData = null;
-                            string resultDataString = string.Empty;
-                            if(cResult.resultCode == 0)
-                            {
-                                resultData = cResult.data;
-                                resultDataString = resultData.ToHexString();
-                            }
-                            
-                            Console.WriteLine( device.Name + "|" + "service:" + s.Name + "| ID: " + s.Id+" | " +  "Characteristic: |" + c.Id.ToString() + "| Properties: " + c.Properties + Environment.NewLine + resultDataString + Environment.NewLine);                            
-                        }
-                        Console.WriteLine("-----------------");
-                    }
-                    
-                }
                 
-
                 if (service != null)
                 {
                     if (monitorType == CO2MonitorType.Aranet4)
@@ -821,14 +776,27 @@ namespace IndoorCO2App_Multiplatform
                     else if (monitorType == CO2MonitorType.InkbirdIAMT1)
                     {
                         sensorUpdateInterval = 60; //TODO => read actual interval!
-                        if (InkbirdAlreadyHookedUp) return;
+                        if (NotifyCharacteristicAlreadyHookedUp) return;
                         inkbirdCO2NotifyCharacteristic = await service.GetCharacteristicAsync(InkbirdCO2NotifyCharacteristic);
                         inkbirdCO2NotifyCharacteristic.ValueUpdated -= OnInkbirdCO2haracteristicValueChanged; //if already had been subscribed - not sure if that works?
                         inkbirdCO2NotifyCharacteristic.ValueUpdated += OnInkbirdCO2haracteristicValueChanged;
 
                         //await characteristic.StartUpdatesAsync();
                         await inkbirdCO2NotifyCharacteristic.StartUpdatesAsync();
-                        InkbirdAlreadyHookedUp = true;
+                        NotifyCharacteristicAlreadyHookedUp = true;
+
+                    }
+                    else if (monitorType == CO2MonitorType.AirSpot)
+                    {
+                        sensorUpdateInterval = 60; //TODO => read actual interval!
+                        if (NotifyCharacteristicAlreadyHookedUp) return;
+                        airspotCO2NotifyCharacteristic = await service.GetCharacteristicAsync(airspotNotifyCharacteristic);
+                        airspotCO2NotifyCharacteristic.ValueUpdated -= OnAirspotCO2CharacteristicValueChanged; //if already had been subscribed - not sure if that works?
+                        airspotCO2NotifyCharacteristic.ValueUpdated += OnAirspotCO2CharacteristicValueChanged;
+
+                        //await characteristic.StartUpdatesAsync();
+                        await airspotCO2NotifyCharacteristic.StartUpdatesAsync();
+                        NotifyCharacteristicAlreadyHookedUp = true;
 
                     }
 
@@ -893,8 +861,7 @@ namespace IndoorCO2App_Multiplatform
         }
 
         public static void OnInkbirdCO2haracteristicValueChanged(object sender, CharacteristicUpdatedEventArgs e)
-        {
-            
+        {            
             if (sender == null) return;
             var data = e.Characteristic.Value;
             if (data == null) return;
@@ -905,16 +872,52 @@ namespace IndoorCO2App_Multiplatform
             byte sb = data[10];
             byte[] c = new byte[] { sb, fb };
             ushort CO2LiveValue = BitConverter.ToUInt16(c, 0);
-            if(CO2LiveValue<100 || CO2LiveValue >=10000)
+            if(CO2LiveValue<100 || CO2LiveValue >=10000) //sanity check
             {
                 return;
             }
             currentCO2Reading = CO2LiveValue;
+            timeOfLastNotifyUpdate = DateTime.Now;
             if (isRecording)
             {
                 int t = recordedData.Count;
                 recordedData.Add(new SensorData(CO2LiveValue, t));
             }
+        }
+
+        public static void OnAirspotCO2CharacteristicValueChanged(object sender, CharacteristicUpdatedEventArgs e)
+        {
+            if(sender == null) return;
+            var data = e.Characteristic.Value;
+            if(data == null) return;
+            if (data.Length != 7) return;
+            Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Airspot|Data: " + ByteArrayToString(data));
+            byte fb = data[4];
+            byte sb = data[5];
+            byte[] c = new byte[] { sb, fb }; //might be the other way around?
+            ushort CO2LiveValue = BitConverter.ToUInt16(c, 0);
+            if (CO2LiveValue < 100 || CO2LiveValue >= 10000) //sanity check
+            {
+                return;
+            }
+            currentCO2Reading = CO2LiveValue;
+            DateTime currentTime = DateTime.Now;
+            if(timeOfLastNotifyUpdate.Year < currentTime.Year)
+            {
+                timeOfLastNotifyUpdate = currentTime;
+            }
+
+            if (isRecording)
+            {
+                if (currentTime - timeOfLastNotifyUpdate >= TimeSpan.FromSeconds(refreshTime - 1))
+                {
+                    int t = recordedData.Count;
+                    recordedData.Add(new SensorData(CO2LiveValue, t));
+                    timeOfLastNotifyUpdate = currentTime;
+                }            
+            }
+
+
         }
 
 

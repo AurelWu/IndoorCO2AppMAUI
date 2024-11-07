@@ -6,7 +6,6 @@ namespace IndoorCO2App_Multiplatform
     {
         private async void OnFinishRecordingClicked(object sender, EventArgs e)
         {
-
             if (submissionMode == SubmissionMode.Transit)
             {
                 selectedTransitTargetLocation = (LocationData)_TransitDestinationPicker.SelectedItem;

@@ -159,8 +159,8 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             </ScrollView> -->
             <HorizontalStackLayout Padding="10" HorizontalOptions="Center" Spacing="10" >
 
-                <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClicked" BackgroundColor="#512BD4" />
-                <Button x:Name="ButtonTransitMode" Text="Transit" Clicked="OnLocationModeClicked" BackgroundColor="LightGray" />
+                <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClicked" TextColor="White" BackgroundColor="#512BD4" />
+                <Button x:Name="ButtonTransitMode" Text="Transit" Clicked="OnLocationModeClicked" TextColor="Black" BackgroundColor="LightGray" />
 
             </HorizontalStackLayout>
 
@@ -188,14 +188,45 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 HorizontalOptions="Center" />
 
             <VerticalStackLayout         
-            x:Name="LocationStackLayout"
-            Spacing="10"
-            VerticalOptions="Start">
-                <Label x:Name="LocationInfoLabel" Text="Select Location:" FontSize="14" VerticalOptions="Center" />
-                <Picker x:Name="LocationPicker" VerticalOptions="Center">
-                </Picker>
-            </VerticalStackLayout>
+    x:Name="LocationStackLayout"
+    Spacing="10"
+    VerticalOptions="Start">
 
+                <Label 
+        x:Name="LocationInfoLabel" 
+        Text="Select Location:" 
+        FontSize="14" 
+        VerticalOptions="Center" />
+
+                <Grid 
+        ColumnDefinitions="*, Auto" 
+        VerticalOptions="Center" 
+        HorizontalOptions="Fill">
+
+                    <!-- Picker in the first column, takes up remaining space -->
+                    <Picker 
+            x:Name="LocationPicker" 
+            Grid.Column="0" 
+            HorizontalOptions="FillAndExpand" 
+            VerticalOptions="Center" />
+
+                    <!-- Star Icon Toggle Button in the second column, with fixed width -->
+                    <ImageButton 
+            x:Name="StarIconToggleBuilding"
+            Clicked="OnFavouriteBuildingIconClicked"
+            Grid.Column="1" 
+            Source="star_icon.png" 
+            WidthRequest="30" 
+            HeightRequest="30" 
+            VerticalOptions="Center"
+            HorizontalOptions="End"
+            Margin="5,0,0,0"
+            BackgroundColor="Transparent" />
+
+                </Grid>
+
+            </VerticalStackLayout>
+            
             <VerticalStackLayout         
             x:Name="TransitOriginStackLayout"
             Spacing="10"
@@ -222,10 +253,10 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="ButtonAll" Text="All" Clicked="OnTransitFilterClicked"  BackgroundColor="#512BD4" Grid.Column="0" />
-                <Button x:Name="ButtonBus" Text="Bus" Clicked="OnTransitFilterClicked" BackgroundColor="LightGray" Grid.Column="1" />
-                <Button x:Name="ButtonTram" Text="Tram" Clicked="OnTransitFilterClicked" BackgroundColor="LightGray" Grid.Column="2" />
-                <Button x:Name="ButtonSubway" Text="Subway" Clicked="OnTransitFilterClicked" BackgroundColor="LightGray" Grid.Column="3" />
+                <Button x:Name="ButtonAll" Text="All" Clicked="OnTransitFilterClicked" TextColor="White"  BackgroundColor="#512BD4" Grid.Column="0" />
+                <Button x:Name="ButtonBus" Text="Bus" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Column="1" />
+                <Button x:Name="ButtonTram" Text="Tram" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Column="2" />
+                <Button x:Name="ButtonSubway" Text="Subway" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Column="3" />
                 <!-- You can add more buttons as needed -->
             </Grid>
 
@@ -233,12 +264,43 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
 
             <VerticalStackLayout         
-                x:Name="TransitLineStackLayout"
-                Spacing="10"
-                VerticalOptions="Start">
-                <Label x:Name="TransitLineInfoLabel" Text="Select Transit Line:" FontSize="14" VerticalOptions="Center" />
-                <Picker x:Name="TransitLinePicker" VerticalOptions="Center">
-                </Picker>
+    x:Name="TransitLineStackLayout"
+    Spacing="10"
+    VerticalOptions="Start">
+
+                <Label 
+        x:Name="TransitLineInfoLabel" 
+        Text="Select Transit Line:" 
+        FontSize="14" 
+        VerticalOptions="Center" />
+
+                <Grid 
+        ColumnDefinitions="*, Auto" 
+        VerticalOptions="Center" 
+        HorizontalOptions="Fill">
+
+                    <!-- Picker in the first column, takes up remaining space -->
+                    <Picker 
+            x:Name="TransitLinePicker" 
+            Grid.Column="0" 
+            HorizontalOptions="FillAndExpand" 
+            VerticalOptions="Center" />
+
+                    <!-- Star Icon Toggle Button in the second column, with fixed width -->
+                    <ImageButton 
+            x:Name="StarIconToggleTransitLine"
+            Clicked="OnFavouriteTransitLineIconClicked"
+            Grid.Column="1" 
+            Source="star_icon.png" 
+            WidthRequest="30" 
+            HeightRequest="30" 
+            VerticalOptions="Center"
+            HorizontalOptions="End"
+            Margin="5,0,0,0"
+            BackgroundColor="Transparent" />
+
+                </Grid>
+
             </VerticalStackLayout>
 
 

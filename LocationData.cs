@@ -32,7 +32,15 @@ namespace IndoorCO2App_Multiplatform
 
         public override string ToString()
         {
-            return $"{Name} | {(int)distanceToGivenLocation}m";
+            if (MainPage.MainPageSingleton.favouredLocations.Contains(type + "_" + ID.ToString()))
+            {
+                return $"★ {Name} | {(int)distanceToGivenLocation}m";
+            }
+            else
+            {
+                return $"{Name} | {(int)distanceToGivenLocation}m";
+            }
+                
         }
     }
 }

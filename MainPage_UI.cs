@@ -55,6 +55,9 @@ namespace IndoorCO2App_Multiplatform
         public Button _TransitFilterTramButton;
         public Button _TransitFilterSubwayButton;
 
+        public ImageButton _StarIconToggleBuilding;
+        public ImageButton _StarIconToggleTransitLine;
+
         internal MenuMode currentMenuMode;
 
 
@@ -108,10 +111,13 @@ namespace IndoorCO2App_Multiplatform
 
             _BuildingModeButton = this.FindByName<Button>("ButtonBuildingMode");
             _TransitModeButton = this.FindByName<Button>("ButtonTransitMode");
-            _TransitFilterAllButton = this.FindByName<Button>("ButtonAll"); ;
-            _TransitFilterBusButton = this.FindByName<Button>("ButtonBus"); ;
-            _TransitFilterTramButton = this.FindByName<Button>("ButtonTram"); ;
-            _TransitFilterSubwayButton = this.FindByName<Button>("ButtonSubway"); ;
+            _TransitFilterAllButton = this.FindByName<Button>("ButtonAll");
+            _TransitFilterBusButton = this.FindByName<Button>("ButtonBus"); 
+            _TransitFilterTramButton = this.FindByName<Button>("ButtonTram"); 
+            _TransitFilterSubwayButton = this.FindByName<Button>("ButtonSubway");
+            _StarIconToggleBuilding = this.FindByName<ImageButton>("StarIconToggleBuilding");
+            _StarIconToggleTransitLine= this.FindByName<ImageButton>("StarIconToggleTransitLine");
+
 
 
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
@@ -158,6 +164,8 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(_BuildingModeButton, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_TransitModeButton, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("TransitFilterGrid"), MenuMode.TransportSelection | MenuMode.TransportRecording);
+
+            
 
         }
 
@@ -217,6 +225,8 @@ namespace IndoorCO2App_Multiplatform
             UpdateStartRecordingButton();
             UpdateStartTransitRecordingButton();
             UpdateFinishRecordingButton();
+            UpdateFavouredBuildingIcon();
+            UpdateFavouredTransitLineIcon();
         }
 
         private void UpdateStartRecordingButton()
@@ -311,7 +321,16 @@ namespace IndoorCO2App_Multiplatform
                 //}
                 else if (BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
                 {
-                    _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                    if(monitorType== CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
+                    {
+                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                    }
+                    else
+                    {
+                        var secondsSinceLastUpdate = DateTime.Now - BluetoothManager.timeOfLastNotifyUpdate;                        
+                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                    }
+                    
                     if (BluetoothManager.lastAttemptFailed)
                     {
                         _DeviceLabel.Text += " | previous update failed";
@@ -323,7 +342,15 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else if (BluetoothManager.currentCO2Reading == 0)
                 {
-                    _DeviceLabel.Text = "initiating first Update in:" + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                    if(monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
+                    {
+                        _DeviceLabel.Text = "initiating first Update in:" + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                    }
+                    else
+                    {
+                        _DeviceLabel.Text = "waiting for first data from Sensor" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                    }
+                    
                     if (BluetoothManager.lastAttemptFailed)
                     {
                         _DeviceLabel.Text += " | previous update failed";
@@ -436,6 +463,44 @@ namespace IndoorCO2App_Multiplatform
                 _LocationLabel.Text = ("");
                 if (!gpsActive) _LocationLabel.Text += ("GPS not enabled ");
                 if (!gpsGranted) _LocationLabel.Text += ("Location Permission missing");
+            }
+        }
+        
+        private void UpdateFavouredBuildingIcon()
+        {
+            
+            if (_LocationPicker.SelectedItem == null)
+            {
+                _StarIconToggleBuilding.Source = "star_icon.png";
+                return;
+            }
+            LocationData d = (LocationData)_LocationPicker.SelectedItem;
+            if (favouredLocations.Contains(d.type+"_"+d.ID.ToString()))
+            {
+                _StarIconToggleBuilding.Source = "star_icon_active.png";
+            }
+            else
+            {
+                _StarIconToggleBuilding.Source = "star_icon.png";
+            }
+        }
+
+        private void UpdateFavouredTransitLineIcon()
+        {
+
+            if (_TransitLinePicker.SelectedItem == null)
+            {
+                _StarIconToggleTransitLine.Source = "star_icon.png";
+                return;
+            }
+            TransitLineData d = (TransitLineData)_TransitLinePicker.SelectedItem;
+            if (favouredLocations.Contains(d.NWRType + "_" + d.ID.ToString()))
+            {
+                _StarIconToggleTransitLine.Source = "star_icon_active.png";
+            }
+            else
+            {
+                _StarIconToggleTransitLine.Source = "star_icon.png";
             }
         }
 

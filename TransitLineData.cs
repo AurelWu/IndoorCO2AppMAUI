@@ -28,7 +28,11 @@ namespace IndoorCO2App_Multiplatform
         public override string ToString()
         {
             string shortName = Regex.Replace(Name, @":\s*.*?=>\s*", ": ");
-            return $"{shortName} ";
+            if(MainPage.MainPageSingleton.favouredLocations.Contains(NWRType+"_"+ID.ToString()))
+            {
+                return $"★ {shortName} ";
+            }
+            else return $"{shortName} ";
         }
     }
 }
