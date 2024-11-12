@@ -83,6 +83,8 @@ namespace IndoorCO2App_Multiplatform
         public static ICharacteristic inkbirdCO2NotifyCharacteristic;
         public static ICharacteristic airspotCO2NotifyCharacteristic;
 
+        public static bool subscribedToAirCodaAdvertisement = false;
+
 
         internal async static void Init()
         {
@@ -149,6 +151,10 @@ namespace IndoorCO2App_Multiplatform
                 previousUpdate = currentTime;
                 try
                 {
+                    if(monitorType== CO2MonitorType.AirSpot)
+                    {
+                        discoveredDevices = null;
+                    }
                     ScanForDevices(monitorType, nameFilter, bluetoothHelper);
                 }
                 catch
@@ -474,34 +480,61 @@ namespace IndoorCO2App_Multiplatform
                 IReadOnlyList<IService> results = await device.GetServicesAsync();
 
                 //TEMP for debugging
+                //if (monitorType == CO2MonitorType.AirCoda)
+                //{
+                //    var advertisement = device.AdvertisementRecords;
+                //
+                //    foreach(var ad in advertisement)
+                //    {
+                //        Console.WriteLine("Advertisement Data:");
+                //        string hexString = ad.Data.ToHexString();
+                //        Console.WriteLine("Ad |" + ad.Type.ToString() + " | " + hexString);
+                //    }
+                //
+                //    var result = await device.GetServicesAsync();
+                //    foreach (var r in results)
+                //    {
+                //        Logger.circularBuffer.Add(r.Id.ToString());
+                //        Console.WriteLine(device.Name + "| Service: | " + r.Id.ToString());
+                //    }
+                //
+                //    var characteristics = await service.GetCharacteristicsAsync();
+                //    foreach(var c in characteristics)
+                //    {
+                //        Logger.circularBuffer.Add(c.Id.ToString());
+                //        Console.WriteLine(device.Name + " | " + "Characteristic: | " + c.Id.ToString());
+                //    }
+                //}
+
                 if (monitorType == CO2MonitorType.AirCoda)
                 {
+                    device.UpdateConnectionParameters();                    
                     var advertisement = device.AdvertisementRecords;
+                    
+                    if (advertisement != null && advertisement.Count == 4)
+                    {                        
 
-                    foreach(var ad in advertisement)
-                    {
-                        Console.WriteLine("Advertisement Data:");
-                        string hexString = ad.Data.ToHexString();
-                        Console.WriteLine("Ad |" + ad.Type.ToString() + " | " + hexString);
+                        var serviceData = advertisement[1].Data;
+                        if (serviceData.Length == 19)
+                        {
+                            byte ageSinceUpdate = serviceData[16]; //multiply with 10
+                            byte CO2firstByte = serviceData[17];
+                            byte CO2secondByte = serviceData[18];
+                            int CO2Value = (CO2firstByte << 8) | CO2secondByte;
+                            currentCO2Reading = CO2Value;
+                            string hexString = serviceData.ToHexString();
+                            Logger.circularBuffer.Add("airCoda CO2Value: " + CO2Value + " | " + hexString);
+                        }
+                        //Bytes 17 and 18 are what we want
                     }
 
-                    var result = await device.GetServicesAsync();
-                    foreach (var r in results)
-                    {
-                        Logger.circularBuffer.Add(r.Id.ToString());
-                        Console.WriteLine(device.Name + "| Service: | " + r.Id.ToString());
-                    }
-
-                    var characteristics = await service.GetCharacteristicsAsync();
-                    foreach(var c in characteristics)
-                    {
-                        Logger.circularBuffer.Add(c.Id.ToString());
-                        Console.WriteLine(device.Name + " | " + "Characteristic: | " + c.Id.ToString());
-                    }
                 }
-                
+
+
                 if (service != null)
                 {
+                    
+
                     if (monitorType == CO2MonitorType.Aranet4)
                     {
                         ICharacteristic aranet4CharacteristicLive = await service.GetCharacteristicAsync(Aranet_CharacteristicUUID);

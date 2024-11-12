@@ -18,10 +18,14 @@ namespace IndoorCO2App_Multiplatform
             _TransitFilterBusButton.BackgroundColor = Colors.LightGray;
             _TransitFilterTramButton.BackgroundColor = Colors.LightGray;
             _TransitFilterSubwayButton.BackgroundColor = Colors.LightGray;
+            _TransitFilterLightRailButton.BackgroundColor = Colors.LightGray;
+            _TransitFilterTrainButton.BackgroundColor = Colors.LightGray;
             _TransitFilterAllButton.TextColor = Colors.Black;
             _TransitFilterBusButton.TextColor = Colors.Black;
             _TransitFilterTramButton.TextColor = Colors.Black;
             _TransitFilterSubwayButton.TextColor = Colors.Black;
+            _TransitFilterLightRailButton.TextColor = Colors.Black;
+            _TransitFilterTrainButton.TextColor = Colors.Black;
 
             // Set the clicked button to active state
             clickedButton.BackgroundColor = Color.Parse("#512BD4");
@@ -30,19 +34,27 @@ namespace IndoorCO2App_Multiplatform
             //this will not work well with translation!
             if (clickedButton.Text.ToLower()=="all")
             {
-                TransitFilter = IndoorCO2App_Android.TransitFilterMode.All;
+                TransitFilter = TransitFilterMode.All;
             }
             else if(clickedButton.Text.ToLower() == "bus")
             {
-                TransitFilter = IndoorCO2App_Android.TransitFilterMode.Bus;
+                TransitFilter = TransitFilterMode.Bus;
             }
             else if (clickedButton.Text.ToLower() == "tram")
             {
-                TransitFilter = IndoorCO2App_Android.TransitFilterMode.Tram;
+                TransitFilter = TransitFilterMode.Tram;
             }
             else if(clickedButton.Text.ToLower() == "subway")
             {
-                TransitFilter = IndoorCO2App_Android.TransitFilterMode.Subway;
+                TransitFilter = TransitFilterMode.Subway;
+            }
+            else if(clickedButton.Text.ToLower() == "lightrail")
+            {
+                TransitFilter = TransitFilterMode.LightRail;
+            }
+            else if (clickedButton.Text.ToLower() == "train")
+            {
+                TransitFilter = TransitFilterMode.Train;
             }
             UpdateTransitLinesPicker();            
         }

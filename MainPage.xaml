@@ -3,7 +3,8 @@
 xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sliders"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
              xmlns:controls="clr-namespace:IndoorCO2App_Multiplatform.Controls"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2021/maui/toolkit"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              x:Class="IndoorCO2App_Multiplatform.MainPage">
     
 
@@ -226,7 +227,20 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 </Grid>
 
             </VerticalStackLayout>
-            
+
+           
+            <StackLayout>
+                <toolkit:Expander x:Name="mapViewExpander" IsExpanded="True">
+                    <toolkit:Expander.Header>
+                        <Label x:Name="mapViewExpanderLabel" Text="Show on Map ▼" FontFamily="Arial" FontSize="16" />
+                    </toolkit:Expander.Header>
+                    <toolkit:Expander.Content>
+                        <mapsui:MapView x:Name="mapView" HeightRequest="300" WidthRequest="400"/>
+                    </toolkit:Expander.Content>
+                </toolkit:Expander>
+
+            </StackLayout>
+
             <VerticalStackLayout         
             x:Name="TransitOriginStackLayout"
             Spacing="10"
@@ -245,19 +259,23 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 </Picker>
             </VerticalStackLayout>
 
-            <Grid x:Name="TransitFilterGrid"  ColumnSpacing="10" HorizontalOptions="Center">
+            <Grid x:Name="TransitFilterGrid" ColumnSpacing="10" RowSpacing="10" HorizontalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="ButtonAll" Text="All" Clicked="OnTransitFilterClicked" TextColor="White"  BackgroundColor="#512BD4" Grid.Column="0" />
-                <Button x:Name="ButtonBus" Text="Bus" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Column="1" />
-                <Button x:Name="ButtonTram" Text="Tram" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Column="2" />
-                <Button x:Name="ButtonSubway" Text="Subway" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Column="3" />
-                <!-- You can add more buttons as needed -->
+                <Button x:Name="ButtonAll" Text="All" Clicked="OnTransitFilterClicked" TextColor="White" BackgroundColor="#512BD4" Grid.Row="0" Grid.Column="0" />
+                <Button x:Name="ButtonBus" Text="Bus" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" />
+                <Button x:Name="ButtonTram" Text="Tram" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" />
+                <Button x:Name="ButtonSubway" Text="Subway" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="0" />
+                <Button x:Name="ButtonLightRail" Text="LightRail" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" />
+                <Button x:Name="ButtonTrain" Text="Train" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" />
             </Grid>
 
 
@@ -302,6 +320,35 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 </Grid>
 
             </VerticalStackLayout>
+
+            <Grid
+x:Name="StackLocationTextFilter"
+RowDefinitions="40"
+ColumnDefinitions="60,*"
+RowSpacing="0"
+ColumnSpacing="5"
+HorizontalOptions="FillAndExpand"
+Margin="5">
+                <Label
+    VerticalOptions="Center"
+    VerticalTextAlignment="Center"
+    Text="Filter:"
+    Grid.Column="0" />
+                <Border                    
+Stroke="{StaticResource Secondary}"
+StrokeThickness="2"
+Grid.Column="1"
+Padding="0">
+
+                    <Editor
+    x:Name="LocationSearchFilterEditor"  
+    VerticalTextAlignment="Start"
+    BackgroundColor="Transparent" 
+    TextChanged="OnLocationSearchFilterTextChanged"
+     Focused="OnEditorFocused"
+    Completed="OnEntryCompleted" />
+                </Border>
+            </Grid>
 
 
 

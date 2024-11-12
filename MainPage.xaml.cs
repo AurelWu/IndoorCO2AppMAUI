@@ -1,7 +1,15 @@
 ﻿
+using BruTile.Wmts.Generated;
+using ExCSS;
 using IndoorCO2App_Android;
 using IndoorCO2App_Multiplatform.Controls;
+using Mapsui.Layers;
+using Mapsui.Projections;
+using Mapsui.Styles;
+using Mapsui.UI.Maui;
 using System.ComponentModel;
+
+//using Microsoft.Maui.Graphics;
 
 namespace IndoorCO2App_Multiplatform
 {
@@ -56,6 +64,7 @@ namespace IndoorCO2App_Multiplatform
         List<LocationData> transitTargetLocations;
         List<TransitLineData> transitLines;
         internal LocationData selectedLocation;
+        internal LocationData previousMapLocation;
         internal LocationData selectedTransitOriginLocation;
         internal LocationData selectedTransitTargetLocation;
         internal TransitLineData selectedTransitLine;
@@ -66,25 +75,32 @@ namespace IndoorCO2App_Multiplatform
         public IBluetoothHelper bluetoothHelper;
         public HashSet<string> favouredLocations;
 
+        public Mapsui.Map locationMap;
+
         public MainPage()
         {
-            favouredLocations = new HashSet<string>();            
+
+            favouredLocations = new HashSet<string>();
             InitializeComponent();
             AppVersion = GetAppVersion();
             CreateMainPageSingleton();
             InitUIElements();
-            InitUILayout();            
+            InitializeMap(0, 0); // Example: Berlin coordinates
+            InitUILayout();
             RecoveryData.ReadFromPreferences();
             _CO2DeviceNameFilterEditor.Text = Preferences.Get(DeviceNameFilterPreferenceKey, "");
             ChangeToStandardUI();
             LoadFavouredLocations();
             LoadMonitorType();
+           
+
+
 #if ANDROID
             bluetoothHelper = new BluetoothHelper();            
 #endif
 #if IOS
             bluetoothHelper = new BluetoothHelperApple();
-//TODO: add bluetoothHelper for iPhone
+            //TODO: add bluetoothHelper for iPhone
 #endif
             //TODO: Add iPhone BluetoothHelper Implementation
             BluetoothManager.Init();
@@ -94,6 +110,61 @@ namespace IndoorCO2App_Multiplatform
             _timer = new PeriodicTimer(TimeSpan.FromSeconds(0.4));
             Update();
         }
+
+        private void InitializeMap(double latitude, double longitude)
+        {
+            // Set OpenStreetMap as the base map layer            
+            locationMap = new Mapsui.Map
+            {
+                CRS = "EPSG:3857", // Web Mercator projection, standard for OSM
+                Layers = { Mapsui.Tiling.OpenStreetMap.CreateTileLayer() }
+            };            
+            
+            UpdateMap(latitude, longitude);
+
+        }
+
+        private void UpdateMap(double latitude, double longitude)
+        {
+            (double x, double y) latlon = SphericalMercator.FromLonLat(longitude, latitude);
+            Mapsui.MPoint p = new Mapsui.MPoint(latlon.x, latlon.y);
+            locationMap.Layers.Remove(x => x.Name == "pin");
+            //locationMap.Home = n => n.CenterOnAndZoomTo(p, 2,500, Mapsui.Animations.Easing.CubicOut);
+            locationMap.Navigator.CenterOnAndZoomTo(p, 2, 500, Mapsui.Animations.Easing.CubicOut);
+            locationMap.RefreshGraphics();
+            var pinLayer = new MemoryLayer
+            {
+                Features = new[]
+                {
+                    new PointFeature(new Mapsui.MPoint(latlon.x, latlon.y))
+                    {
+                        Styles = new[]
+                        {
+                            new SymbolStyle
+                            {
+                                SymbolScale = 0.5,
+                                Fill = new Mapsui.Styles.Brush
+                                {
+                                    Color = new Mapsui.Styles.Color(128, 128, 128, 192) // Grey with 50% transparency
+                                },
+                                Outline = new Pen
+                                {
+                                    Color = new Mapsui.Styles.Color(128, 128, 128, 192), // Match the grey color or set it to transparent
+                                    Width = 1 // You can set the outline width to your preference
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            pinLayer.Opacity = 0.5;
+            pinLayer.Name = "pin";
+            locationMap.Layers.Add(pinLayer);
+
+            _mapView.Map = locationMap;
+            _mapView.Map.Widgets.Clear();
+        }
+
 
         private async void LoadFavouredLocations()
         {
@@ -108,7 +179,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     UpdateUI();
 
-                    BluetoothManager.Update(monitorType,_CO2DeviceNameFilterEditor.Text,bluetoothHelper);
+                    BluetoothManager.Update(monitorType, _CO2DeviceNameFilterEditor.Text, bluetoothHelper);
 
                     if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))
                     {
@@ -134,7 +205,7 @@ namespace IndoorCO2App_Multiplatform
 
         public void BluetoothHelperSingleton()
         {
-            
+
         }
 
 
@@ -143,12 +214,12 @@ namespace IndoorCO2App_Multiplatform
             this.submissionMode = submissionMode;
             BluetoothManager.recordedData = new List<SensorData>();
             _TrimSlider.Minimum = 0;
-            _TrimSlider.Maximum = 1;            
+            _TrimSlider.Maximum = 1;
             startTrimSliderHasBeenUsed = false;
             endTrimSliderHasBeenUsed = false;
             previousDataCount = 0;
             //Console.WriteLine(LocationPicker);
-            if (submissionMode== SubmissionMode.Building)
+            if (submissionMode == SubmissionMode.Building)
             {
                 if (!resumedRecording && _LocationPicker != null && _LocationPicker.SelectedItem != null && locations.Count > 0)
                 {
@@ -176,19 +247,19 @@ namespace IndoorCO2App_Multiplatform
 
 
             }
-            else if (submissionMode== SubmissionMode.BuildingManual)
+            else if (submissionMode == SubmissionMode.BuildingManual)
             {
                 ChangeToManualRecordingUI(); ;
                 BluetoothManager.StartNewManualRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), prerecording);
-            }            
+            }
         }
 
         private void StartTransportRecording()
         {
             submissionMode = SubmissionMode.Transit;
             selectedTransitOriginLocation = (LocationData)_TransitOriginPicker.SelectedItem;
-            selectedTransitLine = (TransitLineData) _TransitLinePicker.SelectedItem;
-            BluetoothManager.recordedData = new List<SensorData>();            
+            selectedTransitLine = (TransitLineData)_TransitLinePicker.SelectedItem;
+            BluetoothManager.recordedData = new List<SensorData>();
             _TrimSlider.Minimum = 0;
             _TrimSlider.Maximum = 1;
             startTrimSliderHasBeenUsed = false;
@@ -196,7 +267,7 @@ namespace IndoorCO2App_Multiplatform
             previousDataCount = 0;
             long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             ChangeToTransportRecordingUI();
-            BluetoothManager.StartTransportRecording(monitorType,startTime, prerecording,selectedTransitOriginLocation,selectedTransitLine);
+            BluetoothManager.StartTransportRecording(monitorType, startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine);
         }
 
         private void CancelRecording()
@@ -224,7 +295,7 @@ namespace IndoorCO2App_Multiplatform
             OverpassModule.TransportStartLocationData.Clear();
             OverpassModule.TransportDestinationLocationData.Clear();
             _CheckBoxDoorsWindows.IsChecked = false;
-            _CheckBoxVentilation.IsChecked = false;                        
+            _CheckBoxVentilation.IsChecked = false;
         }
         private void ResetNotes()
         {
@@ -290,9 +361,9 @@ namespace IndoorCO2App_Multiplatform
             _TransitOriginPicker.ItemsSource = null;
             _TransitOriginPicker.Items.Clear();
             _TransitOriginPicker.ItemsSource = transitOriginLocations;
-            if(transitOriginLocations.Count > 0)
+            if (transitOriginLocations.Count > 0)
             {
-                _TransitOriginPicker.SelectedItem =transitOriginLocations[0];
+                _TransitOriginPicker.SelectedItem = transitOriginLocations[0];
             }
             //TODO create TransitOriginLocationPicker and assign stuff here
         }
@@ -324,7 +395,7 @@ namespace IndoorCO2App_Multiplatform
             //}
             _TransitLinePicker.ItemsSource = null;
             _TransitLinePicker.Items.Clear();
-            _TransitLinePicker.ItemsSource= transitLines;
+            _TransitLinePicker.ItemsSource = transitLines;
             if (transitLines.Count > 0)
             {
                 _TransitLinePicker.SelectedItem = transitLines[0];
@@ -335,32 +406,32 @@ namespace IndoorCO2App_Multiplatform
         {
             if (Preferences.ContainsKey(SelectedMonitorPreferenceKey))
             {
-               int savedIndex = Preferences.Get(SelectedMonitorPreferenceKey, -1);
-               if (savedIndex != -1 && savedIndex < _CO2DevicePicker.Items.Count)
-               {
-                   _CO2DevicePicker.SelectedIndex = savedIndex;
-               
-                   if (_CO2DevicePicker.SelectedItem.ToString() == "Aranet")
-                   {
-                       monitorType = CO2MonitorType.Aranet4;
-                   }
-                   else if (_CO2DevicePicker.SelectedItem.ToString() == "Airvalent")
-                   {
-                       monitorType = CO2MonitorType.Airvalent;
-                   }
-                   else if (_CO2DevicePicker.SelectedItem.ToString() == "Inkbird IAM-T1")
-                   {
-                       monitorType = CO2MonitorType.InkbirdIAMT1;
-                   }
-                   else if(_CO2DevicePicker.SelectedItem.ToString() == "airCoda")
-                   {
+                int savedIndex = Preferences.Get(SelectedMonitorPreferenceKey, -1);
+                if (savedIndex != -1 && savedIndex < _CO2DevicePicker.Items.Count)
+                {
+                    _CO2DevicePicker.SelectedIndex = savedIndex;
+
+                    if (_CO2DevicePicker.SelectedItem.ToString() == "Aranet")
+                    {
+                        monitorType = CO2MonitorType.Aranet4;
+                    }
+                    else if (_CO2DevicePicker.SelectedItem.ToString() == "Airvalent")
+                    {
+                        monitorType = CO2MonitorType.Airvalent;
+                    }
+                    else if (_CO2DevicePicker.SelectedItem.ToString() == "Inkbird IAM-T1")
+                    {
+                        monitorType = CO2MonitorType.InkbirdIAMT1;
+                    }
+                    else if (_CO2DevicePicker.SelectedItem.ToString() == "airCoda")
+                    {
                         monitorType = CO2MonitorType.AirCoda;
-                   }
-                   else if(_CO2DevicePicker.SelectedItem.ToString() == "AirSpot Health")
+                    }
+                    else if (_CO2DevicePicker.SelectedItem.ToString() == "AirSpot Health")
                     {
                         monitorType = CO2MonitorType.AirSpot;
                     }
-               }
+                }
             }
             else
             {

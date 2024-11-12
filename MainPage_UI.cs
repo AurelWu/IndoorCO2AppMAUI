@@ -1,6 +1,10 @@
 ﻿
 using IndoorCO2App_Multiplatform.Controls;
 using Syncfusion.Maui.Sliders;
+using Mapsui.UI.Maui;
+using Mapsui;
+using CommunityToolkit.Maui.Views;
+
 
 namespace IndoorCO2App_Multiplatform
 {
@@ -54,11 +58,22 @@ namespace IndoorCO2App_Multiplatform
         public Button _TransitFilterBusButton;
         public Button _TransitFilterTramButton;
         public Button _TransitFilterSubwayButton;
+        public Button _TransitFilterLightRailButton;
+        public Button _TransitFilterTrainButton;
 
         public ImageButton _StarIconToggleBuilding;
         public ImageButton _StarIconToggleTransitLine;
 
+        public Editor _LocationSearcHFilterEditor;
+        
         internal MenuMode currentMenuMode;
+
+        public MapView _mapView;
+        public Expander _mapViewExpander;
+        public Label _mapViewExpanderLabel;
+
+        
+
 
 
         public void InitUIElements()
@@ -115,8 +130,15 @@ namespace IndoorCO2App_Multiplatform
             _TransitFilterBusButton = this.FindByName<Button>("ButtonBus"); 
             _TransitFilterTramButton = this.FindByName<Button>("ButtonTram"); 
             _TransitFilterSubwayButton = this.FindByName<Button>("ButtonSubway");
+            _TransitFilterLightRailButton = this.FindByName<Button>("ButtonLightRail");
+            _TransitFilterTrainButton = this.FindByName<Button>("ButtonTrain");
             _StarIconToggleBuilding = this.FindByName<ImageButton>("StarIconToggleBuilding");
             _StarIconToggleTransitLine= this.FindByName<ImageButton>("StarIconToggleTransitLine");
+
+            _LocationSearcHFilterEditor = this.FindByName<Editor>("LocationSearchFilterEditor");
+            _mapView = this.FindByName<MapView>("mapView");
+            _mapViewExpander = this.FindByName<Expander>("mapViewExpander");
+            _mapViewExpanderLabel = this.FindByName<Label>("mapViewExpanderLabel");
 
 
 
@@ -164,12 +186,15 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(_BuildingModeButton, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_TransitModeButton, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("TransitFilterGrid"), MenuMode.TransportSelection | MenuMode.TransportRecording);
+            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackLocationTextFilter"), MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_mapViewExpander, MenuMode.Standard);
+            
 
             
 
         }
 
-        private void InitUILayout()
+        private async void InitUILayout()
         {
             var screenWidth = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
             var screenHeight = DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density;
@@ -201,6 +226,17 @@ namespace IndoorCO2App_Multiplatform
             _TrimSlider.WidthRequest = _LineChartView.Width;
             _TransitModeButton.MinimumWidthRequest = buttonWidth40Percent;
             _BuildingModeButton.MinimumWidthRequest = buttonWidth40Percent;
+
+            await CollapseExpanderWithDelay(500);
+        }
+
+        private async Task CollapseExpanderWithDelay(int delayMilliseconds)
+        {
+            // Wait for the specified delay
+            await Task.Delay(delayMilliseconds);
+
+            // Collapse the expander after the delay
+            _mapViewExpander.IsExpanded = false;
         }
 
 
@@ -227,6 +263,42 @@ namespace IndoorCO2App_Multiplatform
             UpdateFinishRecordingButton();
             UpdateFavouredBuildingIcon();
             UpdateFavouredTransitLineIcon();
+
+            UpdateLocationMap();
+            UpdateMapViewExpander();
+        }
+
+        private void UpdateLocationMap()
+        {
+            var pickedLocation = (LocationData)_LocationPicker.SelectedItem;
+            if (!mapViewExpander.IsExpanded) return; //we only update if map is actually visible
+            if(pickedLocation== null)
+            {
+                UpdateMap(51.3070643, 12.3764023);
+            }
+            else if(previousMapLocation!=null && previousMapLocation!= pickedLocation)            
+            {
+                UpdateMap(pickedLocation.latitude, pickedLocation.longitude);
+                previousMapLocation = pickedLocation;
+            }
+            else if(previousMapLocation== null)
+            {
+                UpdateMap(pickedLocation.latitude, pickedLocation.longitude);
+                previousMapLocation = pickedLocation;
+            }
+            
+        }
+
+        private void UpdateMapViewExpander()
+        {
+            if (!_mapViewExpander.IsExpanded)
+            {
+                _mapViewExpanderLabel.Text = "Show on Map ▼";
+            }
+            else
+            {
+                _mapViewExpanderLabel.Text = "Hide Map ▲";
+            }
         }
 
         private void UpdateStartRecordingButton()

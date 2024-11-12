@@ -60,6 +60,10 @@ namespace IndoorCO2App_Multiplatform
                     $"relation(around:{rString},{latString},{lonString})[route=bus];" +
                     $"nwr(around:{rString},{latString},{lonString})[railway=subway_station];" +
                     $"relation(around:{rString},{latString},{lonString})[route=subway];" +
+                    $"nwr(around:{rString},{latString},{lonString})[railway=station];" +     
+                    $"nwr(around:{rString},{latString},{lonString})[railway=halt];" +        
+                    $"relation(around:{rString},{latString},{lonString})[route=train];" +    
+                    $"relation(around:{rString},{latString},{lonString})[route=light_rail];" + 
 
                     ");" +
                     "out center tags qt;";
@@ -71,6 +75,8 @@ namespace IndoorCO2App_Multiplatform
                   $"nwr(around:{rString},{latString},{lonString})[railway=tram_stop];" +
                   $"nwr(around:{rString},{latString},{lonString})[highway=bus_stop];" +
                   $"nwr(around:{rString},{latString},{lonString})[railway=subway_station];" +
+                  $"nwr(around:{rString},{latString},{lonString})[railway=station];" +    
+                  $"nwr(around:{rString},{latString},{lonString})[railway=halt];" +        
 
                   ");" +
                   "out center tags qt;";
@@ -209,6 +215,7 @@ namespace IndoorCO2App_Multiplatform
 
                 // Determine if it's a tram, bus, or subway stop, or a line, and process accordingly
 
+                //This should (and will) be all put in a method with only the strings being replaced for each type eventually but for now it works.
                 // Tram stop
                 if (tags.TryGetProperty("railway", out var railwayProperty) && railwayProperty.GetString() == "tram_stop")
                 {
@@ -303,6 +310,73 @@ namespace IndoorCO2App_Multiplatform
                     TransitLineData t = new TransitLineData("subway", type, id, lineName);
                     TransitLines.Add(t);
                 }
+
+                // Light rail stop (node)
+                else if (tags.TryGetProperty("railway", out var lightRailProperty) && lightRailProperty.GetString() == "station" &&
+                            tags.TryGetProperty("station", out var lightRailStationTypeProperty) && lightRailStationTypeProperty.GetString() == "light_rail")
+                {
+                    var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
+                    if (namesOfStops.Contains(name))
+                    {
+                        continue;
+                    }
+                    if (!namesOfStops.Contains(name))
+                    {
+                        namesOfStops.Add(name);
+                    }
+                    var bd = new LocationData(type, id, name, lat, lon, userLatitude, userLongitude);
+                    if (isOrigin)
+                    {
+                        TransportStartLocationData.Add(bd);
+                    }
+                    else
+                    {
+                        TransportDestinationLocationData.Add(bd);
+                    }
+                }
+
+                // Light rail line (relation)
+                else if (type == "relation" && tags.TryGetProperty("route", out var lightRailRouteProperty) && lightRailRouteProperty.GetString() == "light_rail")
+                {
+                    var lineName = tags.TryGetProperty("name", out var lightRailLineNameProperty) ? lightRailLineNameProperty.GetString() : "";
+                    TransitLineData t = new TransitLineData("light_rail", type, id, lineName);
+                    TransitLines.Add(t);
+                }
+
+                // Train stop (node)
+                else if (tags.TryGetProperty("railway", out var trainProperty) && trainProperty.GetString() == "station" &&
+                            tags.TryGetProperty("station", out var trainStationTypeProperty) && trainStationTypeProperty.GetString() == "train")
+                {
+                    var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
+                    if (namesOfStops.Contains(name))
+                    {
+                        continue;
+                    }
+                    if (!namesOfStops.Contains(name))
+                    {
+                        namesOfStops.Add(name);
+                    }
+                    var bd = new LocationData(type, id, name, lat, lon, userLatitude, userLongitude);
+                    if (isOrigin)
+                    {
+                        TransportStartLocationData.Add(bd);
+                    }
+                    else
+                    {
+                        TransportDestinationLocationData.Add(bd);
+                    }
+                }
+
+                // Train line (relation)
+                else if (type == "relation" && tags.TryGetProperty("route", out var trainRouteProperty) && trainRouteProperty.GetString() == "train")
+                {
+                    var lineName = tags.TryGetProperty("name", out var trainLineNameProperty) ? trainLineNameProperty.GetString() : "";
+                    TransitLineData t = new TransitLineData("train", type, id, lineName);
+                    TransitLines.Add(t);
+                }
+
+                //TODO ADD TRAIN AND LIGHTRAIL
+
             }
             //MainPage.MainPageSingleton.favouredLocations 
             if (TransitLines != null && TransitLines.Count > 0)
@@ -319,11 +393,11 @@ namespace IndoorCO2App_Multiplatform
         {
             if (TransitLines == null) return;
             filteredTransitLines = new List<TransitLineData>();
-            if(MainPage.TransitFilter == TransitFilterMode.All)
+            if (MainPage.TransitFilter == TransitFilterMode.All)
             {
                 filteredTransitLines = TransitLines;
             }
-            else if(MainPage.TransitFilter == TransitFilterMode.Bus)
+            else if (MainPage.TransitFilter == TransitFilterMode.Bus)
             {
                 filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "bus").ToList();
             }
@@ -334,6 +408,20 @@ namespace IndoorCO2App_Multiplatform
             else if (MainPage.TransitFilter == TransitFilterMode.Subway)
             {
                 filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "subway").ToList();
+            }
+            else if (MainPage.TransitFilter == TransitFilterMode.LightRail)
+            {
+                filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "lightrail").ToList();
+            }
+            else if(MainPage.TransitFilter == TransitFilterMode.Train)
+            {
+                filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "train").ToList();
+            }
+
+            string filterString = MainPage.MainPageSingleton._LocationSearcHFilterEditor.Text;
+            if (filterString != null && filterString.Length > 0)
+            {
+                filteredTransitLines = filteredTransitLines.Where(x => x.ShortenedName.ToLower().Contains(filterString.ToLower())).ToList();
             }
         }
 

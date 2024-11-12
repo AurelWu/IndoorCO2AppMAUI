@@ -2,6 +2,8 @@ using Syncfusion.Maui.Core.Hosting;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
+using Mapsui.UI.Maui;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace IndoorCO2App_Multiplatform
 {
@@ -14,8 +16,9 @@ namespace IndoorCO2App_Multiplatform
 
             builder
                 .UseMauiApp<App>()
-            .ConfigureSyncfusionCore()
                 .UseMauiCommunityToolkit()
+                .UseSkiaSharp(true)
+                .ConfigureSyncfusionCore()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
