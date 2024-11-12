@@ -311,9 +311,8 @@ namespace IndoorCO2App_Multiplatform
                     TransitLines.Add(t);
                 }
 
-                // Light rail stop (node)
-                else if (tags.TryGetProperty("railway", out var lightRailProperty) && lightRailProperty.GetString() == "station" &&
-                            tags.TryGetProperty("station", out var lightRailStationTypeProperty) && lightRailStationTypeProperty.GetString() == "light_rail")
+                // Railway stop 
+                else if (tags.TryGetProperty("railway", out var lightRailProperty) && lightRailProperty.GetString() == "station")
                 {
                     var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
                     if (namesOfStops.Contains(name))
@@ -341,30 +340,6 @@ namespace IndoorCO2App_Multiplatform
                     var lineName = tags.TryGetProperty("name", out var lightRailLineNameProperty) ? lightRailLineNameProperty.GetString() : "";
                     TransitLineData t = new TransitLineData("light_rail", type, id, lineName);
                     TransitLines.Add(t);
-                }
-
-                // Train stop (node)
-                else if (tags.TryGetProperty("railway", out var trainProperty) && trainProperty.GetString() == "station" &&
-                            tags.TryGetProperty("station", out var trainStationTypeProperty) && trainStationTypeProperty.GetString() == "train")
-                {
-                    var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
-                    if (namesOfStops.Contains(name))
-                    {
-                        continue;
-                    }
-                    if (!namesOfStops.Contains(name))
-                    {
-                        namesOfStops.Add(name);
-                    }
-                    var bd = new LocationData(type, id, name, lat, lon, userLatitude, userLongitude);
-                    if (isOrigin)
-                    {
-                        TransportStartLocationData.Add(bd);
-                    }
-                    else
-                    {
-                        TransportDestinationLocationData.Add(bd);
-                    }
                 }
 
                 // Train line (relation)
@@ -411,7 +386,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (MainPage.TransitFilter == TransitFilterMode.LightRail)
             {
-                filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "lightrail").ToList();
+                filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "light_rail").ToList();
             }
             else if(MainPage.TransitFilter == TransitFilterMode.Train)
             {

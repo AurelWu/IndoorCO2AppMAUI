@@ -342,7 +342,12 @@ namespace IndoorCO2App_Multiplatform
             int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
             if (trimEnd - trimStart >= 4 && BluetoothManager.isRecording)
             {
-                if (submissionMode==SubmissionMode.BuildingManual && (_ManualNameEditor.Text.Length < 1 || _ManualAddressEditor.Text.Length < 1))
+                if(submissionMode== SubmissionMode.BuildingManual &&(_ManualNameEditor.Text==null || ManualAddressEditor.Text==null))
+                {
+                    _FinishRecordingButton.IsEnabled = false;
+                    _FinishRecordingButton.Text = "Submit Data (needs Address & Name)";
+                }
+                else if (submissionMode==SubmissionMode.BuildingManual && (_ManualNameEditor.Text.Length < 1 || _ManualAddressEditor.Text.Length < 1))
                 {
                     _FinishRecordingButton.IsEnabled = false;
                     _FinishRecordingButton.Text = "Submit Data (needs Address & Name)";

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.aurelwu.indoorairqualitycollector" android:versionCode="51" android:versionName="51.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.aurelwu.indoorairqualitycollector" android:versionCode="52" android:versionName="52.0">
 	<application android:allowBackup="true" android:supportsRtl="true" android:label="IndoorCO2MapDataRecorder" android:icon="@mipmap/appicon">
-		<activity android:name=".MainActivity" android:screenOrientation="portrait">
+		<activity android:name=".MainActivity" android:alwaysRetainTaskState="true" android:screenOrientation="portrait">
 			<!-- Add any activity-specific settings here -->
 		</activity>
 	</application>
