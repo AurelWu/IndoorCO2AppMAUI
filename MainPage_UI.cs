@@ -12,6 +12,7 @@ namespace IndoorCO2App_Multiplatform
     {
         Dictionary<VisualElement, MenuMode> MenuModesOfUIElements;
 
+        public FixedScrollView _MainScrollView;
         public ImageButton _GPSPermissionButton;
         public ImageButton _GPSStatusButton;
         public ImageButton _BluetoothEnabledButton;
@@ -50,7 +51,7 @@ namespace IndoorCO2App_Multiplatform
         public Editor _ManualNameEditor;
         public Editor _ManualAddressEditor;
         public SfRangeSlider _TrimSlider;
-        public Editor _CO2DeviceNameFilterEditor;
+        public Entry _CO2DeviceNameFilterEditor;
         public Button _DebugLogButton;
         public Button _BuildingModeButton;
         public Button _TransitModeButton;
@@ -79,6 +80,7 @@ namespace IndoorCO2App_Multiplatform
         public void InitUIElements()
         {
             //FindByName avoids IDE Error in VS 2022 which doesn't understand that it is defined in XAML - change once that is fixed
+            _MainScrollView = this.FindByName<FixedScrollView>("MainScrollView");
             _TrimSlider = this.FindByName<SfRangeSlider>("TrimSlider");
             _GPSStatusButton = this.FindByName<ImageButton>("ButtonGPSStatus");
             _GPSPermissionButton = this.FindByName<ImageButton>("ButtonGPSPermission");
@@ -120,7 +122,7 @@ namespace IndoorCO2App_Multiplatform
             _ManualAddressEditor = this.FindByName<Editor>("ManualAddressEditor");
             _ManualNameEditor = this.FindByName<Editor>("ManualNameEditor");
             _ConfirmCancelRecordingButton.IsVisible = false;
-            _CO2DeviceNameFilterEditor = this.FindByName<Editor>("CO2DeviceNameFilterEditor");
+            _CO2DeviceNameFilterEditor = this.FindByName<Entry>("CO2DeviceNameFilterEditor");
             _ResumeRecordingButton.IsVisible = false; //TODO Enable again once completely implemented
             _DebugLogButton = this.FindByName<Button>("DebugLogButton");
 
@@ -165,7 +167,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(_OpenMapButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(_OpenImprintButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(this.FindByName<Button>("DeleteLastSubmissionButton"), MenuMode.Standard);
-            MenuModesOfUIElements.Add(_LocationLabelRecording, MenuMode.Recording | MenuMode.ManualRecording);
+            MenuModesOfUIElements.Add(_LocationLabelRecording, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_ConfirmCancelRecordingButton, 0);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("RecordingModeButtonStackLayout"), MenuMode.Recording | MenuMode.ManualRecording |MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualName"), MenuMode.ManualRecording);
@@ -274,7 +276,7 @@ namespace IndoorCO2App_Multiplatform
             if (!mapViewExpander.IsExpanded) return; //we only update if map is actually visible
             if(pickedLocation== null)
             {
-                UpdateMap(51.3070643, 12.3764023);
+                UpdateMap(43.7628933, 11.2547348); //Default set to Florence 
             }
             else if(previousMapLocation!=null && previousMapLocation!= pickedLocation)            
             {
@@ -583,13 +585,24 @@ namespace IndoorCO2App_Multiplatform
 
         private void UpdateLocationRecordingLabel()
         {
-            if (selectedLocation != null)
-            {
-                _LocationLabelRecording.Text = "Location: " + selectedLocation.Name;
+            if (currentMenuMode == MenuMode.Recording && selectedLocation != null)
+            {                
+                {
+                    _LocationLabelRecording.Text = "Location: " + selectedLocation.Name;
+                }             
+                
             }
-            else
+            else if(currentMenuMode == MenuMode.Recording && selectedLocation == null)
             {
-                _LocationLabelRecording.Text = "No Location Selected";
+                _LocationLabelRecording.Text = "No Location Selected"; //shouldnt even happen
+            }
+            else if(currentMenuMode == MenuMode.TransportRecording && selectedTransitOriginLocation != null)
+            {
+                _LocationLabelRecording.Text = "Transport Origin: " + selectedTransitOriginLocation;
+            }
+            else if(currentMenuMode == MenuMode.TransportRecording && selectedTransitOriginLocation == null)
+            {
+                _LocationLabelRecording.Text = "No Transit Origin Selected"; //shouldnt even happen
             }
         }
 
@@ -618,7 +631,7 @@ namespace IndoorCO2App_Multiplatform
         }
 
         private void UpdateLineChart()
-        {
+        {            
             //TODO: RangeSliderMax is 1 when 2 elements ( 0, 1) but logic is based on 0,2 in some places still
             _LineChartView.SetData(BluetoothManager.recordedData);
             int maxSliderVal = BluetoothManager.recordedData.Count - 1;
@@ -691,7 +704,9 @@ namespace IndoorCO2App_Multiplatform
         {
             ChangeToUI(MenuMode.Standard);
             _TransitModeButton.BackgroundColor = Colors.LightGray;
+            _TransitModeButton.TextColor = Colors.Black;
             _BuildingModeButton.BackgroundColor = Color.Parse("#512BD4");
+            _BuildingModeButton.TextColor = Colors.White;
 
             if (RecoveryData.locationID != 0)
             {

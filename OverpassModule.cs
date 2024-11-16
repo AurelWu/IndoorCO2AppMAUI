@@ -63,7 +63,8 @@ namespace IndoorCO2App_Multiplatform
                     $"nwr(around:{rString},{latString},{lonString})[railway=station];" +     
                     $"nwr(around:{rString},{latString},{lonString})[railway=halt];" +        
                     $"relation(around:{rString},{latString},{lonString})[route=train];" +    
-                    $"relation(around:{rString},{latString},{lonString})[route=light_rail];" + 
+                    $"relation(around:{rString},{latString},{lonString})[route=light_rail];" +
+                    $"relation(around:{rString},{latString},{lonString})[route=monorail];" +
 
                     ");" +
                     "out center tags qt;";
@@ -339,6 +340,14 @@ namespace IndoorCO2App_Multiplatform
                 {
                     var lineName = tags.TryGetProperty("name", out var lightRailLineNameProperty) ? lightRailLineNameProperty.GetString() : "";
                     TransitLineData t = new TransitLineData("light_rail", type, id, lineName);
+                    TransitLines.Add(t);
+                }
+
+                // Mono rail line (relation)
+                else if (type == "relation" && tags.TryGetProperty("route", out var monoRailRouteProperty) && monoRailRouteProperty.GetString() == "monorail")
+                {
+                    var lineName = tags.TryGetProperty("name", out var lightRailLineNameProperty) ? lightRailLineNameProperty.GetString() : "";
+                    TransitLineData t = new TransitLineData("light_rail", type, id, lineName); // we categorize monorail also as light_rail 
                     TransitLines.Add(t);
                 }
 

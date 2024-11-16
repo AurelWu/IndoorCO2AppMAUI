@@ -6,10 +6,10 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              x:Class="IndoorCO2App_Multiplatform.MainPage">
-    
 
 
-    <controls:FixedScrollView>
+
+    <controls:FixedScrollView x:Name="MainScrollView">
 
         <VerticalStackLayout
             Spacing="22"
@@ -228,7 +228,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
             </VerticalStackLayout>
 
-           
+
             <StackLayout>
                 <toolkit:Expander x:Name="mapViewExpander" IsExpanded="True">
                     <toolkit:Expander.Header>
@@ -274,7 +274,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 <Button x:Name="ButtonBus" Text="Bus" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" />
                 <Button x:Name="ButtonTram" Text="Tram" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" />
                 <Button x:Name="ButtonSubway" Text="Subway" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="0" />
-                <Button x:Name="ButtonLightRail" Text="LightRail" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" />
+                <Button x:Name="ButtonLightRail" Text="Lightrail" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" />
                 <Button x:Name="ButtonTrain" Text="Train" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" />
             </Grid>
 
@@ -539,7 +539,7 @@ Padding="0">
                                       Interval="1"
                                       ValueChanged="OnTrimSliderValueChanged"
                                       ValueChangeEnd="OnTrimSliderValueChanged">
-                                       
+
             </slider:SfRangeSlider>
             <!--
             <HorizontalStackLayout Spacing="0" HorizontalOptions="CenterAndExpand" x:Name="TrimSliderLayout" Margin="10,0,10,0" >
@@ -557,33 +557,41 @@ Padding="0">
             </Label>
 
             <Grid
-                x:Name="StackNotes"    
-                RowDefinitions="50"
-                ColumnDefinitions="50,*"
-                RowSpacing="0"
-                ColumnSpacing="5"
-                HorizontalOptions="FillAndExpand"
-                Margin="5">
+    x:Name="StackNotes"    
+    RowDefinitions="Auto" 
+    ColumnDefinitions="50,*"
+    RowSpacing="0"
+    ColumnSpacing="5"
+    HorizontalOptions="FillAndExpand"
+    Margin="5">
+
                 <Label
-                    VerticalOptions="Center"
-                    VerticalTextAlignment="Center"
-                    Text="Notes:"
-                    Grid.Column="0" />
+        VerticalOptions="Center"
+        VerticalTextAlignment="Center"
+        Text="Notes:"
+        Grid.Column="0" />
+
                 <Border                    
-                Stroke="{StaticResource Secondary}"
-                StrokeThickness="2"
-                Grid.Column="1"
-                Padding="0">
+        Stroke="{StaticResource Secondary}"
+        StrokeThickness="2"
+        Grid.Column="1"
+        Padding="0"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+                    <!-- Allow border to expand -->
 
                     <Editor
-                    x:Name="NotesEditor"  
-                    VerticalTextAlignment="Start"
-                    BackgroundColor="Transparent" 
-                     Focused="OnEditorFocused"
-                    Completed="OnEntryCompleted" />
+            x:Name="NotesEditor"  
+            VerticalTextAlignment="Start"
+            VerticalOptions="StartAndExpand"
+            BackgroundColor="Transparent" 
+            Focused="OnEditorFocused"
+            AutoSize="TextChanges"
+            Completed="OnEntryCompleted"
+            MinimumHeightRequest="50" />
+                    <!-- Set minimum height -->
                 </Border>
             </Grid>
-
             <HorizontalStackLayout
                 x:Name="StackCheckboxesDoor">
                 <Label Text="Open Doors/Windows"
@@ -627,7 +635,7 @@ Padding="0">
     Grid.Column="1"
     Padding="0">
 
-                    <Editor
+                    <Entry
 x:Name="CO2DeviceNameFilterEditor"  
 VerticalTextAlignment="Start"
 BackgroundColor="Transparent" 

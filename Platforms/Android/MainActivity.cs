@@ -14,6 +14,7 @@ namespace IndoorCO2App_Multiplatform
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            Window.SetSoftInputMode(Android.Views.SoftInput.AdjustResize);
             //RequestedOrientation = ScreenOrientation.Portrait;
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)

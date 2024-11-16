@@ -25,8 +25,10 @@ namespace IndoorCO2App_Multiplatform
             int trimStart = (int)Math.Floor(_TrimSlider.RangeStart);
             int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
             bool success = await BluetoothManager.FinishRecording(trimStart, trimEnd, submissionMode ,_ManualNameEditor.Text, _ManualAddressEditor.Text);            
-
-            ResetRecordingState();
+            if(success)
+            {
+                ResetRecordingState();
+            }            
         }
 
     }

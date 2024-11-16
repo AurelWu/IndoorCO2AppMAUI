@@ -48,7 +48,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 TransitFilter = TransitFilterMode.Subway;
             }
-            else if(clickedButton.Text.ToLower() == "light_rail")
+            else if(clickedButton.Text.ToLower() == "lightrail")
             {
                 TransitFilter = TransitFilterMode.LightRail;
             }

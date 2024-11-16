@@ -167,6 +167,7 @@ namespace IndoorCO2App_Multiplatform
 
         public static void StartNewRecording(CO2MonitorType monitorType, LocationData location, long startTime, bool prerecording)
         {
+            previousUpdate = DateTime.Now.AddMinutes(-3);
             isRecording = true;
             recordedData = new List<SensorData>();
             submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,false), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
