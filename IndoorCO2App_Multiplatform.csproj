@@ -23,8 +23,8 @@
 		<ApplicationIdGuid>fc85f5be-5db1-417c-b04f-0a25963c421c</ApplicationIdGuid>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>44.0</ApplicationDisplayVersion>
-		<ApplicationVersion>44</ApplicationVersion>
+		<ApplicationDisplayVersion>46.0</ApplicationDisplayVersion>
+		<ApplicationVersion>46</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
@@ -50,8 +50,8 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
 		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
-		<ApplicationDisplayVersion>44</ApplicationDisplayVersion>
-		<ApplicationVersion>44</ApplicationVersion>
+		<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
+		<ApplicationVersion>46</ApplicationVersion>
 		<MtouchUseLlvm>True</MtouchUseLlvm>
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 		<Optimize>False</Optimize>
@@ -63,8 +63,8 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
-		<ApplicationDisplayVersion>44</ApplicationDisplayVersion>
-		<ApplicationVersion>44</ApplicationVersion>
+		<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
+		<ApplicationVersion>46</ApplicationVersion>
 		<MtouchUseLlvm>True</MtouchUseLlvm>
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 		<Optimize>False</Optimize>
@@ -73,8 +73,8 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
-	  <ApplicationDisplayVersion>44</ApplicationDisplayVersion>
-	  <ApplicationVersion>44</ApplicationVersion>
+	  <ApplicationDisplayVersion>46</ApplicationDisplayVersion>
+	  <ApplicationVersion>46</ApplicationVersion>
 	  <ApplicationId>com.aurelwu.indoorairqualitycollector</ApplicationId>
 	  <ApplicationTitle>IndoorCO2MapDataRecorder</ApplicationTitle>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
@@ -92,8 +92,8 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
-	  <ApplicationDisplayVersion>44</ApplicationDisplayVersion>
-	  <ApplicationVersion>44</ApplicationVersion>
+	  <ApplicationDisplayVersion>46</ApplicationDisplayVersion>
+	  <ApplicationVersion>46</ApplicationVersion>
 	  <ApplicationId>com.aurelwu.indoorairqualitycollector</ApplicationId>
 	  <ApplicationTitle>IndoorCO2MapDataRecorder</ApplicationTitle>
 	  <DebugSymbols>False</DebugSymbols>
