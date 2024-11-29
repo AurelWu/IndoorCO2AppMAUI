@@ -6,7 +6,7 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnStartTransportRecordingClicked(object sender, EventArgs e)
         {
-            StartTransportRecording();
+            StartTransportRecording(false);
         }
 
     }

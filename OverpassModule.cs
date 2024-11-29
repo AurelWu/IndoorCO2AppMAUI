@@ -95,7 +95,9 @@ namespace IndoorCO2App_Multiplatform
             //TODO: add remaining categories of amenities and maybe other
             return "[out:json];" +
                 "(" +
+                $"nwr(around:{rString},{latString},{lonString})[office=employment_agency];" +
                 $"nwr(around:{rString},{latString},{lonString})[shop];" +
+                $"nwr(around:{rString},{latString},{lonString})[craft];" +
                 $"nwr(around:{rString},{latString},{lonString})[aeroway=aerodrome];" +
                 $"nwr(around:{rString},{latString},{lonString})[railway=station];" +
                 $"nwr(around:{rString},{latString},{lonString})[public_transport=station];" +
@@ -105,6 +107,7 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[leisure=sports_hall];" +
                 $"nwr(around:{rString},{latString},{lonString})[sport=swimming];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=swimming_pool];" +
+                $"nwr(around:{rString},{latString},{lonString})[leisure=sauna];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=hackerspace];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=congress_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=events_centre];" +
@@ -464,6 +467,7 @@ namespace IndoorCO2App_Multiplatform
 
         public static async Task FetchNearbyTransitAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage, bool transitOrigin)
         {
+            everFetchedLocations = true;
             if (currentlyFetching) return;
             currentlyFetching = true;
             lastFetchWasSuccess = false;

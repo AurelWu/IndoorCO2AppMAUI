@@ -72,7 +72,7 @@ namespace IndoorCO2App_Multiplatform
         bool firstInit = true;
         public SubmissionMode submissionMode;
         //public bool transportRecordingMode = false;
-        public IBluetoothHelper bluetoothHelper;
+        public static IBluetoothHelper bluetoothHelper;
         public HashSet<string> favouredLocations;
 
         public Mapsui.Map locationMap;
@@ -203,11 +203,6 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public void BluetoothHelperSingleton()
-        {
-
-        }
-
 
         private async void StartRecording(SubmissionMode submissionMode, bool resumedRecording)
         {
@@ -234,6 +229,7 @@ namespace IndoorCO2App_Multiplatform
                     RecoveryData.locationName = selectedLocation.Name;
                     RecoveryData.locationLat = selectedLocation.latitude;
                     RecoveryData.locationLon = selectedLocation.longitude;
+                    RecoveryData.recordingMode = "Building";
                     RecoveryData.WriteToPreferences();
                     await _MainScrollView.ScrollToAsync(0, 0, false);
 
@@ -257,21 +253,69 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        private async void StartTransportRecording()
+        private async void StartTransportRecording(bool resumedRecording)
         {
-            submissionMode = SubmissionMode.Transit;
-            selectedTransitOriginLocation = (LocationData)_TransitOriginPicker.SelectedItem;
-            selectedTransitLine = (TransitLineData)_TransitLinePicker.SelectedItem;
-            BluetoothManager.recordedData = new List<SensorData>();
-            _TrimSlider.Minimum = 0;
-            _TrimSlider.Maximum = 1;
-            startTrimSliderHasBeenUsed = false;
-            endTrimSliderHasBeenUsed = false;
-            previousDataCount = 0;
-            long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            ChangeToTransportRecordingUI();
-            BluetoothManager.StartTransportRecording(monitorType, startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine);
-            await _MainScrollView.ScrollToAsync(0, 0, false);
+            if(!resumedRecording)
+            {
+                submissionMode = SubmissionMode.Transit;
+                selectedTransitOriginLocation = (LocationData)_TransitOriginPicker.SelectedItem;
+                selectedTransitLine = (TransitLineData)_TransitLinePicker.SelectedItem;
+                BluetoothManager.recordedData = new List<SensorData>();
+                _TrimSlider.Minimum = 0;
+                _TrimSlider.Maximum = 1;
+                startTrimSliderHasBeenUsed = false;
+                endTrimSliderHasBeenUsed = false;
+                previousDataCount = 0;
+                long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+                RecoveryData.startTime = startTime;
+                RecoveryData.timeOfLastUpdate = startTime;
+                RecoveryData.transportOriginID = selectedTransitOriginLocation.ID;
+                RecoveryData.transportOriginName = selectedTransitOriginLocation.Name;
+                RecoveryData.transportOriginType = selectedTransitOriginLocation.type;
+                RecoveryData.transportLineID = selectedTransitLine.ID;
+                RecoveryData.transportLineName = selectedTransitLine.Name;
+                RecoveryData.transportLineType = selectedTransitLine.NWRType;
+                RecoveryData.recordingMode = "Transit";
+                RecoveryData.WriteToPreferences();
+
+                ChangeToTransportRecordingUI();
+                BluetoothManager.StartTransportRecording(monitorType, startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine);
+                await _MainScrollView.ScrollToAsync(0, 0, false);
+            }
+            else
+            {
+                submissionMode = SubmissionMode.Transit;
+                selectedTransitOriginLocation = new LocationData(RecoveryData.transportOriginType, RecoveryData.transportOriginID, RecoveryData.transportOriginName, 0, 0, 0, 0);
+                selectedTransitLine = new TransitLineData("", RecoveryData.transportLineType, RecoveryData.transportLineID, RecoveryData.transportLineName);
+                if (_TransitLinePicker.Items != null)
+                {
+                    _TransitLinePicker.Items.Clear();
+                }
+                List<LocationData> resumeOriginList = new List<LocationData> { selectedTransitOriginLocation };
+                List<TransitLineData> resumeLineList = new List<TransitLineData> { selectedTransitLine };
+                _TransitLinePicker.ItemsSource = resumeLineList;
+                _TransitOriginPicker.ItemsSource = resumeOriginList;
+                if (resumeLineList.Count > 0)
+                {
+                    _TransitLinePicker.SelectedItem = resumeLineList[0];
+                }
+                if (resumeOriginList.Count > 0)
+                {
+                    _TransitOriginPicker.SelectedItem = resumeOriginList[0];
+                }
+
+                BluetoothManager.recordedData = new List<SensorData>();
+                _TrimSlider.Minimum = 0;
+                _TrimSlider.Maximum = 1;
+                startTrimSliderHasBeenUsed = false;
+                endTrimSliderHasBeenUsed = false;
+                previousDataCount = 0;
+                ChangeToTransportRecordingUI();
+                BluetoothManager.StartTransportRecording(monitorType, RecoveryData.startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine);
+                await _MainScrollView.ScrollToAsync(0, 0, false);
+            }
+
         }
 
         private void CancelRecording()

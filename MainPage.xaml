@@ -188,16 +188,18 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 Clicked="OnUpdateLocationsClicked"
                 HorizontalOptions="Center" />
 
+            <Label 
+        x:Name="LocationInfoLabel" 
+        Text="Select Location:" 
+        FontSize="14" 
+        VerticalOptions="Center" />
+
             <VerticalStackLayout         
     x:Name="LocationStackLayout"
     Spacing="10"
     VerticalOptions="Start">
 
-                <Label 
-        x:Name="LocationInfoLabel" 
-        Text="Select Location:" 
-        FontSize="14" 
-        VerticalOptions="Center" />
+
 
                 <Grid 
         ColumnDefinitions="*, Auto" 

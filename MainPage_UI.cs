@@ -708,7 +708,7 @@ namespace IndoorCO2App_Multiplatform
             _BuildingModeButton.BackgroundColor = Color.Parse("#512BD4");
             _BuildingModeButton.TextColor = Colors.White;
 
-            if (RecoveryData.locationID != 0)
+            if (RecoveryData.recordingMode == "Building" || RecoveryData.recordingMode == "Transit")
             {
                 _ResumeRecordingButton.IsVisible = true;
             }

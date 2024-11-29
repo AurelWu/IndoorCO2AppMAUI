@@ -69,6 +69,7 @@ namespace IndoorCO2App_Multiplatform
 
         public async void RequestBluetoothEnable()
         {
+            if (MainPage.bluetoothHelper.CheckIfBTEnabled()) return;
             // Show the dialog asking if the user wants to enable Bluetooth
             bool result = await App.Current.MainPage.DisplayAlert(
                 "Enable Bluetooth",

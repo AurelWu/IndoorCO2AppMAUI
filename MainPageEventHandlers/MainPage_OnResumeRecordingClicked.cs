@@ -6,7 +6,16 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnResumeRecordingClicked(object sender, EventArgs e)
         {
-            StartRecording(submissionMode, true);
+            string mode = RecoveryData.recordingMode;
+            if(mode == "Building")
+            {
+                StartRecording(submissionMode, true);
+            }
+            else if(mode == "Transit")
+            {
+                StartTransportRecording(true);
+            }
+            
         }
     }
 
