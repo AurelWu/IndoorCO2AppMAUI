@@ -415,6 +415,11 @@ namespace IndoorCO2App_Multiplatform
                         _DeviceLabel.Text += " | previous update failed";
                     }
                 }
+                else if(BluetoothManager.outdatedVersion == true)
+                {
+                    _DeviceLabel.Text = "Sensor found, but the Firmware is outdated)";
+                }
+
                 else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
                 {
                     _DeviceLabel.Text = "Sensor found, but the required 'Smart Home Integration' is disabled.\r\n Please enable it using the official Aranet App (use the Gears Icon)";
@@ -735,6 +740,14 @@ namespace IndoorCO2App_Multiplatform
 
         public void ChangeToTransportSelectionUI()
         {
+            if (RecoveryData.recordingMode == "Building" || RecoveryData.recordingMode == "Transit")
+            {
+                _ResumeRecordingButton.IsVisible = true;
+            }
+            else
+            {
+                _ResumeRecordingButton.IsVisible = false;
+            }
             ChangeToUI(MenuMode.TransportSelection);
         }
     }

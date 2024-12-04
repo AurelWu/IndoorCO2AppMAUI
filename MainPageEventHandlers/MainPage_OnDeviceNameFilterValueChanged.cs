@@ -6,12 +6,12 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnDeviceNameFilterValueChanged(object sender, EventArgs e)
         {
-            var editor = sender as Editor;
+            var entry = sender as Entry;
 
-            if (editor != null)
+            if (entry != null)
             {
-                string s = editor.Text;
-                Preferences.Set(DeviceNameFilterPreferenceKey, s);
+                string s = entry.Text;
+                Preferences.Set(DeviceNameFilterPreferenceKey, s);                
             }
         }
 

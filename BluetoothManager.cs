@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls.PlatformConfiguration;
+using Microsoft.VisualStudio.Settings;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
@@ -51,10 +53,16 @@ namespace IndoorCO2App_Multiplatform
 
         public static Guid AranetServiceUUID = Guid.Parse("0000FCE0-0000-1000-8000-00805f9b34fb");
 
+        public static string sensorVersion = "";
+        public static bool outdatedVersion = false;
+
         public static Guid Aranet_CharacteristicUUID = Guid.Parse("f0cd3001-95da-4f4b-9ac8-aa55d312af0c"); //Characteristic which has the data we need
         public static Guid ARANET_WRITE_CHARACTERISTIC_UUID = Guid.Parse("f0cd1402-95da-4f4b-9ac8-aa55d312af0c");
         public static Guid ARANET_HISTORY_V2_CHARACTERISTIC_UUID = Guid.Parse("f0cd2005-95da-4f4b-9ac8-aa55d312af0c");
         public static Guid ARANET_TOTAL_READINGS_CHARACTERISTIC_UUID = Guid.Parse("f0cd2001-95da-4f4b-9ac8-aa55d312af0c");
+
+        public static Guid AranetVersionServiceUUID = Guid.Parse("0000fce0-0000-1000-8000-00805f9b34fb");
+        public static Guid ARANET_VersionNumber_CHARACTERISTIC_UUID = Guid.Parse("00002a26-0000-1000-8000-00805f9b34fb");
 
         public static DateTime previousUpdate = DateTime.MinValue;
         public static double timeToNextUpdate = 60;
@@ -534,10 +542,51 @@ namespace IndoorCO2App_Multiplatform
 
                 if (service != null)
                 {
+
                     
 
                     if (monitorType == CO2MonitorType.Aranet4)
                     {
+                        if(sensorVersion == "")
+                        {                        
+                            IService versionService = await device.GetServiceAsync(AranetVersionServiceUUID);
+                            if (versionService != null)
+                            {
+                                ICharacteristic versionCharacteristic = await versionService.GetCharacteristicAsync(ARANET_VersionNumber_CHARACTERISTIC_UUID);
+                                if (versionCharacteristic != null)
+                                {
+                                    (byte[] data, int resultCode) result;
+                                    try
+                                    {                                        
+                                        {
+                                            result = await versionCharacteristic.ReadAsync();
+                                            if (result.resultCode == 0)
+                                            {
+                                                sensorVersion = Encoding.ASCII.GetString(result.data);
+                                                byte majorVersion = (byte)result.data[1];
+                                                byte minorVersion = (byte)result.data[3];
+                                                Logger.circularBuffer.Add("Aranet Version: " + sensorVersion);
+                                                if (majorVersion == 0)
+                                                {
+                                                    outdatedVersion = true;
+                                                }
+                                                else if (majorVersion == 1 && minorVersion <= 2)
+                                                {
+                                                    outdatedVersion = true;
+                                                }
+                                                else outdatedVersion = false;//TODO change back to false, TRUE just for testing as no device with outdata 
+                                            }
+                                        }                                        
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+
+
                         ICharacteristic aranet4CharacteristicLive = await service.GetCharacteristicAsync(Aranet_CharacteristicUUID);
                         ICharacteristic aranet4CharacteristicTotalDataPoints = await service.GetCharacteristicAsync(ARANET_TOTAL_READINGS_CHARACTERISTIC_UUID);
                         ICharacteristic aranet4CharacteristicWriter = await service.GetCharacteristicAsync(ARANET_WRITE_CHARACTERISTIC_UUID);
