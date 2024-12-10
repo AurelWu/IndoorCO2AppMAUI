@@ -92,6 +92,7 @@ namespace IndoorCO2App_Multiplatform
             ChangeToStandardUI();
             LoadFavouredLocations();
             LoadMonitorType();
+            App.ResumeRecording();
            
 
 
@@ -202,9 +203,10 @@ namespace IndoorCO2App_Multiplatform
                 MainPageSingleton = this;
             }
         }
+        
 
 
-        private async void StartRecording(SubmissionMode submissionMode, bool resumedRecording)
+        public async void StartRecording(SubmissionMode submissionMode, bool resumedRecording)
         {
             this.submissionMode = submissionMode;
             BluetoothManager.recordedData = new List<SensorData>();
@@ -229,6 +231,7 @@ namespace IndoorCO2App_Multiplatform
                     RecoveryData.locationName = selectedLocation.Name;
                     RecoveryData.locationLat = selectedLocation.latitude;
                     RecoveryData.locationLon = selectedLocation.longitude;
+                    RecoveryData.CO2MonitorType = monitorType.ToString();
                     RecoveryData.recordingMode = "Building";
                     RecoveryData.WriteToPreferences();
                     await _MainScrollView.ScrollToAsync(0, 0, false);
@@ -253,7 +256,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        private async void StartTransportRecording(bool resumedRecording)
+        public async void StartTransportRecording(bool resumedRecording)
         {
             if(!resumedRecording)
             {
@@ -277,6 +280,7 @@ namespace IndoorCO2App_Multiplatform
                 RecoveryData.transportLineName = selectedTransitLine.Name;
                 RecoveryData.transportLineType = selectedTransitLine.NWRType;
                 RecoveryData.recordingMode = "Transit";
+                RecoveryData.CO2MonitorType = monitorType.ToString();
                 RecoveryData.WriteToPreferences();
 
                 ChangeToTransportRecordingUI();
@@ -374,12 +378,9 @@ namespace IndoorCO2App_Multiplatform
             OverpassModule.lastFetchWasSuccessButNoResults = false;
             OverpassModule.everFetchedLocations = false;
             ResetNotes();
-
-            Application.Current.Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(4), () =>
-            {
-                RecoveryData.ResetRecoveryData();
-                ChangeToUI(MenuMode.Standard);
-            });
+            RecoveryData.ResetRecoveryData();
+            ChangeToUI(MenuMode.Standard);
+            
         }
 
         public void UpdateLocationPicker()

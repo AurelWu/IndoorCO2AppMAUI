@@ -18,6 +18,7 @@ namespace IndoorCO2App_Multiplatform
             }
             _DeleteLastSubmissionButton.Text = "fetching Last Submission";
             string id = UserIDManager.GetEncryptedID(BluetoothManager.deviceID,false);
+            Logger.circularBuffer.Add("requesting last submission of: "+ id);
             var content = new StringContent(id, Encoding.UTF8, "text/plain");
             using var client = new HttpClient();
             using var response = await client.PostAsync("https://sl5m6xu9qf.execute-api.eu-central-1.amazonaws.com/GetLastSubmission", content);

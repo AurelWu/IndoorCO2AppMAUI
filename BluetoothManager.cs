@@ -159,7 +159,7 @@ namespace IndoorCO2App_Multiplatform
                 previousUpdate = currentTime;
                 try
                 {
-                    if(monitorType== CO2MonitorType.AirSpot)
+                    if(monitorType== CO2MonitorType.AirSpot || monitorType==CO2MonitorType.AirCoda)
                     {
                         discoveredDevices = null;
                     }
@@ -427,7 +427,12 @@ namespace IndoorCO2App_Multiplatform
             {
                 try
                 {
-                    await adapter.ConnectToDeviceAsync(discoveredDevices[0]);
+                    if(monitorType!=CO2MonitorType.AirCoda)
+                    {
+                        await adapter.ConnectToDeviceAsync(discoveredDevices[0]);
+                    }
+                    
+                    
                 }
                 catch
                 {
@@ -439,6 +444,7 @@ namespace IndoorCO2App_Multiplatform
 
                 //TODO Handle case of multiple Devices => Idea is that User can specify the MAC of the device? => or rather in a Advanced Menu, sees all Devices shown with Details and then picks it and we store it
                 //for now we always just use the first device (and in case of multiple, the idea is to filter it down to 1 as in mentioned in comment above
+                //for now we don't actually connect if it is an airspot as that stops the advertisement data and this includes the live co2 data
                 ConnectToDevice(discoveredDevices[0], monitorType);
             }
 
@@ -517,13 +523,22 @@ namespace IndoorCO2App_Multiplatform
 
                 if (monitorType == CO2MonitorType.AirCoda)
                 {
-                    device.UpdateConnectionParameters();                    
+                    //device.UpdateConnectionParameters();                    
                     var advertisement = device.AdvertisementRecords;
                     
-                    if (advertisement != null && advertisement.Count == 4)
-                    {                        
+                    if (advertisement != null && advertisement.Count >= 4)
+                    {
+                        int correctIndex = -0;
+                        for (int i = 0; i < advertisement.Count; i++)
+                        {
+                            if(advertisement[i].Data.Length == 19)
+                            {
+                                correctIndex= i;
+                            }
+                        }
+                        
 
-                        var serviceData = advertisement[1].Data;
+                        var serviceData = advertisement[correctIndex].Data;
                         if (serviceData.Length == 19)
                         {
                             byte ageSinceUpdate = serviceData[16]; //multiply with 10
@@ -885,12 +900,13 @@ namespace IndoorCO2App_Multiplatform
 
                     else if (monitorType == CO2MonitorType.AirCoda)
                     {
-                        var result = await service.GetCharacteristicsAsync();
-                        foreach(var r in results)
-                        {
-                            Logger.circularBuffer.Add(r.ToString());
-                            Console.WriteLine(r.ToString());
-                        }
+                        //var result = await service.GetCharacteristicsAsync();
+                        //foreach(var r in results)
+                        //{
+                        //    Logger.circularBuffer.Add(r.ToString());
+                        //    Console.WriteLine(r.ToString());
+                        //}
+                        //await adapter.DisconnectDeviceAsync(discoveredDevices[0]);
                     }
                 }
             }

@@ -367,13 +367,17 @@ namespace IndoorCO2App_Multiplatform
             }
             //MainPage.MainPageSingleton.favouredLocations 
             if (TransitLines != null && TransitLines.Count > 0)
-            {
+            {              
               TransitLines = TransitLines
               .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.NWRType+"_"+x.ID.ToString()))  // Moves favorites to the top
-                .ThenBy(x => x.Name)  // Sorts alphabetically within favorites and non-favorites
+                .ThenBy(x => x.Name, new MultiNumberStringComparer())  // Sorts alphabetically within favorites and non-favorites
                 .ToList();
             }
             UpdateFilteredTransitLines();
+            if(TransportStartLocationData!=null && TransportStartLocationData.Count==0 && TransportDestinationLocationData !=null && TransportDestinationLocationData.Count==00)
+            {
+                lastFetchWasSuccessButNoResults = true;
+            }
         }
 
         public static void UpdateFilteredTransitLines()

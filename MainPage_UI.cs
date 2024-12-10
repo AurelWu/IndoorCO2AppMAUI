@@ -179,7 +179,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackNotes"), MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesDoor"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesVentilation"), MenuMode.Recording | MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackDeviceNameFilter"), MenuMode.Standard);
+            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackDeviceNameFilter"), MenuMode.Standard, MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_TrimSlider, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_CO2DeviceNameFilterEditor, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_VersionLabel, MenuMode.Standard | MenuMode.TransportSelection);
@@ -190,9 +190,9 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<Grid>("TransitFilterGrid"), MenuMode.TransportSelection | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackLocationTextFilter"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_mapViewExpander, MenuMode.Standard);
-            
+            MenuModesOfUIElements.Add(_LocationInfoLabel, MenuMode.Standard |MenuMode.TransportSelection |MenuMode.TransportSelection);
 
-            
+
 
         }
 
@@ -621,9 +621,13 @@ namespace IndoorCO2App_Multiplatform
             {
                 _LocationInfoLabel.Text = "No locations in range";
             }
-            else if (OverpassModule.lastFetchWasSuccess)
+            else if (OverpassModule.lastFetchWasSuccess && (currentMenuMode == MenuMode.Standard))
             {
                 _LocationInfoLabel.Text = "Select Location:";
+            }
+            else if (OverpassModule.lastFetchWasSuccess && (currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.TransportSelection))
+            {
+                _LocationInfoLabel.Text = "";
             }
             else if (OverpassModule.lastFetchWasSuccess == false && !OverpassModule.currentlyFetching)
             {

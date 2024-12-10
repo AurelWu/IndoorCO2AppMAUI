@@ -9,6 +9,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public static class RecoveryData
     {
+        public static string CO2MonitorType;
         public static string recordingMode;
         public static long startTime;
         public static long timeOfLastUpdate;
@@ -44,6 +45,7 @@ namespace IndoorCO2App_Multiplatform
         public const string prefRecoveryLocationName = "recovery_locationName";
         public const string prefRecoveryLocationLat = "recovery_locationLat";
         public const string prefRecoveryLocationLon = "recovery_locationLon";
+        public const string prefCO2MonitorType = "recovery_CO2MonitorType";
         public const string prefRecoverySensorValues = "recovery_sensorValues";       //TODO: Add recorded values for sensors without history
 
 
@@ -67,6 +69,7 @@ namespace IndoorCO2App_Multiplatform
                 transportOriginID = long.Parse(Preferences.Get(prefRecoverytransportOriginID, "0"));
                 transportOriginName = Preferences.Get(prefRecoverytransportOriginName, "");
                 transportOriginType = Preferences.Get(prefRecoverytransportOriginType, "");
+                CO2MonitorType = Preferences.Get(prefCO2MonitorType,"");
             }
             catch (Exception e)
             {
@@ -95,6 +98,7 @@ namespace IndoorCO2App_Multiplatform
             Preferences.Set(prefRecoverytransportLineType, transportLineType);
             Preferences.Set(prefRecoverytransportLineName, transportLineName);
             Preferences.Set(prefRecoverytransportLineID, transportLineID.ToString());
+            Preferences.Set(prefCO2MonitorType, CO2MonitorType);
 
         }
 
@@ -116,6 +120,7 @@ namespace IndoorCO2App_Multiplatform
             Preferences.Set(prefRecoverytransportLineType, "");
             Preferences.Set(prefRecoverytransportLineName, "");
             Preferences.Set(prefRecoverytransportLineID, "0");
+            Preferences.Set(prefCO2MonitorType, "");
 
             recordingMode = "";
             startTime = 0;
@@ -134,8 +139,9 @@ namespace IndoorCO2App_Multiplatform
             locationName = "";
             locationLat = 0;
             locationLon = 0;
-            ReadFromPreferences();
             sensorValues = new List<int>();
+            CO2MonitorType = "";
+            ReadFromPreferences();
         }
     }
 
