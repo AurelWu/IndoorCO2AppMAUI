@@ -25,6 +25,16 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
             <!-- HorizontalStackLayout with 4 buttons -->
 
+            <Label x:Name="SuccessNotificationLabel"
+               Text="Transmission Successful"
+               BackgroundColor="Green"
+               TextColor="White"
+               
+               HorizontalTextAlignment="Center"
+               VerticalTextAlignment="Center"
+               IsVisible="False" 
+               Padding="0"/>
+            
             <HorizontalStackLayout
             Spacing="10"
             HorizontalOptions="Center">
@@ -334,7 +344,7 @@ Margin="5">
                 <Label
     VerticalOptions="Center"
     VerticalTextAlignment="Center"
-    Text="Filter:"
+    Text="Filter Lines:"
     Grid.Column="0" />
                 <Border                    
 Stroke="{StaticResource Secondary}"

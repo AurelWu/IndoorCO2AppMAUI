@@ -13,7 +13,7 @@ namespace IndoorCO2App_Multiplatform
         public LocationServiceApple()
         {
             locationManager = new CLLocationManager();
-            locationManager.AllowsBackgroundLocationUpdates = true;
+            //locationManager.AllowsBackgroundLocationUpdates = true;
             locationManager.DesiredAccuracy = CLLocation.AccuracyBest;
             locationManager.ActivityType = CLActivityType.Other;
         }

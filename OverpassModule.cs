@@ -365,6 +365,14 @@ namespace IndoorCO2App_Multiplatform
                 //TODO ADD TRAIN AND LIGHTRAIL
 
             }
+            if(TransportDestinationLocationData!=null && TransportDestinationLocationData.Count>0)
+            {
+                TransportDestinationLocationData.Sort((x, y) => x.distanceToGivenLocation.CompareTo(y.distanceToGivenLocation));
+            }
+            if (TransportStartLocationData != null && TransportStartLocationData.Count > 0)
+            {
+                TransportStartLocationData.Sort((x, y) => x.distanceToGivenLocation.CompareTo(y.distanceToGivenLocation));
+            }
             //MainPage.MainPageSingleton.favouredLocations 
             if (TransitLines != null && TransitLines.Count > 0)
             {              

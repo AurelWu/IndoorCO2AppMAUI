@@ -72,8 +72,10 @@ namespace IndoorCO2App_Multiplatform
         public MapView _mapView;
         public Expander _mapViewExpander;
         public Label _mapViewExpanderLabel;
+        public Label _SuccessNotificationLabel;
 
-        
+
+
 
 
 
@@ -141,6 +143,7 @@ namespace IndoorCO2App_Multiplatform
             _mapView = this.FindByName<MapView>("mapView");
             _mapViewExpander = this.FindByName<Expander>("mapViewExpander");
             _mapViewExpanderLabel = this.FindByName<Label>("mapViewExpanderLabel");
+            _SuccessNotificationLabel = this.FindByName<Label>("SuccessNotificationLabel");
 
 
 
@@ -179,7 +182,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackNotes"), MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesDoor"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesVentilation"), MenuMode.Recording | MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackDeviceNameFilter"), MenuMode.Standard, MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackDeviceNameFilter"), MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_TrimSlider, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_CO2DeviceNameFilterEditor, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_VersionLabel, MenuMode.Standard | MenuMode.TransportSelection);
@@ -379,10 +382,18 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else if (BluetoothManager.discoveredDevices.Count == 0)
                 {
-                    if(_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0)
+                    if(_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && currentMenuMode!=MenuMode.TransportRecording && currentMenuMode!=MenuMode.Recording)
                     {
                         _DeviceLabel.Text = $"Device not yet found. This might take a while. Namefilter set to: {_CO2DeviceNameFilterEditor.Text}";
                     }
+                    else if (_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && (currentMenuMode==MenuMode.TransportRecording || currentMenuMode== MenuMode.Recording))
+                    {
+                        _DeviceLabel.Text = $"Recovering Data from Sensor. This might take a while.";
+                    }
+                    else if((currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.Recording))
+                    {
+                        _DeviceLabel.Text = $"Recovering Data from Sensor. This might take a while.";
+                    }               
                     else
                     {
                         _DeviceLabel.Text = $"Device not yet found. This might take a while";

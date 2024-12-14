@@ -429,7 +429,7 @@ namespace IndoorCO2App_Multiplatform
             _TransitDestinationPicker.ItemsSource = null;
             _TransitDestinationPicker.Items.Clear();
             _TransitDestinationPicker.ItemsSource = transitTargetLocations;
-            if (transitOriginLocations.Count > 0)
+            if (transitTargetLocations.Count > 0)
             {
                 _TransitDestinationPicker.SelectedItem = transitTargetLocations[0];
             }

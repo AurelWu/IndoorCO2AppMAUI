@@ -61,7 +61,7 @@
 		<MtouchLink>Full</MtouchLink>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
 		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
 		<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
 		<ApplicationVersion>46</ApplicationVersion>

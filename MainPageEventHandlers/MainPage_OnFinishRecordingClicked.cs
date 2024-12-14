@@ -1,4 +1,7 @@
 ﻿
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Layouts;
+using Microsoft.Maui.Controls;
 
 namespace IndoorCO2App_Multiplatform
 {
@@ -28,9 +31,17 @@ namespace IndoorCO2App_Multiplatform
             if(success)
             {
                 ResetRecordingState();
+                await ShowSuccessNotificationAsync();
             }            
         }
 
+        private async Task ShowSuccessNotificationAsync()
+        {
+            
+            _SuccessNotificationLabel.IsVisible = true;            
+            await Task.Delay(6000);
+            _SuccessNotificationLabel.IsVisible = false;
+        }
     }
 
 }
