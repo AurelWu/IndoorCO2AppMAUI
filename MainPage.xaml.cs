@@ -438,18 +438,27 @@ namespace IndoorCO2App_Multiplatform
 
         public void UpdateTransitLinesPicker()
         {
+            TransitLineData prevLine = (TransitLineData)_TransitLinePicker.SelectedItem;
+
             OverpassModule.UpdateFilteredTransitLines();
             transitLines = OverpassModule.filteredTransitLines;
-            //if(transitLines.Count == 0)
-            //{
-            //    return;
-            //}
+
             _TransitLinePicker.ItemsSource = null;
             _TransitLinePicker.Items.Clear();
             _TransitLinePicker.ItemsSource = transitLines;
+
             if (transitLines.Count > 0)
             {
                 _TransitLinePicker.SelectedItem = transitLines[0];
+            }
+
+            if (prevLine != null)
+            {
+                int prevLineIndex = transitLines.FindIndex(x => x.ID == prevLine.ID);
+                if (prevLineIndex >= 0) // Check if the item was found
+                {
+                    _TransitLinePicker.SelectedItem = transitLines[prevLineIndex];
+                }
             }
         }
 
