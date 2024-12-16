@@ -491,8 +491,14 @@ namespace IndoorCO2App_Multiplatform
 
             try
             {
-                IService service = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType]);
-                IReadOnlyList<IService> results = await device.GetServicesAsync();
+                IService service = null;
+                IReadOnlyList<IService> results;
+                if (monitorType != CO2MonitorType.AirCoda)
+                {
+                    service = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType]);
+                    results = await device.GetServicesAsync();
+                }
+                
 
                 //TEMP for debugging
                 //if (monitorType == CO2MonitorType.AirCoda)
@@ -548,6 +554,18 @@ namespace IndoorCO2App_Multiplatform
                             currentCO2Reading = CO2Value;
                             string hexString = serviceData.ToHexString();
                             Logger.circularBuffer.Add("airCoda CO2Value: " + CO2Value + " | " + hexString);
+                            if(recordedData.Count==0)
+                            {
+                                recordedData.Add(new SensorData(currentCO2Reading, 0));
+                            }
+                            else
+                            {
+                                if(recordedData.Last().CO2ppm!=currentCO2Reading)
+                                {
+                                    recordedData.Add(new SensorData(currentCO2Reading, recordedData.Count()));
+                                }
+                            }
+                                
                         }
                         //Bytes 17 and 18 are what we want
                     }
@@ -557,9 +575,6 @@ namespace IndoorCO2App_Multiplatform
 
                 if (service != null)
                 {
-
-                    
-
                     if (monitorType == CO2MonitorType.Aranet4)
                     {
                         if(sensorVersion == "")

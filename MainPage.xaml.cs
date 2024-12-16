@@ -89,7 +89,7 @@ namespace IndoorCO2App_Multiplatform
             InitUILayout();
             RecoveryData.ReadFromPreferences();
             _CO2DeviceNameFilterEditor.Text = Preferences.Get(DeviceNameFilterPreferenceKey, "");
-            ChangeToStandardUI();
+            ChangeToStandardUI(false);
             LoadFavouredLocations();
             LoadMonitorType();
             App.ResumeRecording();
@@ -285,7 +285,7 @@ namespace IndoorCO2App_Multiplatform
 
                 ChangeToTransportRecordingUI();
                 BluetoothManager.StartTransportRecording(monitorType, startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine);
-                await _MainScrollView.ScrollToAsync(0, 0, false);
+                await _MainScrollView.ScrollToAsync(0, 0, true);
             }
             else
             {
@@ -327,7 +327,7 @@ namespace IndoorCO2App_Multiplatform
             ResetRecordingState();
             BluetoothManager.StopRecording();
             RecoveryData.ResetRecoveryData();
-            ChangeToStandardUI();
+            ChangeToStandardUI(false);
         }
 
         private void ResetRecordingState()
@@ -349,7 +349,7 @@ namespace IndoorCO2App_Multiplatform
             _CheckBoxDoorsWindows.IsChecked = false;
             _CheckBoxVentilation.IsChecked = false;
             BluetoothManager.recordedData.Clear();
-            ChangeToStandardUI();
+            ChangeToStandardUI(false);
         }
         private void ResetNotes()
         {

@@ -720,7 +720,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public void ChangeToStandardUI()
+        public async void ChangeToStandardUI(bool manualTriggered)
         {
             ChangeToUI(MenuMode.Standard);
             _TransitModeButton.BackgroundColor = Colors.LightGray;
@@ -736,24 +736,32 @@ namespace IndoorCO2App_Multiplatform
             {
                 _ResumeRecordingButton.IsVisible = false;
             }
+            if(!manualTriggered)
+            {
+                await _MainScrollView.ScrollToAsync(0, 0, true);
+            }
+            
         }    
 
-        public void ChangeToRecordingUI()
+        public async void ChangeToRecordingUI()
         {
             ChangeToUI(MenuMode.Recording);
+            await _MainScrollView.ScrollToAsync(0, 0, true);
         }
 
-        public void ChangeToManualRecordingUI()
+        public async void ChangeToManualRecordingUI()
         {
             ChangeToUI(MenuMode.ManualRecording);
+            await _MainScrollView.ScrollToAsync(0, 0, true);
         }
 
-        public void ChangeToTransportRecordingUI()
+        public async void ChangeToTransportRecordingUI()
         {
             ChangeToUI(MenuMode.TransportRecording);
+            await _MainScrollView.ScrollToAsync(0, 0, true);
         }
 
-        public void ChangeToTransportSelectionUI()
+        public async void ChangeToTransportSelectionUI(bool manualTriggered)
         {
             if (RecoveryData.recordingMode == "Building" || RecoveryData.recordingMode == "Transit")
             {
@@ -764,6 +772,11 @@ namespace IndoorCO2App_Multiplatform
                 _ResumeRecordingButton.IsVisible = false;
             }
             ChangeToUI(MenuMode.TransportSelection);
+            if(!manualTriggered)
+            {
+                await _MainScrollView.ScrollToAsync(0, 0, true);
+            }
+            
         }
     }
 
