@@ -11,7 +11,8 @@ namespace IndoorCO2App_Multiplatform
             if (entry != null)
             {
                 string s = entry.Text;
-                Preferences.Set(DeviceNameFilterPreferenceKey, s);                
+                Preferences.Set(DeviceNameFilterPreferenceKey, s);
+                BluetoothManager.discoveredDevices = null;
             }
         }
 

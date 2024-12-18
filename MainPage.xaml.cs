@@ -332,6 +332,7 @@ namespace IndoorCO2App_Multiplatform
 
         private void ResetRecordingState()
         {
+            BluetoothManager.recordedData.Clear();
             SpatialManager.ResetLocation();
             _LocationPicker.ItemsSource = null;
             _LocationPicker.Items.Clear();
@@ -348,7 +349,6 @@ namespace IndoorCO2App_Multiplatform
             OverpassModule.TransportDestinationLocationData.Clear();
             _CheckBoxDoorsWindows.IsChecked = false;
             _CheckBoxVentilation.IsChecked = false;
-            BluetoothManager.recordedData.Clear();
             ChangeToStandardUI(false);
         }
         private void ResetNotes()

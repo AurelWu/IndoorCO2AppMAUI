@@ -152,8 +152,12 @@ namespace IndoorCO2App_Multiplatform
                 {
                     var lat = SpatialManager.currentLocation.Latitude;
                     var lon = SpatialManager.currentLocation.Longitude;
-                    submissionDataTransport.LatitudeData.Add(lat);
-                    submissionDataTransport.LongitudeData.Add(lon);
+                    if(lat!=0 && lon !=0)
+                    {
+                        submissionDataTransport.LatitudeData.Add(lat);
+                        submissionDataTransport.LongitudeData.Add(lon);
+                    }
+                    
                 }
 
                 previousUpdate = currentTime;
