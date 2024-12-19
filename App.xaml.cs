@@ -25,6 +25,8 @@ namespace IndoorCO2App_Multiplatform
             // Save state to Preferences
             Preferences.Set("OnSleepTriggeredTime", DateTime.Now.ToString());            
             Preferences.Set("TriedResumeAfterSleep", "false");
+            SpatialManager.CancelGPSUpdateRequest(); //we
+            BluetoothManager.CancelScanRequest();
         }
 
         protected override void OnResume()

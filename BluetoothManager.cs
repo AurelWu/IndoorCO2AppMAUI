@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.VisualStudio.Settings;
@@ -18,6 +19,8 @@ namespace IndoorCO2App_Multiplatform
 {
     internal static class BluetoothManager
     {
+        private static CancellationTokenSource btCancellationTokenSource;
+        private static bool isScanning = false;
         public static IBluetoothLE ble;
         public static IAdapter adapter;
         public static BluetoothState state;
@@ -332,8 +335,11 @@ namespace IndoorCO2App_Multiplatform
 
             if (discoveredDevices == null)
             {
-                await adapter.StartScanningForDevicesAsync(scanFilterOptions);
+                btCancellationTokenSource = new CancellationTokenSource();
+                isScanning = true;
+                await adapter.StartScanningForDevicesAsync(scanFilterOptions,btCancellationTokenSource.Token);
                 await adapter.StopScanningForDevicesAsync();
+                isScanning=false;
                 discoveredDevices = adapter.DiscoveredDevices;
                 if (monitorType == CO2MonitorType.InkbirdIAMT1)
                 {
@@ -362,12 +368,31 @@ namespace IndoorCO2App_Multiplatform
                     rssi = discoveredDevices[0].Rssi;
                 }
 
+                if (nameFilter != null && nameFilter.Length > 0)
+                {
+                    List<IDevice> unfilteredDevices = discoveredDevices.ToList();
+                    List<IDevice> filteredDevices = new List<IDevice>();
+                    for (int i = 0; i < unfilteredDevices.Count; i++)
+                    {
+                        var d = unfilteredDevices[i];
+                        if (d.Name != null && d.Name.Contains(nameFilter))
+                        {
+                            filteredDevices.Add(d);
+                            break;
+                        }
+                    }
+                    discoveredDevices = filteredDevices;
+                }
+
             }
 
-            else if (discoveredDevices != null && discoveredDevices.Count == 0)
+            if (discoveredDevices != null && discoveredDevices.Count == 0)
             {
-                await adapter.StartScanningForDevicesAsync(scanFilterOptions);
+                btCancellationTokenSource = new CancellationTokenSource();
+                isScanning = true;
+                await adapter.StartScanningForDevicesAsync(scanFilterOptions,btCancellationTokenSource.Token);
                 await adapter.StopScanningForDevicesAsync();
+                isScanning = false;
                 discoveredDevices = adapter.DiscoveredDevices;
 
                 foreach(var d in discoveredDevices)
@@ -1088,6 +1113,12 @@ namespace IndoorCO2App_Multiplatform
         public static string ByteArrayToString(byte[] ba)
         {
             return BitConverter.ToString(ba).Replace("-", "");
+        }
+
+        public static void CancelScanRequest()
+        {
+            if (isScanning && btCancellationTokenSource != null && btCancellationTokenSource.IsCancellationRequested == false)
+                btCancellationTokenSource.Cancel();
         }
     }
 }

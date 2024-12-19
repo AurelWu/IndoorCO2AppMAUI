@@ -440,7 +440,7 @@ namespace IndoorCO2App_Multiplatform
             //var content = new StringContent("data=" + overpassQuery);
             var content = new StringContent("data=" + Uri.EscapeDataString(overpassQuery), Encoding.UTF8, "application/x-www-form-urlencoded");
             using var client = new HttpClient();
-            client.Timeout = TimeSpan.FromSeconds(10);
+            client.Timeout = TimeSpan.FromSeconds(13);
             try
             {
                 using var response = await client.PostAsync("https://overpass-api.de/api/interpreter", content);

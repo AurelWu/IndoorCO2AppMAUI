@@ -13,6 +13,8 @@ namespace IndoorCO2App_Multiplatform
                 string s = entry.Text;
                 Preferences.Set(DeviceNameFilterPreferenceKey, s);
                 BluetoothManager.discoveredDevices = null;
+                BluetoothManager.gattStatus = -100;
+                BluetoothManager.currentCO2Reading = 0;
             }
         }
 

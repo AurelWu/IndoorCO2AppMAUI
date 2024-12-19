@@ -182,7 +182,7 @@ namespace IndoorCO2App_Multiplatform
 
                     BluetoothManager.Update(monitorType, _CO2DeviceNameFilterEditor.Text, bluetoothHelper);
 
-                    if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(15))
+                    if (DateTime.Now - timeOfLastGPSUpdate > TimeSpan.FromSeconds(16))
                     {
                         SpatialManager.UpdateLocation();
 

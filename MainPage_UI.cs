@@ -380,7 +380,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     _DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch Sensor Data";
                 }
-                else if (BluetoothManager.discoveredDevices.Count == 0)
+                else if (BluetoothManager.discoveredDevices == null || BluetoothManager.discoveredDevices.Count == 0)
                 {
                     if(_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && currentMenuMode!=MenuMode.TransportRecording && currentMenuMode!=MenuMode.Recording)
                     {
