@@ -31,14 +31,35 @@ namespace IndoorCO2App_Multiplatform
 
         protected override void OnResume()
         {
-            ResumeRecording();
+            Logger.circularBuffer.Add("OnResume triggered at: " + DateTime.Now);
+            Logger.circularBuffer.Add("OnResume | before Resume Recording called: " + DateTime.Now);
+            try
+            {
+                ResumeRecording();
+            }
+            catch (Exception ex)
+            {
+                Logger.circularBuffer.Add("Exception caused by ResumeRecording()");
+            }
+            
+            Logger.circularBuffer.Add("OnResume | After Resume Recording called: " + DateTime.Now);
+            Logger.circularBuffer.Add("OnResume | Before GetCachedLocation called: " + DateTime.Now);
+            try
+            {
+                SpatialManager.GetCachedLocation();
+            }            
+            catch (Exception ex)
+            {
+                Logger.circularBuffer.Add("Exception caused by GetCachedLocation()");
+            }
+            Logger.circularBuffer.Add("OnResume | After GetCachedLocation called: " + DateTime.Now);
         }
 
         public static void ResumeRecording()
         {
             string ost = Preferences.Get("OnSleepTriggeredTime", "never");
-            Logger.circularBuffer.Add("OnSleep Triggered at: " + ost);
-            Logger.circularBuffer.Add("OnResume Triggered at: " + DateTime.Now);
+            Logger.circularBuffer.Add("OnSleep triggered at: " + ost);
+            Logger.circularBuffer.Add("OnResume triggered at: " + DateTime.Now);
             string monitorType = Preferences.Get(RecoveryData.prefCO2MonitorType, "");
             string recordingMode = Preferences.Get(RecoveryData.prefRecoveryRecordingMode, "");
             Logger.circularBuffer.Add("Stored MonitorType: " + monitorType);

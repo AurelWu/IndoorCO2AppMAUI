@@ -66,22 +66,59 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
+        internal static async Task GetCachedLocation()
+        {
+            try
+            {
+                var location = await Geolocation.GetLastKnownLocationAsync();
+                if (location != null)
+                {
+                    currentLocation = location;
+                    //Logger.circularBuffer.Add("current Location set from cache: " + currentLocation.Latitude + "|" + currentLocation.Longitude); //TODO remove again
+                }
+            }
+            catch (FeatureNotSupportedException fnsEx)
+            {
+                Logger.circularBuffer.Add("getting cached GPS location not successful: " + fnsEx.Message);
+            }
+            catch (FeatureNotEnabledException fneEx)
+            {
+
+                Logger.circularBuffer.Add("getting cached GPS location not successful: " + fneEx.Message);
+            }
+            catch (PermissionException pEx)
+            {
+                Logger.circularBuffer.Add("getting cached GPS location not successful: " + pEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Logger.circularBuffer.Add("getting cached GPS location not successful: " + ex.Message);
+            }
+
+        }
+
         internal static async void UpdateLocation()
         {
+
+            await GetCachedLocation();
+            
+
             try
             {
                 isCheckingLocation = true;
 
+                Logger.circularBuffer.Add("Requesting GPS Update | " + DateTime.Now);
                 var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(15));
                 gpsCancelTokenSource = new CancellationTokenSource();
                 var result = await Geolocation.GetLocationAsync(request,gpsCancelTokenSource.Token);
                 if (result != null)
                 {
                     currentLocation = result;
+                    //Logger.circularBuffer.Add("current Location set from UpdateLocation: " + currentLocation.Latitude + "|" + currentLocation.Longitude); //TODO remove again
                 }
                 else
                 {
-                    Logger.circularBuffer.Add("GPS update not successful:  null value after timeout");
+                    Logger.circularBuffer.Add("GPS update not successful:  null value after timeout: " + System.DateTime.Now);
                 }
                 locationUpdateSuccessful = true;
             }
@@ -110,14 +147,31 @@ namespace IndoorCO2App_Multiplatform
             finally
             {
                 isCheckingLocation = false;
+                try
+                {
+                    gpsCancelTokenSource?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Logger.circularBuffer.Add("gpsCancelTokenSource?.Dispose() not successful: " + ex.Message);
+                }
+                
             }
 
         }
 
         public static void CancelGPSUpdateRequest()
-        {            
-            if (isCheckingLocation && gpsCancelTokenSource != null && gpsCancelTokenSource.IsCancellationRequested == false)
-                gpsCancelTokenSource.Cancel();
+        {
+            try
+            {
+                 if (isCheckingLocation && gpsCancelTokenSource != null && gpsCancelTokenSource.IsCancellationRequested == false)
+                    gpsCancelTokenSource.Cancel();
+            }
+            catch (Exception ex)
+            {
+                Logger.circularBuffer.Add("CancelGPSUpdateRequest() not successful" + ex.Message);
+            }
+           
         }
     }
 }

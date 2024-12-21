@@ -375,7 +375,7 @@ namespace IndoorCO2App_Multiplatform
                     for (int i = 0; i < unfilteredDevices.Count; i++)
                     {
                         var d = unfilteredDevices[i];
-                        if (d.Name != null && d.Name.Contains(nameFilter))
+                        if (d.Name != null && d.Name.ToLower().Contains(nameFilter.ToLower()))
                         {
                             filteredDevices.Add(d);
                             break;
@@ -437,7 +437,7 @@ namespace IndoorCO2App_Multiplatform
                     for (int i = 0; i < unfilteredDevices.Count; i++)
                     {
                         var d = unfilteredDevices[i];
-                        if (d.Name != null && d.Name.Contains(nameFilter))
+                        if (d.Name != null && d.Name.ToLower().Contains(nameFilter.ToLower()))
                         {
                             filteredDevices.Add(d);
                             break;

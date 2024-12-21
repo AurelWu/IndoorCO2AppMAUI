@@ -427,6 +427,7 @@ namespace IndoorCO2App_Multiplatform
 
         public static async Task FetchNearbyBuildingsAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage)
         {
+            //Logger.circularBuffer.Add("location send to Overpass Building request: " + userLatitude + "|" + userLongitude); //TODO remove again
             everFetchedLocations = true;
             //userLatitude = 51.1828806;
             //userLongitude = 7.1872148;
@@ -441,6 +442,8 @@ namespace IndoorCO2App_Multiplatform
             var content = new StringContent("data=" + Uri.EscapeDataString(overpassQuery), Encoding.UTF8, "application/x-www-form-urlencoded");
             using var client = new HttpClient();
             client.Timeout = TimeSpan.FromSeconds(13);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("IndoorCO2DataRecorder/1.0 (https://indoorco2Map.com; aurelwuensch@proton.me)");
+
             try
             {
                 using var response = await client.PostAsync("https://overpass-api.de/api/interpreter", content);
@@ -473,12 +476,14 @@ namespace IndoorCO2App_Multiplatform
             finally
             {
                 currentlyFetching = false;
+                
             }
 
         }
 
         public static async Task FetchNearbyTransitAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage, bool transitOrigin)
         {
+            //Logger.circularBuffer.Add("location send to Overpass Transit request: " + userLatitude + "|" + userLongitude); //TODO remove again
             everFetchedLocations = true;
             if (currentlyFetching) return;
             currentlyFetching = true;
@@ -489,6 +494,7 @@ namespace IndoorCO2App_Multiplatform
             var content = new StringContent("data=" + Uri.EscapeDataString(overpassQuery), Encoding.UTF8, "application/x-www-form-urlencoded");
             using var client = new HttpClient();
             client.Timeout = TimeSpan.FromSeconds(10);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("IndoorCO2DataRecorder/1.0 (https://indoorco2Map.com; aurelwuensch@proton.me)");
 
             try
             {
@@ -528,7 +534,7 @@ namespace IndoorCO2App_Multiplatform
             }
             finally
             {
-                currentlyFetching = false;
+                currentlyFetching = false;                
             }
         }
     }

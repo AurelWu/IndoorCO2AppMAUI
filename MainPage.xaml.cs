@@ -93,6 +93,7 @@ namespace IndoorCO2App_Multiplatform
             LoadFavouredLocations();
             LoadMonitorType();
             App.ResumeRecording();
+            SpatialManager.GetCachedLocation();
            
 
 

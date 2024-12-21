@@ -8,7 +8,7 @@ namespace IndoorCO2App_Multiplatform
         {
             if(SpatialManager.currentLocation!=null)
             {
-                Logger.circularBuffer.Add("Update Location started for coordinates: " + SpatialManager.currentLocation.Latitude + " | " + SpatialManager.currentLocation.Longitude);
+                //Logger.circularBuffer.Add("Update Location started for coordinates: " + SpatialManager.currentLocation.Latitude + " | " + SpatialManager.currentLocation.Longitude);
             }
             if (currentMenuMode.HasFlag(MenuMode.Standard))
             {
