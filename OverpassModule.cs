@@ -417,7 +417,7 @@ namespace IndoorCO2App_Multiplatform
                 filteredTransitLines = TransitLines.Where(x => x.VehicleType.ToLower() == "train").ToList();
             }
 
-            string filterString = MainPage.MainPageSingleton._LocationSearcHFilterEditor.Text;
+            string filterString = MainPage.MainPageSingleton._TransitLineSearchFilterEditor.Text;
             if (filterString != null && filterString.Length > 0)
             {
                 filteredTransitLines = filteredTransitLines.Where(x => x.ShortenedName.ToLower().Contains(filterString.ToLower())).ToList();

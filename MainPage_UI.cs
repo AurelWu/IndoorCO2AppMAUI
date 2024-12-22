@@ -65,7 +65,7 @@ namespace IndoorCO2App_Multiplatform
         public ImageButton _StarIconToggleBuilding;
         public ImageButton _StarIconToggleTransitLine;
 
-        public Editor _LocationSearcHFilterEditor;
+        public Entry _TransitLineSearchFilterEditor;
         
         internal MenuMode currentMenuMode;
 
@@ -139,7 +139,7 @@ namespace IndoorCO2App_Multiplatform
             _StarIconToggleBuilding = this.FindByName<ImageButton>("StarIconToggleBuilding");
             _StarIconToggleTransitLine= this.FindByName<ImageButton>("StarIconToggleTransitLine");
 
-            _LocationSearcHFilterEditor = this.FindByName<Editor>("LocationSearchFilterEditor");
+            _TransitLineSearchFilterEditor = this.FindByName<Entry>("TransitLineSearchFilterEditor");
             _mapView = this.FindByName<MapView>("mapView");
             _mapViewExpander = this.FindByName<Expander>("mapViewExpander");
             _mapViewExpanderLabel = this.FindByName<Label>("mapViewExpanderLabel");
@@ -248,7 +248,7 @@ namespace IndoorCO2App_Multiplatform
         public void UpdateUI()
         {
             Application.Current.UserAppTheme = Application.Current.RequestedTheme;
-            VersionLabel.Text = AppVersion;
+            VersionLabel.Text = appVersion;
             UpdateGPSStatusButton();
             UpdateGPSPermissionButton();
             UpdateBluetoothStatusButton();

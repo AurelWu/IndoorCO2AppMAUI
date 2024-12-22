@@ -17,7 +17,7 @@ namespace IndoorCO2App_Multiplatform
     {
         private string _appVersion;
         public event PropertyChangedEventHandler PropertyChanged;
-        public string AppVersion
+        public string appVersion
         {
             get => _appVersion;
             set
@@ -25,7 +25,7 @@ namespace IndoorCO2App_Multiplatform
                 if (_appVersion != value)
                 {
                     _appVersion = value;
-                    OnPropertyChanged(nameof(AppVersion)); // Notify the UI that the property changed
+                    OnPropertyChanged(nameof(appVersion)); // Notify the UI that the property changed
                 }
             }
         }
@@ -82,7 +82,7 @@ namespace IndoorCO2App_Multiplatform
 
             favouredLocations = new HashSet<string>();
             InitializeComponent();
-            AppVersion = GetAppVersion();
+            appVersion = GetAppVersion();
             CreateMainPageSingleton();
             InitUIElements();
             InitializeMap(0, 0); // Example: Berlin coordinates
@@ -94,6 +94,7 @@ namespace IndoorCO2App_Multiplatform
             LoadMonitorType();
             App.ResumeRecording();
             SpatialManager.GetCachedLocation();
+            Logger.circularBuffer.Add("App Version: " + appVersion);
            
 
 
