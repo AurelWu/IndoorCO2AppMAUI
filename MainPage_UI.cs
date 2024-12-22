@@ -74,6 +74,9 @@ namespace IndoorCO2App_Multiplatform
         public Label _mapViewExpanderLabel;
         public Label _SuccessNotificationLabel;
 
+        public HorizontalStackLayout _StatusButtons;
+        public HorizontalStackLayout _ButtonBuildingTransitSelectionStackLayout;
+
 
 
 
@@ -81,6 +84,8 @@ namespace IndoorCO2App_Multiplatform
 
         public void InitUIElements()
         {
+            _ButtonBuildingTransitSelectionStackLayout = this.FindByName<HorizontalStackLayout>("ButtonBuildingTransitSelectionStackLayout");
+            _StatusButtons = this.FindByName<HorizontalStackLayout>("StatusButtons");
             //FindByName avoids IDE Error in VS 2022 which doesn't understand that it is defined in XAML - change once that is fixed
             _MainScrollView = this.FindByName<FixedScrollView>("MainScrollView");
             _TrimSlider = this.FindByName<SfRangeSlider>("TrimSlider");
@@ -194,6 +199,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackLocationTextFilter"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_mapViewExpander, MenuMode.Standard);
             MenuModesOfUIElements.Add(_LocationInfoLabel, MenuMode.Standard |MenuMode.TransportSelection |MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_ButtonBuildingTransitSelectionStackLayout, MenuMode.Standard | MenuMode.TransportSelection);
 
 
 
@@ -271,6 +277,46 @@ namespace IndoorCO2App_Multiplatform
 
             UpdateLocationMap();
             UpdateMapViewExpander();
+            HideElementsWithStatusOK();
+        }
+
+        private async void HideElementsWithStatusOK()
+        {
+            bool hiddenElementThisTime = false;
+            if (gpsActive && gpsGranted == btGranted == btActive)
+            {
+                if (_StatusButtons.IsVisible == true || _StatusLabel.IsVisible == true) hiddenElementThisTime = true;
+                _StatusButtons.IsVisible = false;
+                _StatusLabel.IsVisible = false;
+            }
+            else
+            {
+                _StatusButtons.IsVisible = true;
+                _StatusLabel.IsVisible = true;
+            }
+
+            if (SpatialManager.currentLocation.Latitude != 0 || SpatialManager.currentLocation.Longitude != 0)
+            {
+                if (_LocationLabel.IsVisible == true) hiddenElementThisTime = true;
+                _LocationLabel.IsVisible = false;
+            }
+            else _LocationLabel.IsVisible = true;
+
+            if (_LocationInfoLabel.Text.Length < 1)
+            {
+                if (_LocationInfoLabel.IsVisible == true) hiddenElementThisTime = true;
+                _LocationInfoLabel.IsVisible = false;
+            }
+            else if (currentMenuMode == MenuMode.Standard)
+            {
+                _LocationInfoLabel.IsVisible = true;
+            }
+            
+            if(hiddenElementThisTime)
+            {
+                await _MainScrollView.ScrollToAsync(0, 0, true);
+            }
+
         }
 
         private void UpdateLocationMap()
@@ -306,6 +352,15 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
+        private void UpdateGetLocationButton()
+        {
+            if(SpatialManager.currentLocation.Latitude==0 && SpatialManager.currentLocation.Longitude==0)
+            {
+                _UpdateLocationsButton.IsEnabled = false;
+            }
+            _UpdateLocationsButton.IsEnabled = true;
+        }
+
         private void UpdateStartRecordingButton()
         {
             if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.LocationData.Count > 0 && BluetoothManager.discoveredDevices != null && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
@@ -325,7 +380,7 @@ namespace IndoorCO2App_Multiplatform
             else
             {
                 _StartManualRecordingButton.IsEnabled = false;
-            }
+            }            
         }
 
         private void UpdateStartTransitRecordingButton()
@@ -413,12 +468,12 @@ namespace IndoorCO2App_Multiplatform
                 {
                     if(monitorType== CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
-                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id:" + BluetoothManager.deviceName;
+                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                     }
                     else
                     {
                         var secondsSinceLastUpdate = DateTime.Now - BluetoothManager.timeOfLastNotifyUpdate;                        
-                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id:" + BluetoothManager.deviceName;
+                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                     }
                     
                     if (BluetoothManager.lastAttemptFailed)
@@ -740,25 +795,28 @@ namespace IndoorCO2App_Multiplatform
             {
                 await _MainScrollView.ScrollToAsync(0, 0, true);
             }
-            
+            HideElementsWithStatusOK();
         }    
 
         public async void ChangeToRecordingUI()
         {
             ChangeToUI(MenuMode.Recording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
+            HideElementsWithStatusOK();
         }
 
         public async void ChangeToManualRecordingUI()
         {
             ChangeToUI(MenuMode.ManualRecording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
+            HideElementsWithStatusOK();
         }
 
         public async void ChangeToTransportRecordingUI()
         {
             ChangeToUI(MenuMode.TransportRecording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
+            HideElementsWithStatusOK();
         }
 
         public async void ChangeToTransportSelectionUI(bool manualTriggered)
@@ -776,7 +834,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 await _MainScrollView.ScrollToAsync(0, 0, true);
             }
-            
+            HideElementsWithStatusOK();
         }
     }
 

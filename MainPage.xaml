@@ -13,7 +13,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
         <VerticalStackLayout
             Spacing="22"
-            Padding="30,0">
+            Padding="{OnPlatform iOS='30,50,30,0', Android='30,0,30,0', Default='0,0,0,0'}">
             <!--
             <Label
                 Text="Indoor CO2 Recorder"
@@ -35,7 +35,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                IsVisible="False" 
                Padding="0"/>
             
-            <HorizontalStackLayout
+            <HorizontalStackLayout x:Name="StatusButtons"
             Spacing="10"
             HorizontalOptions="Center">
                 <ImageButton x:Name="ButtonGPSStatus" Source="gps_icon_v2.png" Clicked="OnRequestGPSEnableDialog"  Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
@@ -168,7 +168,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                        />
                 
             </ScrollView> -->
-            <HorizontalStackLayout Padding="10" HorizontalOptions="Center" Spacing="10" >
+            <HorizontalStackLayout x:Name="ButtonBuildingTransitSelectionStackLayout" Padding="10" HorizontalOptions="Center" Spacing="10" >
 
                 <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClicked" TextColor="White" BackgroundColor="#512BD4" />
                 <Button x:Name="ButtonTransitMode" Text="Transit" Clicked="OnLocationModeClicked" TextColor="Black" BackgroundColor="LightGray" />

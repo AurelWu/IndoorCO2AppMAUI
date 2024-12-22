@@ -63,7 +63,7 @@ namespace IndoorCO2App_Multiplatform
         {
             bool answer = await Application.Current.MainPage.DisplayAlert(
                 "Change Transport Mode Filter?", // Title
-                "Are you sure you want to change Filter Settings, this will remove the current selected Line?", // Message
+                "Are you sure you want to change Filter Settings? This might remove the currently selected Line.", // Message
                 "Confirm", // Confirm button
                 "Cancel" // Cancel button
             );

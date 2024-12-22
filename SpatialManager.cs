@@ -57,9 +57,9 @@ namespace IndoorCO2App_Multiplatform
             return await ls.ShowEnableGpsDialogAsync();
         }
 
-        internal static void ResetLocation()
+        internal static async void ResetLocation()
         {
-            currentLocation = new Location();
+            await GetCachedLocation();
             if (OverpassModule.LocationData != null)
             {
                 OverpassModule.LocationData.Clear();

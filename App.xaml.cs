@@ -16,8 +16,10 @@ namespace IndoorCO2App_Multiplatform
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(SerialKey.SyncFusionKey);
             InitializeComponent();
 
-            MainPage = new AppShell();
-            Shell.SetNavBarIsVisible(MainPage, false);
+            //MainPage = new AppShell();
+            //Shell.SetNavBarIsVisible(this, false);
+            MainPage = new MainPage();
+            //Shell.SetNavBarIsVisible(this, false);
         }
 
         protected override void OnSleep()
