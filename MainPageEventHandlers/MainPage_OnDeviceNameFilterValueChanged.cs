@@ -15,6 +15,7 @@ namespace IndoorCO2App_Multiplatform
                 BluetoothManager.discoveredDevices = null;
                 BluetoothManager.gattStatus = -100;
                 BluetoothManager.currentCO2Reading = 0;
+               
             }
         }
 

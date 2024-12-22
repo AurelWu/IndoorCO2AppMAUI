@@ -19,6 +19,7 @@ namespace IndoorCO2App_Multiplatform
 {
     internal static class BluetoothManager
     {
+        public static string deviceName ="";
         private static CancellationTokenSource btCancellationTokenSource;
         private static bool isScanning = false;
         public static IBluetoothLE ble;
@@ -278,11 +279,12 @@ namespace IndoorCO2App_Multiplatform
 
         internal static async void ScanForDevices(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
         {
+
             //doesnt work like it should yet
             //directConnectToBondedDevice = false;
             //bool checkStatus = BluetoothHelper.CheckStatus();
             //if (!checkStatus) return;
-            //var bonded = await CheckBondedDevicesForCO2Sensor(monitorType);
+            //var bonded = await CheckBondedDevicesForCO2Sensor(monitorType,MainPage.bluetoothHelper);
             //if(bonded!=null && deviceID==null)
             //{
             //    rssi = bonded.Rssi;
@@ -331,7 +333,20 @@ namespace IndoorCO2App_Multiplatform
             }
             adapter.ScanMatchMode = ScanMatchMode.STICKY;
             adapter.ScanMode = ScanMode.LowLatency;
-            adapter.ScanTimeout = 15000;
+            adapter.ScanTimeout = 14500;
+            adapter.DeviceDiscovered += (s, e) =>
+            {
+                var device = e.Device;
+                Console.WriteLine($"Discovered Device: {device.Name} ({device.Id})");
+
+                // Check if the discovered device matches criteria, as we currently only check serviceUUIDs of airvalent and aranet we only do this for them (only  they are necessarily paired)
+                if (device.Name.ToLower().Contains(nameFilter.ToLower()) && (monitorType==CO2MonitorType.Aranet4 || monitorType==CO2MonitorType.Airvalent))
+                {
+                    Console.WriteLine("Target device found. Stopping scan...");
+                    btCancellationTokenSource.Cancel(); // Stop scanning
+                }
+            };
+
 
             if (discoveredDevices == null)
             {
@@ -454,6 +469,7 @@ namespace IndoorCO2App_Multiplatform
 
             if (discoveredDevices != null && discoveredDevices.Count > 0)
             {
+                deviceName = discoveredDevices[0].Name;
                 try
                 {
                     if(monitorType!=CO2MonitorType.AirCoda)
@@ -1078,6 +1094,7 @@ namespace IndoorCO2App_Multiplatform
             // Get bonded devices (paired devices)
             var bondedDevices = adapter.BondedDevices;
 
+            if (bondedDevices == null) return null;
             foreach (var device in bondedDevices)
             {
                 // Connect to the device

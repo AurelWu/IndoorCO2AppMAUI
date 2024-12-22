@@ -103,9 +103,8 @@ namespace IndoorCO2App_Multiplatform
 #endif
 #if IOS
             bluetoothHelper = new BluetoothHelperApple();
-            //TODO: add bluetoothHelper for iPhone
 #endif
-            //TODO: Add iPhone BluetoothHelper Implementation
+
             BluetoothManager.Init();
             firstInit = false;
 
