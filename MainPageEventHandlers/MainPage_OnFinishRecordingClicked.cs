@@ -40,7 +40,7 @@ namespace IndoorCO2App_Multiplatform
         {
             
             _SuccessNotificationLabel.IsVisible = true;            
-            await Task.Delay(6000);
+            await Task.Delay(2500);
             _SuccessNotificationLabel.IsVisible = false;
         }
     }

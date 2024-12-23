@@ -24,6 +24,7 @@ namespace IndoorCO2App_Multiplatform
         public static bool lastFetchWasSuccess = false;
         public static bool lastFetchWasSuccessButNoResults = false;
         public static bool everFetchedLocations = false;
+        public static bool everFetchedTransitLocations = false;
 
         static OverpassModule()
         {
@@ -99,6 +100,7 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[shop];" +
                 $"nwr(around:{rString},{latString},{lonString})[craft];" +
                 $"nwr(around:{rString},{latString},{lonString})[aeroway=aerodrome];" +
+                $"nwr(around:{rString},{latString},{lonString})[aeroway=terminal];" +
                 $"nwr(around:{rString},{latString},{lonString})[railway=station];" +
                 $"nwr(around:{rString},{latString},{lonString})[public_transport=station];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=fitness_centre];" +
@@ -484,7 +486,7 @@ namespace IndoorCO2App_Multiplatform
         public static async Task FetchNearbyTransitAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage, bool transitOrigin)
         {
             //Logger.circularBuffer.Add("location send to Overpass Transit request: " + userLatitude + "|" + userLongitude); //TODO remove again
-            everFetchedLocations = true;
+            everFetchedTransitLocations = true;
             if (currentlyFetching) return;
             currentlyFetching = true;
             lastFetchWasSuccess = false;

@@ -7,11 +7,18 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
              xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
              x:Class="IndoorCO2App_Multiplatform.MainPage">
 
+    <AbsoluteLayout         
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
 
 
-    <controls:FixedScrollView x:Name="MainScrollView">
 
-        <VerticalStackLayout
+        <controls:FixedScrollView 
+            x:Name="MainScrollView"
+            AbsoluteLayout.LayoutFlags="All"
+            AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
+
+            <VerticalStackLayout
             Spacing="22"
             Padding="{OnPlatform iOS='30,50,30,0', Android='30,0,30,0', Default='0,0,0,0'}">
             <!--
@@ -25,15 +32,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
             <!-- HorizontalStackLayout with 4 buttons -->
 
-            <Label x:Name="SuccessNotificationLabel"
-               Text="Transmission Successful"
-               BackgroundColor="Green"
-               TextColor="White"
-               
-               HorizontalTextAlignment="Center"
-               VerticalTextAlignment="Center"
-               IsVisible="False" 
-               Padding="0"/>
+          
             
             <HorizontalStackLayout x:Name="StatusButtons"
             Spacing="10"
@@ -178,7 +177,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
             <HorizontalStackLayout
             x:Name="SearchRangeStackLayout"
-            Spacing="10"
+            Spacing="5"
             VerticalOptions="Start">
                 <Label Text="Search Range: " FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Center" />
                 <StackLayout Orientation="Horizontal">
@@ -667,6 +666,21 @@ Completed="OnEntryCompleted" />
             <Label x:Name="VersionLabel" Text="Version: 2024-10-01" FontSize="12" VerticalOptions="Center" />
         </VerticalStackLayout>
     </controls:FixedScrollView>
+
+        <Label x:Name="SuccessNotificationLabel"
+           Text="Transmission Successful"
+           BackgroundColor="Green"
+           TextColor="White"
+           FontSize="Large"
+           FontAttributes="Bold"
+           HorizontalTextAlignment="Center"
+           VerticalTextAlignment="Center"
+           AbsoluteLayout.LayoutFlags="All"
+           AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 0.2"
+           IsVisible="false"           
+           />
+
+    </AbsoluteLayout>
 
     <ContentPage.Resources>
         <ControlTemplate x:Key="RadioButtonTemplate">

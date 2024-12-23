@@ -679,10 +679,11 @@ namespace IndoorCO2App_Multiplatform
 
         private void UpdateLocationInfoLabel()
         {
-            if (OverpassModule.everFetchedLocations == false)
+
+            if (OverpassModule.everFetchedLocations == false && currentMenuMode == MenuMode.Standard)
             {
                 _LocationInfoLabel.Text = "Press Update Locations to get nearby locations";
-            }
+            }            
             else if (OverpassModule.lastFetchWasSuccessButNoResults)
             {
                 _LocationInfoLabel.Text = "No locations in range";
@@ -693,7 +694,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (OverpassModule.lastFetchWasSuccess && (currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.TransportSelection))
             {
-                _LocationInfoLabel.Text = "";
+                _LocationInfoLabel.Text = "Locations Found";
             }
             else if (OverpassModule.lastFetchWasSuccess == false && !OverpassModule.currentlyFetching)
             {
@@ -703,6 +704,12 @@ namespace IndoorCO2App_Multiplatform
             {
                 _LocationInfoLabel.Text = "currently retrieving nearby locations";
             }
+
+            if (OverpassModule.everFetchedTransitLocations == false && currentMenuMode == MenuMode.TransportSelection)
+            {
+                _LocationInfoLabel.Text = "Press Update Locations to get nearby locations";
+            }
+            
         }
 
         private void UpdateLineChart()
