@@ -6,11 +6,11 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnRadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            if (_RadioButton50m.IsChecked)
-            {
-                searchRange = 50;
-            }
-            else if (_RadioButton100m.IsChecked)
+            //if (_RadioButton50m.IsChecked)
+            //{
+            //    searchRange = 50;
+            //}
+            if (_RadioButton100m.IsChecked)
             {
                 searchRange = 100;
             }

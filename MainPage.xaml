@@ -180,9 +180,10 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             Spacing="5"
             VerticalOptions="Start">
                 <Label Text="Search Range: " FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Center" />
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="50m" HorizontalOptions="Start" VerticalOptions="Center" />
+                    <StackLayout Orientation="Horizontal" Spacing="10" >
+                <!--    <Label Text="50m" HorizontalOptions="Start" VerticalOptions="Center" />
                     <RadioButton x:Name="RadioButton50m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start"  CheckedChanged="OnRadioButtonCheckedChanged"  />
+                    -->
                     <Label Text=" 100m" HorizontalOptions="Start" VerticalOptions="Center" />
                     <RadioButton x:Name="RadioButton100m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start" CheckedChanged="OnRadioButtonCheckedChanged"  />
                     <Label Text=" 250m" HorizontalOptions="Start" VerticalOptions="Center" />

@@ -18,7 +18,10 @@ namespace IndoorCO2App_Multiplatform
 
             //MainPage = new AppShell();
             //Shell.SetNavBarIsVisible(this, false);
+
+            //Shell.SetNavBarIsVisible(this, false);
             MainPage = new MainPage();
+
             //Shell.SetNavBarIsVisible(this, false);
         }
 

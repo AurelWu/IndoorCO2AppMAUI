@@ -16,7 +16,7 @@ namespace IndoorCO2App_Multiplatform
         };
 
         // Modify sendJsonToApiGateway to accept callback
-        public static async Task SendJsonToApiGateway(string json, SubmissionMode submissionMode)
+        public static async Task<string> SendJsonToApiGateway(string json, SubmissionMode submissionMode)
         {
             var successState = string.Empty;
 
@@ -36,7 +36,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     response = await client.PostAsync("https://sokwze8jj1.execute-api.eu-central-1.amazonaws.com/SendTransitCO2DataToSQS", content);
                 }
-                else return;
+                else return "failure";
 
 
                 if (response.IsSuccessStatusCode)
@@ -79,6 +79,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 MainPage.MainPageSingleton.OnTransmissionFailed("No Response from server. Try again!");
             }
+            return successState;
 
         }
     }

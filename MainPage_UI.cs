@@ -35,7 +35,7 @@ namespace IndoorCO2App_Multiplatform
         public Picker _TransitOriginPicker;
         public Picker _TransitDestinationPicker;
         public Picker _TransitLinePicker;
-        public RadioButton _RadioButton50m;
+        //public RadioButton _RadioButton50m;
         public RadioButton _RadioButton100m;
         public RadioButton _RadioButton250m;
         public Button _OpenMapButton;
@@ -112,7 +112,7 @@ namespace IndoorCO2App_Multiplatform
             _TransitDestinationPicker = this.FindByName<Picker>("TransitDestinationPicker");
             _TransitLinePicker = this.FindByName<Picker>("TransitLinePicker");
 
-            _RadioButton50m = this.FindByName<RadioButton>("RadioButton50m");
+            //_RadioButton50m = this.FindByName<RadioButton>("RadioButton50m");
             _RadioButton100m = this.FindByName<RadioButton>("RadioButton100m");
             _RadioButton250m = this.FindByName<RadioButton>("RadioButton250m");
             _OpenMapButton = this.FindByName<Button>("OpenMapButton");
@@ -277,7 +277,7 @@ namespace IndoorCO2App_Multiplatform
 
             UpdateLocationMap();
             UpdateMapViewExpander();
-            HideElementsWithStatusOK();
+            //HideElementsWithStatusOK();
         }
 
         private async void HideElementsWithStatusOK()
