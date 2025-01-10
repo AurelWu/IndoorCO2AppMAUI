@@ -343,6 +343,7 @@ namespace IndoorCO2App_Multiplatform
             _TransitOriginPicker.Items.Clear();
             _TransitLinePicker.ItemsSource = null;
             _TransitLinePicker.Items.Clear();
+            _TransitLineSearchFilterEditor.Text = "";
             _ManualAddressEditor.Text = "";
             _ManualNameEditor.Text = "";
             OverpassModule.TransitLines.Clear();

@@ -97,6 +97,8 @@ namespace IndoorCO2App_Multiplatform
             return "[out:json];" +
                 "(" +
                 $"nwr(around:{rString},{latString},{lonString})[office=employment_agency];" +
+                $"nwr(around:{rString},{latString},{lonString})[office=lawyer];" +
+                $"nwr(around:{rString},{latString},{lonString})[office=government];" +
                 $"nwr(around:{rString},{latString},{lonString})[shop];" +
                 $"nwr(around:{rString},{latString},{lonString})[craft];" +
                 $"nwr(around:{rString},{latString},{lonString})[aeroway=aerodrome];" +
@@ -111,6 +113,7 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[leisure=swimming_pool];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=sauna];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=hackerspace];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=townhall];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=congress_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=events_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=bar];" +

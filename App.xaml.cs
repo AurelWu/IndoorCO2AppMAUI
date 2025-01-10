@@ -15,12 +15,12 @@ namespace IndoorCO2App_Multiplatform
             //It still works without license but shows an Info Popup at start of the App
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(SerialKey.SyncFusionKey);
             InitializeComponent();
+            //MainPage = new MainPage();
+            MainPage = new AppShell();
+            Shell.SetNavBarIsVisible(this, false);
 
-            //MainPage = new AppShell();
             //Shell.SetNavBarIsVisible(this, false);
 
-            //Shell.SetNavBarIsVisible(this, false);
-            MainPage = new MainPage();
 
             //Shell.SetNavBarIsVisible(this, false);
         }

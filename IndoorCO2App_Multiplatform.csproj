@@ -96,7 +96,7 @@
 	  <ApplicationVersion>46</ApplicationVersion>
 	  <ApplicationId>com.aurelwu.indoorairqualitycollector</ApplicationId>
 	  <ApplicationTitle>IndoorCO2MapDataRecorder</ApplicationTitle>
-	  <DebugSymbols>False</DebugSymbols>
+	  <DebugSymbols>True</DebugSymbols>
 	  <AndroidKeyStore>False</AndroidKeyStore>
 	  <AndroidPackageFormat>aab</AndroidPackageFormat>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
@@ -114,6 +114,7 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <PublishTrimmed>True</PublishTrimmed>
+	  <DebugSymbols>True</DebugSymbols>
 	</PropertyGroup>
 
 	<ItemGroup>

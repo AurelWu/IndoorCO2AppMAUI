@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace IndoorCO2App_Multiplatform
 {
     public static class RecoveryData
     {
+        public static bool windowsOpen;
+        public static bool ventilation;
+        public static string customNotes;
+
         public static string CO2MonitorType;
         public static string recordingMode;
         public static long startTime;
@@ -31,6 +36,10 @@ namespace IndoorCO2App_Multiplatform
         public const string prefRecoveryRecordingMode = "recovery_recordingMode";
         public const string prefRecoveryStartTime = "recovery_startTime";
         public const string prefRecoveryTimeOfLastUpdate = "recovery_timeOfLastUpdate";
+
+        public const string prefRecoveryWindows = "recovery_windowsOpen";
+        public const string prefRecoveryVentilation = "recovery_ventilation";
+        public const string prefRecoveryCustomNotes = "recovery_customNotes";
 
         public const string prefRecoverytransportOriginID = "recovery_transportOriginID";
         public const string prefRecoverytransportOriginType = "recovery_transportOriginType";
@@ -70,6 +79,12 @@ namespace IndoorCO2App_Multiplatform
                 transportOriginName = Preferences.Get(prefRecoverytransportOriginName, "");
                 transportOriginType = Preferences.Get(prefRecoverytransportOriginType, "");
                 CO2MonitorType = Preferences.Get(prefCO2MonitorType,"");
+                customNotes = Preferences.Get(prefRecoveryCustomNotes, "");
+                windowsOpen = Preferences.Get(prefRecoveryWindows, false);
+                ventilation = Preferences.Get(prefRecoveryVentilation, false);
+                MainPage.MainPageSingleton._CheckBoxVentilation.IsChecked = ventilation;
+                MainPage.MainPageSingleton._CheckBoxDoorsWindows.IsChecked = windowsOpen;
+                MainPage.MainPageSingleton._NotesEditor.Text = customNotes;
             }
             catch (Exception e)
             {
@@ -99,6 +114,9 @@ namespace IndoorCO2App_Multiplatform
             Preferences.Set(prefRecoverytransportLineName, transportLineName);
             Preferences.Set(prefRecoverytransportLineID, transportLineID.ToString());
             Preferences.Set(prefCO2MonitorType, CO2MonitorType);
+            Preferences.Set(prefRecoveryVentilation, MainPage.MainPageSingleton._CheckBoxVentilation.IsChecked);
+            Preferences.Set(prefRecoveryWindows, MainPage.MainPageSingleton._CheckBoxDoorsWindows.IsChecked);
+            Preferences.Set(prefRecoveryCustomNotes, MainPage.MainPageSingleton._NotesEditor.Text);
 
         }
 
@@ -122,6 +140,10 @@ namespace IndoorCO2App_Multiplatform
             Preferences.Set(prefRecoverytransportLineID, "0");
             Preferences.Set(prefCO2MonitorType, "");
 
+            Preferences.Set(prefRecoveryWindows, false);
+            Preferences.Set(prefRecoveryVentilation, false);
+            Preferences.Set(prefRecoveryCustomNotes, "");
+
             recordingMode = "";
             startTime = 0;
             timeOfLastUpdate = 0;
@@ -141,6 +163,9 @@ namespace IndoorCO2App_Multiplatform
             locationLon = 0;
             sensorValues = new List<int>();
             CO2MonitorType = "";
+            ventilation = false;
+            windowsOpen = false;
+            customNotes = "";
             ReadFromPreferences();
         }
     }

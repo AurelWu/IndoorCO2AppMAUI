@@ -126,6 +126,7 @@ namespace IndoorCO2App_Multiplatform
             adapter.ScanTimeout = 10000; //ms
             deviceID = String.Empty;
 
+
         }
 
         internal static void Update(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
@@ -324,6 +325,19 @@ namespace IndoorCO2App_Multiplatform
             //    
             //}
 
+
+            bool checkPermissions = bluetoothHelper.CheckStatus();
+            if (!checkPermissions) return;
+            bool checkBTEnabled = bluetoothHelper.CheckIfBTEnabled();
+            if (!checkBTEnabled) return;
+
+            //if we already have a discoveredDevice we can take a shortcut
+            if (discoveredDevices!=null && discoveredDevices.Count>0 && discoveredDevices[0].State == DeviceState.Connected)
+            {                
+                ConnectToDevice(discoveredDevices[0],monitorType);
+                return;
+            }
+
             Guid serviceUUID;
             if (serviceUUIDByMonitorType.ContainsKey(monitorType))
             {
@@ -334,8 +348,7 @@ namespace IndoorCO2App_Multiplatform
                 throw new System.NotImplementedException("monitorType not supported");
             }
             lastAttemptFailed = false;
-            bool checkPermissions = bluetoothHelper.CheckStatus();
-            if (!checkPermissions) return;
+
             await bluetoothHelper.RequestAsync();
             if (ble == null)
             {
@@ -569,7 +582,7 @@ namespace IndoorCO2App_Multiplatform
                 {
 
                     var cts = new CancellationTokenSource();
-                    cts.CancelAfter(TimeSpan.FromSeconds(4)); // Cancel after 10 seconds.
+                    cts.CancelAfter(TimeSpan.FromSeconds(8)); // Cancel after 10 seconds.
 
                     try
                     {
@@ -592,20 +605,20 @@ namespace IndoorCO2App_Multiplatform
                         Logger.circularBuffer.Add($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) Error during service discovery: {ex.Message}  | " + DateTime.Now);
                     }
                                                             
-                    results = await device.GetServicesAsync();
-                    if(results==null)
-                    {
-                        Logger.circularBuffer.Add($"device.GetServicesAsync() returned null | " + DateTime.Now);                    
-                    }
-                    else
-                    {
-                        Logger.circularBuffer.Add($"found {results.Count} services | " + DateTime.Now);
-                        foreach(var s in results)
-                        {
-                            Logger.circularBuffer.Add($"found service: {s.Id} | " + DateTime.Now);
-                        }
-
-                    }
+                    //results = await device.GetServicesAsync();
+                    //if(results==null)
+                    //{
+                    //    Logger.circularBuffer.Add($"device.GetServicesAsync() returned null | " + DateTime.Now);                    
+                    //}
+                    //else
+                    //{
+                    //    Logger.circularBuffer.Add($"found {results.Count} services | " + DateTime.Now);
+                    //    foreach(var s in results)
+                    //    {
+                    //        Logger.circularBuffer.Add($"found service: {s.Id} | " + DateTime.Now);
+                    //    }
+                    //
+                    //}
                        
                     
                 }
@@ -688,59 +701,59 @@ namespace IndoorCO2App_Multiplatform
                 {
                     if (monitorType == CO2MonitorType.Aranet4)
                     {
-                        if(sensorVersion == "")
-                        {                        
-                            IService versionService = await device.GetServiceAsync(AranetVersionServiceUUID);
-                            if(versionService==null)
-                            {
-                                Logger.circularBuffer.Add($".GetServiceAsync(AranetVersionServiceUUID) returned null | " + DateTime.Now);
-                            }
-                            
-                            if (versionService != null)
-                            {
-                                ICharacteristic versionCharacteristic = await versionService.GetCharacteristicAsync(ARANET_VersionNumber_CHARACTERISTIC_UUID);
-                                if(versionCharacteristic==null)
-                                {
-                                    Logger.circularBuffer.Add($".GetCharacteristicAsync(ARANET_VersionNumber_CHARACTERISTIC_UUID) returned null | " + DateTime.Now);
-                                }
-                                if (versionCharacteristic != null)
-                                {
-                                    //Disabled for now as it always seems to return null
-                                    //(byte[] data, int resultCode) result;
-                                    //try
-                                    //{                                        
-                                    //    {
-                                    //        Logger.circularBuffer.Add($" trying to read versionCharacteristic | " + DateTime.Now);
-                                    //        result = await versionCharacteristic.ReadAsync();
-                                    //        if (result.resultCode == 0)
-                                    //        {
-                                    //            sensorVersion = Encoding.ASCII.GetString(result.data);
-                                    //            byte majorVersion = (byte)result.data[1];
-                                    //            byte minorVersion = (byte)result.data[3];
-                                    //            Logger.circularBuffer.Add("Aranet Version: " + sensorVersion);
-                                    //            if (majorVersion == 0)
-                                    //            {
-                                    //                outdatedVersion = true;
-                                    //            }
-                                    //            else if (majorVersion == 1 && minorVersion <= 2)
-                                    //            {
-                                    //                outdatedVersion = true;
-                                    //            }
-                                    //            else outdatedVersion = false;//TODO change back to false, TRUE just for testing as no device with outdata 
-                                    //        }
-                                    //        else
-                                    //        {
-                                    //            Logger.circularBuffer.Add($"got resultcode {result.resultCode} instead of 0 trying to read versionCharacteristic | " + DateTime.Now);
-                                    //        }
-                                    //    }                                        
-                                    //}
-                                    //catch (Exception e)
-                                    //{
-                                    //    Logger.circularBuffer.Add($"exception raised while trying to read versionCharacteristic: {e} | " + DateTime.Now);
-                                    //}
-                                }
-                            }
-                        }
+                        //if(sensorVersion == "")
+                        //{                        
+                        //    //IService versionService = await device.GetServiceAsync(AranetVersionServiceUUID);
+                        //    //if(versionService==null)
+                        //    //{
+                        //    //    Logger.circularBuffer.Add($".GetServiceAsync(AranetVersionServiceUUID) returned null | " + DateTime.Now);
+                        //    //}
+                        //    //
+                        //    //if (versionService != null)
+                        //    //{
+                        //    //    ICharacteristic versionCharacteristic = await versionService.GetCharacteristicAsync(ARANET_VersionNumber_CHARACTERISTIC_UUID);
+                        //    //    if(versionCharacteristic==null)
+                        //    //    {
+                        //    //        Logger.circularBuffer.Add($".GetCharacteristicAsync(ARANET_VersionNumber_CHARACTERISTIC_UUID) returned null | " + DateTime.Now);
+                        //    //    }
+                        //    //    if (versionCharacteristic != null)
+                        //    //    {
+                        //    //        //Disabled for now as it always seems to return null
+                        //    //        //(byte[] data, int resultCode) result;
+                        //    //        //try
+                        //    //        //{                                        
+                        //    //        //    {
+                        //    //        //        Logger.circularBuffer.Add($" trying to read versionCharacteristic | " + DateTime.Now);
+                        //    //        //        result = await versionCharacteristic.ReadAsync();
+                        //    //        //        if (result.resultCode == 0)
+                        //    //        //        {
+                        //    //        //            sensorVersion = Encoding.ASCII.GetString(result.data);
+                        //    //        //            byte majorVersion = (byte)result.data[1];
+                        //    //        //            byte minorVersion = (byte)result.data[3];
+                        //    //        //            Logger.circularBuffer.Add("Aranet Version: " + sensorVersion);
+                        //    //        //            if (majorVersion == 0)
+                        //    //        //            {
+                        //    //        //                outdatedVersion = true;
+                        //    //        //            }
+                        //    //        //            else if (majorVersion == 1 && minorVersion <= 2)
+                        //    //        //            {
+                        //    //        //                outdatedVersion = true;
+                        //    //        //            }
+                        //    //        //            else outdatedVersion = false;//TODO change back to false, TRUE just for testing as no device with outdata 
+                        //    //        //        }
+                        //    //        //        else
+                        //    //        //        {
+                        //    //        //            Logger.circularBuffer.Add($"got resultcode {result.resultCode} instead of 0 trying to read versionCharacteristic | " + DateTime.Now);
+                        //    //        //        }
+                        //    //        //    }                                        
+                        //    //        //}
+                        //    //        //catch (Exception e)
+                        //    //        //{
+                        //    //        //    Logger.circularBuffer.Add($"exception raised while trying to read versionCharacteristic: {e} | " + DateTime.Now);
+                        //    //        //}
+                        //    //    }
+                        //    //}
+                        //}
 
                         Logger.circularBuffer.Add($"trying to read characteristics | " + DateTime.Now);
                         

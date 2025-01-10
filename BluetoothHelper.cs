@@ -3,6 +3,7 @@ using Android.Bluetooth;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using AndroidX.Core.App;
 using AndroidX.Core.Content;
 using Microsoft.Maui.ApplicationModel;
 using System.Threading.Tasks;

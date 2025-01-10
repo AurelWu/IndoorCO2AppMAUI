@@ -15,6 +15,7 @@ namespace IndoorCO2App_Multiplatform
 
                 // Example: Hide the keyboard
                 editor.Unfocus();  // This makes sure the editor loses focus and the cursor is removed.
+                RecoveryData.customNotes = NotesEditor.Text;
             }
         }
     }

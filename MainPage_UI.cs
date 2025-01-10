@@ -77,6 +77,8 @@ namespace IndoorCO2App_Multiplatform
         public HorizontalStackLayout _StatusButtons;
         public HorizontalStackLayout _ButtonBuildingTransitSelectionStackLayout;
 
+        public Editor _NotesEditor;
+
 
 
 
@@ -84,6 +86,7 @@ namespace IndoorCO2App_Multiplatform
 
         public void InitUIElements()
         {
+            _NotesEditor = this.FindByName<Editor>("NotesEditor");
             _ButtonBuildingTransitSelectionStackLayout = this.FindByName<HorizontalStackLayout>("ButtonBuildingTransitSelectionStackLayout");
             _StatusButtons = this.FindByName<HorizontalStackLayout>("StatusButtons");
             //FindByName avoids IDE Error in VS 2022 which doesn't understand that it is defined in XAML - change once that is fixed
@@ -254,7 +257,7 @@ namespace IndoorCO2App_Multiplatform
         public void UpdateUI()
         {
             Application.Current.UserAppTheme = Application.Current.RequestedTheme;
-            VersionLabel.Text = appVersion;
+            _VersionLabel.Text = appVersion;
             UpdateGPSStatusButton();
             UpdateGPSPermissionButton();
             UpdateBluetoothStatusButton();
@@ -322,7 +325,7 @@ namespace IndoorCO2App_Multiplatform
         private void UpdateLocationMap()
         {
             var pickedLocation = (LocationData)_LocationPicker.SelectedItem;
-            if (!mapViewExpander.IsExpanded) return; //we only update if map is actually visible
+            if (!_mapViewExpander.IsExpanded) return; //we only update if map is actually visible
             if(pickedLocation== null)
             {
                 UpdateMap(43.7628933, 11.2547348); //Default set to Florence 
@@ -402,7 +405,7 @@ namespace IndoorCO2App_Multiplatform
             int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
             if (trimEnd - trimStart >= 4 && BluetoothManager.isRecording)
             {
-                if(submissionMode== SubmissionMode.BuildingManual &&(_ManualNameEditor.Text==null || ManualAddressEditor.Text==null))
+                if(submissionMode== SubmissionMode.BuildingManual &&(_ManualNameEditor.Text==null || _ManualAddressEditor.Text==null))
                 {
                     _FinishRecordingButton.IsEnabled = false;
                     _FinishRecordingButton.Text = "Submit Data (needs Address & Name)";
@@ -421,7 +424,7 @@ namespace IndoorCO2App_Multiplatform
             else if (BluetoothManager.isRecording)
             {
                 _FinishRecordingButton.IsEnabled = false;
-                _FinishRecordingButton.Text = "Submit Data (needs 5 Minutes of Data)";
+                _FinishRecordingButton.Text = "Submit Data (needs 5 Data points)";
             }
 
 
@@ -802,28 +805,28 @@ namespace IndoorCO2App_Multiplatform
             {
                 await _MainScrollView.ScrollToAsync(0, 0, true);
             }
-            HideElementsWithStatusOK();
+            //HideElementsWithStatusOK();
         }    
 
         public async void ChangeToRecordingUI()
         {
             ChangeToUI(MenuMode.Recording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
-            HideElementsWithStatusOK();
+            //HideElementsWithStatusOK();
         }
 
         public async void ChangeToManualRecordingUI()
         {
             ChangeToUI(MenuMode.ManualRecording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
-            HideElementsWithStatusOK();
+            //HideElementsWithStatusOK();
         }
 
         public async void ChangeToTransportRecordingUI()
         {
             ChangeToUI(MenuMode.TransportRecording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
-            HideElementsWithStatusOK();
+            //HideElementsWithStatusOK();
         }
 
         public async void ChangeToTransportSelectionUI(bool manualTriggered)
@@ -841,7 +844,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 await _MainScrollView.ScrollToAsync(0, 0, true);
             }
-            HideElementsWithStatusOK();
+            //HideElementsWithStatusOK();
         }
     }
 

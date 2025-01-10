@@ -6,7 +6,8 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnCheckBoxDoorsWindows_CheckedChanged(object sender, EventArgs e)
         {
-            hasVentilationSystem = _CheckBoxVentilation.IsChecked;
+            hasOpenWindowsDoors = _CheckBoxDoorsWindows.IsChecked;
+            RecoveryData.windowsOpen = hasOpenWindowsDoors;
         }
     }
 
