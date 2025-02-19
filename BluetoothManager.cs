@@ -58,6 +58,7 @@ namespace IndoorCO2App_Multiplatform
         public static Guid airvalentHistoryPointerCharacteristic = Guid.Parse("cdbde84d-2dc6-46e4-8d6b-f3ababf560aa");
 
         public static Guid AranetServiceUUID = Guid.Parse("0000FCE0-0000-1000-8000-00805f9b34fb");
+        public static Guid OldAranetServiceUUID = Guid.Parse("f0cd1400-95da-4f4b-9ac8-aa55d312af0c");
 
         public static string sensorVersion = "";
         public static bool outdatedVersion = false;
@@ -361,18 +362,22 @@ namespace IndoorCO2App_Multiplatform
             {
                 Logger.circularBuffer.Add($"setting serviceUUId filter to: {serviceUUID} | " + DateTime.Now);
                 scanFilterOptions.ServiceUuids = new[] { serviceUUID };
+                if(monitorType== CO2MonitorType.Aranet4)
+                {
+                    scanFilterOptions.ServiceUuids = new[] { serviceUUID, OldAranetServiceUUID }; 
+                }
             }
             adapter.ScanMatchMode = ScanMatchMode.STICKY;
             adapter.ScanMode = ScanMode.LowLatency;
             adapter.ScanTimeout = 14500;
             adapter.DeviceDiscovered += (s, e) =>
-            {
+            {                
                 var device = e.Device;
                 Logger.circularBuffer.Add($"Discovered Device: {device.Name} ({device.Id}) | " + DateTime.Now);
                 Console.WriteLine($"Discovered Device: {device.Name} ({device.Id})");
 
                 // Check if the discovered device matches criteria, as we currently only check serviceUUIDs of airvalent and aranet we only do this for them (only  they are necessarily paired)
-                if ((monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent) && device.Name.ToLower().Contains(nameFilter.ToLower()))
+                if ((monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent) && device.Name.ToLower().Contains(nameFilter.Trim().ToLower()))
                 {
                     Logger.circularBuffer.Add("Target device found. Stopping scan early | " + DateTime.Now);
                     Console.WriteLine("Target device found. Stopping scan...");
@@ -423,7 +428,7 @@ namespace IndoorCO2App_Multiplatform
                     for (int i = 0; i < unfilteredDevices.Count; i++)
                     {
                         var d = unfilteredDevices[i];
-                        if (d.Name != null && d.Name.ToLower().Contains(nameFilter.ToLower()))
+                        if (d.Name != null && d.Name.ToLower().Contains(nameFilter.Trim().ToLower()))
                         {
                             filteredDevices.Add(d);
                             break;
@@ -485,7 +490,7 @@ namespace IndoorCO2App_Multiplatform
                     for (int i = 0; i < unfilteredDevices.Count; i++)
                     {
                         var d = unfilteredDevices[i];
-                        if (d.Name != null && d.Name.ToLower().Contains(nameFilter.ToLower()))
+                        if (d.Name != null && d.Name.ToLower().Contains(nameFilter.Trim().ToLower()))
                         {
                             filteredDevices.Add(d);
                             break;
@@ -561,7 +566,7 @@ namespace IndoorCO2App_Multiplatform
             }
             //TODO if interval is 
             if (monitorType != CO2MonitorType.AirCoda)
-            {
+            {                
                 deviceID = device.Id.ToString();
                 rssi = device.Rssi;
                 DeviceState deviceState = device.State;
@@ -1293,6 +1298,11 @@ namespace IndoorCO2App_Multiplatform
             //read report characteristic
             //==> "0x1301 if starts with that
             // const deviceRandom = valueHex.substring(6, 6 + 8); // 4 bytes => value depends on sensor
+        }
+
+        public static void ToggleAranet4SmartHomeIntegration()
+        {
+
         }
     }
 }

@@ -62,7 +62,8 @@ namespace IndoorCO2App_Multiplatform
                     $"nwr(around:{rString},{latString},{lonString})[railway=subway_station];" +
                     $"relation(around:{rString},{latString},{lonString})[route=subway];" +
                     $"nwr(around:{rString},{latString},{lonString})[railway=station];" +     
-                    $"nwr(around:{rString},{latString},{lonString})[railway=halt];" +        
+                    $"nwr(around:{rString},{latString},{lonString})[railway=halt];" +
+                    $"nwr(around:{rString},{latString},{lonString})[railway=stop];" +
                     $"relation(around:{rString},{latString},{lonString})[route=train];" +    
                     $"relation(around:{rString},{latString},{lonString})[route=light_rail];" +
                     $"relation(around:{rString},{latString},{lonString})[route=monorail];" +
@@ -77,7 +78,8 @@ namespace IndoorCO2App_Multiplatform
                   $"nwr(around:{rString},{latString},{lonString})[railway=tram_stop];" +
                   $"nwr(around:{rString},{latString},{lonString})[highway=bus_stop];" +
                   $"nwr(around:{rString},{latString},{lonString})[railway=subway_station];" +
-                  $"nwr(around:{rString},{latString},{lonString})[railway=station];" +    
+                  $"nwr(around:{rString},{latString},{lonString})[railway=station];" +
+                  $"nwr(around:{rString},{latString},{lonString})[railway=stop];" +
                   $"nwr(around:{rString},{latString},{lonString})[railway=halt];" +        
 
                   ");" +
@@ -99,6 +101,7 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[office=employment_agency];" +
                 $"nwr(around:{rString},{latString},{lonString})[office=lawyer];" +
                 $"nwr(around:{rString},{latString},{lonString})[office=government];" +
+                $"nwr(around:{rString},{latString},{lonString})[office=political_party];" +
                 $"nwr(around:{rString},{latString},{lonString})[shop];" +
                 $"nwr(around:{rString},{latString},{lonString})[craft];" +
                 $"nwr(around:{rString},{latString},{lonString})[aeroway=aerodrome];" +
@@ -321,7 +324,7 @@ namespace IndoorCO2App_Multiplatform
                 }
 
                 // Railway stop 
-                else if (tags.TryGetProperty("railway", out var lightRailProperty) && lightRailProperty.GetString() == "station")
+                else if (tags.TryGetProperty("railway", out var RailWayProperty) && new[] { "station", "halt", "stop" }.Contains(RailWayProperty.GetString()))
                 {
                     var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
                     if (namesOfStops.Contains(name))
@@ -464,6 +467,7 @@ namespace IndoorCO2App_Multiplatform
                 else
                 {
                     lastFetchWasSuccess = false;
+                    Logger.circularBuffer.Add($"fetching overpass building data not successful, returned: {response.StatusCode} | {response.ReasonPhrase} | ${DateTime.Now}");
                     // Handle unsuccessful response
                 }
                 currentlyFetching = false;
@@ -471,11 +475,13 @@ namespace IndoorCO2App_Multiplatform
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
             {
                 lastFetchWasSuccess = false;
+                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
                 Console.WriteLine("The request timed out.");
             }
             catch (Exception ex)
             {
                 lastFetchWasSuccess = false;
+                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
             finally
@@ -523,6 +529,7 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else
                 {
+                    Logger.circularBuffer.Add($"fetching overpass building data not successful, returned: {response.StatusCode} | {response.ReasonPhrase} | ${DateTime.Now}");
                     lastFetchWasSuccess = false;
                     // Handle unsuccessful response
                 }
@@ -531,10 +538,12 @@ namespace IndoorCO2App_Multiplatform
             {
                 lastFetchWasSuccess = false;
                 Console.WriteLine("The request timed out.");
+                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
             }
             catch (Exception ex)
             {
                 lastFetchWasSuccess = false;
+                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
             finally

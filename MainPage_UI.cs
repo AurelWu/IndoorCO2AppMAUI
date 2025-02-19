@@ -661,7 +661,7 @@ namespace IndoorCO2App_Multiplatform
         {
             if (currentMenuMode == MenuMode.Recording && selectedLocation != null)
             {                
-                {
+                {                    
                     _LocationLabelRecording.Text = "Location: " + selectedLocation.Name;
                 }             
                 

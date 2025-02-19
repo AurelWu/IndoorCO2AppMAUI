@@ -430,9 +430,10 @@ Padding="0">
 
             <Label
                 x:Name="LocationLabelRecording"
-                Text="Location: "                
-                SemanticProperties.Description="SemanticProperties.Description"
-                FontSize="Small"
+                Text="Location: "    
+                FontSize="Large"
+                SemanticProperties.Description="SemanticProperties.Description"                
+                FontAttributes="Bold"
                 LineBreakMode="WordWrap"
                 VerticalOptions="StartAndExpand"
                 MaxLines="2"

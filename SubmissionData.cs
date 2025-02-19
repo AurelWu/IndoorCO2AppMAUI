@@ -66,7 +66,7 @@ namespace IndoorCO2App_Multiplatform
             AdditionalNotes = MainPage.MainPageSingleton.GetNotesEditorText();
 
             //TODO: =
-            json["d"] = SensorType.ToString() +"_"+ SensorID;
+            json["d"] = MainPage.MainPageSingleton.appVersion + "_" + SensorType.ToString() +"_"+ SensorID;
             json["p"] = NwrType;
             json["i"] = NwrID;
             json["n"] = NwrName;

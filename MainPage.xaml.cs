@@ -226,6 +226,10 @@ namespace IndoorCO2App_Multiplatform
                     long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     BluetoothManager.StartNewRecording(monitorType, selectedLocation, startTime, prerecording);
                     RecoveryData.startTime = startTime;
+                    if(prerecording)
+                    {
+                        startTime -= BluetoothManager.prerecordingLength * 60 * 1000; //minutes to milliseconds
+                    }
                     RecoveryData.timeOfLastUpdate = startTime;
                     RecoveryData.locationID = selectedLocation.ID;
                     RecoveryData.locationType = selectedLocation.type;
@@ -271,6 +275,7 @@ namespace IndoorCO2App_Multiplatform
                 endTrimSliderHasBeenUsed = false;
                 previousDataCount = 0;
                 long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
 
                 RecoveryData.startTime = startTime;
                 RecoveryData.timeOfLastUpdate = startTime;

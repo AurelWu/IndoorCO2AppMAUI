@@ -32,7 +32,26 @@ namespace IndoorCO2App_Multiplatform
 
         public override string ToString()
         {
-            if (MainPage.MainPageSingleton.favouredLocations.Contains(type + "_" + ID.ToString()))
+            if(Name.Length == 0)
+            {
+                if(type == "relation")
+                {
+                    return "nameless relation " + ID;
+                }
+                if (type == "node")
+                {
+                    return "nameless node " + ID;
+                }
+                if (type == "way")
+                {
+                    return "nameless way " + ID;
+                }
+                else
+                {
+                    return "nameless entry " + ID;
+                }
+            }
+            else if (MainPage.MainPageSingleton.favouredLocations.Contains(type + "_" + ID.ToString()))
             {
                 return $"★ {Name} | {(int)distanceToGivenLocation}m";
             }
@@ -40,6 +59,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 return $"{Name} | {(int)distanceToGivenLocation}m";
             }
+            
                 
         }
     }
