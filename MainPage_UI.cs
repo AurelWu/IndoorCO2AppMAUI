@@ -4,6 +4,7 @@ using Syncfusion.Maui.Sliders;
 using Mapsui.UI.Maui;
 using Mapsui;
 using CommunityToolkit.Maui.Views;
+using Microsoft.VisualStudio.RpcContracts.Commands;
 
 
 namespace IndoorCO2App_Multiplatform
@@ -64,6 +65,8 @@ namespace IndoorCO2App_Multiplatform
 
         public ImageButton _StarIconToggleBuilding;
         public ImageButton _StarIconToggleTransitLine;
+        public ImageButton _StarIconToggleTransitOrigin;
+        public ImageButton _StarIconToggleTransitDestination;
 
         public Entry _TransitLineSearchFilterEditor;
         
@@ -146,6 +149,8 @@ namespace IndoorCO2App_Multiplatform
             _TransitFilterTrainButton = this.FindByName<Button>("ButtonTrain");
             _StarIconToggleBuilding = this.FindByName<ImageButton>("StarIconToggleBuilding");
             _StarIconToggleTransitLine= this.FindByName<ImageButton>("StarIconToggleTransitLine");
+            _StarIconToggleTransitOrigin = this.FindByName<ImageButton>("StarIconToggleTransitOrigin");
+            _StarIconToggleTransitDestination = this.FindByName<ImageButton>("StarIconToggleTransitDestination");
 
             _TransitLineSearchFilterEditor = this.FindByName<Entry>("TransitLineSearchFilterEditor");
             _mapView = this.FindByName<MapView>("mapView");
@@ -201,7 +206,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<Grid>("TransitFilterGrid"), MenuMode.TransportSelection | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackLocationTextFilter"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_mapViewExpander, MenuMode.Standard);
-            MenuModesOfUIElements.Add(_LocationInfoLabel, MenuMode.Standard |MenuMode.TransportSelection |MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_LocationInfoLabel, MenuMode.Standard |MenuMode.TransportSelection |MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_ButtonBuildingTransitSelectionStackLayout, MenuMode.Standard | MenuMode.TransportSelection);
 
 
@@ -277,6 +282,8 @@ namespace IndoorCO2App_Multiplatform
             UpdateFinishRecordingButton();
             UpdateFavouredBuildingIcon();
             UpdateFavouredTransitLineIcon();
+            UpdateFavouredTransitOriginIcon();
+            UpdateFavouredTransitDestinationIcon();
 
             UpdateLocationMap();
             UpdateMapViewExpander();
@@ -638,6 +645,43 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
+        private void UpdateFavouredTransitOriginIcon()
+        {
+            if (_TransitOriginPicker.SelectedItem == null)
+            {
+                _StarIconToggleTransitOrigin.Source = "star_icon.png";
+                return;
+            }
+            LocationData d = (LocationData)_TransitOriginPicker.SelectedItem;
+            if (favouredLocations.Contains(d.type + "_" + d.ID.ToString()))
+            {
+                _StarIconToggleTransitOrigin.Source = "star_icon_active.png";
+            }
+            else
+            {
+                _StarIconToggleTransitOrigin.Source = "star_icon.png";
+            }
+        }
+
+        private void UpdateFavouredTransitDestinationIcon()
+        {
+            if (_TransitDestinationPicker.SelectedItem == null)
+            {
+                _StarIconToggleTransitDestination.Source = "star_icon.png";
+                return;
+            }
+            LocationData d = (LocationData)_TransitDestinationPicker.SelectedItem;
+            if (favouredLocations.Contains(d.type + "_" + d.ID.ToString()))
+            {
+                _StarIconToggleTransitDestination.Source = "star_icon_active.png";
+            }
+            else
+            {
+                _StarIconToggleTransitDestination.Source = "star_icon.png";
+            }
+        }
+
+
         private void UpdateFavouredTransitLineIcon()
         {
 
@@ -683,7 +727,7 @@ namespace IndoorCO2App_Multiplatform
         private void UpdateLocationInfoLabel()
         {
 
-            if (OverpassModule.everFetchedLocations == false && currentMenuMode == MenuMode.Standard)
+            if (OverpassModule.everFetchedLocations == false)
             {
                 _LocationInfoLabel.Text = "Press Update Locations to get nearby locations";
             }            
@@ -701,11 +745,18 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (OverpassModule.lastFetchWasSuccess == false && !OverpassModule.currentlyFetching)
             {
-                _LocationInfoLabel.Text = "Update locations request failed, try again later";
+                if(OverpassModule.lastFetchWasATimeout)
+                {
+                    _LocationInfoLabel.Text = "Update locations request timed out, try again later";
+                }
+                else
+                {
+                    _LocationInfoLabel.Text = "Update locations request failed, try again later";
+                }                
             }
             else if (OverpassModule.currentlyFetching)
             {
-                _LocationInfoLabel.Text = "currently retrieving nearby locations";
+                _LocationInfoLabel.Text = $"currently retrieving nearby locations ({Math.Round((DateTime.Now-OverpassModule.startTimeOfFetch).TotalSeconds)}) ";
             }
 
             if (OverpassModule.everFetchedTransitLocations == false && currentMenuMode == MenuMode.TransportSelection)

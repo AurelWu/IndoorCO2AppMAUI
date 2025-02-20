@@ -258,18 +258,52 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             Spacing="10"
             VerticalOptions="Start">
                 <Label x:Name="TransitOriginInfoLabel" Text="Select Transit Origin:" FontSize="14" VerticalOptions="Center" />
-                <Picker x:Name="TransitOriginPicker" VerticalOptions="Center">
-                </Picker>
-            </VerticalStackLayout>
+                    <Grid 
+                        ColumnDefinitions="*, Auto" 
+                        VerticalOptions="Center" 
+                        HorizontalOptions="Fill">
+                        <Picker x:Name="TransitOriginPicker" VerticalOptions="Center" Grid.Column="0" HorizontalOptions="FillAndExpand">
+                        </Picker>
+                        <!-- Star Icon Toggle Button in the second column, with fixed width -->
+                        <ImageButton 
+    x:Name="StarIconToggleTransitOrigin"
+    Clicked="OnFavouriteTransitOriginIconClicked"
+    Grid.Column="1" 
+    Source="star_icon.png" 
+    WidthRequest="30" 
+    HeightRequest="30" 
+    VerticalOptions="Center"
+    HorizontalOptions="End"
+    Margin="5,0,0,0"
+    BackgroundColor="Transparent" />
 
-            <VerticalStackLayout         
+                    </Grid>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout         
             x:Name="TransitDestinationStackLayout"
             Spacing="10"
             VerticalOptions="Start">
-                <Label x:Name="TransitDestinationInfoLabel" Text="Select Transit Destination:" FontSize="14" VerticalOptions="Center" />
-                <Picker x:Name="TransitDestinationPicker" VerticalOptions="Center">
+                    <Label x:Name="TransitDestinationInfoLabel" Text="Select Transit Destination:" FontSize="14" VerticalOptions="Center" />
+                    <Grid 
+                         ColumnDefinitions="*, Auto" 
+                         VerticalOptions="Center" 
+                         HorizontalOptions="Fill">
+                        <Picker x:Name="TransitDestinationPicker" VerticalOptions="Center" Grid.Column="0" HorizontalOptions="FillAndExpand">
                 </Picker>
-            </VerticalStackLayout>
+                    <ImageButton 
+x:Name="StarIconToggleTransitDestination"
+Clicked="OnFavouriteTransitDestinationIconClicked"
+Grid.Column="1" 
+Source="star_icon.png" 
+WidthRequest="30" 
+HeightRequest="30" 
+VerticalOptions="Center"
+HorizontalOptions="End"
+Margin="5,0,0,0"
+BackgroundColor="Transparent" />
+                    </Grid>
+                </VerticalStackLayout>
 
             <Grid x:Name="TransitFilterGrid" ColumnSpacing="10" RowSpacing="10" HorizontalOptions="Center">
                 <Grid.RowDefinitions>

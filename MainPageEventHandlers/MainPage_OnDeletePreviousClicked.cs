@@ -17,6 +17,7 @@ namespace IndoorCO2App_Multiplatform
                 return;
             }
             _DeleteLastSubmissionButton.Text = "fetching Last Submission";
+            MainPageSingleton._DeleteLastSubmissionButton.IsEnabled = false;
             string id = UserIDManager.GetEncryptedID(BluetoothManager.deviceID,false);
             Logger.circularBuffer.Add("requesting last submission of: "+ id);
             var content = new StringContent(id, Encoding.UTF8, "text/plain");
@@ -33,6 +34,7 @@ namespace IndoorCO2App_Multiplatform
                 catch (Exception)
                 {
                     await DisplayAlert("No Entry Found", "No deletable entry in database. To delete entries older than 24 hours, send an email to aurelwuensch@proton.me", "OK");
+                    MainPageSingleton._DeleteLastSubmissionButton.IsEnabled = true;
                     return;
                 }
             }
@@ -40,12 +42,13 @@ namespace IndoorCO2App_Multiplatform
             if(submissionInfo== null)
             {
                 await DisplayAlert("No Entry Found", "No deletable entry in database. To delete entries older than 24 hours, send an email to aurelwuensch@proton.me", "OK");
+                MainPageSingleton._DeleteLastSubmissionButton.IsEnabled = true;
                 return;
             }
+            MainPageSingleton._DeleteLastSubmissionButton.IsEnabled = true;
 
             DateTime dateTime = DateTimeOffset.FromUnixTimeMilliseconds(submissionInfo.startTime).UtcDateTime;
 
-            // If you need it in the local time zone:
             DateTime localDateTime = dateTime.ToLocalTime();
 
             _DeleteLastSubmissionButton.Text = "Delete Previous Submission";
@@ -71,7 +74,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else
             {
-                await DisplayAlert("No Entry Found", "No deletable entry in database. To delete entries older than 24 hours, send an email to aurelwuensch@proton.me", "OK");
+                await DisplayAlert("No Entry Found", "No deletable entry in database. To request deletion of entries older than 24 hours, send an email to aurelwuensch@proton.me", "OK");
             }
 
         }

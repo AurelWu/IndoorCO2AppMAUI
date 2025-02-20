@@ -10,6 +10,14 @@ using System.Threading.Tasks;
 
 namespace IndoorCO2App_Multiplatform
 {
+
+    internal enum fetchResult //not yet used
+    {
+        failure,
+        success,
+        timeout,
+        
+    }
     internal static class OverpassModule
     {
 
@@ -23,8 +31,10 @@ namespace IndoorCO2App_Multiplatform
         public static bool currentlyFetching = false;
         public static bool lastFetchWasSuccess = false;
         public static bool lastFetchWasSuccessButNoResults = false;
+        public static bool lastFetchWasATimeout = false;
         public static bool everFetchedLocations = false;
         public static bool everFetchedTransitLocations = false;
+        public static DateTime startTimeOfFetch = DateTime.MinValue;
 
         static OverpassModule()
         {
@@ -444,12 +454,14 @@ namespace IndoorCO2App_Multiplatform
             currentlyFetching = true;
             lastFetchWasSuccess = false;
             lastFetchWasSuccessButNoResults = false;
+            lastFetchWasATimeout = false;
+            startTimeOfFetch = DateTime.Now;
             Console.WriteLine("Fetch NearbyBuildings called");
             var overpassQuery = BuildOverpassQuery(userLatitude, userLongitude, searchRadius);
             //var content = new StringContent("data=" + overpassQuery);
             var content = new StringContent("data=" + Uri.EscapeDataString(overpassQuery), Encoding.UTF8, "application/x-www-form-urlencoded");
             using var client = new HttpClient();
-            client.Timeout = TimeSpan.FromSeconds(13);
+            client.Timeout = TimeSpan.FromSeconds(30);
             client.DefaultRequestHeaders.UserAgent.ParseAdd("IndoorCO2DataRecorder/1.0 (https://indoorco2Map.com; aurelwuensch@proton.me)");
 
             try
@@ -500,11 +512,13 @@ namespace IndoorCO2App_Multiplatform
             currentlyFetching = true;
             lastFetchWasSuccess = false;
             lastFetchWasSuccessButNoResults = false;
+            lastFetchWasATimeout = false;
+            startTimeOfFetch = DateTime.Now;
             Console.WriteLine("Fetch NearbyTransit called");
             var overpassQuery = BuildTransportOverpassQuery(userLatitude, userLongitude, searchRadius, transitOrigin);
             var content = new StringContent("data=" + Uri.EscapeDataString(overpassQuery), Encoding.UTF8, "application/x-www-form-urlencoded");
             using var client = new HttpClient();
-            client.Timeout = TimeSpan.FromSeconds(10);
+            client.Timeout = TimeSpan.FromSeconds(30);
             client.DefaultRequestHeaders.UserAgent.ParseAdd("IndoorCO2DataRecorder/1.0 (https://indoorco2Map.com; aurelwuensch@proton.me)");
 
             try
