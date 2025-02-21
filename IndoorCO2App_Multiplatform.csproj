@@ -208,6 +208,9 @@
 	  <Compile Update="MainPageEventHandlers\MainPage_OnFavouriteIconClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
+	  <Compile Update="MainPageEventHandlers\MainPage_OnGetCachedLocationsClicked.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnUpdateLocationsClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>

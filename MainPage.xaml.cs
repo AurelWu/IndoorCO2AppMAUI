@@ -170,7 +170,7 @@ namespace IndoorCO2App_Multiplatform
 
         private async void LoadFavouredLocations()
         {
-            favouredLocations = await FileStorage.LoadHashSetAsync();
+            favouredLocations = await FileStorage.LoadFavouritesHashSetAsync();
         }
 
         private async void Update()

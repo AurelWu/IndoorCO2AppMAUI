@@ -25,6 +25,7 @@ namespace IndoorCO2App_Multiplatform
         public Label _LocationInfoLabel;
         public Label _VersionLabel;
         public Button _UpdateLocationsButton;
+        public Button _GetCachedLocationsButton;
         public Button _ResumeRecordingButton;
         public Button _StartRecordingButton;
         public Button _FinishRecordingButton;
@@ -106,6 +107,7 @@ namespace IndoorCO2App_Multiplatform
             _LocationInfoLabel = this.FindByName<Label>("LocationInfoLabel");
             _VersionLabel = this.FindByName<Label>("VersionLabel"); 
             _UpdateLocationsButton = this.FindByName<Button>("UpdateLocationsButton");
+            _GetCachedLocationsButton = this.FindByName<Button>("GetCachedLocationsButton");
             _ResumeRecordingButton = this.FindByName<Button>("ResumeRecordingButton");
             _StartRecordingButton = this.FindByName<Button>("StartRecordingButton");
             _StartManualRecordingButton = this.FindByName<Button>("StartManualRecordingButton");
@@ -208,6 +210,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(_mapViewExpander, MenuMode.Standard);
             MenuModesOfUIElements.Add(_LocationInfoLabel, MenuMode.Standard |MenuMode.TransportSelection |MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_ButtonBuildingTransitSelectionStackLayout, MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(_GetCachedLocationsButton, MenuMode.Standard);
 
 
 
@@ -756,7 +759,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (OverpassModule.currentlyFetching)
             {
-                _LocationInfoLabel.Text = $"currently retrieving nearby locations ({Math.Round((DateTime.Now-OverpassModule.startTimeOfFetch).TotalSeconds)}) ";
+                _LocationInfoLabel.Text = $"currently retrieving nearby locations ({Math.Round((DateTime.Now-OverpassModule.startTimeOfFetch).TotalSeconds)}s) ";
             }
 
             if (OverpassModule.everFetchedTransitLocations == false && currentMenuMode == MenuMode.TransportSelection)

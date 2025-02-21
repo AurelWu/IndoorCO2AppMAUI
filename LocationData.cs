@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IndoorCO2App_Multiplatform
 {
-    internal class LocationData
+    public class LocationData
     {
         public string type;
         public long ID;

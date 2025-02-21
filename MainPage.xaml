@@ -47,17 +47,26 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 x:Name="CO2MonitorPickerStackLayout"
                 Spacing="10"
                 VerticalOptions="Start">
-                <Label x:Name="DevicePickerLabel" Text="CO2-Monitor:" FontSize="14" VerticalOptions="Center" />
-                <Picker x:Name="CO2MonitorPicker" VerticalOptions="Center" HorizontalOptions="FillAndExpand" SelectedIndexChanged="OnCO2MonitorPickerSelectedIndexChanged">
-                    <Picker.Items>
-                        <x:String>Aranet</x:String>
-                        <x:String>Airvalent</x:String>
-                        <x:String>Inkbird IAM-T1</x:String>
-                        <x:String>AirSpot Health</x:String>
-                        <x:String>airCoda</x:String>
-                    </Picker.Items>
-                </Picker>
-            </HorizontalStackLayout>
+                    <Label x:Name="DevicePickerLabel" Text="select your CO2-Monitor:" FontSize="14" VerticalOptions="Center" />
+
+                    <Border
+    BackgroundColor="Transparent"
+    Stroke="{OnPlatform iOS={StaticResource ThemeLineColor} , Android=Transparent}"
+    StrokeThickness="{OnPlatform iOS=2, Android=0}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="4"/>
+                        </Border.StrokeShape>
+                        <Picker x:Name="CO2MonitorPicker" VerticalOptions="Center" HorizontalOptions="FillAndExpand" SelectedIndexChanged="OnCO2MonitorPickerSelectedIndexChanged">
+                            <Picker.Items>
+                                <x:String>Aranet</x:String>
+                                <x:String>Airvalent</x:String>
+                                <x:String>Inkbird IAM-T1</x:String>
+                                <x:String>AirSpot Health</x:String>
+                                <x:String>airCoda</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </Border>
+                </HorizontalStackLayout>
 
             <Label                
                 x:Name="StatusLabel"
@@ -198,7 +207,14 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 Clicked="OnUpdateLocationsClicked"
                 HorizontalOptions="Center" />
 
-            <Label 
+                <Button
+     x:Name="GetCachedLocationsButton"
+     Text="Get Cached Locations"
+     SemanticProperties.Hint="Get Cached LocationsButton"
+     Clicked="OnGetCachedLocationsClicked"
+     HorizontalOptions="Center" />
+
+                <Label 
         x:Name="LocationInfoLabel" 
         Text="Select Location:" 
         FontSize="14" 
@@ -216,14 +232,21 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
         VerticalOptions="Center" 
         HorizontalOptions="Fill">
 
-                    <!-- Picker in the first column, takes up remaining space -->
-                    <Picker 
+                        <Border
+BackgroundColor="Transparent"
+Stroke="{OnPlatform iOS={StaticResource ThemeLineColor}, Android=Transparent}"
+StrokeThickness="{OnPlatform iOS=2, Android=0}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="4"/>
+                            </Border.StrokeShape>
+                            <!-- Picker in the first column, takes up remaining space -->
+                            <Picker 
             x:Name="LocationPicker" 
             Grid.Column="0" 
             HorizontalOptions="FillAndExpand" 
             VerticalOptions="Center" />
-
-                    <!-- Star Icon Toggle Button in the second column, with fixed width -->
+                        </Border>
+                        <!-- Star Icon Toggle Button in the second column, with fixed width -->
                     <ImageButton 
             x:Name="StarIconToggleBuilding"
             Clicked="OnFavouriteBuildingIconClicked"
@@ -262,8 +285,16 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                         ColumnDefinitions="*, Auto" 
                         VerticalOptions="Center" 
                         HorizontalOptions="Fill">
-                        <Picker x:Name="TransitOriginPicker" VerticalOptions="Center" Grid.Column="0" HorizontalOptions="FillAndExpand">
-                        </Picker>
+                        <Border
+BackgroundColor="Transparent"
+Stroke="{OnPlatform iOS={StaticResource ThemeLineColor}, Android=Transparent}"
+StrokeThickness="{OnPlatform iOS=2, Android=0}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="4"/>
+                            </Border.StrokeShape>
+                            <Picker x:Name="TransitOriginPicker" VerticalOptions="Center" Grid.Column="0" HorizontalOptions="FillAndExpand">
+                            </Picker>
+                        </Border>
                         <!-- Star Icon Toggle Button in the second column, with fixed width -->
                         <ImageButton 
     x:Name="StarIconToggleTransitOrigin"
@@ -289,9 +320,17 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                          ColumnDefinitions="*, Auto" 
                          VerticalOptions="Center" 
                          HorizontalOptions="Fill">
-                        <Picker x:Name="TransitDestinationPicker" VerticalOptions="Center" Grid.Column="0" HorizontalOptions="FillAndExpand">
-                </Picker>
-                    <ImageButton 
+                        <Border
+BackgroundColor="Transparent"
+Stroke="{OnPlatform iOS={StaticResource ThemeLineColor}, Android=Transparent}"
+StrokeThickness="{OnPlatform iOS=2, Android=0}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="4"/>
+                            </Border.StrokeShape>
+                            <Picker x:Name="TransitDestinationPicker" VerticalOptions="Center" Grid.Column="0" HorizontalOptions="FillAndExpand">
+                            </Picker>
+                        </Border>
+                        <ImageButton 
 x:Name="StarIconToggleTransitDestination"
 Clicked="OnFavouriteTransitDestinationIconClicked"
 Grid.Column="1" 
@@ -344,13 +383,25 @@ BackgroundColor="Transparent" />
         HorizontalOptions="Fill">
 
                     <!-- Picker in the first column, takes up remaining space -->
-                    <Picker 
+
+                        <Border
+BackgroundColor="Transparent"
+Stroke="{OnPlatform iOS={StaticResource ThemeLineColor}, Android=Transparent}"
+StrokeThickness="{OnPlatform iOS=2, Android=0}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="4"/>
+                            </Border.StrokeShape>
+                            <Picker 
             x:Name="TransitLinePicker" 
             Grid.Column="0" 
             HorizontalOptions="FillAndExpand" 
-            VerticalOptions="Center" />
+            VerticalOptions="Center" 
+                        >
 
-                    <!-- Star Icon Toggle Button in the second column, with fixed width -->
+                            </Picker>
+                        </Border>
+
+                        <!-- Star Icon Toggle Button in the second column, with fixed width -->
                     <ImageButton 
             x:Name="StarIconToggleTransitLine"
             Clicked="OnFavouriteTransitLineIconClicked"

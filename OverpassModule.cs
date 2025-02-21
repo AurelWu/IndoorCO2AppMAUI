@@ -1,5 +1,6 @@
 ﻿
 using IndoorCO2App_Android;
+using Microsoft.VisualStudio.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,13 +21,15 @@ namespace IndoorCO2App_Multiplatform
     }
     internal static class OverpassModule
     {
+        //only buildings for now
+        private static CircularBuffer<LocationDataWithTimeStamp> cachedLocations;
 
         public static List<LocationData> LocationData { get; private set; }
         public static List<LocationData> TransportStartLocationData { get; private set; }
         public static List<LocationData> TransportDestinationLocationData { get; private set; }
 
         public static List<TransitLineData> TransitLines { get; private set; }
-        public static List<TransitLineData> filteredTransitLines { get; private set; } 
+        public static List<TransitLineData> filteredTransitLines { get; private set; }
 
         public static bool currentlyFetching = false;
         public static bool lastFetchWasSuccess = false;
@@ -42,7 +45,70 @@ namespace IndoorCO2App_Multiplatform
             TransportStartLocationData = new List<LocationData>();
             TransportDestinationLocationData = new List<LocationData>();
             TransitLines = new List<TransitLineData>();
+            cachedLocations = new CircularBuffer<LocationDataWithTimeStamp>(10000);
+            LoadCachedLocations();
         }
+
+        /// <summary>
+        /// loads Locations stored in File Cache when app is started
+        /// </summary>
+        private static async void LoadCachedLocations()
+        {
+            var savedCachedLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync();
+            List<LocationDataWithTimeStamp> cachedList = savedCachedLocationsHashSet.ToList();
+            cachedList = cachedList.OrderBy(x => x.timeLastSeen).ToList();
+            cachedLocations.Clear();
+            foreach(var c in cachedList)
+            {
+                cachedLocations.Add(c);
+            }
+            
+        }
+
+        /// <summary>
+        /// Adds Location to Cached Locations after Location Update and stores that to filestorage
+        /// </summary>
+        private static void AddToCachedLocations()
+        {
+            foreach(var l in LocationData)
+            {
+                DateTime c = DateTime.Now;
+                LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.type, l.ID, l.Name, l.latitude, l.longitude, 0, 0, c);
+                if(cachedLocations.Contains(ld))
+                {
+                    int pos = cachedLocations.IndexOf(ld);
+                    cachedLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
+                }
+                else
+                {
+                    cachedLocations.Add(ld);
+                }
+            }
+            WriteBuildingCacheToFileStorage();
+        }
+
+        private static async void WriteBuildingCacheToFileStorage()
+        {
+            await FileStorage.SaveCachedHashSetAsync(cachedLocations.ToHashSet());
+        }
+
+        public static void GetNearbyCachedBuildingLocations(double userLatitude, double userLongitude, double radius)
+        {
+            LocationData.Clear();
+            Logger.circularBuffer.Add("# of Cached Locations Locations total: " + cachedLocations.Count);
+            foreach (var c in cachedLocations)
+            {
+                double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
+                if (dist <= radius)
+                {
+                    c.distanceToGivenLocation = dist;
+                    LocationData.Add((LocationData)c);
+                }
+            }
+            LocationData = LocationData.OrderBy(x => x.distanceToGivenLocation).ToList();
+            Logger.circularBuffer.Add("# of Cached Locations Locations in range: " + LocationData.Count);
+        }
+
 
         private static string BuildTransportOverpassQuery(double latitude, double longitude, double radius,bool startLocation)
         {
@@ -51,6 +117,7 @@ namespace IndoorCO2App_Multiplatform
                 TransportStartLocationData.Clear();
                 TransitLines.Clear();
             }
+        
             else
             {
                 TransportDestinationLocationData.Clear();
@@ -208,6 +275,7 @@ namespace IndoorCO2App_Multiplatform
                 // If both are favorites or both are non-favorites, sort by distance
                 return point1.distanceToGivenLocation.CompareTo(point2.distanceToGivenLocation);
             });
+            AddToCachedLocations();
             if (LocationData.Count == 0)
             {
                 lastFetchWasSuccessButNoResults = true;

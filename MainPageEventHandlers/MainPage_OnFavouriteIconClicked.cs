@@ -25,7 +25,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     favouredLocations.Remove(combined);
                 }
-                await FileStorage.SaveHashSetAsync(favouredLocations);
+                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
             }
         }
 
@@ -48,7 +48,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     favouredLocations.Remove(combined);
                 }
-                await FileStorage.SaveHashSetAsync(favouredLocations);
+                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
             }
         }
 
@@ -71,7 +71,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     favouredLocations.Remove(combined);
                 }
-                await FileStorage.SaveHashSetAsync(favouredLocations);
+                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
             }
         }
 
@@ -93,7 +93,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     favouredLocations.Remove(combined);
                 }
-                await FileStorage.SaveHashSetAsync(favouredLocations);
+                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
             }
         }
     }
