@@ -22,9 +22,12 @@ namespace IndoorCO2App_Multiplatform
     internal static class OverpassModule
     {
         //only buildings for now
-        private static CircularBuffer<LocationDataWithTimeStamp> cachedLocations;
+        private static CircularBuffer<LocationDataWithTimeStamp> cachedBuildingLocations;
+        private static CircularBuffer<LocationDataWithTimeStamp> cachedTransitStopLocations;
+        private static CircularBuffer<TransitLineDataWithTimeStamp> cachedTransitLineLocations;
 
-        public static List<LocationData> LocationData { get; private set; }
+
+        public static List<LocationData> BuildingLocationData { get; private set; }
         public static List<LocationData> TransportStartLocationData { get; private set; }
         public static List<LocationData> TransportDestinationLocationData { get; private set; }
 
@@ -41,72 +44,197 @@ namespace IndoorCO2App_Multiplatform
 
         static OverpassModule()
         {
-            LocationData = new List<LocationData>();
+            BuildingLocationData = new List<LocationData>();
             TransportStartLocationData = new List<LocationData>();
             TransportDestinationLocationData = new List<LocationData>();
             TransitLines = new List<TransitLineData>();
-            cachedLocations = new CircularBuffer<LocationDataWithTimeStamp>(10000);
-            LoadCachedLocations();
+            cachedBuildingLocations = new CircularBuffer<LocationDataWithTimeStamp>(10000);
+            cachedTransitStopLocations = new CircularBuffer<LocationDataWithTimeStamp>(10000);
+            cachedTransitLineLocations = new CircularBuffer<TransitLineDataWithTimeStamp>(10000);
+            LoadCachedBuildingLocations();
+            LoadCachedTransitStopLocations();
+            LoadCachedTransitLineLocations();
         }
 
         /// <summary>
         /// loads Locations stored in File Cache when app is started
         /// </summary>
-        private static async void LoadCachedLocations()
+        private static async void LoadCachedBuildingLocations()
         {
-            var savedCachedLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync();
+            var savedCachedLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync(CacheDataCategory.Building);
             List<LocationDataWithTimeStamp> cachedList = savedCachedLocationsHashSet.ToList();
             cachedList = cachedList.OrderBy(x => x.timeLastSeen).ToList();
-            cachedLocations.Clear();
+            cachedBuildingLocations.Clear();
             foreach(var c in cachedList)
             {
-                cachedLocations.Add(c);
+                cachedBuildingLocations.Add(c);
+            }            
+        }
+
+        private static async void LoadCachedTransitStopLocations()
+        {
+            var savedCachedTransitLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync(CacheDataCategory.TransitStop);
+            List<LocationDataWithTimeStamp> cachedList = savedCachedTransitLocationsHashSet.ToList();
+            cachedList = cachedList.OrderBy(x => x.timeLastSeen).ToList();
+            cachedTransitStopLocations.Clear();
+            foreach(var c in cachedList)
+            {
+                cachedTransitStopLocations.Add(c);
             }
-            
+        }
+
+        private static async void LoadCachedTransitLineLocations()
+        {
+            var savedCachedTransitLineHashset = await FileStorage.LoadCachedTransitLineLocationsHashSetAsync();
+            List<TransitLineDataWithTimeStamp> cachedList = savedCachedTransitLineHashset.ToList();
+            cachedList = cachedList.OrderBy(x=>x.TimeLastSeen).ToList();
+            cachedTransitLineLocations.Clear();
+            foreach(var c in cachedList)
+            {
+                cachedTransitLineLocations.Add(c);
+            }
         }
 
         /// <summary>
         /// Adds Location to Cached Locations after Location Update and stores that to filestorage
         /// </summary>
-        private static void AddToCachedLocations()
+        private static void AddToCachedBuildingLocations()
         {
-            foreach(var l in LocationData)
+            foreach(var l in BuildingLocationData)
             {
                 DateTime c = DateTime.Now;
                 LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.type, l.ID, l.Name, l.latitude, l.longitude, 0, 0, c);
-                if(cachedLocations.Contains(ld))
+                if(cachedBuildingLocations.Contains(ld))
                 {
-                    int pos = cachedLocations.IndexOf(ld);
-                    cachedLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
+                    int pos = cachedBuildingLocations.IndexOf(ld);
+                    cachedBuildingLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
                 }
                 else
                 {
-                    cachedLocations.Add(ld);
+                    cachedBuildingLocations.Add(ld);
                 }
             }
             WriteBuildingCacheToFileStorage();
         }
 
+        private static void AddToCachedTransitStopLocations()
+        {
+            var tr = new List<LocationData>();
+            tr.AddRange(TransportStartLocationData);
+            tr.AddRange(TransportDestinationLocationData);
+            foreach (var l in tr)
+            {
+                DateTime c = DateTime.Now;
+                LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.type, l.ID, l.Name, l.latitude, l.longitude, 0, 0, c);
+                if (cachedTransitStopLocations.Contains(ld))
+                {
+                    int pos = cachedTransitStopLocations.IndexOf(ld);
+                    cachedTransitStopLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
+                }
+                else
+                {
+                    cachedTransitStopLocations.Add(ld);
+                }
+            }
+            WriteTransitStopCachedToFileStorage();
+        }
+
+        private static void AddToCachedTransitLineLocations(double userLatitude, double userLongitude)
+        {
+            //allows same ID if rounded position is differently, so we can store multiple positions for each relation (better solution down the road which just has the actual routes is way more effort)
+            var tr = new List<TransitLineData>();
+            tr.AddRange(TransitLines);
+            foreach(var l in tr)
+            {
+                DateTime c = DateTime.Now;
+                TransitLineDataWithTimeStamp ld = new TransitLineDataWithTimeStamp(l.VehicleType, l.NWRType, l.ID, l.Name, c, double.Round(userLatitude, 3), double.Round(userLongitude, 3));
+                if (cachedTransitLineLocations.Contains(ld))
+                {
+                    int pos = cachedTransitLineLocations.IndexOf(ld);
+                    cachedTransitLineLocations[pos].TimeLastSeen = c;
+                }
+                else 
+                {
+                    cachedTransitLineLocations.Add(ld);
+                }
+            }
+            TransitLines = tr.DistinctBy(c => new { c.NWRType, c.ID }).ToList();
+            WriteTransitLineCachedToFileStorage();
+        }
+
         private static async void WriteBuildingCacheToFileStorage()
         {
-            await FileStorage.SaveCachedHashSetAsync(cachedLocations.ToHashSet());
+            await FileStorage.SaveCachedHashSetAsync(cachedBuildingLocations.ToHashSet(),CacheDataCategory.Building);
+        }
+
+        private static async void WriteTransitStopCachedToFileStorage()
+        {
+            await FileStorage.SaveCachedHashSetAsync(cachedTransitStopLocations.ToHashSet(), CacheDataCategory.TransitStop);
+        }
+
+        private static async void WriteTransitLineCachedToFileStorage()
+        {
+            await FileStorage.SaveCachedTransitLineHashSetAsync(cachedTransitLineLocations.ToHashSet());
         }
 
         public static void GetNearbyCachedBuildingLocations(double userLatitude, double userLongitude, double radius)
         {
-            LocationData.Clear();
-            Logger.circularBuffer.Add("# of Cached Locations Locations total: " + cachedLocations.Count);
-            foreach (var c in cachedLocations)
+            BuildingLocationData.Clear();
+            Logger.circularBuffer.Add("# of Cached Building Locations Locations total: " + cachedBuildingLocations.Count);
+            foreach (var c in cachedBuildingLocations)
             {
                 double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
                 if (dist <= radius)
                 {
                     c.distanceToGivenLocation = dist;
-                    LocationData.Add((LocationData)c);
+                    BuildingLocationData.Add((LocationData)c);
                 }
             }
-            LocationData = LocationData.OrderBy(x => x.distanceToGivenLocation).ToList();
-            Logger.circularBuffer.Add("# of Cached Locations Locations in range: " + LocationData.Count);
+            BuildingLocationData = BuildingLocationData.OrderBy(x => x.distanceToGivenLocation).ToList();
+            SortFavouriteBuildingsToTop();
+            Logger.circularBuffer.Add("# of Cached Building Locations Locations in range: " + BuildingLocationData.Count);
+        }
+
+        public static void GetNearbyCachedTransitstopLocations(double userLatitude, double userLongitude, double radius, bool origin)
+        {
+            List<LocationData> ld = TransportStartLocationData;            
+            if(!origin)
+            {
+                ld = TransportDestinationLocationData;
+            }
+            ld.Clear();
+            Logger.circularBuffer.Add("# of Cached Transit Stop Locations Locations total: " + cachedTransitStopLocations.Count);
+            foreach (var c in cachedTransitStopLocations)
+            {
+                double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
+                if (dist <= radius)
+                {
+                    c.distanceToGivenLocation = dist;
+                    ld.Add((LocationData)c);
+                }
+            }
+            ld = ld.OrderBy(x => x.distanceToGivenLocation).ToList();
+            SortTransitStops();
+            Logger.circularBuffer.Add("# of Cached Transit Stop Locations Locations in range: " + ld.Count);
+        }
+
+        public static void GetNearbyCachedTransitLineLocations(double userLatitude, double userLongitude, double radius)
+        {
+            List<TransitLineData> ld = TransitLines;
+            ld.Clear();
+            Logger.circularBuffer.Add("# of Cached Transitlines in total: " + cachedTransitLineLocations.Count);
+            foreach(var c in cachedTransitLineLocations)
+            {
+                double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
+                if (dist <= radius)
+                {
+                    ld.Add((TransitLineData)c);
+                }
+                ld = ld.DistinctBy(c => new { c.NWRType, c.ID }).ToList();
+            }
+            TransitLines = ld;
+            SortTransitLines();
+            UpdateFilteredTransitLines();
         }
 
 
@@ -167,7 +295,7 @@ namespace IndoorCO2App_Multiplatform
 
         private static string BuildOverpassQuery(double latitude, double longitude, double radius)
         {
-            LocationData.Clear();
+            BuildingLocationData.Clear();
             string rString = radius.ToString(CultureInfo.InvariantCulture);
             string latString = latitude.ToString(CultureInfo.InvariantCulture);
             string lonString = longitude.ToString(CultureInfo.InvariantCulture);
@@ -260,12 +388,26 @@ namespace IndoorCO2App_Multiplatform
                 var tags = element.GetProperty("tags");
                 var name = tags.TryGetProperty("name", out var nameProperty) ? nameProperty.GetString() : "";
                 var bd = new LocationData(type, id, name, lat, lon, userLatitude, userLongitude);
-                LocationData.Add(bd);
+                BuildingLocationData.Add(bd);
             }
 
-            LocationData.Sort((point1, point2) =>
+            SortFavouriteBuildingsToTop();
+            AddToCachedBuildingLocations();
+            if (BuildingLocationData.Count == 0)
             {
-                bool isFavorite1 = MainPage.MainPageSingleton.favouredLocations.Contains(point1.type+"_"+point1.ID);
+                lastFetchWasSuccessButNoResults = true;
+            }
+            else
+            {
+                lastFetchWasSuccessButNoResults = false;
+            }
+        }
+
+        private static void SortFavouriteBuildingsToTop()
+        {
+            BuildingLocationData.Sort((point1, point2) =>
+            {
+                bool isFavorite1 = MainPage.MainPageSingleton.favouredLocations.Contains(point1.type + "_" + point1.ID);
                 bool isFavorite2 = MainPage.MainPageSingleton.favouredLocations.Contains(point2.type + "_" + point2.ID);
 
                 // Sort favorites to the top
@@ -275,15 +417,6 @@ namespace IndoorCO2App_Multiplatform
                 // If both are favorites or both are non-favorites, sort by distance
                 return point1.distanceToGivenLocation.CompareTo(point2.distanceToGivenLocation);
             });
-            AddToCachedLocations();
-            if (LocationData.Count == 0)
-            {
-                lastFetchWasSuccessButNoResults = true;
-            }
-            else
-            {
-                lastFetchWasSuccessButNoResults = false;
-            }
         }
 
         private static void ParseTransitOverpassResponse(string response, double userLatitude, double userLongitude, bool isOrigin)
@@ -310,30 +443,32 @@ namespace IndoorCO2App_Multiplatform
                 if (tags.TryGetProperty("railway", out var railwayProperty) && railwayProperty.GetString() == "tram_stop")
                 {
                     var name = tags.TryGetProperty("name", out var stopNameProperty) ? stopNameProperty.GetString() : "";
-                    if(namesOfStops.Contains(name))
+                    if (namesOfStops.Contains(name))
                     {
                         continue;
                     }
-                    if(!namesOfStops.Contains(name))
+                    if (!namesOfStops.Contains(name))
                     {
                         namesOfStops.Add(name); ;
                     }
-                    
+
                     var bd = new LocationData(type, id, name, lat, lon, userLatitude, userLongitude);
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
+                        AddToCachedTransitStopLocations();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
+                        AddToCachedTransitStopLocations();
                     }
                 }
                 // Tram line (relation)
                 else if (type == "relation" && tags.TryGetProperty("route", out var tramRouteProperty) && tramRouteProperty.GetString() == "tram")
                 {
                     var lineName = tags.TryGetProperty("name", out var tramLineNameProperty) ? tramLineNameProperty.GetString() : "";
-                    TransitLineData t = new TransitLineData("tram", type, id, lineName);
+                    TransitLineData t = new TransitLineData("tram", type, id, lineName, userLatitude, userLongitude);
                     TransitLines.Add(t);
                 }
 
@@ -356,17 +491,19 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
+                        AddToCachedTransitStopLocations();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
+                        AddToCachedTransitStopLocations();
                     }
                 }
                 // Bus line (relation)
                 else if (type == "relation" && tags.TryGetProperty("route", out var busRouteProperty) && busRouteProperty.GetString() == "bus")
                 {
                     var lineName = tags.TryGetProperty("name", out var busLineNameProperty) ? busLineNameProperty.GetString() : "";
-                    TransitLineData t = new TransitLineData("bus",type, id, lineName);
+                    TransitLineData t = new TransitLineData("bus", type, id, lineName, userLatitude, userLongitude);
                     TransitLines.Add(t);
                 }
 
@@ -387,17 +524,19 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
+                        AddToCachedTransitStopLocations();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
+                        AddToCachedTransitStopLocations();
                     }
                 }
                 // Subway line (relation)
                 else if (type == "relation" && tags.TryGetProperty("route", out var subwayRouteProperty) && subwayRouteProperty.GetString() == "subway")
                 {
                     var lineName = tags.TryGetProperty("name", out var subwayLineNameProperty) ? subwayLineNameProperty.GetString() : "";
-                    TransitLineData t = new TransitLineData("subway", type, id, lineName);
+                    TransitLineData t = new TransitLineData("subway", type, id, lineName, userLatitude, userLongitude);
                     TransitLines.Add(t);
                 }
 
@@ -417,10 +556,12 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
+                        AddToCachedTransitStopLocations();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
+                        AddToCachedTransitStopLocations();
                     }
                 }
 
@@ -428,7 +569,7 @@ namespace IndoorCO2App_Multiplatform
                 else if (type == "relation" && tags.TryGetProperty("route", out var lightRailRouteProperty) && lightRailRouteProperty.GetString() == "light_rail")
                 {
                     var lineName = tags.TryGetProperty("name", out var lightRailLineNameProperty) ? lightRailLineNameProperty.GetString() : "";
-                    TransitLineData t = new TransitLineData("light_rail", type, id, lineName);
+                    TransitLineData t = new TransitLineData("light_rail", type, id, lineName, userLatitude, userLongitude);
                     TransitLines.Add(t);
                 }
 
@@ -436,7 +577,7 @@ namespace IndoorCO2App_Multiplatform
                 else if (type == "relation" && tags.TryGetProperty("route", out var monoRailRouteProperty) && monoRailRouteProperty.GetString() == "monorail")
                 {
                     var lineName = tags.TryGetProperty("name", out var lightRailLineNameProperty) ? lightRailLineNameProperty.GetString() : "";
-                    TransitLineData t = new TransitLineData("light_rail", type, id, lineName); // we categorize monorail also as light_rail 
+                    TransitLineData t = new TransitLineData("light_rail", type, id, lineName, userLatitude, userLongitude); // we categorize monorail also as light_rail 
                     TransitLines.Add(t);
                 }
 
@@ -444,33 +585,52 @@ namespace IndoorCO2App_Multiplatform
                 else if (type == "relation" && tags.TryGetProperty("route", out var trainRouteProperty) && trainRouteProperty.GetString() == "train")
                 {
                     var lineName = tags.TryGetProperty("name", out var trainLineNameProperty) ? trainLineNameProperty.GetString() : "";
-                    TransitLineData t = new TransitLineData("train", type, id, lineName);
+                    TransitLineData t = new TransitLineData("train", type, id, lineName, userLatitude, userLongitude);
                     TransitLines.Add(t);
                 }
 
                 //TODO ADD TRAIN AND LIGHTRAIL
 
             }
-            if(TransportDestinationLocationData!=null && TransportDestinationLocationData.Count>0)
+            SortTransitStops();
+            //MainPage.MainPageSingleton.favouredLocations 
+            SortTransitLines();
+            UpdateFilteredTransitLines();
+            if (TransportStartLocationData != null && TransportStartLocationData.Count == 0 && TransportDestinationLocationData != null && TransportDestinationLocationData.Count == 00)
             {
-                TransportDestinationLocationData.Sort((x, y) => x.distanceToGivenLocation.CompareTo(y.distanceToGivenLocation));
+                lastFetchWasSuccessButNoResults = true;
+            }
+            AddToCachedTransitLineLocations(userLatitude, userLongitude);
+        }
+
+        private static void SortTransitStops()
+        {
+            if (TransportDestinationLocationData != null && TransportDestinationLocationData.Count > 0)
+            {
+                TransportDestinationLocationData = TransportDestinationLocationData
+                 .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.type + "_" + x.ID.ToString()))
+                  .ThenBy(x => x.distanceToGivenLocation)
+                  .ToList();
+                
             }
             if (TransportStartLocationData != null && TransportStartLocationData.Count > 0)
             {
-                TransportStartLocationData.Sort((x, y) => x.distanceToGivenLocation.CompareTo(y.distanceToGivenLocation));
+                TransportStartLocationData = TransportStartLocationData
+  .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.type + "_" + x.ID.ToString()))
+  .ThenBy(x => x.distanceToGivenLocation)
+  .ToList();
+
             }
-            //MainPage.MainPageSingleton.favouredLocations 
+        }
+
+        private static void SortTransitLines()
+        {
             if (TransitLines != null && TransitLines.Count > 0)
-            {              
-              TransitLines = TransitLines
-              .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.NWRType+"_"+x.ID.ToString()))  // Moves favorites to the top
-                .ThenBy(x => x.Name, new MultiNumberStringComparer())  // Sorts alphabetically within favorites and non-favorites
-                .ToList();
-            }
-            UpdateFilteredTransitLines();
-            if(TransportStartLocationData!=null && TransportStartLocationData.Count==0 && TransportDestinationLocationData !=null && TransportDestinationLocationData.Count==00)
             {
-                lastFetchWasSuccessButNoResults = true;
+                TransitLines = TransitLines
+                .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.NWRType + "_" + x.ID.ToString()))  // Moves favorites to the top
+                  .ThenBy(x => x.Name, new MultiNumberStringComparer())  // Sorts alphabetically within favorites and non-favorites
+                  .ToList();
             }
         }
 

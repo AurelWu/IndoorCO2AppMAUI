@@ -17,11 +17,18 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (currentMenuMode.HasFlag(MenuMode.TransportSelection))
             {
-                //TODO
+                OverpassModule.GetNearbyCachedTransitstopLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, true);
+                UpdateTransitOriginPicker();
+                OverpassModule.GetNearbyCachedTransitLineLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange + 100);
+                UpdateTransitLinesPicker();
+
             }
             else if (currentMenuMode.HasFlag(MenuMode.TransportRecording))
             {
-                //TODO
+                OverpassModule.GetNearbyCachedTransitstopLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, false);
+                UpdateTransitDestinationPicker();
+                OverpassModule.GetNearbyCachedTransitLineLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange + 100);
+                UpdateTransitLinesPicker();
             }
         }
     }

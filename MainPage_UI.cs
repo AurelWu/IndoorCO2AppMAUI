@@ -83,6 +83,7 @@ namespace IndoorCO2App_Multiplatform
 
         public Editor _NotesEditor;
 
+        public Grid _LocationUpdateGrid;
 
 
 
@@ -90,6 +91,7 @@ namespace IndoorCO2App_Multiplatform
 
         public void InitUIElements()
         {
+            _LocationUpdateGrid = this.FindByName<Grid>("LocationUpdateGrid");
             _NotesEditor = this.FindByName<Editor>("NotesEditor");
             _ButtonBuildingTransitSelectionStackLayout = this.FindByName<HorizontalStackLayout>("ButtonBuildingTransitSelectionStackLayout");
             _StatusButtons = this.FindByName<HorizontalStackLayout>("StatusButtons");
@@ -179,7 +181,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitLineStackLayout"), MenuMode.TransportSelection | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_ResumeRecordingButton, 0); 
             MenuModesOfUIElements.Add(_StartRecordingButton, MenuMode.Standard);
-            MenuModesOfUIElements.Add(_StartManualRecordingButton, MenuMode.Standard);
+            MenuModesOfUIElements.Add(_StartManualRecordingButton, 0);
             //MenuModesOfUIElements.Add(_FinishRecordingButton, MenuMode.Recording | MenuMode.ManualRecording); //stack is hidden so shouldnt be necessary?
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("PrerecordingLayout"), MenuMode.Standard);
             MenuModesOfUIElements.Add(_OpenMapButton, MenuMode.Standard);
@@ -210,9 +212,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(_mapViewExpander, MenuMode.Standard);
             MenuModesOfUIElements.Add(_LocationInfoLabel, MenuMode.Standard |MenuMode.TransportSelection |MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_ButtonBuildingTransitSelectionStackLayout, MenuMode.Standard | MenuMode.TransportSelection);
-            MenuModesOfUIElements.Add(_GetCachedLocationsButton, MenuMode.Standard);
-
-
+            MenuModesOfUIElements.Add(_GetCachedLocationsButton, MenuMode.Standard | MenuMode.TransportSelection | MenuMode.TransportRecording);
 
         }
 
@@ -228,12 +228,13 @@ namespace IndoorCO2App_Multiplatform
             var buttonWidth30Percent = screenWidth * 0.30;
             var buttonWidth25Percent = screenWidth * 0.25;
 
+            _LocationUpdateGrid.MinimumWidthRequest = buttonWidth70Percent;            
             // Set the button's minimum width
             _ResumeRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
             _StartRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
             _StartManualRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
             _StartTransportRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
-            _UpdateLocationsButton.MinimumWidthRequest = buttonWidth70Percent;
+            //_UpdateLocationsButton.MinimumWidthRequest = buttonWidth70Percent;
             _OpenMapButton.MinimumWidthRequest = buttonWidth70Percent;
             _OpenImprintButton.MinimumWidthRequest = buttonWidth70Percent;
             _FinishRecordingButton.MinimumWidthRequest = buttonWidth60Percent;
@@ -248,7 +249,8 @@ namespace IndoorCO2App_Multiplatform
             _TrimSlider.WidthRequest = _LineChartView.Width;
             _TransitModeButton.MinimumWidthRequest = buttonWidth40Percent;
             _BuildingModeButton.MinimumWidthRequest = buttonWidth40Percent;
-
+            _LocationUpdateGrid.WidthRequest = _StartRecordingButton.Width;
+            _GetCachedLocationsButton.HeightRequest = _StartRecordingButton.Height;
             await CollapseExpanderWithDelay(500);
         }
 
@@ -290,6 +292,7 @@ namespace IndoorCO2App_Multiplatform
 
             UpdateLocationMap();
             UpdateMapViewExpander();
+            UpdateBackgroundColor();
             //HideElementsWithStatusOK();
         }
 
@@ -330,6 +333,41 @@ namespace IndoorCO2App_Multiplatform
                 await _MainScrollView.ScrollToAsync(0, 0, true);
             }
 
+        }
+
+        private void UpdateBackgroundColor()
+        {
+
+            
+                BoxView topStroke = this.FindByName<BoxView>("TopStroke");
+                if (topStroke != null)
+                {
+                    var co2 = BluetoothManager.currentCO2Reading;
+                    if(co2== 0)
+                    {
+                        topStroke.Color = Color.FromArgb("#00008b");
+                    }
+                    else if(co2 < 600)
+                    {
+                        topStroke.Color = Color.FromArgb("#00008b");
+                    }
+                    else if(co2 <800)
+                    {
+                        topStroke.Color = Color.FromArgb("#add8e6");
+                    }
+                    else if(co2 <1000)
+                    {
+                        topStroke.Color = Color.FromArgb("#ffff00");
+                    }
+                    else if(co2<1200)
+                    {
+                        topStroke.Color = Color.FromArgb("#ffa500");
+                    }
+                    else
+                    {
+                        topStroke.Color = Color.FromArgb("#ff0000");
+                    }
+                }            
         }
 
         private void UpdateLocationMap()
@@ -376,7 +414,7 @@ namespace IndoorCO2App_Multiplatform
 
         private void UpdateStartRecordingButton()
         {
-            if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.LocationData.Count > 0 && BluetoothManager.discoveredDevices != null && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
+            if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.BuildingLocationData.Count > 0 && BluetoothManager.discoveredDevices != null && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
             {
                 _StartRecordingButton.IsEnabled = true;
             }
@@ -481,12 +519,14 @@ namespace IndoorCO2App_Multiplatform
                 {
                     if(monitorType== CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
+                        //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                         _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                     }
                     else
                     {
                         var secondsSinceLastUpdate = DateTime.Now - BluetoothManager.timeOfLastNotifyUpdate;                        
                         _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
+                        //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                     }
                     
                     if (BluetoothManager.lastAttemptFailed)
@@ -533,11 +573,16 @@ namespace IndoorCO2App_Multiplatform
         {
             {
                 _StatusLabel.Text = ("");
+                _StatusLabel.IsVisible = true;
                 if (!gpsActive) _StatusLabel.Text += "GPS not enabled | ";
                 if (!gpsGranted) _StatusLabel.Text += "Location Permission missing |";
                 if (!btActive) _StatusLabel.Text += "Bluetooth not enabled |";
                 if (!btGranted) _StatusLabel.Text += "Bluetooth permission not granted";
-                if (gpsActive && gpsGranted && btActive && btGranted) _StatusLabel.Text = "GPS & Bluetooth Permissions and Status okay";
+                if (gpsActive && gpsGranted && btActive && btGranted)
+                {
+                    _StatusLabel.Text = "GPS & Bluetooth Permissions and Status okay";
+                    _StatusLabel.IsVisible = false;
+                }
             }
         }
 
@@ -603,10 +648,12 @@ namespace IndoorCO2App_Multiplatform
 
         private void UpdateLocationLabel()
         {
+            
             if (gpsActive && gpsGranted)
             {
                 if (SpatialManager.currentLocation.Latitude != 0 || SpatialManager.currentLocation.Longitude != 0)
                 {
+                    _LocationLabel.IsVisible = false;
                     if (!hideLocation)
                     {
                         _LocationLabel.Text = "Lat: " + SpatialManager.currentLocation.Latitude.ToString("0.######") + " | Lon:" + SpatialManager.currentLocation.Longitude.ToString("0.######") + " (tap to hide)";
@@ -618,11 +665,13 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else
                 {
+                    _LocationLabel.IsVisible = true;
                     _LocationLabel.Text = "GPS enabled & Location permissions granted. Getting Location Info. Might take a minute";
                 }
             }
             else
             {
+                _LocationLabel.IsVisible = true;
                 _LocationLabel.Text = ("");
                 if (!gpsActive) _LocationLabel.Text += ("GPS not enabled ");
                 if (!gpsGranted) _LocationLabel.Text += ("Location Permission missing");

@@ -60,9 +60,9 @@ namespace IndoorCO2App_Multiplatform
         internal static async void ResetLocation()
         {
             await GetCachedLocation();
-            if (OverpassModule.LocationData != null)
+            if (OverpassModule.BuildingLocationData != null)
             {
-                OverpassModule.LocationData.Clear();
+                OverpassModule.BuildingLocationData.Clear();
             }
         }
 

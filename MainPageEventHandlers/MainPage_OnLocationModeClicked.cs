@@ -20,10 +20,12 @@ namespace IndoorCO2App_Multiplatform
             if (clickedButton.Text=="Buildings")
             {
                 ChangeToStandardUI(true);
+                UpdateUI();
             }
             else if(clickedButton.Text=="Transit")
             {
                 ChangeToTransportSelectionUI(true);
+                UpdateUI();
             }
         }
     }

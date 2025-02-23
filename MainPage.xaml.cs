@@ -297,7 +297,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 submissionMode = SubmissionMode.Transit;
                 selectedTransitOriginLocation = new LocationData(RecoveryData.transportOriginType, RecoveryData.transportOriginID, RecoveryData.transportOriginName, 0, 0, 0, 0);
-                selectedTransitLine = new TransitLineData("", RecoveryData.transportLineType, RecoveryData.transportLineID, RecoveryData.transportLineName);
+                selectedTransitLine = new TransitLineData("", RecoveryData.transportLineType, RecoveryData.transportLineID, RecoveryData.transportLineName,0,0);
                 if (_TransitLinePicker.Items != null)
                 {
                     _TransitLinePicker.Items.Clear();
@@ -393,7 +393,7 @@ namespace IndoorCO2App_Multiplatform
         public void UpdateLocationPicker()
         {
 
-            locations = OverpassModule.LocationData;
+            locations = OverpassModule.BuildingLocationData;
             if (locations.Count == 0)
             {
                 return;
