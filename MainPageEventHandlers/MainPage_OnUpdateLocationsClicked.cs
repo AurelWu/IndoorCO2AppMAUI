@@ -6,13 +6,13 @@ namespace IndoorCO2App_Multiplatform
     {
         private async void OnUpdateLocationsClicked(object sender, EventArgs e)
         {
-            if(SpatialManager.currentLocation!=null)
+            OverpassModule.lastFetchWasFromCachedData = false;
+            if (SpatialManager.currentLocation!=null)
             {
                 //Logger.circularBuffer.Add("Update Location started for coordinates: " + SpatialManager.currentLocation.Latitude + " | " + SpatialManager.currentLocation.Longitude);
             }
             if (currentMenuMode.HasFlag(MenuMode.Standard))
             {
-                
                 await OverpassModule.FetchNearbyBuildingsAsync(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, this);
             }
             else if (currentMenuMode.HasFlag(MenuMode.TransportSelection))

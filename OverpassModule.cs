@@ -40,6 +40,7 @@ namespace IndoorCO2App_Multiplatform
         public static bool lastFetchWasATimeout = false;
         public static bool everFetchedLocations = false;
         public static bool everFetchedTransitLocations = false;
+        public static bool lastFetchWasFromCachedData = false; //make enum out of this mess
         public static DateTime startTimeOfFetch = DateTime.MinValue;
 
         static OverpassModule()
@@ -68,7 +69,8 @@ namespace IndoorCO2App_Multiplatform
             foreach(var c in cachedList)
             {
                 cachedBuildingLocations.Add(c);
-            }            
+            }
+
         }
 
         private static async void LoadCachedTransitStopLocations()
@@ -81,6 +83,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 cachedTransitStopLocations.Add(c);
             }
+
         }
 
         private static async void LoadCachedTransitLineLocations()
@@ -93,6 +96,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 cachedTransitLineLocations.Add(c);
             }
+
         }
 
         /// <summary>
@@ -193,6 +197,7 @@ namespace IndoorCO2App_Multiplatform
             BuildingLocationData = BuildingLocationData.OrderBy(x => x.distanceToGivenLocation).ToList();
             SortFavouriteBuildingsToTop();
             Logger.circularBuffer.Add("# of Cached Building Locations Locations in range: " + BuildingLocationData.Count);
+            lastFetchWasFromCachedData = true;
         }
 
         public static void GetNearbyCachedTransitstopLocations(double userLatitude, double userLongitude, double radius, bool origin)
@@ -216,6 +221,7 @@ namespace IndoorCO2App_Multiplatform
             ld = ld.OrderBy(x => x.distanceToGivenLocation).ToList();
             SortTransitStops();
             Logger.circularBuffer.Add("# of Cached Transit Stop Locations Locations in range: " + ld.Count);
+            lastFetchWasFromCachedData = true;
         }
 
         public static void GetNearbyCachedTransitLineLocations(double userLatitude, double userLongitude, double radius)
@@ -235,6 +241,7 @@ namespace IndoorCO2App_Multiplatform
             TransitLines = ld;
             SortTransitLines();
             UpdateFilteredTransitLines();
+            lastFetchWasFromCachedData = true;
         }
 
 
@@ -403,7 +410,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        private static void SortFavouriteBuildingsToTop()
+        public static void SortFavouriteBuildingsToTop()
         {
             BuildingLocationData.Sort((point1, point2) =>
             {
@@ -603,7 +610,7 @@ namespace IndoorCO2App_Multiplatform
             AddToCachedTransitLineLocations(userLatitude, userLongitude);
         }
 
-        private static void SortTransitStops()
+        public static void SortTransitStops()
         {
             if (TransportDestinationLocationData != null && TransportDestinationLocationData.Count > 0)
             {
@@ -623,7 +630,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        private static void SortTransitLines()
+        public static void SortTransitLines()
         {
             if (TransitLines != null && TransitLines.Count > 0)
             {
@@ -700,7 +707,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     var jsonData = await response.Content.ReadAsStringAsync();
                     ParseOverpassResponse(jsonData, userLatitude, userLongitude);
-                    mainPage.UpdateLocationPicker();
+                    mainPage.UpdateLocationPicker(true);
                     lastFetchWasSuccess = true;
                     // Update UI on the main thread if necessary
                 }
@@ -761,10 +768,10 @@ namespace IndoorCO2App_Multiplatform
                     ParseTransitOverpassResponse(jsonData, userLatitude, userLongitude, transitOrigin);
                     if (transitOrigin)
                     {
-                        mainPage.UpdateTransitOriginPicker();
-                        mainPage.UpdateTransitLinesPicker();
+                        mainPage.UpdateTransitOriginPicker(true);
+                        mainPage.UpdateTransitLinesPicker(true);
                     }
-                    else mainPage.UpdateTransitDestinationPicker();
+                    else mainPage.UpdateTransitDestinationPicker(true);
 
 
                     lastFetchWasSuccess = true;

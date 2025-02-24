@@ -300,7 +300,7 @@ namespace IndoorCO2App_Multiplatform
                 selectedTransitLine = new TransitLineData("", RecoveryData.transportLineType, RecoveryData.transportLineID, RecoveryData.transportLineName,0,0);
                 if (_TransitLinePicker.Items != null)
                 {
-                    _TransitLinePicker.Items.Clear();
+                    _TransitLinePicker.ItemsSource = null;
                 }
                 List<LocationData> resumeOriginList = new List<LocationData> { selectedTransitOriginLocation };
                 List<TransitLineData> resumeLineList = new List<TransitLineData> { selectedTransitLine };
@@ -390,14 +390,15 @@ namespace IndoorCO2App_Multiplatform
             
         }
 
-        public void UpdateLocationPicker()
+        public void UpdateLocationPicker(bool setToFirstEntry)
         {
-
+            LocationData selectedItem = (LocationData)_LocationPicker.SelectedItem;
             locations = OverpassModule.BuildingLocationData;
             if (locations.Count == 0)
             {
                 return;
             }
+            OverpassModule.SortFavouriteBuildingsToTop();
             _LocationPicker.ItemsSource = null;
             _LocationPicker.Items.Clear();
             _LocationPicker.ItemsSource = locations;
@@ -407,15 +408,26 @@ namespace IndoorCO2App_Multiplatform
             {
                 _LocationPicker.SelectedItem = locations[0];
             }
+            if (selectedItem != null)
+            {
+                int prevIndex = locations.FindIndex(x => x.ID == selectedItem.ID);
+                if (prevIndex >= 0 && !setToFirstEntry) // Check if the item was found
+                {
+                    _LocationPicker.SelectedItem = locations[prevIndex];                   
+                }
+            }
         }
 
-        public void UpdateTransitOriginPicker()
+        public void UpdateTransitOriginPicker(bool setToFirstEntry)
         {
+            LocationData selectedItem = (LocationData)_TransitOriginPicker.SelectedItem;
+            OverpassModule.SortTransitStops();
             transitOriginLocations = OverpassModule.TransportStartLocationData;
             //if(transitOriginLocations.Count == 0)
             //{
             //    return;
             //}
+
             _TransitOriginPicker.ItemsSource = null;
             _TransitOriginPicker.Items.Clear();
             _TransitOriginPicker.ItemsSource = transitOriginLocations;
@@ -423,32 +435,63 @@ namespace IndoorCO2App_Multiplatform
             {
                 _TransitOriginPicker.SelectedItem = transitOriginLocations[0];
             }
+            if (selectedItem != null)
+            {
+                int prevIndex = transitOriginLocations.FindIndex(x => x.ID == selectedItem.ID);
+                if (prevIndex >= 0 && !setToFirstEntry) // Check if the item was found
+                {
+                    _TransitOriginPicker.SelectedItem = transitOriginLocations[prevIndex];
+                    
+                }
+            }
             //TODO create TransitOriginLocationPicker and assign stuff here
         }
 
-        public void UpdateTransitDestinationPicker()
+        public void UpdateTransitDestinationPicker(bool setToFirstEntry)
         {
+            LocationData selectedItem = (LocationData)_TransitDestinationPicker.SelectedItem;
+
+            OverpassModule.SortTransitStops();
             transitTargetLocations = OverpassModule.TransportDestinationLocationData;
             //if (transitTargetLocations.Count == 0)
             //{
             //    return;
             //}
+
             _TransitDestinationPicker.ItemsSource = null;
             _TransitDestinationPicker.Items.Clear();
             _TransitDestinationPicker.ItemsSource = transitTargetLocations;
-            if (transitTargetLocations.Count > 0)
+            if (transitTargetLocations != null && transitTargetLocations.Count > 0)
             {
                 _TransitDestinationPicker.SelectedItem = transitTargetLocations[0];
+            }
+            if (selectedItem != null && transitTargetLocations !=null)
+            {
+                int prevIndex = transitTargetLocations.FindIndex(x => x.ID == selectedItem.ID);
+                if (prevIndex >= 0 &&!setToFirstEntry) // Check if the item was found
+                {
+                    _TransitOriginPicker.SelectedItem = transitOriginLocations[prevIndex];                   
+                }
+            }
+            if (selectedItem != null && transitTargetLocations != null)
+            {
+                int prevIndex = transitTargetLocations.FindIndex(x => x.ID == selectedItem.ID);
+                if (prevIndex >= 0) // Check if the item was found
+                {
+                    _TransitDestinationPicker.SelectedItem = transitTargetLocations[prevIndex];
+                }
             }
             //TODO create TransitDestinationLocationPicker and assign stuff here
         }
 
-        public void UpdateTransitLinesPicker()
+        public void UpdateTransitLinesPicker(bool setToFirstEntry)
         {
             TransitLineData prevLine = (TransitLineData)_TransitLinePicker.SelectedItem;
 
+            OverpassModule.SortTransitLines();
             OverpassModule.UpdateFilteredTransitLines();
             transitLines = OverpassModule.filteredTransitLines;
+
 
             _TransitLinePicker.ItemsSource = null;
             _TransitLinePicker.Items.Clear();
@@ -462,7 +505,7 @@ namespace IndoorCO2App_Multiplatform
             if (prevLine != null)
             {
                 int prevLineIndex = transitLines.FindIndex(x => x.ID == prevLine.ID);
-                if (prevLineIndex >= 0) // Check if the item was found
+                if (prevLineIndex >= 0 && !setToFirstEntry) // Check if the item was found
                 {
                     _TransitLinePicker.SelectedItem = transitLines[prevLineIndex];
                 }

@@ -8,7 +8,7 @@ namespace IndoorCO2App_Multiplatform
         {
             if(currentMenuMode == MenuMode.TransportSelection)
             {
-                UpdateTransitLinesPicker();
+                UpdateTransitLinesPicker(false);
             }
             else if(currentMenuMode== MenuMode.Standard)
             {

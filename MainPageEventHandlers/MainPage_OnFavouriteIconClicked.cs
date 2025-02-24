@@ -25,7 +25,8 @@ namespace IndoorCO2App_Multiplatform
                 {
                     favouredLocations.Remove(combined);
                 }
-                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
+                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);                
+                UpdateLocationPicker(false);
             }
         }
 
@@ -49,6 +50,7 @@ namespace IndoorCO2App_Multiplatform
                     favouredLocations.Remove(combined);
                 }
                 await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
+                UpdateTransitOriginPicker(false);
             }
         }
 
@@ -59,7 +61,7 @@ namespace IndoorCO2App_Multiplatform
             if (_TransitDestinationPicker.SelectedItem == null)
             {
                 return;
-            }
+            }            
 
             LocationData d = (LocationData)_TransitDestinationPicker.SelectedItem;
             if (d != null)
@@ -72,6 +74,8 @@ namespace IndoorCO2App_Multiplatform
                     favouredLocations.Remove(combined);
                 }
                 await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
+                
+                UpdateTransitDestinationPicker(false);
             }
         }
 
@@ -94,6 +98,7 @@ namespace IndoorCO2App_Multiplatform
                     favouredLocations.Remove(combined);
                 }
                 await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
+                UpdateTransitLinesPicker(false);
             }
         }
     }

@@ -770,7 +770,7 @@ Completed="OnEntryCompleted" />
         <BoxView 
     x:Name="TopStroke"
     Color="Black"  
-    HeightRequest="7"  
+    HeightRequest="8"  
         AbsoluteLayout.LayoutBounds="0, 0, 1, 1"  
     AbsoluteLayout.LayoutFlags="WidthProportional" />
                 

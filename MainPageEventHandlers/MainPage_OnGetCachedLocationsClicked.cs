@@ -13,22 +13,22 @@ namespace IndoorCO2App_Multiplatform
             if (currentMenuMode.HasFlag(MenuMode.Standard))
             {                
                 OverpassModule.GetNearbyCachedBuildingLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange);
-                UpdateLocationPicker();
+                UpdateLocationPicker(true);
             }
             else if (currentMenuMode.HasFlag(MenuMode.TransportSelection))
             {
                 OverpassModule.GetNearbyCachedTransitstopLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, true);
-                UpdateTransitOriginPicker();
+                UpdateTransitOriginPicker(true);
                 OverpassModule.GetNearbyCachedTransitLineLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange + 100);
-                UpdateTransitLinesPicker();
+                UpdateTransitLinesPicker(true);
 
             }
             else if (currentMenuMode.HasFlag(MenuMode.TransportRecording))
             {
                 OverpassModule.GetNearbyCachedTransitstopLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, false);
-                UpdateTransitDestinationPicker();
-                OverpassModule.GetNearbyCachedTransitLineLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange + 100);
-                UpdateTransitLinesPicker();
+                UpdateTransitDestinationPicker(true);
+                //OverpassModule.GetNearbyCachedTransitLineLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange + 100);
+                //UpdateTransitLinesPicker(false);
             }
         }
     }

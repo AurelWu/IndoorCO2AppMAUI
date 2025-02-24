@@ -779,7 +779,7 @@ namespace IndoorCO2App_Multiplatform
         private void UpdateLocationInfoLabel()
         {
 
-            if (OverpassModule.everFetchedLocations == false)
+            if (OverpassModule.everFetchedLocations == false && currentMenuMode == MenuMode.Standard)
             {
                 _LocationInfoLabel.Text = "Press Update Locations to get nearby locations";
             }            
@@ -799,11 +799,19 @@ namespace IndoorCO2App_Multiplatform
             {
                 if(OverpassModule.lastFetchWasATimeout)
                 {
-                    _LocationInfoLabel.Text = "Update locations request timed out, try again later";
+                    _LocationInfoLabel.Text = "Update locations request timed out, try again";
                 }
                 else
                 {
-                    _LocationInfoLabel.Text = "Update locations request failed, try again later";
+                    if(OverpassModule.everFetchedTransitLocations && currentMenuMode != MenuMode.Standard)
+                    {
+                        _LocationInfoLabel.Text = "Update locations request failed, try again";
+                    }
+                    else if(OverpassModule.everFetchedLocations && currentMenuMode == MenuMode.Standard)
+                    {
+                        _LocationInfoLabel.Text = "Update locations request failed, try again";
+                    }
+                    
                 }                
             }
             else if (OverpassModule.currentlyFetching)
@@ -815,7 +823,34 @@ namespace IndoorCO2App_Multiplatform
             {
                 _LocationInfoLabel.Text = "Press Update Locations to get nearby locations";
             }
-            
+
+            if (OverpassModule.lastFetchWasFromCachedData)
+            {
+                if(currentMenuMode == MenuMode.Standard && OverpassModule.BuildingLocationData != null && OverpassModule.BuildingLocationData.Count>0)
+                {
+                    _LocationInfoLabel.Text = "Retrieved locally stored Locations";
+                }
+                else if(currentMenuMode == MenuMode.Standard)
+                {
+                    _LocationInfoLabel.Text = "No nearby Locations stored locally";
+                }
+                else if(currentMenuMode == MenuMode.TransportSelection && OverpassModule.TransportStartLocationData != null && OverpassModule.TransportStartLocationData.Count>0)
+                {
+                    _LocationInfoLabel.Text = "Retrieved locally stored Locations";
+                }
+                else if (currentMenuMode == MenuMode.TransportSelection)
+                {
+                    _LocationInfoLabel.Text = "No nearby Locations stored locally";
+                }
+                else if (currentMenuMode == MenuMode.TransportRecording && OverpassModule.TransportDestinationLocationData != null && OverpassModule.TransportDestinationLocationData.Count > 0)
+                {
+                    _LocationInfoLabel.Text = "Retrieved locally stored Locations";
+                }
+                else if (currentMenuMode == MenuMode.TransportRecording)
+                {
+                    _LocationInfoLabel.Text = "No nearby Locations stored locally";
+                }
+            }            
         }
 
         private void UpdateLineChart()

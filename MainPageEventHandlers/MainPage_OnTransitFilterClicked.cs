@@ -56,7 +56,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 TransitFilter = TransitFilterMode.Train;
             }
-            UpdateTransitLinesPicker();            
+            UpdateTransitLinesPicker(false);            
         }
 
         private async Task<bool> DisplayFilterConfirmationDialog()
