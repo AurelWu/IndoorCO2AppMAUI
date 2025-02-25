@@ -541,7 +541,7 @@ namespace IndoorCO2App_Multiplatform
 
                 else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
                 {
-                    _DeviceLabel.Text = "Sensor found, but the required 'Smart Home Integration' is disabled.\r\n Please enable it using the official Aranet App (use the Gears Icon)";
+                    _DeviceLabel.Text = "Sensor found, but 'Smart Home Integration' is disabled.\r\n enable it using the offical Aranet App 🛈";
                 }
                 else if (BluetoothManager.currentCO2Reading == 0)
                 {

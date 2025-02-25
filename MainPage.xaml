@@ -507,19 +507,19 @@ Padding="0">
 
                 <Button
                 x:Name="OpenMapButton"
-                Text="Open Map in Browser"
+                Text="Open Map in Browser 🔗"
                 SemanticProperties.Hint="Open the Map in your default Browser"
                 Clicked="OnShowMapInBrowserClicked"
                 HorizontalOptions="Center" />
 
                 <Button
-                x:Name="OpenImprintButton"
-                Text="Data Protection Info and Imprint"
-                SemanticProperties.Hint="Displays Data Protection Info and Imprint"
-                Clicked="OnImprintClicked"
-                HorizontalOptions="Center" />
+    x:Name="OpenImprintButton"
+    Text="Data Protection Info and Imprint 🔗"  
+                    Clicked="OnImprintClicked"
+    FontFamily="fa"
+    HorizontalOptions="Center" />
 
-                <Button
+                    <Button
                 x:Name="DeleteLastSubmissionButton"
                 Text="Delete Previous Submission"
                 SemanticProperties.Hint="Shows Dialot to Delete Previous Submission"
