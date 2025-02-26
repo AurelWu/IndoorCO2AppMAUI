@@ -23,7 +23,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             x:Name="MainScrollView"
             AbsoluteLayout.LayoutFlags="All"
             AbsoluteLayout.LayoutBounds="0, 0, 1, 1">
-                
+
 
             <VerticalStackLayout
             Spacing="22"
@@ -94,7 +94,11 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 LineBreakMode="WordWrap"
                 VerticalOptions="StartAndExpand"
                 MaxLines="3"
-                HorizontalOptions="Start" />
+                HorizontalOptions="Start" >
+                    <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnShowToolTipSmartHomeClicked" />
+                </Label.GestureRecognizers>
+                </Label>
 
                 <Label
                 x:Name="LocationLabel"

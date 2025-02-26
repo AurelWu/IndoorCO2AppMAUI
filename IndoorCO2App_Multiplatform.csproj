@@ -166,6 +166,9 @@
 	  <Compile Update="MainPageEventHandlers\MainPage_OnDebugLogButtonClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
+	  <Compile Update="MainPageEventHandlers\MainPage_OnShowToolTipSmartHomeClicked.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnLocationSearchFilterTextChanged.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
