@@ -96,7 +96,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 MaxLines="3"
                 HorizontalOptions="Start" >
                     <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnShowToolTipSmartHomeClicked" />
+                    <TapGestureRecognizer Tapped="OnShowToolTipDeviceIssueClicked" />
                 </Label.GestureRecognizers>
                 </Label>
 

@@ -379,7 +379,29 @@ namespace IndoorCO2App_Multiplatform
                 // Check if the discovered device matches criteria, as we currently only check serviceUUIDs of airvalent and aranet we only do this for them (only  they are necessarily paired)
                 if ((monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent) && device.Name.ToLower().Contains(nameFilter.Trim().ToLower()))
                 {
+                    var adRecords = device.AdvertisementRecords;
                     Logger.circularBuffer.Add("Target device found. Stopping scan early | " + DateTime.Now);
+
+                    int majorVersion = 0;
+                    int minorVersion = 0;
+                    foreach(var r in adRecords)
+                    {
+                        if(r.Data.Length == 24)
+                        {
+                            majorVersion = r.Data[5];
+                            minorVersion = r.Data[4];
+                            if (majorVersion < 1 || (majorVersion == 1 && minorVersion < 2))
+                            {
+                                outdatedVersion = true;
+                            }
+                            else
+                            {
+                                outdatedVersion = false;
+                            }
+                        }
+                    }
+                    
+
                     Console.WriteLine("Target device found. Stopping scan...");
                     btCancellationTokenSource.Cancel(); // Stop scanning
                 }
