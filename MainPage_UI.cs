@@ -536,12 +536,12 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else if(BluetoothManager.outdatedVersion == true)
                 {
-                    _DeviceLabel.Text = "Sensor found, but the Firmware is outdated \r\nUpdate it using the official Aranet App 🛈)";
+                    _DeviceLabel.Text = "Sensor found, but the Firmware is outdated \r\nUpdate it using the official Aranet App ⓘ)";
                 }
 
                 else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
                 {
-                    _DeviceLabel.Text = "Sensor found, but 'Smart Home Integration' is disabled.\r\nEnable it using the offical Aranet App 🛈";
+                    _DeviceLabel.Text = "Sensor found, but 'Smart Home Integration' is disabled.\r\nEnable it using the offical Aranet App ⓘ";
                 }
                 else if (BluetoothManager.currentCO2Reading == 0)
                 {
@@ -577,7 +577,7 @@ namespace IndoorCO2App_Multiplatform
                 if (!gpsActive) _StatusLabel.Text += "GPS not enabled | ";
                 if (!gpsGranted) _StatusLabel.Text += "Location Permission missing |";
                 if (!btActive) _StatusLabel.Text += "Bluetooth not enabled |";
-                if (!btGranted) _StatusLabel.Text += "Bluetooth permission not granted";
+                if (!btGranted) _StatusLabel.Text += "Bluetooth permission not granted, press red button above";
                 if (gpsActive && gpsGranted && btActive && btGranted)
                 {
                     _StatusLabel.Text = "GPS & Bluetooth Permissions and Status okay";

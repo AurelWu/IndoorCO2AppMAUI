@@ -1,6 +1,6 @@
 ﻿
-using BruTile.Wmts.Generated;
-using ExCSS;
+//using BruTile.Wmts.Generated;
+//using ExCSS;
 using IndoorCO2App_Android;
 using IndoorCO2App_Multiplatform.Controls;
 using Mapsui.Layers;
@@ -52,7 +52,7 @@ namespace IndoorCO2App_Multiplatform
 
         public static int previousDataCount = 0;
 
-        private readonly PeriodicTimer _timer;
+        private PeriodicTimer _timer;
         private DateTime timeOfLastGPSUpdate = DateTime.MinValue;
 
         public static bool hasOpenWindowsDoors;
@@ -79,6 +79,11 @@ namespace IndoorCO2App_Multiplatform
 
         public MainPage()
         {
+            Init();
+        }
+
+        public async void Init()
+        {
 
             favouredLocations = new HashSet<string>();
             InitializeComponent();
@@ -92,26 +97,36 @@ namespace IndoorCO2App_Multiplatform
             ChangeToStandardUI(false);
             LoadFavouredLocations();
             LoadMonitorType();
+
             App.ResumeRecording();
-            SpatialManager.GetCachedLocation();
+
             Logger.circularBuffer.Add("App Version: " + appVersion);
-           
+
 
 
 #if ANDROID
-            bluetoothHelper = new BluetoothHelper();            
+            bluetoothHelper = new BluetoothHelper();
 #endif
 #if IOS
             bluetoothHelper = new BluetoothHelperApple();
 #endif
 
             BluetoothManager.Init();
+            await SpatialManager.GetCachedLocation();
+#if ANDROID
+            var tcs = new TaskCompletionSource<PermissionStatus>();
+            PermissionsHandler.RequestPermissions(tcs);
+#endif
+
             firstInit = false;
 
             UpdateUI();
+
             _timer = new PeriodicTimer(TimeSpan.FromSeconds(0.4));
             Update();
         }
+
+        
 
         private void InitializeMap(double latitude, double longitude)
         {
@@ -174,7 +189,8 @@ namespace IndoorCO2App_Multiplatform
         }
 
         private async void Update()
-        {
+        {            
+
             try
             {
                 while (await _timer.WaitForNextTickAsync())
