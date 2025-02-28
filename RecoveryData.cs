@@ -97,6 +97,10 @@ namespace IndoorCO2App_Multiplatform
 
         public static void WriteToPreferences()
         {
+            try
+            {
+
+            
             Preferences.Set(prefRecoveryRecordingMode, recordingMode);
             Preferences.Set(prefRecoveryStartTime, startTime.ToString());
             Preferences.Set(prefRecoveryTimeOfLastUpdate, timeOfLastUpdate.ToString());
@@ -117,7 +121,11 @@ namespace IndoorCO2App_Multiplatform
             Preferences.Set(prefRecoveryVentilation, MainPage.MainPageSingleton._CheckBoxVentilation.IsChecked);
             Preferences.Set(prefRecoveryWindows, MainPage.MainPageSingleton._CheckBoxDoorsWindows.IsChecked);
             Preferences.Set(prefRecoveryCustomNotes, MainPage.MainPageSingleton._NotesEditor.Text);
-
+            }
+            catch (Exception ex)
+            {
+                Logger.circularBuffer.Add("Error writing recovery data to preferences");
+            }
         }
 
         public static void ResetRecoveryData()

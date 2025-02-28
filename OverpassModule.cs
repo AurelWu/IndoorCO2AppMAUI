@@ -25,6 +25,7 @@ namespace IndoorCO2App_Multiplatform
         public static string privateCoffeeURL = "https://overpass.private.coffee/api/interpreter";
 
         public static bool useAlternative = false;
+        public static bool isAlreadyRetry = false;
 
         //only buildings for now
         private static CircularBuffer<LocationDataWithTimeStamp> cachedBuildingLocations;
@@ -770,6 +771,7 @@ namespace IndoorCO2App_Multiplatform
                     ParseOverpassResponse(jsonData, userLatitude, userLongitude);
                     mainPage.UpdateLocationPicker(true);
                     lastFetchWasSuccess = true;
+                    isAlreadyRetry = false;
                     // Update UI on the main thread if necessary
                 }
                 else
@@ -781,13 +783,49 @@ namespace IndoorCO2App_Multiplatform
                 }
                 currentlyFetching = false;
             }
-            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
+            catch (TaskCanceledException ex) 
             {
                 useAlternative = !useAlternative;
                 lastFetchWasSuccess = false;
+                lastFetchWasATimeout = true;
+                currentlyFetching = false;
                 Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
                 Console.WriteLine("The request timed out.");
+                if (!isAlreadyRetry)
+                {
+                    isAlreadyRetry = true;
+                    await FetchNearbyBuildingsAsync(userLatitude, userLongitude, searchRadius, mainPage);
+                }            
             }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                // Handle socket closed exception (connection lost, server down, etc.)
+                Logger.circularBuffer.Add($"Socket error: {ex.SocketErrorCode} | {ex.Message} | {DateTime.Now}");
+                Console.WriteLine("Network connection lost or socket was closed.");                
+            }
+            catch (IOException ex) when (ex.Message.Contains("closed"))
+            {
+                // Some socket errors might surface as IOException (e.g., stream closed)
+                Logger.circularBuffer.Add($"I/O error (possible socket closure): {ex.Message} | {DateTime.Now}");
+                Console.WriteLine("The network connection was lost.");
+                Console.WriteLine("The network connection was lost.");
+            }
+
+            catch (TimeoutException ex)
+            {
+                useAlternative = !useAlternative;
+                lastFetchWasSuccess = false;
+                lastFetchWasATimeout = true;
+                currentlyFetching = false;
+                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
+                Console.WriteLine("The request timed out.");
+                if (!isAlreadyRetry)
+                {
+                    isAlreadyRetry = true;
+                    await FetchNearbyBuildingsAsync(userLatitude, userLongitude, searchRadius, mainPage);
+                }
+            }
+
             catch (Exception ex)
             {
                 useAlternative = !useAlternative;
@@ -843,27 +881,37 @@ namespace IndoorCO2App_Multiplatform
 
 
                     lastFetchWasSuccess = true;
+                    isAlreadyRetry = false;
                 }
                 else
                 {
                     useAlternative = !useAlternative;
-                    Logger.circularBuffer.Add($"fetching overpass building data not successful, returned: {response.StatusCode} | {response.ReasonPhrase} | ${DateTime.Now}");
+                    Logger.circularBuffer.Add($"fetching overpass transit data not successful, returned: {response.StatusCode} | {response.ReasonPhrase} | ${DateTime.Now}");
                     lastFetchWasSuccess = false;
                     // Handle unsuccessful response
                 }
             }
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
             {
+                
                 useAlternative = !useAlternative;
                 lastFetchWasSuccess = false;
+                lastFetchWasATimeout = true;
+                currentlyFetching = false;
                 Console.WriteLine("The request timed out.");
-                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
+                Logger.circularBuffer.Add($"fetching overpass transit data caused exception: |  {ex.Message} | ${DateTime.Now}");
+                if(!isAlreadyRetry)
+                {
+                    isAlreadyRetry = true;
+                    await FetchNearbyTransitAsync(userLatitude, userLongitude, searchRadius, mainPage, transitOrigin);
+                }
+                
             }
             catch (Exception ex)
             {
                 useAlternative = !useAlternative;
                 lastFetchWasSuccess = false;
-                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
+                Logger.circularBuffer.Add($"fetching overpass transit data caused exception: |  {ex.Message} | ${DateTime.Now}");
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
             finally

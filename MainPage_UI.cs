@@ -799,7 +799,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 if(OverpassModule.lastFetchWasATimeout)
                 {
-                    _LocationInfoLabel.Text = "Update locations request timed out, try again";
+                    _LocationInfoLabel.Text = "Update locations request timed out, try again";                    
                 }
                 else
                 {
@@ -817,6 +817,10 @@ namespace IndoorCO2App_Multiplatform
             else if (OverpassModule.currentlyFetching)
             {
                 _LocationInfoLabel.Text = $"currently retrieving nearby locations ({Math.Round((DateTime.Now-OverpassModule.startTimeOfFetch).TotalSeconds)}s) ";
+                if(OverpassModule.isAlreadyRetry && OverpassModule.useAlternative)
+                {
+                    _LocationInfoLabel.Text = $"trying alternative location service ({Math.Round((DateTime.Now - OverpassModule.startTimeOfFetch).TotalSeconds)}s)";
+                }
             }
 
             if (OverpassModule.everFetchedTransitLocations == false && currentMenuMode == MenuMode.TransportSelection)
