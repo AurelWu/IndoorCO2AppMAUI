@@ -22,6 +22,7 @@ namespace IndoorCO2App_Multiplatform
         {
 #if ANDROID
             ls = new LocationService();
+            OnStartListening();
 #endif
 #if IOS
             ls = new LocationServiceApple();
@@ -102,13 +103,12 @@ namespace IndoorCO2App_Multiplatform
 
             await GetCachedLocation();
             
-
             try
             {
                 isCheckingLocation = true;
 
                 Logger.circularBuffer.Add("Requesting GPS Update | " + DateTime.Now);
-                var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(15));
+                var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(20));
                 gpsCancelTokenSource = new CancellationTokenSource();
                 var result = await Geolocation.GetLocationAsync(request,gpsCancelTokenSource.Token);
                 if (result != null)
@@ -172,6 +172,33 @@ namespace IndoorCO2App_Multiplatform
                 Logger.circularBuffer.Add("CancelGPSUpdateRequest() not successful" + ex.Message);
             }
            
+        }
+
+        async static void OnStartListening()
+        {
+#if ANDROID
+            try
+            {
+                Geolocation.LocationChanged -= Geolocation_LocationChanged;
+                GeolocationAccuracy accuracy = GeolocationAccuracy.Best;
+                Geolocation.LocationChanged += Geolocation_LocationChanged;
+                var request = new GeolocationListeningRequest(accuracy);
+                var success = await Geolocation.StartListeningForegroundAsync(request);
+
+                string status = success
+                    ? "Started listening for foreground location updates"
+                    : "Couldn't start listening";
+            }
+            catch (Exception ex)
+            {
+                Logger.circularBuffer.Add("OnStartListening() not successful" + ex.Message);
+            }
+#endif
+        }
+
+        static void Geolocation_LocationChanged(object sender, GeolocationLocationChangedEventArgs e)
+        {
+            currentLocation = e.Location;
         }
     }
 }

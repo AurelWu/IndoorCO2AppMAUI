@@ -757,10 +757,10 @@ namespace IndoorCO2App_Multiplatform
 
             try
             {
-                string endpoint = privateCoffeeURL;
+                string endpoint = overpassTurboURL;
                 if (useAlternative == true)
                 {
-                    endpoint = overpassTurboURL;
+                    endpoint = privateCoffeeURL;
                 }
                 using var response = await client.PostAsync(endpoint, content);
 
@@ -821,10 +821,10 @@ namespace IndoorCO2App_Multiplatform
 
             try
             {
-                string endpoint = privateCoffeeURL;
+                string endpoint = overpassTurboURL;
                 if(useAlternative == true)
                 {
-                    endpoint = overpassTurboURL;
+                    endpoint = privateCoffeeURL;
                 }
                 using var response = await client.PostAsync(endpoint, content);
 
