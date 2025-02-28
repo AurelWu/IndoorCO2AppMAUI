@@ -13,6 +13,7 @@ using System.ComponentModel;
 
 namespace IndoorCO2App_Multiplatform
 {
+
     public partial class MainPage : ContentPage, INotifyPropertyChanged
     {
         private string _appVersion;

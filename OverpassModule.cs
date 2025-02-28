@@ -21,6 +21,11 @@ namespace IndoorCO2App_Multiplatform
     }
     internal static class OverpassModule
     {
+        public static string overpassTurboURL = "https://overpass-api.de/api/interpreter";
+        public static string privateCoffeeURL = "https://overpass.private.coffee/api/interpreter";
+
+        public static bool useAlternative = false;
+
         //only buildings for now
         private static CircularBuffer<LocationDataWithTimeStamp> cachedBuildingLocations;
         private static CircularBuffer<LocationDataWithTimeStamp> cachedTransitStopLocations;
@@ -104,81 +109,130 @@ namespace IndoorCO2App_Multiplatform
         /// </summary>
         private static void AddToCachedBuildingLocations()
         {
-            foreach(var l in BuildingLocationData)
+            try
             {
-                DateTime c = DateTime.Now;
-                LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.type, l.ID, l.Name, l.latitude, l.longitude, 0, 0, c);
-                if(cachedBuildingLocations.Contains(ld))
+
+
+                foreach (var l in BuildingLocationData)
                 {
-                    int pos = cachedBuildingLocations.IndexOf(ld);
-                    cachedBuildingLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
+                    DateTime c = DateTime.Now;
+                    LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.type, l.ID, l.Name, l.latitude, l.longitude, 0, 0, c);
+                    if (cachedBuildingLocations.Contains(ld))
+                    {
+                        int pos = cachedBuildingLocations.IndexOf(ld);
+                        cachedBuildingLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
+                    }
+                    else
+                    {
+                        cachedBuildingLocations.Add(ld);
+                    }
                 }
-                else
-                {
-                    cachedBuildingLocations.Add(ld);
-                }
+                WriteBuildingCacheToFileStorage();
             }
-            WriteBuildingCacheToFileStorage();
+            catch
+            {
+                Logger.circularBuffer.Add("Error Adding Building Results to App Cache");
+            }
         }
 
         private static void AddToCachedTransitStopLocations()
         {
-            var tr = new List<LocationData>();
-            tr.AddRange(TransportStartLocationData);
-            tr.AddRange(TransportDestinationLocationData);
-            foreach (var l in tr)
+            try
             {
-                DateTime c = DateTime.Now;
-                LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.type, l.ID, l.Name, l.latitude, l.longitude, 0, 0, c);
-                if (cachedTransitStopLocations.Contains(ld))
+
+                var tr = new List<LocationData>();
+                tr.AddRange(TransportStartLocationData);
+                tr.AddRange(TransportDestinationLocationData);
+                foreach (var l in tr)
                 {
-                    int pos = cachedTransitStopLocations.IndexOf(ld);
-                    cachedTransitStopLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
+                    DateTime c = DateTime.Now;
+                    LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.type, l.ID, l.Name, l.latitude, l.longitude, 0, 0, c);
+                    if (cachedTransitStopLocations.Contains(ld))
+                    {
+                        int pos = cachedTransitStopLocations.IndexOf(ld);
+                        cachedTransitStopLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
+                    }
+                    else
+                    {
+                        cachedTransitStopLocations.Add(ld);
+                    }
                 }
-                else
-                {
-                    cachedTransitStopLocations.Add(ld);
-                }
+                WriteTransitStopCachedToFileStorage();
             }
-            WriteTransitStopCachedToFileStorage();
+            catch
+            {
+                Logger.circularBuffer.Add("Error Adding Transit Stop Results to App Cache");
+            }
         }
 
         private static void AddToCachedTransitLineLocations(double userLatitude, double userLongitude)
         {
-            //allows same ID if rounded position is differently, so we can store multiple positions for each relation (better solution down the road which just has the actual routes is way more effort)
-            var tr = new List<TransitLineData>();
-            tr.AddRange(TransitLines);
-            foreach(var l in tr)
+            try
             {
-                DateTime c = DateTime.Now;
-                TransitLineDataWithTimeStamp ld = new TransitLineDataWithTimeStamp(l.VehicleType, l.NWRType, l.ID, l.Name, c, double.Round(userLatitude, 3), double.Round(userLongitude, 3));
-                if (cachedTransitLineLocations.Contains(ld))
+
+                //allows same ID if rounded position is differently, so we can store multiple positions for each relation (better solution down the road which just has the actual routes is way more effort)
+                var tr = new List<TransitLineData>();
+                tr.AddRange(TransitLines);
+                foreach (var l in tr)
                 {
-                    int pos = cachedTransitLineLocations.IndexOf(ld);
-                    cachedTransitLineLocations[pos].TimeLastSeen = c;
+                    DateTime c = DateTime.Now;
+                    TransitLineDataWithTimeStamp ld = new TransitLineDataWithTimeStamp(l.VehicleType, l.NWRType, l.ID, l.Name, c, double.Round(userLatitude, 3), double.Round(userLongitude, 3));
+                    if (cachedTransitLineLocations.Contains(ld))
+                    {
+                        int pos = cachedTransitLineLocations.IndexOf(ld);
+                        cachedTransitLineLocations[pos].TimeLastSeen = c;
+                    }
+                    else
+                    {
+                        cachedTransitLineLocations.Add(ld);
+                    }
                 }
-                else 
-                {
-                    cachedTransitLineLocations.Add(ld);
-                }
+                TransitLines = tr.DistinctBy(c => new { c.NWRType, c.ID }).ToList();
+                WriteTransitLineCachedToFileStorage();
             }
-            TransitLines = tr.DistinctBy(c => new { c.NWRType, c.ID }).ToList();
-            WriteTransitLineCachedToFileStorage();
+            catch
+            {
+                Logger.circularBuffer.Add("Error Adding Transit Lines to App Cache");
+            }
         }
 
         private static async void WriteBuildingCacheToFileStorage()
         {
-            await FileStorage.SaveCachedHashSetAsync(cachedBuildingLocations.ToHashSet(),CacheDataCategory.Building);
+            try
+            {
+                await FileStorage.SaveCachedHashSetAsync(cachedBuildingLocations.ToHashSet(), CacheDataCategory.Building);
+            }
+            catch
+            {
+                Logger.circularBuffer.Add("Error writing buildings to App Cache");
+            }
+            
         }
 
         private static async void WriteTransitStopCachedToFileStorage()
         {
-            await FileStorage.SaveCachedHashSetAsync(cachedTransitStopLocations.ToHashSet(), CacheDataCategory.TransitStop);
+            try
+            {
+                await FileStorage.SaveCachedHashSetAsync(cachedTransitStopLocations.ToHashSet(), CacheDataCategory.TransitStop);
+            }
+            catch
+            {
+                Logger.circularBuffer.Add("Error writing Transit Stops to App Cache");
+            }
+            
         }
 
         private static async void WriteTransitLineCachedToFileStorage()
         {
-            await FileStorage.SaveCachedTransitLineHashSetAsync(cachedTransitLineLocations.ToHashSet());
+            try
+            {
+                await FileStorage.SaveCachedTransitLineHashSetAsync(cachedTransitLineLocations.ToHashSet());
+            }
+            catch
+            {
+                Logger.circularBuffer.Add("Error Writing Transit Lines to App Cache");
+            }
+            
         }
 
         public static void GetNearbyCachedBuildingLocations(double userLatitude, double userLongitude, double radius)
@@ -399,7 +453,9 @@ namespace IndoorCO2App_Multiplatform
             }
 
             SortFavouriteBuildingsToTop();
+
             AddToCachedBuildingLocations();
+
             if (BuildingLocationData.Count == 0)
             {
                 lastFetchWasSuccessButNoResults = true;
@@ -701,7 +757,12 @@ namespace IndoorCO2App_Multiplatform
 
             try
             {
-                using var response = await client.PostAsync("https://overpass-api.de/api/interpreter", content);
+                string endpoint = privateCoffeeURL;
+                if (useAlternative == true)
+                {
+                    endpoint = overpassTurboURL;
+                }
+                using var response = await client.PostAsync(endpoint, content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -713,6 +774,7 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else
                 {
+                    useAlternative = !useAlternative;
                     lastFetchWasSuccess = false;
                     Logger.circularBuffer.Add($"fetching overpass building data not successful, returned: {response.StatusCode} | {response.ReasonPhrase} | ${DateTime.Now}");
                     // Handle unsuccessful response
@@ -721,20 +783,21 @@ namespace IndoorCO2App_Multiplatform
             }
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
             {
+                useAlternative = !useAlternative;
                 lastFetchWasSuccess = false;
                 Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
                 Console.WriteLine("The request timed out.");
             }
             catch (Exception ex)
             {
+                useAlternative = !useAlternative;
                 lastFetchWasSuccess = false;
                 Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
             finally
             {
-                currentlyFetching = false;
-                
+                currentlyFetching = false;                
             }
 
         }
@@ -758,7 +821,12 @@ namespace IndoorCO2App_Multiplatform
 
             try
             {
-                using var response = await client.PostAsync("https://overpass-api.de/api/interpreter", content);
+                string endpoint = privateCoffeeURL;
+                if(useAlternative == true)
+                {
+                    endpoint = overpassTurboURL;
+                }
+                using var response = await client.PostAsync(endpoint, content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -778,6 +846,7 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else
                 {
+                    useAlternative = !useAlternative;
                     Logger.circularBuffer.Add($"fetching overpass building data not successful, returned: {response.StatusCode} | {response.ReasonPhrase} | ${DateTime.Now}");
                     lastFetchWasSuccess = false;
                     // Handle unsuccessful response
@@ -785,12 +854,14 @@ namespace IndoorCO2App_Multiplatform
             }
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
             {
+                useAlternative = !useAlternative;
                 lastFetchWasSuccess = false;
                 Console.WriteLine("The request timed out.");
                 Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
             }
             catch (Exception ex)
             {
+                useAlternative = !useAlternative;
                 lastFetchWasSuccess = false;
                 Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
                 Console.WriteLine("An error occurred: " + ex.Message);

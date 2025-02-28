@@ -59,9 +59,10 @@
 		<DebugType>portable</DebugType>
 		<BuildIpa>False</BuildIpa>
 		<MtouchLink>Full</MtouchLink>
+		<MtouchDebug>True</MtouchDebug>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
 		<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
 		<ApplicationVersion>46</ApplicationVersion>
@@ -69,7 +70,10 @@
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 		<Optimize>False</Optimize>
 		<OptimizePNGs>False</OptimizePNGs>
+		<DebugType>portable</DebugType>
+		<BuildIpa>False</BuildIpa>
 		<MtouchLink>Full</MtouchLink>
+		<MtouchDebug>True</MtouchDebug>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
@@ -115,6 +119,13 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <DebugSymbols>True</DebugSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+	  <MtouchDebug>True</MtouchDebug>
+	  <MtouchLink>Full</MtouchLink>
+	  <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+	  <OptimizePNGs>False</OptimizePNGs>
 	</PropertyGroup>
 
 	<ItemGroup>
