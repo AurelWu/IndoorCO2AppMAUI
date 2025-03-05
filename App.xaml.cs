@@ -25,7 +25,21 @@ namespace IndoorCO2App_Multiplatform
             //Shell.SetNavBarIsVisible(this, false);
             MainPage = new MainPage();
 #endif
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            {
+                Logger.LogError("AppDomain Exception", e.ExceptionObject as Exception);
+            };
+
+            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            {
+                LogError("Unobserved Task Exception", e.Exception);
+                e.SetObserved();
+            };
         }
+
+
+
 
         protected override void OnSleep()
         {
@@ -38,63 +52,63 @@ namespace IndoorCO2App_Multiplatform
 
         protected override void OnResume()
         {
-            Logger.circularBuffer.Add("OnResume triggered at: " + DateTime.Now);
-            Logger.circularBuffer.Add("OnResume | before Resume Recording called: " + DateTime.Now);
+            Logger.WriteToLog("OnResume triggered" , false);
+            Logger.WriteToLog("OnResume | before Resume Recording called",false);
             try
             {
                 ResumeRecording();
             }
             catch (Exception ex)
             {
-                Logger.circularBuffer.Add("Exception caused by ResumeRecording()");
+                Logger.WriteToLog("Exception caused by ResumeRecording() " + ex.Source + " | " + ex.Message,false);
             }
-            
-            Logger.circularBuffer.Add("OnResume | After Resume Recording called: " + DateTime.Now);
-            Logger.circularBuffer.Add("OnResume | Before GetCachedLocation called: " + DateTime.Now);
+
+            Logger.WriteToLog("OnResume | After Resume Recording called", false);
+            Logger.WriteToLog("OnResume | Before GetCachedLocation called", false);
             try
             {
                 SpatialManager.GetCachedLocation();
             }            
             catch (Exception ex)
             {
-                Logger.circularBuffer.Add("Exception caused by GetCachedLocation()");
+                Logger.WriteToLog("Exception caused by GetCachedLocation()",true);
             }
-            Logger.circularBuffer.Add("OnResume | After GetCachedLocation called: " + DateTime.Now);
+            Logger.WriteToLog("OnResume | After GetCachedLocation called",false);
         }
 
         public static void ResumeRecording()
         {
             string ost = Preferences.Get("OnSleepTriggeredTime", "never");
-            Logger.circularBuffer.Add("OnSleep triggered at: " + ost);
-            Logger.circularBuffer.Add("OnResume triggered at: " + DateTime.Now);
+            Logger.WriteToLog("OnSleep triggered at " + ost,false);
+            Logger.WriteToLog("OnResume triggered",false);
             string monitorType = Preferences.Get(RecoveryData.prefCO2MonitorType, "");
             string recordingMode = Preferences.Get(RecoveryData.prefRecoveryRecordingMode, "");
-            Logger.circularBuffer.Add("Stored MonitorType: " + monitorType);
+            Logger.WriteToLog("Stored MonitorType: " + monitorType,false);
             if (monitorType == CO2MonitorType.Aranet4.ToString() || monitorType == CO2MonitorType.Airvalent.ToString())
             {
-                Logger.circularBuffer.Add("checking if a resume attempt failed previously...");
+                Logger.WriteToLog("checking if a resume attempt failed previously...",false);
                 if (Preferences.Get("TriedResumeAfterSleep", "false") == "true") return;
-                Logger.circularBuffer.Add("resume attempt did not fail previously...");
-                Logger.circularBuffer.Add("checking if the app is already recording, meaning it didnt get reset...");
+                Logger.WriteToLog("resume attempt did not fail previously...",false);
+                Logger.WriteToLog("checking if the app is already recording, meaning it didnt get reset...", false);
                 if (BluetoothManager.isRecording) return; //means the app didnt get reset
-                Logger.circularBuffer.Add("app is not recording...");
-                Logger.circularBuffer.Add("checking if recording mode is either building or transit...");
-                Logger.circularBuffer.Add("recordingMode is: " + recordingMode);
+                Logger.WriteToLog("app is not recording...",false);
+                Logger.WriteToLog("checking if recording mode is either building or transit...", false);
+                Logger.WriteToLog("recordingMode is: " + recordingMode, false);
                 if (!(recordingMode == "Building" || recordingMode == "Transit")) return;
-                Logger.circularBuffer.Add("recording mode is either building or transit...");
-                Logger.circularBuffer.Add("recovering after app got stopped");
+                Logger.WriteToLog("recording mode is either building or transit...",false);
+                Logger.WriteToLog("recovering after app got stopped", false);
 
                 //TODO => IF RECOVERY FAILED FOR WHATEVER REASON... dont try to recover again to prevent eternal problems
                 Preferences.Set("TriedResumeAfterSleep", "true"); //if something goes wrong then next try it wont get called as long as there wasn't a OnSleep Before
                 string mode = recordingMode;
                 if (mode == "Building")
                 {
-                    Logger.circularBuffer.Add("recovering Building Recording");
+                    Logger.WriteToLog("recovering Building Recording", false);
                     IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartRecording(SubmissionMode.Building, true);
                 }
                 else if (mode == "Transit")
                 {
-                    Logger.circularBuffer.Add("recovering Transit Recording");
+                    Logger.WriteToLog("recovering Transit Recording",false);
                     IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartTransportRecording(true);
                 }
             }

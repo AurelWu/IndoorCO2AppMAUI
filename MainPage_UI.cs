@@ -453,7 +453,23 @@ namespace IndoorCO2App_Multiplatform
             int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
             if (trimEnd - trimStart >= 4 && BluetoothManager.isRecording)
             {
-                if(submissionMode== SubmissionMode.BuildingManual &&(_ManualNameEditor.Text==null || _ManualAddressEditor.Text==null))
+
+                if(submissionMode== SubmissionMode.Transit)
+                {
+                    selectedTransitLine = (TransitLineData)_TransitLinePicker.SelectedItem;
+                    if(selectedTransitLine==null)
+                    {
+                        _FinishRecordingButton.IsEnabled = false;
+                        _FinishRecordingButton.Text = "Submit Data (needs Transit Line)";
+                    }
+                    else
+                    {
+                        _FinishRecordingButton.IsEnabled = true;
+                        _FinishRecordingButton.Text = "Submit Data";
+                    }
+                }
+
+                else if(submissionMode== SubmissionMode.BuildingManual &&(_ManualNameEditor.Text==null || _ManualAddressEditor.Text==null))
                 {
                     _FinishRecordingButton.IsEnabled = false;
                     _FinishRecordingButton.Text = "Submit Data (needs Address & Name)";

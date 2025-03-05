@@ -80,20 +80,20 @@ namespace IndoorCO2App_Multiplatform
             }
             catch (FeatureNotSupportedException fnsEx)
             {
-                Logger.circularBuffer.Add("getting cached GPS location not successful: " + fnsEx.Message);
+                Logger.WriteToLog("getting cached GPS location not successful: " + fnsEx.Message, false);
             }
             catch (FeatureNotEnabledException fneEx)
             {
 
-                Logger.circularBuffer.Add("getting cached GPS location not successful: " + fneEx.Message);
+                Logger.WriteToLog("getting cached GPS location not successful: " + fneEx.Message, false);
             }
             catch (PermissionException pEx)
             {
-                Logger.circularBuffer.Add("getting cached GPS location not successful: " + pEx.Message);
+                Logger.WriteToLog("getting cached GPS location not successful: " + pEx.Message, false);
             }
             catch (Exception ex)
             {
-                Logger.circularBuffer.Add("getting cached GPS location not successful: " + ex.Message);
+                Logger.WriteToLog("getting cached GPS location not successful: " + ex.Message, false);
             }
 
         }
@@ -107,7 +107,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 isCheckingLocation = true;
 
-                Logger.circularBuffer.Add("Requesting GPS Update | " + DateTime.Now);
+                Logger.WriteToLog("Requesting GPS Update |", false);
                 var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(20));
                 gpsCancelTokenSource = new CancellationTokenSource();
                 var result = await Geolocation.GetLocationAsync(request,gpsCancelTokenSource.Token);
@@ -118,30 +118,30 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else
                 {
-                    Logger.circularBuffer.Add("GPS update not successful:  null value after timeout: " + System.DateTime.Now);
+                    Logger.WriteToLog("GPS update not successful:  null value after timeout: ",false);
                 }
                 locationUpdateSuccessful = true;
             }
 
             catch (FeatureNotSupportedException fnsEx)
             {
-                Logger.circularBuffer.Add("GPS update not successful: " + fnsEx.Message);                
+                Logger.WriteToLog("GPS update not successful: " + fnsEx.Message,false);                
                 locationUpdateSuccessful = false;
             }
             catch (FeatureNotEnabledException fneEx)
             {
 
-                Logger.circularBuffer.Add("GPS update not successful: " + fneEx.Message);
+                Logger.WriteToLog("GPS update not successful: " + fneEx.Message, false);
                 locationUpdateSuccessful = false;
             }
             catch (PermissionException pEx)
             {
-                Logger.circularBuffer.Add("GPS update not successful: " + pEx.Message);
+                Logger.WriteToLog("GPS update not successful: " + pEx.Message, false);
                 locationUpdateSuccessful = false;
             }
             catch (Exception ex)
             {
-                Logger.circularBuffer.Add("GPS update not successful: " + ex.Message);
+                Logger.WriteToLog("GPS update not successful: " + ex.Message, false);
                 locationUpdateSuccessful = false;
             }
             finally
@@ -153,7 +153,7 @@ namespace IndoorCO2App_Multiplatform
                 }
                 catch (Exception ex)
                 {
-                    Logger.circularBuffer.Add("gpsCancelTokenSource?.Dispose() not successful: " + ex.Message);
+                    Logger.WriteToLog("gpsCancelTokenSource?.Dispose() not successful: " + ex.Message, false);
                 }
                 
             }
@@ -169,7 +169,7 @@ namespace IndoorCO2App_Multiplatform
             }
             catch (Exception ex)
             {
-                Logger.circularBuffer.Add("CancelGPSUpdateRequest() not successful" + ex.Message);
+                Logger.WriteToLog("CancelGPSUpdateRequest() not successful" + ex.Message, false);
             }
            
         }

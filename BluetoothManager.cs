@@ -298,7 +298,7 @@ namespace IndoorCO2App_Multiplatform
 
         internal static async void ScanForDevices(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
         {
-            Logger.circularBuffer.Add($"ScanForDevices() called for: {monitorType} with nameFilter: {nameFilter} | "  + DateTime.Now);
+            Logger.WriteToLog($"ScanForDevices() called for: {monitorType} with nameFilter: {nameFilter} | " + DateTime.Now, false);
             //doesnt work like it should yet
             //directConnectToBondedDevice = false;
             //bool checkStatus = BluetoothHelper.CheckStatus();
@@ -360,7 +360,7 @@ namespace IndoorCO2App_Multiplatform
             var scanFilterOptions = new ScanFilterOptions();
             if (monitorType != CO2MonitorType.InkbirdIAMT1 && monitorType != CO2MonitorType.AirCoda && monitorType != CO2MonitorType.AirSpot)
             {
-                Logger.circularBuffer.Add($"setting serviceUUId filter to: {serviceUUID} | " + DateTime.Now);
+                Logger.WriteToLog($"setting serviceUUId filter to: {serviceUUID}", false);
                 scanFilterOptions.ServiceUuids = new[] { serviceUUID };
                 if(monitorType== CO2MonitorType.Aranet4)
                 {
@@ -373,14 +373,14 @@ namespace IndoorCO2App_Multiplatform
             adapter.DeviceDiscovered += (s, e) =>
             {                
                 var device = e.Device;
-                Logger.circularBuffer.Add($"Discovered Device: {device.Name} ({device.Id}) | " + DateTime.Now);
+                Logger.WriteToLog($"Discovered Device: {device.Name} ({device.Id}) |",false);
                 Console.WriteLine($"Discovered Device: {device.Name} ({device.Id})");
 
                 // Check if the discovered device matches criteria, as we currently only check serviceUUIDs of airvalent and aranet we only do this for them (only  they are necessarily paired)
                 if ((monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent) && device.Name.ToLower().Contains(nameFilter.Trim().ToLower()))
                 {
                     var adRecords = device.AdvertisementRecords;
-                    Logger.circularBuffer.Add("Target device found. Stopping scan early | " + DateTime.Now);
+                    Logger.WriteToLog("Target device found. Stopping scan early",false);
 
                     int majorVersion = 0;
                     int minorVersion = 0;
@@ -526,6 +526,7 @@ namespace IndoorCO2App_Multiplatform
                     rssi = discoveredDevices[0].Rssi;
                 }
             }
+            
 
             if (discoveredDevices != null && discoveredDevices.Count > 0)
             {
@@ -533,22 +534,32 @@ namespace IndoorCO2App_Multiplatform
                 try
                 {
 
-                        Logger.circularBuffer.Add($"ConnectToDeviceAsync() to device: {deviceName} | " + DateTime.Now);
+                        Logger.WriteToLog($"ConnectToDeviceAsync() to device: {deviceName}",false);
                         await adapter.ConnectToDeviceAsync(discoveredDevices[0]);                    
                 }
                 catch
                 {
                     lastAttemptFailed = true;
                     discoveredDevices = null;
-                    Logger.circularBuffer.Add($"ConnectToDeviceAsync() to Device failed: {deviceName} | " + DateTime.Now);
+                    Logger.WriteToLog($"ConnectToDeviceAsync() to Device failed: {deviceName}", false);
                     Console.WriteLine("Connecting to Device failed");
                     return;
                 }
 
-                //TODO Handle case of multiple Devices => Idea is that User can specify the MAC of the device? => or rather in a Advanced Menu, sees all Devices shown with Details and then picks it and we store it
-                //for now we always just use the first device (and in case of multiple, the idea is to filter it down to 1 as in mentioned in comment above
-                //for now we don't actually connect if it is an airspot as that stops the advertisement data and this includes the live co2 data
-                ConnectToDevice(discoveredDevices[0], monitorType);
+                //might have changed after the await before
+                if(discoveredDevices.Count>0)
+                {
+                    try
+                    {
+                        ConnectToDevice(discoveredDevices[0], monitorType);
+                    }
+                    catch
+                    {
+                        Logger.WriteToLog($"ConnectToDevice() failed for: {deviceName} | " +$"namefilter set to: {nameFilter}",false );
+                    }
+                    
+                }
+                
             }
 
             //if (discoveredDevices == null)
@@ -592,7 +603,7 @@ namespace IndoorCO2App_Multiplatform
                 deviceID = device.Id.ToString();
                 rssi = device.Rssi;
                 DeviceState deviceState = device.State;
-                Logger.circularBuffer.Add($"deviceState of {device.Name} : {deviceState} | " + DateTime.Now);
+                Logger.WriteToLog($"deviceState of {device.Name} : {deviceState} | ",false);
             }
 
             if(monitorType==CO2MonitorType.AirCoda)
@@ -616,20 +627,20 @@ namespace IndoorCO2App_Multiplatform
                         service = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType], cts.Token);
                         if (service == null)
                         {
-                            Logger.circularBuffer.Add($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) returned null | " + DateTime.Now);
+                            Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) returned null",false);
                         }
                         else
                         {
-                            Logger.circularBuffer.Add($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]) returned serviceID:  {service.Id} | " + DateTime.Now);
+                            Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]) returned serviceID:  {service.Id}",false);
                         }
                     }
                     catch (TaskCanceledException)
                     {
-                        Logger.circularBuffer.Add($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) TaskCanceledException  | " + DateTime.Now);
+                        Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) TaskCanceledException",false);
                     }
                     catch (Exception ex)
                     {
-                        Logger.circularBuffer.Add($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) Error during service discovery: {ex.Message}  | " + DateTime.Now);
+                        Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) Error during service discovery: {ex.Message}",false);
                     }
                                                             
                     //results = await device.GetServicesAsync();
@@ -704,7 +715,7 @@ namespace IndoorCO2App_Multiplatform
                             int CO2Value = (CO2firstByte << 8) | CO2secondByte;
                             currentCO2Reading = CO2Value;
                             string hexString = serviceData.ToHexString();
-                            Logger.circularBuffer.Add("airCoda CO2Value: " + CO2Value + " | " + hexString);
+                            Logger.WriteToLog("airCoda CO2Value: " + CO2Value + " | " + hexString,false);
                             if(recordedData.Count==0)
                             {
                                 recordedData.Add(new SensorData(currentCO2Reading, 0));
@@ -782,7 +793,7 @@ namespace IndoorCO2App_Multiplatform
                         //    //}
                         //}
 
-                        Logger.circularBuffer.Add($"trying to read characteristics | " + DateTime.Now);
+                        Logger.WriteToLog($"trying to read characteristics", false);
                         
 
                         ICharacteristic aranet4CharacteristicLive = await service.GetCharacteristicAsync(Aranet_CharacteristicUUID);
@@ -792,19 +803,19 @@ namespace IndoorCO2App_Multiplatform
 
                         if(aranet4CharacteristicLive == null)
                         {
-                            Logger.circularBuffer.Add($"aranet4CharacteristicLive is null | " + DateTime.Now);
+                            Logger.WriteToLog($"aranet4CharacteristicLive is null", false);
                         }
                         if(aranet4CharacteristicTotalDataPoints == null)
                         {
-                            Logger.circularBuffer.Add($"aranet4TotalDataPointsCharacteristic null | " + DateTime.Now);
+                            Logger.WriteToLog($"aranet4TotalDataPointsCharacteristic null", false);
                         }
                         if (aranet4CharacteristicLive == null)
                         {
-                            Logger.circularBuffer.Add($"aranet4CharacteristicWriter is null | " + DateTime.Now);
+                            Logger.WriteToLog($"aranet4CharacteristicWriter is null", false);
                         }
                         if(aranet4CharacteristicHistoryV2 == null)
                         {
-                            Logger.circularBuffer.Add($"aranet4CharacteristicHistoryV2  is null | " + DateTime.Now);
+                            Logger.WriteToLog($"aranet4CharacteristicHistoryV2  is null", false);
                         }
 
                         if (aranet4CharacteristicLive != null)
@@ -816,14 +827,14 @@ namespace IndoorCO2App_Multiplatform
                             }
                             catch (Exception e)
                             {
-                                Logger.circularBuffer.Add($"calling aranet4CharacteristicLive.ReadAsync() raised an exception: {e} | " + DateTime.Now);
+                                Logger.WriteToLog($"calling aranet4CharacteristicLive.ReadAsync() raised an exception: {e}",false);
                                 return;
                             }                            
                             gattStatus = result.resultCode;
                             //if(gattStatus == result.resultCode== CAN)
                             if (gattStatus != 0)
                             {
-                                Logger.circularBuffer.Add($"GattStatus is not 0 but {gattStatus} | " + DateTime.Now);
+                                Logger.WriteToLog($"GattStatus is not 0 but {gattStatus}",false);
                                 if (gattStatus == 2)
                                 {
                                     isGattA2DP = true;
@@ -843,7 +854,7 @@ namespace IndoorCO2App_Multiplatform
 
                             else
                             {
-                                Logger.circularBuffer.Add($"aranet4CharacteristicLive.ReadAsync() returned smaller array than expected | " + DateTime.Now);
+                                Logger.WriteToLog($"aranet4CharacteristicLive.ReadAsync() returned smaller array than expected",false);
                                 Console.WriteLine("Byte array does not contain enough data");
                             }
                         }
@@ -859,12 +870,12 @@ namespace IndoorCO2App_Multiplatform
                                 totalDataPoints = (totalDataPointsRaw[1] << 8) | (totalDataPointsRaw[0] & 0xFF);
                                 if(isRecording)
                                 {
-                                    Logger.circularBuffer.Add("************");
-                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Aranet|TotalDataPoints: " + totalDataPoints);
+                                    Logger.WriteToLog("************",false);
+                                    Logger.WriteToLog(System.DateTime.Now.ToLongTimeString() + "|Aranet|TotalDataPoints: " + totalDataPoints,false);
                                 }
                                 else
                                 {
-                                    Logger.circularBuffer.Add($"aranet4CharacteristicTotalDataPoints, TotalDataPoints: {totalDataPoints} | " + DateTime.Now);
+                                    Logger.WriteToLog($"aranet4CharacteristicTotalDataPoints, TotalDataPoints: {totalDataPoints}", false);
                                 }
                                 
                             }
@@ -889,9 +900,9 @@ namespace IndoorCO2App_Multiplatform
                                 RETRYREAD:
                                 try
                                 {
-                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString()+ "|Aranet|Requesting History with startIndex: " +start);
+                                    Logger.WriteToLog("|Aranet|Requesting History with startIndex: " + start, false);
                                     response = await aranet4CharacteristicWriter.WriteAsync(requestData);
-                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Aranet|Response to Request: " + response);
+                                    Logger.WriteToLog("|Aranet|Response to Request: " + response, false);
                                 }
                                 catch
                                 {
@@ -905,12 +916,12 @@ namespace IndoorCO2App_Multiplatform
                                 {
                                     await Task.Delay(35);
                                     history = await aranet4CharacteristicHistoryV2.ReadAsync();
-                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Aranet|ReadingHistoryV2|data Size: " + history.data.Length);
-                                    Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Aranet|ReadingHistoryV2|result Code: " + history.resultCode);
+                                    Logger.WriteToLog("|Aranet|ReadingHistoryV2|data Size: " + history.data.Length, false);
+                                    Logger.WriteToLog("|Aranet|ReadingHistoryV2|result Code: " + history.resultCode, false);
                                     if(history.data.Length<=10 && retryCounter<10)
                                     {
                                         retryCounter++;
-                                        Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() +"|Aranet|Historyread Retry: " + retryCounter);
+                                        Logger.WriteToLog("|Aranet|Historyread Retry: " + retryCounter, false);
                                         await Task.Delay(35);
                                         goto RETRYREAD;
                                     }
@@ -934,7 +945,7 @@ namespace IndoorCO2App_Multiplatform
                                 {
                                     co2dataArray[i] = BitConverter.ToUInt16(historyDataRaw, 10 + (i * 2));
                                 }
-                                Logger.circularBuffer.Add("Aranet|historyArrayLength: " + co2dataArray.Length);
+                                Logger.WriteToLog("Aranet|historyArrayLength: " + co2dataArray.Length, false);
                                 //TODO => dont clear if something went wrong but for now we want to find out what sometimes goes wrong first.
                                 recordedData.Clear();
                                 int t = 0;
@@ -995,7 +1006,7 @@ namespace IndoorCO2App_Multiplatform
                             try
                             {
                                 response = await airValentHistoryPointer.WriteAsync(msg);
-                                Logger.circularBuffer.Add("airvalent|Response|HistoryRequest: " + response);
+                                Logger.WriteToLog("airvalent|Response|HistoryRequest: " + response, false);
 
                             }
                             catch
@@ -1180,7 +1191,7 @@ namespace IndoorCO2App_Multiplatform
             if (data == null) return;
             if (data.Length < 11) return;
             if (data.Length != 16) return;
-            Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Ink|Data: " + ByteArrayToString(data));
+            Logger.WriteToLog("|Ink|Data: " + ByteArrayToString(data), false);
             byte fb = data[9];
             byte sb = data[10];
             byte[] c = new byte[] { sb, fb };
@@ -1204,7 +1215,7 @@ namespace IndoorCO2App_Multiplatform
             var data = e.Characteristic.Value;
             if(data == null) return;
             if (data.Length != 7) return;
-            Logger.circularBuffer.Add(System.DateTime.Now.ToLongTimeString() + "|Airspot|Data: " + ByteArrayToString(data));
+            Logger.WriteToLog("Airspot|Data: " + ByteArrayToString(data), false);
             byte fb = data[4];
             byte sb = data[5];
             byte[] c = new byte[] { sb, fb }; //might be the other way around?

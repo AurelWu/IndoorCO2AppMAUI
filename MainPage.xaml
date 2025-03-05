@@ -767,7 +767,16 @@ Completed="OnEntryCompleted" />
     SemanticProperties.Hint="Copy Debug Log to Clipboard Button"
     Clicked="OnDebugLogButtonClicked"
     HorizontalOptions="Center" />
+
+                <Button
+    x:Name="CrashLogButton"
+    Text="Copy Crash Log to Clipboard"
+    SemanticProperties.Hint="Copy Debug Log to Clipboard Button"
+    Clicked="OnCrashLogButtonClicked"
+    HorizontalOptions="Center" />
                 <Label x:Name="VersionLabel" Text="Version: 2024-10-01" FontSize="12" VerticalOptions="Center" />
+
+
             </VerticalStackLayout>
         </controls:FixedScrollView>
 

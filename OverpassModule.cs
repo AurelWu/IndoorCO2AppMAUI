@@ -132,7 +132,7 @@ namespace IndoorCO2App_Multiplatform
             }
             catch
             {
-                Logger.circularBuffer.Add("Error Adding Building Results to App Cache");
+                Logger.WriteToLog("Error Adding Building Results to App Cache",false);
             }
         }
 
@@ -162,7 +162,7 @@ namespace IndoorCO2App_Multiplatform
             }
             catch
             {
-                Logger.circularBuffer.Add("Error Adding Transit Stop Results to App Cache");
+                Logger.WriteToLog("Error Adding Transit Stop Results to App Cache", false);
             }
         }
 
@@ -193,7 +193,7 @@ namespace IndoorCO2App_Multiplatform
             }
             catch
             {
-                Logger.circularBuffer.Add("Error Adding Transit Lines to App Cache");
+                Logger.WriteToLog("Error Adding Transit Lines to App Cache",false);
             }
         }
 
@@ -205,7 +205,7 @@ namespace IndoorCO2App_Multiplatform
             }
             catch
             {
-                Logger.circularBuffer.Add("Error writing buildings to App Cache");
+                Logger.WriteToLog("Error writing buildings to App Cache", false);
             }
             
         }
@@ -218,7 +218,7 @@ namespace IndoorCO2App_Multiplatform
             }
             catch
             {
-                Logger.circularBuffer.Add("Error writing Transit Stops to App Cache");
+                Logger.WriteToLog("Error writing Transit Stops to App Cache", false);
             }
             
         }
@@ -231,7 +231,7 @@ namespace IndoorCO2App_Multiplatform
             }
             catch
             {
-                Logger.circularBuffer.Add("Error Writing Transit Lines to App Cache");
+                Logger.WriteToLog("Error Writing Transit Lines to App Cache", false);
             }
             
         }
@@ -239,7 +239,7 @@ namespace IndoorCO2App_Multiplatform
         public static void GetNearbyCachedBuildingLocations(double userLatitude, double userLongitude, double radius)
         {
             BuildingLocationData.Clear();
-            Logger.circularBuffer.Add("# of Cached Building Locations Locations total: " + cachedBuildingLocations.Count);
+            Logger.WriteToLog("# of Cached Building Locations Locations total: " + cachedBuildingLocations.Count,false);
             foreach (var c in cachedBuildingLocations)
             {
                 double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
@@ -251,7 +251,7 @@ namespace IndoorCO2App_Multiplatform
             }
             BuildingLocationData = BuildingLocationData.OrderBy(x => x.distanceToGivenLocation).ToList();
             SortFavouriteBuildingsToTop();
-            Logger.circularBuffer.Add("# of Cached Building Locations Locations in range: " + BuildingLocationData.Count);
+            Logger.WriteToLog("# of Cached Building Locations Locations in range: " + BuildingLocationData.Count, false);
             lastFetchWasFromCachedData = true;
         }
 
@@ -263,7 +263,7 @@ namespace IndoorCO2App_Multiplatform
                 ld = TransportDestinationLocationData;
             }
             ld.Clear();
-            Logger.circularBuffer.Add("# of Cached Transit Stop Locations Locations total: " + cachedTransitStopLocations.Count);
+            Logger.WriteToLog("# of Cached Transit Stop Locations Locations total: " + cachedTransitStopLocations.Count, false);
             foreach (var c in cachedTransitStopLocations)
             {
                 double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
@@ -275,7 +275,7 @@ namespace IndoorCO2App_Multiplatform
             }
             ld = ld.OrderBy(x => x.distanceToGivenLocation).ToList();
             SortTransitStops();
-            Logger.circularBuffer.Add("# of Cached Transit Stop Locations Locations in range: " + ld.Count);
+            Logger.WriteToLog("# of Cached Transit Stop Locations Locations in range: " + ld.Count, false);
             lastFetchWasFromCachedData = true;
         }
 
@@ -283,7 +283,7 @@ namespace IndoorCO2App_Multiplatform
         {
             List<TransitLineData> ld = TransitLines;
             ld.Clear();
-            Logger.circularBuffer.Add("# of Cached Transitlines in total: " + cachedTransitLineLocations.Count);
+            Logger.WriteToLog("# of Cached Transitlines in total: " + cachedTransitLineLocations.Count, false);
             foreach(var c in cachedTransitLineLocations)
             {
                 double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
@@ -430,8 +430,10 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[amenity=bank];" +
                 $"nwr(around:{rString},{latString},{lonString})[healthcare];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=museum];" +
+                $"nwr(around:{rString},{latString},{lonString})[tourism=zoo];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=gallery];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=hotel];" +
+                $"nwr(around:{rString},{latString},{lonString})[tourism][building];" +
                 ");" +
                 "out center qt;";
         }
@@ -778,7 +780,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     useAlternative = !useAlternative;
                     lastFetchWasSuccess = false;
-                    Logger.circularBuffer.Add($"fetching overpass building data not successful, returned: {response.StatusCode} | {response.ReasonPhrase} | ${DateTime.Now}");
+                    Logger.WriteToLog($"fetching overpass building data not successful, returned: {response.StatusCode} | {response.ReasonPhrase}",false);
                     // Handle unsuccessful response
                 }
                 currentlyFetching = false;
@@ -789,7 +791,7 @@ namespace IndoorCO2App_Multiplatform
                 lastFetchWasSuccess = false;
                 lastFetchWasATimeout = true;
                 currentlyFetching = false;
-                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
+                Logger.WriteToLog($"fetching overpass building data caused exception: |  {ex.Message}",false);
                 Console.WriteLine("The request timed out.");
                 if (!isAlreadyRetry)
                 {
@@ -800,13 +802,13 @@ namespace IndoorCO2App_Multiplatform
             catch (System.Net.Sockets.SocketException ex)
             {
                 // Handle socket closed exception (connection lost, server down, etc.)
-                Logger.circularBuffer.Add($"Socket error: {ex.SocketErrorCode} | {ex.Message} | {DateTime.Now}");
+                Logger.WriteToLog($"Socket error: {ex.SocketErrorCode} | {ex.Message}",false);
                 Console.WriteLine("Network connection lost or socket was closed.");                
             }
             catch (IOException ex) when (ex.Message.Contains("closed"))
             {
                 // Some socket errors might surface as IOException (e.g., stream closed)
-                Logger.circularBuffer.Add($"I/O error (possible socket closure): {ex.Message} | {DateTime.Now}");
+                Logger.WriteToLog($"I/O error (possible socket closure): {ex.Message}",false);
                 Console.WriteLine("The network connection was lost.");
                 Console.WriteLine("The network connection was lost.");
             }
@@ -817,7 +819,7 @@ namespace IndoorCO2App_Multiplatform
                 lastFetchWasSuccess = false;
                 lastFetchWasATimeout = true;
                 currentlyFetching = false;
-                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
+                Logger.WriteToLog($"fetching overpass building data caused exception: |  {ex.Message}", false);
                 Console.WriteLine("The request timed out.");
                 if (!isAlreadyRetry)
                 {
@@ -830,7 +832,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 useAlternative = !useAlternative;
                 lastFetchWasSuccess = false;
-                Logger.circularBuffer.Add($"fetching overpass building data caused exception: |  {ex.Message} | ${DateTime.Now}");
+                Logger.WriteToLog($"fetching overpass building data caused exception: |  {ex.Message}", false);
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
             finally
@@ -886,7 +888,7 @@ namespace IndoorCO2App_Multiplatform
                 else
                 {
                     useAlternative = !useAlternative;
-                    Logger.circularBuffer.Add($"fetching overpass transit data not successful, returned: {response.StatusCode} | {response.ReasonPhrase} | ${DateTime.Now}");
+                    Logger.WriteToLog($"fetching overpass transit data not successful, returned: {response.StatusCode}", false);
                     lastFetchWasSuccess = false;
                     // Handle unsuccessful response
                 }
@@ -899,7 +901,7 @@ namespace IndoorCO2App_Multiplatform
                 lastFetchWasATimeout = true;
                 currentlyFetching = false;
                 Console.WriteLine("The request timed out.");
-                Logger.circularBuffer.Add($"fetching overpass transit data caused exception: |  {ex.Message} | ${DateTime.Now}");
+                Logger.WriteToLog($"fetching overpass transit data caused exception: |  {ex.Message}",false);
                 if(!isAlreadyRetry)
                 {
                     isAlreadyRetry = true;
@@ -911,7 +913,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 useAlternative = !useAlternative;
                 lastFetchWasSuccess = false;
-                Logger.circularBuffer.Add($"fetching overpass transit data caused exception: |  {ex.Message} | ${DateTime.Now}");
+                Logger.WriteToLog($"fetching overpass transit data caused exception: |  {ex.Message}", false);
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
             finally

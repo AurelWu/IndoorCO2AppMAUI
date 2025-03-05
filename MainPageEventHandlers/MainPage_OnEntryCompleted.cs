@@ -6,17 +6,12 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnEntryCompleted(object sender, EventArgs e)
         {
-            var editor = sender as Editor;
 
-            if (editor != null)
+            if(sender is VisualElement input)
             {
-                // Perform your logic when the Editor loses focus
-                // For example, hide the keyboard if needed or validate the text.
-
-                // Example: Hide the keyboard
-                editor.Unfocus();  // This makes sure the editor loses focus and the cursor is removed.
-                RecoveryData.customNotes = NotesEditor.Text;
-            }
+                input.Unfocus();
+            };
+            RecoveryData.customNotes = NotesEditor.Text;
         }
     }
 }

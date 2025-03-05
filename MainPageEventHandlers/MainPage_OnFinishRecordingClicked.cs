@@ -21,6 +21,11 @@ namespace IndoorCO2App_Multiplatform
                         return;
                     }
                 }
+                if (selectedTransitLine == null)
+                {
+                    return;
+                }
+
             }
             _FinishRecordingButton.Text = "Submitting Data";
             _FinishRecordingButton.IsEnabled = false; ;

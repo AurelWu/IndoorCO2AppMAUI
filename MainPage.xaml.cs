@@ -101,7 +101,7 @@ namespace IndoorCO2App_Multiplatform
 
             App.ResumeRecording();
 
-            Logger.circularBuffer.Add("App Version: " + appVersion);
+            Logger.WriteToLog("App Version: " + appVersion,false);
 
 
 
