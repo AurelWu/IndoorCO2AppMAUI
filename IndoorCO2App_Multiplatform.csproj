@@ -43,6 +43,10 @@
 		-->
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<UseInterpreter>true</UseInterpreter>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
 		<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>
 		<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>
@@ -75,6 +79,8 @@
 		<MtouchLink>Full</MtouchLink>
 		<MtouchDebug>True</MtouchDebug>
 	</PropertyGroup>
+
+
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
 	  <ApplicationDisplayVersion>46</ApplicationDisplayVersion>

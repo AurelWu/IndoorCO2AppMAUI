@@ -10,7 +10,7 @@ namespace IndoorCO2App_Android
 {
     public class LocationDataWithTimeStamp : LocationData
     {
-        [JsonProperty("timeLastSeen")]
+        [JsonProperty("tls")]
         public DateTime timeLastSeen;
         public LocationDataWithTimeStamp(string type, long ID, string Name, double latitude, double longitude, double myLatitude, double myLongitude, DateTime timeLastSeen) : base(type, ID, Name, latitude, longitude, myLatitude, myLongitude)
         {

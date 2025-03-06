@@ -12,19 +12,19 @@ namespace IndoorCO2App_Multiplatform
 {
     public class TransitLineData
     {
-        [JsonProperty("VehicleType")]
+        [JsonProperty("vt")]
         public string VehicleType;
-        [JsonProperty("ID")]
+        [JsonProperty("i")]
         public long ID;
-        [JsonProperty("NWRType")]
+        [JsonProperty("nwrt")]
         public string NWRType;
-        [JsonProperty("Name")]
+        [JsonProperty("n")]
         public string Name;
-        [JsonProperty("ShortenedName")]
+        [JsonProperty("sn")]
         public string ShortenedName;
-        [JsonProperty("latitude")]
+        [JsonProperty("lat")]
         public double latitude; //used for cached Data
-        [JsonProperty("longitude")]
+        [JsonProperty("lon")]
         public double longitude; //used for cached Data
 
 

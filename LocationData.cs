@@ -9,17 +9,18 @@ namespace IndoorCO2App_Multiplatform
 {
     public class LocationData
     {
-        [JsonProperty("type")]
+        [JsonProperty("t")]
         public string type;
-        [JsonProperty("ID")]
+        [JsonProperty("i")]
         public long ID;
-        [JsonProperty("Name")]
+        [JsonProperty("n")]
         public string Name;
-        [JsonProperty("latitude")]
+        [JsonProperty("lat")]
         public double latitude;
-        [JsonProperty("longitude")]
+        [JsonProperty("lon")]
         public double longitude;
 
+        [JsonProperty("dist")]
         public double distanceToGivenLocation;
 
         public LocationData(string type, long ID, string Name, double latitude, double longitude, double myLatitude, double myLongitude)

@@ -20,7 +20,7 @@ namespace IndoorCO2App_Multiplatform
         //we split the cached categories up so we can have bigger size of them without naive distance calculation getting slowed down (might not be needed at all but for now its just a quick way to avoid issues)
 
         private static string fileNameBuildingCachedLocations = "CachedBuildingLocations.json";
-        private static string fileNameCachedTransitStopLocations = "CachedTransitStopLocation.jon";
+        private static string fileNameCachedTransitStopLocations = "CachedTransitStopLocation.json";
         private static string fileNameCachedTransitLineLocations => "CachedTransitLineLocations.json";
 
         public static async Task SaveFavouritesHashSetAsync(HashSet<string> hashSet)
@@ -117,7 +117,7 @@ namespace IndoorCO2App_Multiplatform
                 Logger.WriteToLog($"cached file for transit Lines exists already: " + existsBefore, false);
                 await File.WriteAllTextAsync(path, json);
                 bool existsAfter = File.Exists(path);
-                Logger.WriteToLog($"cached file for transit Lines exists ater save attempt: " + existsBefore, false);
+                Logger.WriteToLog($"cached file for transit Lines exists after save attempt: " + existsBefore, false);
                 Console.WriteLine(existsBefore + "_" + existsAfter);
             }
             catch (Exception ex) 
@@ -157,6 +157,7 @@ namespace IndoorCO2App_Multiplatform
                     var json = await reader.ReadToEndAsync();
                     Logger.WriteToLog("after favourite json read - before deserialisation", true);
                     Logger.WriteToLog("lengthOf favourite json: " + json.Length, true);
+                    Logger.WriteToLog("content of favourite json: " + json, true);
                     return JsonConvert.DeserializeObject<HashSet<string>>(json) ?? new HashSet<string>();
                 }
             }
@@ -212,7 +213,10 @@ namespace IndoorCO2App_Multiplatform
                 using (var reader = new StreamReader(stream))
                 {
                     var json = await reader.ReadToEndAsync();
-                    return JsonConvert.DeserializeObject<HashSet<LocationDataWithTimeStamp>>(json) ?? new HashSet<LocationDataWithTimeStamp>();
+                    Logger.WriteToLog($"after reading location json with length: {json.Length}, before deserialistion", false);
+                    HashSet<LocationDataWithTimeStamp> data = JsonConvert.DeserializeObject<HashSet<LocationDataWithTimeStamp>>(json) ?? new HashSet<LocationDataWithTimeStamp>();
+                    Logger.WriteToLog($"after deserialisation", false);
+                    return data;
                 }
             }
             catch (Exception ex)
@@ -251,7 +255,10 @@ namespace IndoorCO2App_Multiplatform
                 using (var reader = new StreamReader(stream))
                 {
                     var json = await reader.ReadToEndAsync();
-                    return JsonConvert.DeserializeObject<HashSet<TransitLineDataWithTimeStamp>>(json) ?? new HashSet<TransitLineDataWithTimeStamp>();
+                    Logger.WriteToLog($"after reading transitline json with length: {json.Length}, before deserialistion", false);
+                    var data = JsonConvert.DeserializeObject<HashSet<TransitLineDataWithTimeStamp>>(json) ?? new HashSet<TransitLineDataWithTimeStamp>();
+                    Logger.WriteToLog($"after deserialisation", false);
+                    return data;
                 }
             }
             catch (Exception ex)

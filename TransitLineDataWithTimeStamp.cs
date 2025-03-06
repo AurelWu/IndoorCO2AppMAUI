@@ -9,10 +9,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace IndoorCO2App_Multiplatform
-{
+{    
     public class TransitLineDataWithTimeStamp : TransitLineData
     {
-        [JsonProperty("TimeLastSeen")]
+        [JsonProperty("tls")]
         public DateTime TimeLastSeen;
         public TransitLineDataWithTimeStamp(string vehicleType, string NWRType, long ID, string name, DateTime timeLastSeen, double latitude, double longitude) : base(vehicleType, NWRType, ID, name, latitude,longitude)
         {
