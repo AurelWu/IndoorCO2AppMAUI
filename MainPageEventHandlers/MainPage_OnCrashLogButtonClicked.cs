@@ -8,11 +8,11 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private void OnCrashLogButtonClicked(object sender, EventArgs e)
+        private async void OnCrashLogButtonClicked(object sender, EventArgs e)
         {
             try
             {
-                PersistentLogHelper.CopyCrashLogToClipboardAsync();
+                await PersistentLogHelper.CopyCrashLogToClipboardAsync();
             }
             catch
             {

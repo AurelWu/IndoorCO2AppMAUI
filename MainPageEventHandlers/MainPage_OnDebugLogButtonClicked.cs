@@ -10,8 +10,6 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnDebugLogButtonClicked(object sender, EventArgs e)
         {
-            //var popup = new SmarthomeInfoPopUp();
-            //this.ShowPopup(popup);
             Logger.CopyLogToClipboard();   
         }
 

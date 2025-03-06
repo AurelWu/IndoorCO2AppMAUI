@@ -33,9 +33,22 @@ namespace IndoorCO2App_Multiplatform
 
             TaskScheduler.UnobservedTaskException += (sender, e) =>
             {
-                LogError("Unobserved Task Exception", e.Exception);
+                Logger.LogError("Unobserved Task Exception", e.Exception);
                 e.SetObserved();
             };
+
+            // Catch UI Thread Exceptions
+            Application.Current.Dispatcher.Dispatch(async () =>
+            {
+                try
+                {
+                    await Task.Delay(500); // Allow startup
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("UI Thread Exception", ex);
+                }
+            });
         }
 
 

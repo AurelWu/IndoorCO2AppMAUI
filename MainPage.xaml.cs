@@ -98,7 +98,7 @@ namespace IndoorCO2App_Multiplatform
             ChangeToStandardUI(false);
             LoadFavouredLocations();
             LoadMonitorType();
-
+            Logger.WriteToLog("App started", true);
             App.ResumeRecording();
 
             Logger.WriteToLog("App Version: " + appVersion,false);
@@ -573,7 +573,7 @@ namespace IndoorCO2App_Multiplatform
             return "Version: " + VersionTracking.CurrentVersion;
         }
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected override void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

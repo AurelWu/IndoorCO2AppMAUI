@@ -334,7 +334,14 @@ namespace IndoorCO2App_Multiplatform
 
             //if we already have a discoveredDevice we can take a shortcut
             if (discoveredDevices!=null && discoveredDevices.Count>0 && discoveredDevices[0].State == DeviceState.Connected)
-            {                
+            {
+                if (!discoveredDevices[0].Name.ToLower().Contains(nameFilter.Trim().ToLower()))
+                {
+                    discoveredDevices = null;
+                    Logger.WriteToLog("current Device not matching namefilter, removing it and redoing connection", false);
+                    return;
+                }
+                //if (discoveredDevices[0].Name)
                 ConnectToDevice(discoveredDevices[0],monitorType);
                 return;
             }
@@ -793,7 +800,7 @@ namespace IndoorCO2App_Multiplatform
                         //    //}
                         //}
 
-                        Logger.WriteToLog($"trying to read characteristics", false);
+                        Logger.WriteToLog($"trying to read characteristics from {device.Name}", false);
                         
 
                         ICharacteristic aranet4CharacteristicLive = await service.GetCharacteristicAsync(Aranet_CharacteristicUUID);
@@ -848,7 +855,7 @@ namespace IndoorCO2App_Multiplatform
                             {
                                 currentCO2Reading = (data[1] << 8) | (data[0] & 0xFF);
                                 sensorUpdateInterval = (data[10] << 8) | (data[9] & 0xFF);
-
+                                Logger.WriteToLog($"current CO Reading from {device.Name}: {currentCO2Reading}", false);
                             }
 
 

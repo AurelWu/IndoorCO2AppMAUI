@@ -36,7 +36,7 @@ namespace IndoorCO2App_Multiplatform
         {
             if (ex != null)
             {
-                string logPath = Path.Combine(FileSystem.AppDataDirectory, "persistentLog.txt");
+                string logPath = Path.Combine(FileSystem.Current.AppDataDirectory, "persistentLog.txt");
                 const int maxFileSize = 100 * 1024; // 100 KB max size
 
                 string errorLog = $"{DateTime.UtcNow}: [{source}] {ex.Message}\n{ex.StackTrace}\n\n";
@@ -51,14 +51,14 @@ namespace IndoorCO2App_Multiplatform
                 File.AppendAllText(logPath, " ");
                 File.AppendAllText(logPath,"Crash Entry Start");
                 File.AppendAllText(logPath, errorLog);
-                File.AppendAllText(logPath,"Crash Entry End");
+                File.AppendAllText(logPath,"Crash Entry End\r\n");
                 File.AppendAllText(logPath, " ");
             }
         }
 
         private static void LogPersistent(string text)
         {
-            string logPath = Path.Combine(FileSystem.AppDataDirectory, "persistentLog.txt");
+            string logPath = Path.Combine(FileSystem.Current.AppDataDirectory, "persistentLog.txt");
             const int maxFileSize = 100 * 1024; // 100 KB max size
 
             // If the file exists and is too large, trim it
@@ -69,7 +69,7 @@ namespace IndoorCO2App_Multiplatform
                 File.WriteAllText(logPath, oldLogs);
             }
 
-            File.AppendAllText(logPath, text);
+            File.AppendAllText(logPath, text + System.Environment.NewLine);
         }
     }
 }
