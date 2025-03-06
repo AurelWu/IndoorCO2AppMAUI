@@ -10,16 +10,15 @@ namespace IndoorCO2App_Android
 {
     public class LocationDataWithTimeStamp : LocationData
     {
-        [JsonProperty("tls")]
-        public DateTime timeLastSeen;
+        public DateTime TimeLastSeen {  get; set; }
         public LocationDataWithTimeStamp(string type, long ID, string Name, double latitude, double longitude, double myLatitude, double myLongitude, DateTime timeLastSeen) : base(type, ID, Name, latitude, longitude, myLatitude, myLongitude)
         {
-            base.type = type;
+            base.Type = type;
             base.ID = ID;
             base.Name = Name;
-            base.latitude = latitude;
-            base.longitude = longitude;
-            this.timeLastSeen = timeLastSeen;
+            base.Latitude = latitude;
+            base.Longitude = longitude;
+            this.TimeLastSeen = timeLastSeen;
         }
 
         // Override Equals to compare just type and ID 
@@ -27,7 +26,7 @@ namespace IndoorCO2App_Android
         {
             if (obj is LocationDataWithTimeStamp other)
             {
-                return this.type == other.type && this.ID == other.ID;
+                return this.Type == other.Type && this.ID == other.ID;
             }
             return false;
         }
@@ -35,7 +34,7 @@ namespace IndoorCO2App_Android
         // Override GetHashCode to use just type and ID
         public override int GetHashCode()
         {
-            return HashCode.Combine(this.type, this.ID);
+            return HashCode.Combine(this.Type, this.ID);
         }
     }
 

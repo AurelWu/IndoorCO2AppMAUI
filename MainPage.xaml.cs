@@ -249,10 +249,10 @@ namespace IndoorCO2App_Multiplatform
                     }
                     RecoveryData.timeOfLastUpdate = startTime;
                     RecoveryData.locationID = selectedLocation.ID;
-                    RecoveryData.locationType = selectedLocation.type;
+                    RecoveryData.locationType = selectedLocation.Type;
                     RecoveryData.locationName = selectedLocation.Name;
-                    RecoveryData.locationLat = selectedLocation.latitude;
-                    RecoveryData.locationLon = selectedLocation.longitude;
+                    RecoveryData.locationLat = selectedLocation.Latitude;
+                    RecoveryData.locationLon = selectedLocation.Longitude;
                     RecoveryData.CO2MonitorType = monitorType.ToString();
                     RecoveryData.recordingMode = "Building";
                     RecoveryData.WriteToPreferences();
@@ -298,7 +298,7 @@ namespace IndoorCO2App_Multiplatform
                 RecoveryData.timeOfLastUpdate = startTime;
                 RecoveryData.transportOriginID = selectedTransitOriginLocation.ID;
                 RecoveryData.transportOriginName = selectedTransitOriginLocation.Name;
-                RecoveryData.transportOriginType = selectedTransitOriginLocation.type;
+                RecoveryData.transportOriginType = selectedTransitOriginLocation.Type;
                 RecoveryData.transportLineID = selectedTransitLine.ID;
                 RecoveryData.transportLineName = selectedTransitLine.Name;
                 RecoveryData.transportLineType = selectedTransitLine.NWRType;

@@ -9,47 +9,45 @@ namespace IndoorCO2App_Multiplatform
 {
     public class LocationData
     {
-        [JsonProperty("t")]
-        public string type;
-        [JsonProperty("i")]
-        public long ID;
-        [JsonProperty("n")]
-        public string Name;
-        [JsonProperty("lat")]
-        public double latitude;
-        [JsonProperty("lon")]
-        public double longitude;
+        public string Type { get; set; }
+        public long ID { get; set; }
+        public string Name { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public double MyLatitude { get; set; }
+        public double MyLongitude { get; set; }
 
-        [JsonProperty("dist")]
-        public double distanceToGivenLocation;
+        public double DistanceToGivenLocation { get; set; }
 
-        public LocationData(string type, long ID, string Name, double latitude, double longitude, double myLatitude, double myLongitude)
+        public LocationData(string type, long id, string name, double latitude, double longitude, double myLatitude, double myLongitude)
         {
-            this.type = type;
-            this.ID = ID;
-            this.Name = Name;
-            this.latitude = latitude;
-            this.longitude = longitude;
+            this.Type = type;
+            this.ID = id;
+            this.Name = name;
+            this.Latitude = latitude;
+            this.Longitude = longitude;
+            this.MyLatitude = myLatitude;
+            this.MyLongitude = myLongitude;
             CalculateDistanceToGivenLocation(myLatitude, myLongitude);
         }
         private void CalculateDistanceToGivenLocation(double myLatitude, double myLongitude)
         {
-            distanceToGivenLocation = Haversine.GetDistanceInMeters(myLatitude, myLongitude, latitude, longitude);
+            DistanceToGivenLocation = Haversine.GetDistanceInMeters(myLatitude, myLongitude, Latitude, Longitude);
         }
 
         public override string ToString()
         {
             if(Name.Length == 0)
             {
-                if(type == "relation")
+                if(Type == "relation")
                 {
                     return "nameless relation " + ID;
                 }
-                if (type == "node")
+                if (Type == "node")
                 {
                     return "nameless node " + ID;
                 }
-                if (type == "way")
+                if (Type == "way")
                 {
                     return "nameless way " + ID;
                 }
@@ -58,13 +56,13 @@ namespace IndoorCO2App_Multiplatform
                     return "nameless entry " + ID;
                 }
             }
-            else if (MainPage.MainPageSingleton.favouredLocations.Contains(type + "_" + ID.ToString()))
+            else if (MainPage.MainPageSingleton.favouredLocations.Contains(Type + "_" + ID.ToString()))
             {
-                return $"★ {Name} | {(int)distanceToGivenLocation}m";
+                return $"★ {Name} | {(int)DistanceToGivenLocation}m";
             }
             else
             {
-                return $"{Name} | {(int)distanceToGivenLocation}m";
+                return $"{Name} | {(int)DistanceToGivenLocation}m";
             }
             
                 

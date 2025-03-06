@@ -12,20 +12,13 @@ namespace IndoorCO2App_Multiplatform
 {
     public class TransitLineData
     {
-        [JsonProperty("vt")]
-        public string VehicleType;
-        [JsonProperty("i")]
-        public long ID;
-        [JsonProperty("nwrt")]
-        public string NWRType;
-        [JsonProperty("n")]
-        public string Name;
-        [JsonProperty("sn")]
-        public string ShortenedName;
-        [JsonProperty("lat")]
-        public double latitude; //used for cached Data
-        [JsonProperty("lon")]
-        public double longitude; //used for cached Data
+        public string VehicleType { get; set; }
+        public long ID { get; set; }
+        public string NWRType { get; set; }
+        public string Name { get; set; }
+        public string ShortenedName { get; set; }
+        public double Latitude { get; set; } //used for cached Data
+        public double Longitude { get; set; } //used for cached Data
 
 
         public TransitLineData(string vehicleType, string NWRType, long ID, string name, double latitude, double longitude)
@@ -35,8 +28,8 @@ namespace IndoorCO2App_Multiplatform
             this.Name = name;
             this.NWRType = NWRType;
             this.ShortenedName = Regex.Replace(Name, @":\s*.*?=>\s*", ": ");
-            this.latitude = Math.Round(latitude, 3); //we round to 3rd decimal = ~100m
-            this.longitude = Math.Round(longitude, 3); //we round to 3rd decimal = varies in length but between 110 - 50 m in most inhabited areas
+            this.Latitude = Math.Round(latitude, 3); //we round to 3rd decimal = ~100m
+            this.Longitude = Math.Round(longitude, 3); //we round to 3rd decimal = varies in length but between 110 - 50 m in most inhabited areas
         }
 
 

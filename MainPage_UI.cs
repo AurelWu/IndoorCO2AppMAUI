@@ -380,12 +380,12 @@ namespace IndoorCO2App_Multiplatform
             }
             else if(previousMapLocation!=null && previousMapLocation!= pickedLocation)            
             {
-                UpdateMap(pickedLocation.latitude, pickedLocation.longitude);
+                UpdateMap(pickedLocation.Latitude, pickedLocation.Longitude);
                 previousMapLocation = pickedLocation;
             }
             else if(previousMapLocation== null)
             {
-                UpdateMap(pickedLocation.latitude, pickedLocation.longitude);
+                UpdateMap(pickedLocation.Latitude, pickedLocation.Longitude);
                 previousMapLocation = pickedLocation;
             }
             
@@ -703,7 +703,7 @@ namespace IndoorCO2App_Multiplatform
                 return;
             }
             LocationData d = (LocationData)_LocationPicker.SelectedItem;
-            if (favouredLocations.Contains(d.type+"_"+d.ID.ToString()))
+            if (favouredLocations.Contains(d.Type+"_"+d.ID.ToString()))
             {
                 _StarIconToggleBuilding.Source = "star_icon_active.png";
             }
@@ -721,7 +721,7 @@ namespace IndoorCO2App_Multiplatform
                 return;
             }
             LocationData d = (LocationData)_TransitOriginPicker.SelectedItem;
-            if (favouredLocations.Contains(d.type + "_" + d.ID.ToString()))
+            if (favouredLocations.Contains(d.Type + "_" + d.ID.ToString()))
             {
                 _StarIconToggleTransitOrigin.Source = "star_icon_active.png";
             }
@@ -739,7 +739,7 @@ namespace IndoorCO2App_Multiplatform
                 return;
             }
             LocationData d = (LocationData)_TransitDestinationPicker.SelectedItem;
-            if (favouredLocations.Contains(d.type + "_" + d.ID.ToString()))
+            if (favouredLocations.Contains(d.Type + "_" + d.ID.ToString()))
             {
                 _StarIconToggleTransitDestination.Source = "star_icon_active.png";
             }

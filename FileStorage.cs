@@ -1,12 +1,13 @@
-﻿using Newtonsoft.Json;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Maui.Storage;
 using IndoorCO2App_Android;
+
 #if IOS
 using Foundation;
 #endif
+using System.Text.Json;
 
 namespace IndoorCO2App_Multiplatform
 {
@@ -36,7 +37,7 @@ namespace IndoorCO2App_Multiplatform
                     path = Path.Combine(FileSystem.Current.AppDataDirectory, fileNameFavourites);
 #endif
 
-                var json = JsonConvert.SerializeObject(hashSet);
+                var json = JsonSerializer.Serialize(hashSet);
                 // Use FileSystem API for writing
                 bool existsBefore = File.Exists(path);
                 Logger.WriteToLog($"cached file for favourites exists already: " + existsBefore, false);
@@ -82,7 +83,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     return;
                 }
-                var json = JsonConvert.SerializeObject(cacheData); //not sure if this works out of the box without any type hints...
+                var json = JsonSerializer.Serialize(cacheData); ; //not sure if this works out of the box without any type hints...
                                                                    // Use FileSystem API for writing
                 bool existsBefore = File.Exists(path);
                 Logger.WriteToLog($"cached file for category {category} exists already: " + existsBefore,false);
@@ -111,7 +112,7 @@ namespace IndoorCO2App_Multiplatform
                 path = Path.Combine(FileSystem.Current.AppDataDirectory, fileNameCachedTransitLineLocations);
 #endif
 
-                var json = JsonConvert.SerializeObject(cacheData); 
+                var json = JsonSerializer.Serialize(cacheData); 
                                                                    
                 bool existsBefore = File.Exists(path);
                 Logger.WriteToLog($"cached file for transit Lines exists already: " + existsBefore, false);
@@ -158,7 +159,7 @@ namespace IndoorCO2App_Multiplatform
                     Logger.WriteToLog("after favourite json read - before deserialisation", true);
                     Logger.WriteToLog("lengthOf favourite json: " + json.Length, true);
                     Logger.WriteToLog("content of favourite json: " + json, true);
-                    return JsonConvert.DeserializeObject<HashSet<string>>(json) ?? new HashSet<string>();
+                    return JsonSerializer.Deserialize<HashSet<string>>(json) ?? new HashSet<string>();
                 }
             }
             catch (Exception ex)
@@ -214,7 +215,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     var json = await reader.ReadToEndAsync();
                     Logger.WriteToLog($"after reading location json with length: {json.Length}, before deserialistion", false);
-                    HashSet<LocationDataWithTimeStamp> data = JsonConvert.DeserializeObject<HashSet<LocationDataWithTimeStamp>>(json) ?? new HashSet<LocationDataWithTimeStamp>();
+                    HashSet<LocationDataWithTimeStamp> data = JsonSerializer.Deserialize<HashSet<LocationDataWithTimeStamp>>(json) ?? new HashSet<LocationDataWithTimeStamp>();
                     Logger.WriteToLog($"after deserialisation", false);
                     return data;
                 }
@@ -256,7 +257,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     var json = await reader.ReadToEndAsync();
                     Logger.WriteToLog($"after reading transitline json with length: {json.Length}, before deserialistion", false);
-                    var data = JsonConvert.DeserializeObject<HashSet<TransitLineDataWithTimeStamp>>(json) ?? new HashSet<TransitLineDataWithTimeStamp>();
+                    var data = JsonSerializer.Deserialize<HashSet<TransitLineDataWithTimeStamp>>(json) ?? new HashSet<TransitLineDataWithTimeStamp>();
                     Logger.WriteToLog($"after deserialisation", false);
                     return data;
                 }

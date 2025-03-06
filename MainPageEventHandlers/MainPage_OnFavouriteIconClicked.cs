@@ -19,7 +19,7 @@ namespace IndoorCO2App_Multiplatform
             if (d != null)
             {
                 long id =d.ID;
-                string type = d.type;
+                string type = d.Type;
                 string combined = type + "_" + id.ToString();
                 if (!favouredLocations.Add(combined))
                 {
@@ -43,7 +43,7 @@ namespace IndoorCO2App_Multiplatform
             if (d != null)
             {
                 long id = d.ID;
-                string type = d.type;
+                string type = d.Type;
                 string combined = type + "_" + id.ToString();
                 if (!favouredLocations.Add(combined))
                 {
@@ -67,7 +67,7 @@ namespace IndoorCO2App_Multiplatform
             if (d != null)
             {
                 long id = d.ID;
-                string type = d.type;
+                string type = d.Type;
                 string combined = type + "_" + id.ToString();
                 if (!favouredLocations.Add(combined))
                 {

@@ -70,7 +70,7 @@ namespace IndoorCO2App_Multiplatform
         {
             var savedCachedLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync(CacheDataCategory.Building);
             List<LocationDataWithTimeStamp> cachedList = savedCachedLocationsHashSet.ToList();
-            cachedList = cachedList.OrderBy(x => x.timeLastSeen).ToList();
+            cachedList = cachedList.OrderBy(x => x.TimeLastSeen).ToList();
             cachedBuildingLocations.Clear();
             foreach(var c in cachedList)
             {
@@ -83,7 +83,7 @@ namespace IndoorCO2App_Multiplatform
         {
             var savedCachedTransitLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync(CacheDataCategory.TransitStop);
             List<LocationDataWithTimeStamp> cachedList = savedCachedTransitLocationsHashSet.ToList();
-            cachedList = cachedList.OrderBy(x => x.timeLastSeen).ToList();
+            cachedList = cachedList.OrderBy(x => x.TimeLastSeen).ToList();
             cachedTransitStopLocations.Clear();
             foreach(var c in cachedList)
             {
@@ -117,11 +117,11 @@ namespace IndoorCO2App_Multiplatform
                 foreach (var l in BuildingLocationData)
                 {
                     DateTime c = DateTime.Now;
-                    LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.type, l.ID, l.Name, l.latitude, l.longitude, 0, 0, c);
+                    LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.Type, l.ID, l.Name, l.Latitude, l.Longitude, 0, 0, c);
                     if (cachedBuildingLocations.Contains(ld))
                     {
                         int pos = cachedBuildingLocations.IndexOf(ld);
-                        cachedBuildingLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
+                        cachedBuildingLocations[pos].TimeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
                     }
                     else
                     {
@@ -147,11 +147,11 @@ namespace IndoorCO2App_Multiplatform
                 foreach (var l in tr)
                 {
                     DateTime c = DateTime.Now;
-                    LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.type, l.ID, l.Name, l.latitude, l.longitude, 0, 0, c);
+                    LocationDataWithTimeStamp ld = new LocationDataWithTimeStamp(l.Type, l.ID, l.Name, l.Latitude, l.Longitude, 0, 0, c);
                     if (cachedTransitStopLocations.Contains(ld))
                     {
                         int pos = cachedTransitStopLocations.IndexOf(ld);
-                        cachedTransitStopLocations[pos].timeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
+                        cachedTransitStopLocations[pos].TimeLastSeen = c; // if already existing we update the time... as during deserialisation we order by date, we dont need to change position in this buffer instantly
                     }
                     else
                     {
@@ -242,14 +242,14 @@ namespace IndoorCO2App_Multiplatform
             Logger.WriteToLog("# of Cached Building Locations Locations total: " + cachedBuildingLocations.Count,false);
             foreach (var c in cachedBuildingLocations)
             {
-                double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
+                double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.Latitude, c.Longitude);
                 if (dist <= radius)
                 {
-                    c.distanceToGivenLocation = dist;
+                    c.DistanceToGivenLocation = dist;
                     BuildingLocationData.Add((LocationData)c);
                 }
             }
-            BuildingLocationData = BuildingLocationData.OrderBy(x => x.distanceToGivenLocation).ToList();
+            BuildingLocationData = BuildingLocationData.OrderBy(x => x.DistanceToGivenLocation).ToList();
             SortFavouriteBuildingsToTop();
             Logger.WriteToLog("# of Cached Building Locations Locations in range: " + BuildingLocationData.Count, false);
             lastFetchWasFromCachedData = true;
@@ -266,14 +266,14 @@ namespace IndoorCO2App_Multiplatform
             Logger.WriteToLog("# of Cached Transit Stop Locations Locations total: " + cachedTransitStopLocations.Count, false);
             foreach (var c in cachedTransitStopLocations)
             {
-                double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
+                double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.Latitude, c.Longitude);
                 if (dist <= radius)
                 {
-                    c.distanceToGivenLocation = dist;
+                    c.DistanceToGivenLocation = dist;
                     ld.Add((LocationData)c);
                 }
             }
-            ld = ld.OrderBy(x => x.distanceToGivenLocation).ToList();
+            ld = ld.OrderBy(x => x.DistanceToGivenLocation).ToList();
             SortTransitStops();
             Logger.WriteToLog("# of Cached Transit Stop Locations Locations in range: " + ld.Count, false);
             lastFetchWasFromCachedData = true;
@@ -286,7 +286,7 @@ namespace IndoorCO2App_Multiplatform
             Logger.WriteToLog("# of Cached Transitlines in total: " + cachedTransitLineLocations.Count, false);
             foreach(var c in cachedTransitLineLocations)
             {
-                double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.latitude, c.longitude);
+                double dist = Haversine.GetDistanceInMeters(userLatitude, userLongitude, c.Latitude, c.Longitude);
                 if (dist <= radius)
                 {
                     ld.Add((TransitLineData)c);
@@ -473,15 +473,15 @@ namespace IndoorCO2App_Multiplatform
         {
             BuildingLocationData.Sort((point1, point2) =>
             {
-                bool isFavorite1 = MainPage.MainPageSingleton.favouredLocations.Contains(point1.type + "_" + point1.ID);
-                bool isFavorite2 = MainPage.MainPageSingleton.favouredLocations.Contains(point2.type + "_" + point2.ID);
+                bool isFavorite1 = MainPage.MainPageSingleton.favouredLocations.Contains(point1.Type + "_" + point1.ID);
+                bool isFavorite2 = MainPage.MainPageSingleton.favouredLocations.Contains(point2.Type + "_" + point2.ID);
 
                 // Sort favorites to the top
                 if (isFavorite1 && !isFavorite2) return -1;
                 if (!isFavorite1 && isFavorite2) return 1;
 
                 // If both are favorites or both are non-favorites, sort by distance
-                return point1.distanceToGivenLocation.CompareTo(point2.distanceToGivenLocation);
+                return point1.DistanceToGivenLocation.CompareTo(point2.DistanceToGivenLocation);
             });
         }
 
@@ -674,16 +674,16 @@ namespace IndoorCO2App_Multiplatform
             if (TransportDestinationLocationData != null && TransportDestinationLocationData.Count > 0)
             {
                 TransportDestinationLocationData = TransportDestinationLocationData
-                 .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.type + "_" + x.ID.ToString()))
-                  .ThenBy(x => x.distanceToGivenLocation)
+                 .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.Type + "_" + x.ID.ToString()))
+                  .ThenBy(x => x.DistanceToGivenLocation)
                   .ToList();
                 
             }
             if (TransportStartLocationData != null && TransportStartLocationData.Count > 0)
             {
                 TransportStartLocationData = TransportStartLocationData
-  .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.type + "_" + x.ID.ToString()))
-  .ThenBy(x => x.distanceToGivenLocation)
+  .OrderByDescending(x => MainPage.MainPageSingleton.favouredLocations.Contains(x.Type + "_" + x.ID.ToString()))
+  .ThenBy(x => x.DistanceToGivenLocation)
   .ToList();
 
             }

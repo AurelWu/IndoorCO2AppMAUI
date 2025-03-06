@@ -192,7 +192,7 @@ namespace IndoorCO2App_Multiplatform
             previousUpdate = DateTime.Now.AddMinutes(-3);
             isRecording = true;
             recordedData = new List<SensorData>();
-            submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,false), location.type, location.ID, location.Name, location.latitude, location.longitude, startTime);
+            submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,false), location.Type, location.ID, location.Name, location.Latitude, location.Longitude, startTime);
             startingTime = startTime;
             NotifyCharacteristicAlreadyHookedUp = false;
             if (prerecording)
@@ -228,7 +228,7 @@ namespace IndoorCO2App_Multiplatform
             isRecording = true;
             isTransportRecording = true;
             recordedData = new List<SensorData>();
-            submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,true), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.type,startLocation.Name);
+            submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,true), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.Type,startLocation.Name);
             startingTime = startTime;
             NotifyCharacteristicAlreadyHookedUp = false;
             prerecordingLength = 0; // no prerecording for now
@@ -279,7 +279,7 @@ namespace IndoorCO2App_Multiplatform
                 if(MainPage.MainPageSingleton.selectedTransitTargetLocation != null)
                 {
                     submissionDataTransport.EndPointID = MainPage.MainPageSingleton.selectedTransitTargetLocation.ID;
-                    submissionDataTransport.EndPointNWRType = MainPage.MainPageSingleton.selectedTransitTargetLocation.type;
+                    submissionDataTransport.EndPointNWRType = MainPage.MainPageSingleton.selectedTransitTargetLocation.Type;
                     submissionDataTransport.EndPointName = MainPage.MainPageSingleton.selectedTransitTargetLocation.Name;                    
                 }
                 submissionDataTransport.TransportID = MainPage.MainPageSingleton.selectedTransitLine.ID;
