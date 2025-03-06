@@ -156,6 +156,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     var json = await reader.ReadToEndAsync();
                     Logger.WriteToLog("after favourite json read - before deserialisation", true);
+                    Logger.WriteToLog("lengthOf favourite json: " + json.Length, true);
                     return JsonConvert.DeserializeObject<HashSet<string>>(json) ?? new HashSet<string>();
                 }
             }

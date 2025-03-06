@@ -1,4 +1,5 @@
-﻿using Sprache;
+﻿using Newtonsoft.Json;
+using Sprache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,19 @@ namespace IndoorCO2App_Multiplatform
 {
     public class TransitLineData
     {
+        [JsonProperty("VehicleType")]
         public string VehicleType;
+        [JsonProperty("ID")]
         public long ID;
+        [JsonProperty("NWRType")]
         public string NWRType;
+        [JsonProperty("Name")]
         public string Name;
+        [JsonProperty("ShortenedName")]
         public string ShortenedName;
+        [JsonProperty("latitude")]
         public double latitude; //used for cached Data
+        [JsonProperty("longitude")]
         public double longitude; //used for cached Data
 
 

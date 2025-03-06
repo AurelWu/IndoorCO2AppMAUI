@@ -1,4 +1,5 @@
 ﻿using IndoorCO2App_Multiplatform;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace IndoorCO2App_Android
 {
     public class LocationDataWithTimeStamp : LocationData
     {
+        [JsonProperty("timeLastSeen")]
         public DateTime timeLastSeen;
         public LocationDataWithTimeStamp(string type, long ID, string Name, double latitude, double longitude, double myLatitude, double myLongitude, DateTime timeLastSeen) : base(type, ID, Name, latitude, longitude, myLatitude, myLongitude)
         {

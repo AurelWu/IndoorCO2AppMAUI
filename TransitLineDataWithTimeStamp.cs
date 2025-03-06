@@ -1,4 +1,5 @@
-﻿using Sprache;
+﻿using Newtonsoft.Json;
+using Sprache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public class TransitLineDataWithTimeStamp : TransitLineData
     {
+        [JsonProperty("TimeLastSeen")]
         public DateTime TimeLastSeen;
         public TransitLineDataWithTimeStamp(string vehicleType, string NWRType, long ID, string name, DateTime timeLastSeen, double latitude, double longitude) : base(vehicleType, NWRType, ID, name, latitude,longitude)
         {

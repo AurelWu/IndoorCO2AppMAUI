@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,15 @@ namespace IndoorCO2App_Multiplatform
 {
     public class LocationData
     {
+        [JsonProperty("type")]
         public string type;
+        [JsonProperty("ID")]
         public long ID;
+        [JsonProperty("Name")]
         public string Name;
+        [JsonProperty("latitude")]
         public double latitude;
+        [JsonProperty("longitude")]
         public double longitude;
 
         public double distanceToGivenLocation;
