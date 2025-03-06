@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +19,7 @@ namespace IndoorCO2App_Multiplatform
 
         public double DistanceToGivenLocation { get; set; }
 
+        [JsonConstructor]
         public LocationData(string type, long id, string name, double latitude, double longitude, double myLatitude, double myLongitude)
         {
             this.Type = type;

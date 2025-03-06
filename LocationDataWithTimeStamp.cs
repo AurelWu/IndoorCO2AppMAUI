@@ -1,16 +1,18 @@
 ﻿using IndoorCO2App_Multiplatform;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace IndoorCO2App_Android
 {
     public class LocationDataWithTimeStamp : LocationData
     {
         public DateTime TimeLastSeen {  get; set; }
+
+        [JsonConstructor]
         public LocationDataWithTimeStamp(string type, long ID, string Name, double latitude, double longitude, double myLatitude, double myLongitude, DateTime timeLastSeen) : base(type, ID, Name, latitude, longitude, myLatitude, myLongitude)
         {
             base.Type = type;

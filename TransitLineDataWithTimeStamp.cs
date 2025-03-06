@@ -7,12 +7,16 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace IndoorCO2App_Multiplatform
 {    
+
     public class TransitLineDataWithTimeStamp : TransitLineData
     {        
         public DateTime TimeLastSeen { get; set; }
+
+        [JsonConstructor]
         public TransitLineDataWithTimeStamp(string vehicleType, string NWRType, long ID, string name, DateTime timeLastSeen, double latitude, double longitude) : base(vehicleType, NWRType, ID, name, latitude,longitude)
         {
             base.VehicleType = vehicleType;
