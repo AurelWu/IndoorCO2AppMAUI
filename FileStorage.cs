@@ -45,9 +45,9 @@ namespace IndoorCO2App_Multiplatform
                 Logger.WriteToLog($"cached file for favourites exists after save attempt: " + existsBefore, false);
                 Console.WriteLine(existsBefore + "_" + existsAfter);
             }
-            catch
+            catch (Exception ex) 
             {
-                Logger.WriteToLog("Error saving Favourites to Cached File", true);
+                Logger.WriteToLog($"Error saving Favourites to Cached File {ex.Message}", true);
             }
         }
 
@@ -91,9 +91,9 @@ namespace IndoorCO2App_Multiplatform
                 Logger.WriteToLog($"cached file for category {category} exists after save attempt: " + existsBefore, false);
                 Console.WriteLine(existsBefore + "_" + existsAfter);
             }
-            catch
+            catch (Exception ex)
             {
-                Logger.WriteToLog("Error Writing Locations to Cache File",true);
+                Logger.WriteToLog($"Error Writing Locations to Cache File: {ex.Message}",true);
             }
         }
 
@@ -120,9 +120,9 @@ namespace IndoorCO2App_Multiplatform
                 Logger.WriteToLog($"cached file for transit Lines exists ater save attempt: " + existsBefore, false);
                 Console.WriteLine(existsBefore + "_" + existsAfter);
             }
-            catch
+            catch (Exception ex) 
             {
-                Logger.WriteToLog("Error Writing Transit Lines to Cache File", true );
+                Logger.WriteToLog($"Error Writing Transit Lines to Cache File: {ex.Message}", true );
             }
             
         }
@@ -136,6 +136,7 @@ namespace IndoorCO2App_Multiplatform
 #if IOS
                     string iosLibraryPath = NSFileManager.DefaultManager.GetUrls(NSSearchPathDirectory.LibraryDirectory, NSSearchPathDomain.User)[0].Path;
                     path = Path.Combine(iosLibraryPath, fileNameFavourites);
+                    Logger.WriteToLog("path attemptint to load favourites from: " + path,true);
 #endif
 #if ANDROID
                 path = Path.Combine(FileSystem.Current.AppDataDirectory, fileNameFavourites);
@@ -144,7 +145,7 @@ namespace IndoorCO2App_Multiplatform
                 // Check if the file exists in AppDataDirectory
                 if (!File.Exists(path))
                 {
-                    Logger.WriteToLog("No favourites File existing/found",false);
+                    Logger.WriteToLog("No favourites File existing/found",true);
                     // If the file doesn't exist, return an empty HashSet
                     return new HashSet<string>();
                 }
@@ -154,6 +155,7 @@ namespace IndoorCO2App_Multiplatform
                 using (var reader = new StreamReader(stream))
                 {
                     var json = await reader.ReadToEndAsync();
+                    Logger.WriteToLog("after favourite json read - before deserialisation", true);
                     return JsonConvert.DeserializeObject<HashSet<string>>(json) ?? new HashSet<string>();
                 }
             }
@@ -195,6 +197,7 @@ namespace IndoorCO2App_Multiplatform
 
             try
             {
+                Logger.WriteToLog($"path attempting to load cached location {category} from: " + path, true);
                 // Check if the file exists in AppDataDirectory
                 if (!File.Exists(path))
                 {
@@ -233,6 +236,7 @@ namespace IndoorCO2App_Multiplatform
 
             try
             {
+                Logger.WriteToLog($"path attempting to load cached transitlines from: " + path, true);
                 // Check if the file exists in AppDataDirectory
                 if (!File.Exists(path))
                 {
