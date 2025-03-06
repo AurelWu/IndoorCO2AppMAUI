@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Globalization;
 
 namespace IndoorCO2App_Multiplatform
 {    
@@ -16,7 +17,6 @@ namespace IndoorCO2App_Multiplatform
     {        
         public DateTime TimeLastSeen { get; set; }
 
-        [JsonConstructor]
         public TransitLineDataWithTimeStamp(string vehicleType, string NWRType, long ID, string name, DateTime timeLastSeen, double latitude, double longitude) : base(vehicleType, NWRType, ID, name, latitude,longitude)
         {
             base.VehicleType = vehicleType;
@@ -27,7 +27,6 @@ namespace IndoorCO2App_Multiplatform
             base.Latitude= latitude;
             base.Longitude= longitude;
             this.TimeLastSeen = timeLastSeen;
-
         }
 
         // Override Equals to compare just type and ID 
@@ -45,5 +44,38 @@ namespace IndoorCO2App_Multiplatform
         {
             return HashCode.Combine(this.NWRType, this.ID, this.Latitude,this.Longitude);
         }
+
+        public string ToJson()
+        {
+            var jsonObject = new Dictionary<string, string>
+    {
+        { "vehicleType", this.VehicleType },
+        { "nwrType", this.NWRType },
+        { "id", this.ID.ToString() },
+        { "name", this.Name },
+        { "shortenedName", this.ShortenedName },
+        { "latitude", this.Latitude.ToString(CultureInfo.InvariantCulture) }, // Ensures decimal format consistency
+        { "longitude", this.Longitude.ToString(CultureInfo.InvariantCulture) },
+        { "timeLastSeen", new DateTimeOffset(this.TimeLastSeen).ToUnixTimeSeconds().ToString() } // Unix timestamp for consistency
+    };
+
+        return JsonSerializer.Serialize(jsonObject);
+        }
+
+        public static TransitLineDataWithTimeStamp FromJson(string json)
+        {
+            var jsonObject = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
+            return new TransitLineDataWithTimeStamp(
+                jsonObject["vehicleType"],
+                jsonObject["nwrType"],
+                long.Parse(jsonObject["id"]),
+                jsonObject["name"],
+                DateTimeOffset.FromUnixTimeSeconds(long.Parse(jsonObject["timeLastSeen"])).UtcDateTime, // Parse Unix timestamp
+                double.Parse(jsonObject["latitude"], CultureInfo.InvariantCulture), // Ensure decimal parsing consistency
+                double.Parse(jsonObject["longitude"], CultureInfo.InvariantCulture)
+            );
+        }
+
     }
 }

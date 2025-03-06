@@ -20,7 +20,6 @@ namespace IndoorCO2App_Multiplatform
         public double Longitude { get; set; } //used for cached Data
 
 
-        [JsonConstructor]
         public TransitLineData(string vehicleType, string NWRType, long ID, string name, double latitude, double longitude)
         {
             this.VehicleType = vehicleType;

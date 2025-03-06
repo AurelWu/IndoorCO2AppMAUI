@@ -16,13 +16,13 @@ namespace IndoorCO2App_Multiplatform
 
 
 
-        private static string fileNameFavourites = "FavouriteLocations.json";
+        private static string fileNameFavourites = "FavouriteLocationsV2.json";
 
         //we split the cached categories up so we can have bigger size of them without naive distance calculation getting slowed down (might not be needed at all but for now its just a quick way to avoid issues)
 
-        private static string fileNameBuildingCachedLocations = "CachedBuildingLocations.json";
-        private static string fileNameCachedTransitStopLocations = "CachedTransitStopLocation.json";
-        private static string fileNameCachedTransitLineLocations => "CachedTransitLineLocations.json";
+        private static string fileNameBuildingCachedLocations = "CachedBuildingLocationsV2.json";
+        private static string fileNameCachedTransitStopLocations = "CachedTransitStopLocationV2.json";
+        private static string fileNameCachedTransitLineLocations => "CachedTransitLineLocationsV2.json";
 
         public static async Task SaveFavouritesHashSetAsync(HashSet<string> hashSet)
         {
@@ -83,8 +83,19 @@ namespace IndoorCO2App_Multiplatform
                 {
                     return;
                 }
-                var json = JsonSerializer.Serialize(cacheData); ; //not sure if this works out of the box without any type hints...
-                                                                   // Use FileSystem API for writing
+                //var json = JsonSerializer.Serialize(cacheData); ; //not sure if this works out of the box without any type hints...
+                                                                  // Use FileSystem API for writing
+
+                var jsonArray = new List<string>();
+
+                foreach (var item in cacheData)
+                {
+                    jsonArray.Add(item.ToJson());
+                }
+
+                // Convert list of JSON strings to a JSON array
+                string json = JsonSerializer.Serialize(jsonArray);
+
                 bool existsBefore = File.Exists(path);
                 Logger.WriteToLog($"cached file for category {category} exists already: " + existsBefore,false);
                 await File.WriteAllTextAsync(path, json);
@@ -111,8 +122,15 @@ namespace IndoorCO2App_Multiplatform
 #if ANDROID
                 path = Path.Combine(FileSystem.Current.AppDataDirectory, fileNameCachedTransitLineLocations);
 #endif
+                var jsonArray = new List<string>();
 
-                var json = JsonSerializer.Serialize(cacheData); 
+                foreach (var item in cacheData)
+                {
+                    jsonArray.Add(item.ToJson());
+                }
+
+                // Convert list of JSON strings to a JSON array
+                string json = JsonSerializer.Serialize(jsonArray);
                                                                    
                 bool existsBefore = File.Exists(path);
                 Logger.WriteToLog($"cached file for transit Lines exists already: " + existsBefore, false);
@@ -204,19 +222,28 @@ namespace IndoorCO2App_Multiplatform
                 // Check if the file exists in AppDataDirectory
                 if (!File.Exists(path))
                 {
-                    Logger.WriteToLog($"No Cached File existing/found for category {category}", false);
+                    Logger.WriteToLog($"No Cached File existing/found for category {category}", true);
                     // If the file doesn't exist, return an empty HashSet
                     return new HashSet<LocationDataWithTimeStamp>();
                 }
-
+                if(File.Exists(path))
+                {
+                    Logger.WriteToLog($"Found Cached File for category {category}",true);
+                }
                 // Open and read the file
                 using (var stream = File.OpenRead(path))
                 using (var reader = new StreamReader(stream))
                 {
                     var json = await reader.ReadToEndAsync();
-                    Logger.WriteToLog($"after reading location json with length: {json.Length}, before deserialistion", false);
-                    HashSet<LocationDataWithTimeStamp> data = JsonSerializer.Deserialize<HashSet<LocationDataWithTimeStamp>>(json) ?? new HashSet<LocationDataWithTimeStamp>();
-                    Logger.WriteToLog($"after deserialisation", false);
+                    Logger.WriteToLog($"after reading location json with length: {json.Length}, before deserialistion", true);
+                    var jsonArray = JsonSerializer.Deserialize<List<string>>(json) ?? new List<string>();
+                    var data = new HashSet<LocationDataWithTimeStamp>();
+
+                    foreach (var jsonItem in jsonArray)
+                    {
+                        data.Add(LocationDataWithTimeStamp.FromJson(jsonItem));
+                    }
+                    Logger.WriteToLog($"after deserialization with {data.Count} items", true);
                     return data;
                 }
             }
@@ -246,9 +273,13 @@ namespace IndoorCO2App_Multiplatform
                 // Check if the file exists in AppDataDirectory
                 if (!File.Exists(path))
                 {
-                    Logger.WriteToLog($"No Cached File existing/found for Transit Lines", false);
+                    Logger.WriteToLog($"No Cached File existing/found for Transit Lines", true);
                     // If the file doesn't exist, return an empty HashSet
                     return new HashSet<TransitLineDataWithTimeStamp>();
+                }
+                if (File.Exists(path))
+                {
+                    Logger.WriteToLog($"Found Cached File for Transit Lines", true);
                 }
 
                 // Open and read the file
@@ -256,9 +287,15 @@ namespace IndoorCO2App_Multiplatform
                 using (var reader = new StreamReader(stream))
                 {
                     var json = await reader.ReadToEndAsync();
-                    Logger.WriteToLog($"after reading transitline json with length: {json.Length}, before deserialistion", false);
-                    var data = JsonSerializer.Deserialize<HashSet<TransitLineDataWithTimeStamp>>(json) ?? new HashSet<TransitLineDataWithTimeStamp>();
-                    Logger.WriteToLog($"after deserialisation", false);
+                    Logger.WriteToLog($"after reading transitline json with length: {json.Length}, before deserialistion", true);
+                    var jsonArray = JsonSerializer.Deserialize<List<string>>(json) ?? new List<string>();
+                    var data = new HashSet<TransitLineDataWithTimeStamp>();
+
+                    foreach (var jsonItem in jsonArray)
+                    {
+                        data.Add(TransitLineDataWithTimeStamp.FromJson(jsonItem));
+                    }
+                    Logger.WriteToLog($"after deserialization with {data.Count} items", true);
                     return data;
                 }
             }
