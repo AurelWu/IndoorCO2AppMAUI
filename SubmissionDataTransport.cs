@@ -6,12 +6,14 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace IndoorCO2App_Multiplatform
 {
     internal class SubmissionDataTransport
     {
         public string sensorID;
+        public string sensorType;
         public long startTime;
         public List<SensorData> sensorData;
 
@@ -37,7 +39,8 @@ namespace IndoorCO2App_Multiplatform
 
         public SubmissionDataTransport(string sensorType,string sensorID, long startTime, long transportID, string transportNWRType, string transportName, long startingPointID, string startingPointNWRType, string startingPointName)
         {
-            this.sensorID = sensorType.ToString() + "_" + sensorID;
+            this.sensorID = sensorID;            
+            this.sensorType = sensorType;
             this.startTime = startTime;
             this.LatitudeData = new List<Double>();
             this.LongitudeData = new List<Double>();
@@ -83,7 +86,7 @@ namespace IndoorCO2App_Multiplatform
             //
             try
             {
-                json.Add("d", sensorID);
+                json.Add("d", MainPage.MainPageSingleton.appVersion + "_" + sensorType.ToString() + "_" + sensorID); 
                 json.Add("b", startTime);
                 json.Add("st", StartingNWRType);
                 json.Add("si", StartingPointID);

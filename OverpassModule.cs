@@ -384,6 +384,8 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[leisure=sauna];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=hackerspace];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=townhall];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=convention_centre];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=conference_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=congress_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=events_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=bar];" +
@@ -603,7 +605,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     var lineName = tags.TryGetProperty("name", out var subwayLineNameProperty) ? subwayLineNameProperty.GetString() : "";
                     TransitLineData t = new TransitLineData("subway", type, id, lineName, userLatitude, userLongitude);
-                    TransitLines.Add(t);
+                    TransitLines.Add(t);                    
                 }
 
                 // Railway stop 

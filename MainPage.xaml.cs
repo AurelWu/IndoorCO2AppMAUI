@@ -31,11 +31,13 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
+        public const string everTransmittededPreferenceKey = "everTransmitted";
         private const string SelectedMonitorPreferenceKey = "SelectedMonitorIndex";
         private const string DeviceNameFilterPreferenceKey = "NameFilterValue";
         public static int startTrimSliderValue = 0;
         public static int endTrimSliderValue = 1;
 
+        public static bool evertransmittedSucessfully = false;
         public static bool startTrimSliderHasBeenUsed = false;
         public static bool endTrimSliderHasBeenUsed = false;
         public static bool endtrimSliderIsAtmax = false;
@@ -94,6 +96,7 @@ namespace IndoorCO2App_Multiplatform
             InitializeMap(0, 0); // Example: Berlin coordinates
             InitUILayout();
             RecoveryData.ReadFromPreferences();
+            LoadHasAlreadySuccessfulTransmitted();
             _CO2DeviceNameFilterEditor.Text = Preferences.Get(DeviceNameFilterPreferenceKey, "");
             ChangeToStandardUI(false);
             LoadFavouredLocations();
@@ -403,6 +406,8 @@ namespace IndoorCO2App_Multiplatform
             OverpassModule.everFetchedLocations = false;
             ResetNotes();
             RecoveryData.ResetRecoveryData();
+            Preferences.Set(everTransmittededPreferenceKey, true);
+            evertransmittedSucessfully = true;
             ChangeToUI(MenuMode.Standard);
             
         }
@@ -526,6 +531,14 @@ namespace IndoorCO2App_Multiplatform
                 {
                     _TransitLinePicker.SelectedItem = transitLines[prevLineIndex];
                 }
+            }
+        }
+
+        private void LoadHasAlreadySuccessfulTransmitted()
+        {
+            if (Preferences.ContainsKey(everTransmittededPreferenceKey))
+            {
+                evertransmittedSucessfully = true;
             }
         }
 

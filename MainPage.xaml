@@ -51,6 +51,15 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                     <ImageButton x:Name="ButtonBluetoothPermissions" Source="bluetoothscan.png" Clicked="OnRequestBluetoothPermissionsDialog" Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
                 </HorizontalStackLayout>
 
+
+                <Button
+                x:Name="QuickGuideButtonTop"
+                Text="Quick Guide / User Manual"
+                SemanticProperties.Hint="Quick Guide Button"
+                Clicked="OnShowQuickGuideClicked"
+                HorizontalOptions="Center" />
+
+
                 <HorizontalStackLayout         
                 x:Name="CO2MonitorPickerStackLayout"
                 Spacing="10"
@@ -223,11 +232,11 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
         Grid.Column="0" />
 
                     <Button
-        x:Name="GetCachedLocationsButton"
-        ImageSource="folder_transparent.png"                 
-        Clicked="OnGetCachedLocationsClicked"
-        HorizontalOptions="Fill"
-        Grid.Column="1" />
+    x:Name="GetCachedLocationsButton"
+    ImageSource="{AppThemeBinding Light='folder_transparent.png', Dark='folder_transparent_dark.png'}"
+    Clicked="OnGetCachedLocationsClicked"
+    HorizontalOptions="Fill"
+    Grid.Column="1" />
                 </Grid>
 
 
@@ -762,6 +771,13 @@ Completed="OnEntryCompleted" />
 
 
                 <Button
+                x:Name="QuickGuideButtonBottom"
+                Text="Quick Guide / User Manual"
+                SemanticProperties.Hint="Quick Guide Button"
+                Clicked="OnShowQuickGuideClicked"
+                HorizontalOptions="Center" />
+
+                <Button
     x:Name="DebugLogButton"
     Text="Copy Debug Log to Clipboard"
     SemanticProperties.Hint="Copy Debug Log to Clipboard Button"
@@ -774,8 +790,10 @@ Completed="OnEntryCompleted" />
     SemanticProperties.Hint="Copy Debug Log to Clipboard Button"
     Clicked="OnCrashLogButtonClicked"
     HorizontalOptions="Center" />
+                
+                
                 <Label x:Name="VersionLabel" Text="Version: 2024-10-01" FontSize="12" VerticalOptions="Center" />
-
+    
 
             </VerticalStackLayout>
         </controls:FixedScrollView>

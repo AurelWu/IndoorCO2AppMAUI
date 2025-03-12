@@ -99,7 +99,9 @@ namespace IndoorCO2App_Multiplatform
             {
                 // Bluetooth is not enabled, show a dialog to ask the user to enable it
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ActionRequestEnable);
-                Platform.CurrentActivity.StartActivityForResult(enableBtIntent, 1);
+#if ANDROID
+                Microsoft.Maui.ApplicationModel.Platform.CurrentActivity.StartActivityForResult(enableBtIntent, 1);
+#endif
             }
             else
             {

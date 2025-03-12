@@ -888,6 +888,7 @@ namespace IndoorCO2App_Multiplatform
                             }
                             catch
                             {
+                                Logger.WriteToLog($"reading aranet4CharacteristicTotalDataPoints failed | + Bondstate: {device.BondState}",true);
                                 return;
                             }
 

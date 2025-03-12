@@ -7,6 +7,17 @@ using System.Threading.Tasks;
 
 
 
+
+//using Android.Gms.Location;
+
+
+
+#if IOS
+using CoreLocation;
+#endif
+
+
+
 namespace IndoorCO2App_Multiplatform
 {
     internal static class SpatialManager
@@ -100,64 +111,76 @@ namespace IndoorCO2App_Multiplatform
 
         internal static async void UpdateLocation()
         {
-
+#if ANDROID
             await GetCachedLocation();
-            
-            try
+        try
+        {
+            isCheckingLocation = true;
+            Logger.WriteToLog("Requesting GPS Update using MAUI Geolocation API", false);
+        
+            // Request the location
+            var request = new GeolocationRequest(GeolocationAccuracy.Best);
+            var location = await Geolocation.GetLocationAsync(request);
+        
+            if (location != null)
             {
-                isCheckingLocation = true;
-
-                Logger.WriteToLog("Requesting GPS Update |", false);
-                var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(20));
-                gpsCancelTokenSource = new CancellationTokenSource();
-                var result = await Geolocation.GetLocationAsync(request,gpsCancelTokenSource.Token);
-                if (result != null)
-                {
-                    currentLocation = result;
-                    //Logger.circularBuffer.Add("current Location set from UpdateLocation: " + currentLocation.Latitude + "|" + currentLocation.Longitude); //TODO remove again
-                }
-                else
-                {
-                    Logger.WriteToLog("GPS update not successful:  null value after timeout: ",false);
-                }
+                currentLocation = new Location(location.Latitude, location.Longitude);
+                Logger.WriteToLog($"Current Location set from MAUI Geolocation: {currentLocation.Latitude}|{currentLocation.Longitude}", false);
                 locationUpdateSuccessful = true;
             }
+            else
+            {
+                Logger.WriteToLog("GPS update not successful: location was null", false);
+                locationUpdateSuccessful = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.WriteToLog($"GPS update not successful: {ex.Message}", false);
+            locationUpdateSuccessful = false;
+        }
+        finally
+        {
+            isCheckingLocation = false;
+        }
+#elif IOS
+            try
+            {
+        isCheckingLocation = true;
+        Logger.WriteToLog("Requesting GPS Update with CLLocationManager (iOS)", false);
 
-            catch (FeatureNotSupportedException fnsEx)
+        // Use CLLocationManager on iOS
+        var locationManager = new CoreLocation.CLLocationManager();
+        locationManager.RequestWhenInUseAuthorization(); // Request permission
+        locationManager.DesiredAccuracy = CoreLocation.CLLocation.AccuracyBest;
+        locationManager.LocationsUpdated += (sender, e) =>
+        {
+            var location = e.Locations.LastOrDefault();
+            if (location != null)
             {
-                Logger.WriteToLog("GPS update not successful: " + fnsEx.Message,false);                
-                locationUpdateSuccessful = false;
+                currentLocation = new Location(location.Coordinate.Latitude, location.Coordinate.Longitude);
+                Logger.WriteToLog($"Current Location set from CLLocationManager: {currentLocation.Latitude}|{currentLocation.Longitude}", false);
+                locationUpdateSuccessful = true;
             }
-            catch (FeatureNotEnabledException fneEx)
-            {
+        };
 
-                Logger.WriteToLog("GPS update not successful: " + fneEx.Message, false);
-                locationUpdateSuccessful = false;
-            }
-            catch (PermissionException pEx)
-            {
-                Logger.WriteToLog("GPS update not successful: " + pEx.Message, false);
-                locationUpdateSuccessful = false;
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteToLog("GPS update not successful: " + ex.Message, false);
-                locationUpdateSuccessful = false;
-            }
-            finally
-            {
-                isCheckingLocation = false;
-                try
-                {
-                    gpsCancelTokenSource?.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteToLog("gpsCancelTokenSource?.Dispose() not successful: " + ex.Message, false);
-                }
-                
-            }
-
+        locationManager.StartUpdatingLocation();
+        await Task.Delay(5000); // Wait for location update
+        locationManager.StopUpdatingLocation();
+    }
+    catch (Exception ex)
+    {
+        Logger.WriteToLog($"iOS GPS update not successful: {ex.Message}", false);
+        locationUpdateSuccessful = false;
+    }
+    finally
+    {
+        isCheckingLocation = false;
+    }
+#else
+    // Default location update handling for other platforms (fallback to Xamarin Geolocation)
+    await GetCachedLocation(); // For non-Android and non-iOS platforms, continue with Xamarin.Geolocation
+#endif
         }
 
         public static void CancelGPSUpdateRequest()

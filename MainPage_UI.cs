@@ -70,7 +70,7 @@ namespace IndoorCO2App_Multiplatform
         public ImageButton _StarIconToggleTransitDestination;
 
         public Entry _TransitLineSearchFilterEditor;
-        
+
         internal MenuMode currentMenuMode;
 
         public MapView _mapView;
@@ -85,12 +85,15 @@ namespace IndoorCO2App_Multiplatform
 
         public Grid _LocationUpdateGrid;
 
-
+        public Button _QuickGuideButtonTop;
+        public Button _QuickGuideButtonBottom;
 
 
 
         public void InitUIElements()
         {
+            _QuickGuideButtonTop = this.FindByName<Button>("QuickGuideButtonTop");
+            _QuickGuideButtonBottom = this.FindByName<Button>("QuickGuideButtonBottom");
             _LocationUpdateGrid = this.FindByName<Grid>("LocationUpdateGrid");
             _NotesEditor = this.FindByName<Editor>("NotesEditor");
             _ButtonBuildingTransitSelectionStackLayout = this.FindByName<HorizontalStackLayout>("ButtonBuildingTransitSelectionStackLayout");
@@ -107,7 +110,7 @@ namespace IndoorCO2App_Multiplatform
             _LocationLabel = this.FindByName<Label>("LocationLabel");
             _LocationLabelRecording = this.FindByName<Label>("LocationLabelRecording");
             _LocationInfoLabel = this.FindByName<Label>("LocationInfoLabel");
-            _VersionLabel = this.FindByName<Label>("VersionLabel"); 
+            _VersionLabel = this.FindByName<Label>("VersionLabel");
             _UpdateLocationsButton = this.FindByName<Button>("UpdateLocationsButton");
             _GetCachedLocationsButton = this.FindByName<Button>("GetCachedLocationsButton");
             _ResumeRecordingButton = this.FindByName<Button>("ResumeRecordingButton");
@@ -146,13 +149,13 @@ namespace IndoorCO2App_Multiplatform
             _BuildingModeButton = this.FindByName<Button>("ButtonBuildingMode");
             _TransitModeButton = this.FindByName<Button>("ButtonTransitMode");
             _TransitFilterAllButton = this.FindByName<Button>("ButtonAll");
-            _TransitFilterBusButton = this.FindByName<Button>("ButtonBus"); 
-            _TransitFilterTramButton = this.FindByName<Button>("ButtonTram"); 
+            _TransitFilterBusButton = this.FindByName<Button>("ButtonBus");
+            _TransitFilterTramButton = this.FindByName<Button>("ButtonTram");
             _TransitFilterSubwayButton = this.FindByName<Button>("ButtonSubway");
             _TransitFilterLightRailButton = this.FindByName<Button>("ButtonLightRail");
             _TransitFilterTrainButton = this.FindByName<Button>("ButtonTrain");
             _StarIconToggleBuilding = this.FindByName<ImageButton>("StarIconToggleBuilding");
-            _StarIconToggleTransitLine= this.FindByName<ImageButton>("StarIconToggleTransitLine");
+            _StarIconToggleTransitLine = this.FindByName<ImageButton>("StarIconToggleTransitLine");
             _StarIconToggleTransitOrigin = this.FindByName<ImageButton>("StarIconToggleTransitOrigin");
             _StarIconToggleTransitDestination = this.FindByName<ImageButton>("StarIconToggleTransitDestination");
 
@@ -165,7 +168,7 @@ namespace IndoorCO2App_Multiplatform
 
 
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
-            MenuModesOfUIElements.Add(_GPSStatusButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection );
+            MenuModesOfUIElements.Add(_GPSStatusButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_GPSPermissionButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_BluetoothEnabledButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_BluetoothPermissionsButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
@@ -179,7 +182,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitOriginStackLayout"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitDestinationStackLayout"), MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("TransitLineStackLayout"), MenuMode.TransportSelection | MenuMode.TransportRecording);
-            MenuModesOfUIElements.Add(_ResumeRecordingButton, 0); 
+            MenuModesOfUIElements.Add(_ResumeRecordingButton, 0);
             MenuModesOfUIElements.Add(_StartRecordingButton, MenuMode.Standard);
             MenuModesOfUIElements.Add(_StartManualRecordingButton, 0);
             //MenuModesOfUIElements.Add(_FinishRecordingButton, MenuMode.Recording | MenuMode.ManualRecording); //stack is hidden so shouldnt be necessary?
@@ -189,7 +192,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<Button>("DeleteLastSubmissionButton"), MenuMode.Standard);
             MenuModesOfUIElements.Add(_LocationLabelRecording, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_ConfirmCancelRecordingButton, 0);
-            MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("RecordingModeButtonStackLayout"), MenuMode.Recording | MenuMode.ManualRecording |MenuMode.TransportRecording);
+            MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("RecordingModeButtonStackLayout"), MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualName"), MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackManualAddress"), MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(_LineChartView, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
@@ -210,7 +213,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<Grid>("TransitFilterGrid"), MenuMode.TransportSelection | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackLocationTextFilter"), MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_mapViewExpander, MenuMode.Standard);
-            MenuModesOfUIElements.Add(_LocationInfoLabel, MenuMode.Standard |MenuMode.TransportSelection |MenuMode.TransportRecording);
+            MenuModesOfUIElements.Add(_LocationInfoLabel, MenuMode.Standard | MenuMode.TransportSelection | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_ButtonBuildingTransitSelectionStackLayout, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_GetCachedLocationsButton, MenuMode.Standard | MenuMode.TransportSelection | MenuMode.TransportRecording);
 
@@ -228,7 +231,7 @@ namespace IndoorCO2App_Multiplatform
             var buttonWidth30Percent = screenWidth * 0.30;
             var buttonWidth25Percent = screenWidth * 0.25;
 
-            _LocationUpdateGrid.MinimumWidthRequest = buttonWidth70Percent;            
+            _LocationUpdateGrid.MinimumWidthRequest = buttonWidth70Percent;
             // Set the button's minimum width
             _ResumeRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
             _StartRecordingButton.MinimumWidthRequest = buttonWidth70Percent;
@@ -293,6 +296,7 @@ namespace IndoorCO2App_Multiplatform
             UpdateLocationMap();
             UpdateMapViewExpander();
             UpdateBackgroundColor();
+            UpdateQuickGuideButton();
             //HideElementsWithStatusOK();
         }
 
@@ -327,8 +331,8 @@ namespace IndoorCO2App_Multiplatform
             {
                 _LocationInfoLabel.IsVisible = true;
             }
-            
-            if(hiddenElementThisTime)
+
+            if (hiddenElementThisTime)
             {
                 await _MainScrollView.ScrollToAsync(0, 0, true);
             }
@@ -338,57 +342,57 @@ namespace IndoorCO2App_Multiplatform
         private void UpdateBackgroundColor()
         {
 
-            
-                BoxView topStroke = this.FindByName<BoxView>("TopStroke");
-                if (topStroke != null)
+
+            BoxView topStroke = this.FindByName<BoxView>("TopStroke");
+            if (topStroke != null)
+            {
+                var co2 = BluetoothManager.currentCO2Reading;
+                if (co2 == 0)
                 {
-                    var co2 = BluetoothManager.currentCO2Reading;
-                    if(co2== 0)
-                    {
-                        topStroke.Color = Color.FromArgb("#00008b");
-                    }
-                    else if(co2 < 600)
-                    {
-                        topStroke.Color = Color.FromArgb("#00008b");
-                    }
-                    else if(co2 <800)
-                    {
-                        topStroke.Color = Color.FromArgb("#add8e6");
-                    }
-                    else if(co2 <1000)
-                    {
-                        topStroke.Color = Color.FromArgb("#ffff00");
-                    }
-                    else if(co2<1200)
-                    {
-                        topStroke.Color = Color.FromArgb("#ffa500");
-                    }
-                    else
-                    {
-                        topStroke.Color = Color.FromArgb("#ff0000");
-                    }
-                }            
+                    topStroke.Color = Color.FromArgb("#00008b");
+                }
+                else if (co2 < 600)
+                {
+                    topStroke.Color = Color.FromArgb("#00008b");
+                }
+                else if (co2 < 800)
+                {
+                    topStroke.Color = Color.FromArgb("#add8e6");
+                }
+                else if (co2 < 1000)
+                {
+                    topStroke.Color = Color.FromArgb("#ffff00");
+                }
+                else if (co2 < 1200)
+                {
+                    topStroke.Color = Color.FromArgb("#ffa500");
+                }
+                else
+                {
+                    topStroke.Color = Color.FromArgb("#ff0000");
+                }
+            }
         }
 
         private void UpdateLocationMap()
         {
             var pickedLocation = (LocationData)_LocationPicker.SelectedItem;
             if (!_mapViewExpander.IsExpanded) return; //we only update if map is actually visible
-            if(pickedLocation== null)
+            if (pickedLocation == null)
             {
                 UpdateMap(43.7628933, 11.2547348); //Default set to Florence 
             }
-            else if(previousMapLocation!=null && previousMapLocation!= pickedLocation)            
+            else if (previousMapLocation != null && previousMapLocation != pickedLocation)
             {
                 UpdateMap(pickedLocation.Latitude, pickedLocation.Longitude);
                 previousMapLocation = pickedLocation;
             }
-            else if(previousMapLocation== null)
+            else if (previousMapLocation == null)
             {
                 UpdateMap(pickedLocation.Latitude, pickedLocation.Longitude);
                 previousMapLocation = pickedLocation;
             }
-            
+
         }
 
         private void UpdateMapViewExpander()
@@ -405,7 +409,7 @@ namespace IndoorCO2App_Multiplatform
 
         private void UpdateGetLocationButton()
         {
-            if(SpatialManager.currentLocation.Latitude==0 && SpatialManager.currentLocation.Longitude==0)
+            if (SpatialManager.currentLocation.Latitude == 0 && SpatialManager.currentLocation.Longitude == 0)
             {
                 _UpdateLocationsButton.IsEnabled = false;
             }
@@ -431,12 +435,12 @@ namespace IndoorCO2App_Multiplatform
             else
             {
                 _StartManualRecordingButton.IsEnabled = false;
-            }            
+            }
         }
 
         private void UpdateStartTransitRecordingButton()
         {
-            if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.TransportStartLocationData.Count > 0 && OverpassModule.TransitLines.Count>0 && BluetoothManager.discoveredDevices != null && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
+            if (gpsActive && gpsGranted && btGranted && btActive && OverpassModule.TransportStartLocationData.Count > 0 && OverpassModule.TransitLines.Count > 0 && BluetoothManager.discoveredDevices != null && BluetoothManager.discoveredDevices.Count > 0 && BluetoothManager.currentCO2Reading > 0)
             {
                 _StartTransportRecordingButton.IsEnabled = true;
             }
@@ -454,10 +458,10 @@ namespace IndoorCO2App_Multiplatform
             if (trimEnd - trimStart >= 4 && BluetoothManager.isRecording)
             {
 
-                if(submissionMode== SubmissionMode.Transit)
+                if (submissionMode == SubmissionMode.Transit)
                 {
                     selectedTransitLine = (TransitLineData)_TransitLinePicker.SelectedItem;
-                    if(selectedTransitLine==null)
+                    if (selectedTransitLine == null)
                     {
                         _FinishRecordingButton.IsEnabled = false;
                         _FinishRecordingButton.Text = "Submit Data (needs Transit Line)";
@@ -469,12 +473,12 @@ namespace IndoorCO2App_Multiplatform
                     }
                 }
 
-                else if(submissionMode== SubmissionMode.BuildingManual &&(_ManualNameEditor.Text==null || _ManualAddressEditor.Text==null))
+                else if (submissionMode == SubmissionMode.BuildingManual && (_ManualNameEditor.Text == null || _ManualAddressEditor.Text == null))
                 {
                     _FinishRecordingButton.IsEnabled = false;
                     _FinishRecordingButton.Text = "Submit Data (needs Address & Name)";
                 }
-                else if (submissionMode==SubmissionMode.BuildingManual && (_ManualNameEditor.Text.Length < 1 || _ManualAddressEditor.Text.Length < 1))
+                else if (submissionMode == SubmissionMode.BuildingManual && (_ManualNameEditor.Text.Length < 1 || _ManualAddressEditor.Text.Length < 1))
                 {
                     _FinishRecordingButton.IsEnabled = false;
                     _FinishRecordingButton.Text = "Submit Data (needs Address & Name)";
@@ -504,23 +508,23 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else if (BluetoothManager.discoveredDevices == null || BluetoothManager.discoveredDevices.Count == 0)
                 {
-                    if(_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && currentMenuMode!=MenuMode.TransportRecording && currentMenuMode!=MenuMode.Recording)
+                    if (_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && currentMenuMode != MenuMode.TransportRecording && currentMenuMode != MenuMode.Recording)
                     {
                         _DeviceLabel.Text = $"Device not yet found. This might take a while. Namefilter set to: {_CO2DeviceNameFilterEditor.Text}";
                     }
-                    else if (_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && (currentMenuMode==MenuMode.TransportRecording || currentMenuMode== MenuMode.Recording))
+                    else if (_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && (currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.Recording))
                     {
                         _DeviceLabel.Text = $"Recovering Data from Sensor. This might take a while.";
                     }
-                    else if((currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.Recording))
+                    else if ((currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.Recording))
                     {
                         _DeviceLabel.Text = $"Recovering Data from Sensor. This might take a while.";
-                    }               
+                    }
                     else
                     {
                         _DeviceLabel.Text = $"Device not yet found. This might take a while";
                     }
-                    
+
 
                     if (BluetoothManager.lastAttemptFailed)
                     {
@@ -533,24 +537,24 @@ namespace IndoorCO2App_Multiplatform
                 //}
                 else if (BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
                 {
-                    if(monitorType== CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
+                    if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                         _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                     }
                     else
                     {
-                        var secondsSinceLastUpdate = DateTime.Now - BluetoothManager.timeOfLastNotifyUpdate;                        
+                        var secondsSinceLastUpdate = DateTime.Now - BluetoothManager.timeOfLastNotifyUpdate;
                         _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                     }
-                    
+
                     if (BluetoothManager.lastAttemptFailed)
                     {
                         _DeviceLabel.Text += " | previous update failed";
                     }
                 }
-                else if(BluetoothManager.outdatedVersion == true)
+                else if (BluetoothManager.outdatedVersion == true)
                 {
                     _DeviceLabel.Text = "Sensor found, but the Firmware is outdated \r\nUpdate it using the official Aranet App ⓘ)";
                 }
@@ -561,7 +565,7 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else if (BluetoothManager.currentCO2Reading == 0)
                 {
-                    if(monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
+                    if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
                         _DeviceLabel.Text = "initiating first Update in:" + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
                     }
@@ -569,7 +573,7 @@ namespace IndoorCO2App_Multiplatform
                     {
                         _DeviceLabel.Text = "waiting for first data from Sensor" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
                     }
-                    
+
                     if (BluetoothManager.lastAttemptFailed)
                     {
                         _DeviceLabel.Text += " | previous update failed";
@@ -664,7 +668,7 @@ namespace IndoorCO2App_Multiplatform
 
         private void UpdateLocationLabel()
         {
-            
+
             if (gpsActive && gpsGranted)
             {
                 if (SpatialManager.currentLocation.Latitude != 0 || SpatialManager.currentLocation.Longitude != 0)
@@ -693,23 +697,37 @@ namespace IndoorCO2App_Multiplatform
                 if (!gpsGranted) _LocationLabel.Text += ("Location Permission missing");
             }
         }
-        
+
         private void UpdateFavouredBuildingIcon()
         {
-            
+
             if (_LocationPicker.SelectedItem == null)
             {
                 _StarIconToggleBuilding.Source = "star_icon.png";
                 return;
             }
             LocationData d = (LocationData)_LocationPicker.SelectedItem;
-            if (favouredLocations.Contains(d.Type+"_"+d.ID.ToString()))
+            if (favouredLocations.Contains(d.Type + "_" + d.ID.ToString()))
             {
                 _StarIconToggleBuilding.Source = "star_icon_active.png";
             }
             else
             {
                 _StarIconToggleBuilding.Source = "star_icon.png";
+            }
+        }
+
+        private void UpdateQuickGuideButton()
+        {
+            if (evertransmittedSucessfully)
+            {
+                _QuickGuideButtonBottom.IsVisible = true;
+                _QuickGuideButtonTop.IsVisible = false;
+            }
+            else
+            {
+                _QuickGuideButtonBottom.IsVisible = false;
+                _QuickGuideButtonTop.IsVisible = true;
             }
         }
 

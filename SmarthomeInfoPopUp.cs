@@ -16,6 +16,7 @@ namespace IndoorCO2App_Android
             var titleLabel = new Label
             {
                 Text = "Enabling Smart Home Integration",
+                TextColor = Colors.Black,
                 FontSize = 16,
                 FontAttributes = FontAttributes.Bold,
                 HorizontalOptions = LayoutOptions.Center
@@ -24,6 +25,7 @@ namespace IndoorCO2App_Android
             var description1 = new Label
             {
                 Text = "To read the data from your Aranet4, Smart Home Integration needs to be enabled. \r\n 1) Open the official Aranet Home App (install from App Store if not installed)",
+                TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
             };
@@ -40,6 +42,7 @@ namespace IndoorCO2App_Android
             var description2 = new Label
             {
                 Text = "2) Press the Gears Icon in top right of the sensor",
+                TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
             };
@@ -55,6 +58,7 @@ namespace IndoorCO2App_Android
             var description3 = new Label
             {
                 Text = "3) move to Smart Home Integration Slider to the right ",
+                TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
             };

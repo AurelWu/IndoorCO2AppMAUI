@@ -18,6 +18,7 @@ namespace IndoorCO2App_Android
                 Text = "Updating the Firmware",
                 FontSize = 16,
                 FontAttributes = FontAttributes.Bold,
+                TextColor = Colors.Black,
                 HorizontalOptions = LayoutOptions.Center
             };
 
@@ -25,6 +26,7 @@ namespace IndoorCO2App_Android
             {
                 Text = "To Update The Firmware follow these steps: \r\n 1) Open the official Aranet Home App (install from App Store if not installed)",
                 FontSize = 12,
+                TextColor = Colors.Black,
                 HorizontalOptions = LayoutOptions.Center
             };
 
@@ -40,6 +42,7 @@ namespace IndoorCO2App_Android
             var description2 = new Label
             {
                 Text = "2) Press the Gears Icon in top right of the sensor",
+                TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
             };
@@ -55,6 +58,7 @@ namespace IndoorCO2App_Android
             var description3 = new Label
             {
                 Text = "3) press the Version number and follow the instructions ",
+                TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
             };
@@ -71,6 +75,7 @@ namespace IndoorCO2App_Android
             var closeButton = new Button
             {
                 Text = "Close",
+                TextColor = Colors.Black,
                 Command = new Command(() => this.Close())
             };
 
