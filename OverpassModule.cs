@@ -40,6 +40,7 @@ namespace IndoorCO2App_Multiplatform
         public static List<TransitLineData> TransitLines { get; private set; }
         public static List<TransitLineData> filteredTransitLines { get; private set; }
 
+        public static bool sortAlphabetic = false;
         public static bool currentlyFetching = false;
         public static bool lastFetchWasSuccess = false;
         public static bool lastFetchWasSuccessButNoResults = false;
@@ -250,7 +251,7 @@ namespace IndoorCO2App_Multiplatform
                 }
             }
             BuildingLocationData = BuildingLocationData.OrderBy(x => x.DistanceToGivenLocation).ToList();
-            SortFavouriteBuildingsToTop();
+            SortFavouriteBuildingsToTop(sortAlphabetic);
             Logger.WriteToLog("# of Cached Building Locations Locations in range: " + BuildingLocationData.Count, false);
             lastFetchWasFromCachedData = true;
         }
@@ -457,7 +458,7 @@ namespace IndoorCO2App_Multiplatform
                 BuildingLocationData.Add(bd);
             }
 
-            SortFavouriteBuildingsToTop();
+            SortFavouriteBuildingsToTop(sortAlphabetic);
 
             AddToCachedBuildingLocations();
 
@@ -471,7 +472,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public static void SortFavouriteBuildingsToTop()
+        public static void SortFavouriteBuildingsToTop(bool alphabetic)
         {
             BuildingLocationData.Sort((point1, point2) =>
             {
@@ -483,7 +484,14 @@ namespace IndoorCO2App_Multiplatform
                 if (!isFavorite1 && isFavorite2) return 1;
 
                 // If both are favorites or both are non-favorites, sort by distance
-                return point1.DistanceToGivenLocation.CompareTo(point2.DistanceToGivenLocation);
+                if(!alphabetic)
+                {
+                    return point1.DistanceToGivenLocation.CompareTo(point2.DistanceToGivenLocation);
+                }
+                else
+                {
+                    return point1.Name.CompareTo(point2.Name);
+                }
             });
         }
 

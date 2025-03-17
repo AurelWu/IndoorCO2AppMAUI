@@ -399,11 +399,11 @@ namespace IndoorCO2App_Multiplatform
         {
             if (!_mapViewExpander.IsExpanded)
             {
-                _mapViewExpanderLabel.Text = "Show on Map ▼";
+                _mapViewExpanderLabel.Text = "Show on map ▼";
             }
             else
             {
-                _mapViewExpanderLabel.Text = "Hide Map ▲";
+                _mapViewExpanderLabel.Text = "Hide map ▲";
             }
         }
 
@@ -464,7 +464,7 @@ namespace IndoorCO2App_Multiplatform
                     if (selectedTransitLine == null)
                     {
                         _FinishRecordingButton.IsEnabled = false;
-                        _FinishRecordingButton.Text = "Submit Data (needs Transit Line)";
+                        _FinishRecordingButton.Text = "Submit data (needs transit line)";
                     }
                     else
                     {
@@ -476,23 +476,23 @@ namespace IndoorCO2App_Multiplatform
                 else if (submissionMode == SubmissionMode.BuildingManual && (_ManualNameEditor.Text == null || _ManualAddressEditor.Text == null))
                 {
                     _FinishRecordingButton.IsEnabled = false;
-                    _FinishRecordingButton.Text = "Submit Data (needs Address & Name)";
+                    _FinishRecordingButton.Text = "Submit data (needs address & name)";
                 }
                 else if (submissionMode == SubmissionMode.BuildingManual && (_ManualNameEditor.Text.Length < 1 || _ManualAddressEditor.Text.Length < 1))
                 {
                     _FinishRecordingButton.IsEnabled = false;
-                    _FinishRecordingButton.Text = "Submit Data (needs Address & Name)";
+                    _FinishRecordingButton.Text = "Submit data (needs address & name)";
                 }
                 else
                 {
                     _FinishRecordingButton.IsEnabled = true;
-                    _FinishRecordingButton.Text = "Submit Data";
+                    _FinishRecordingButton.Text = "Submit data";
                 }
             }
             else if (BluetoothManager.isRecording)
             {
                 _FinishRecordingButton.IsEnabled = false;
-                _FinishRecordingButton.Text = "Submit Data (needs 5 Data points)";
+                _FinishRecordingButton.Text = "Submit data (needs 5 data points)";
             }
 
 
@@ -504,7 +504,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 if (!btGranted || !btActive)
                 {
-                    _DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch Sensor Data";
+                    _DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch sensor data";
                 }
                 else if (BluetoothManager.discoveredDevices == null || BluetoothManager.discoveredDevices.Count == 0)
                 {
@@ -514,11 +514,11 @@ namespace IndoorCO2App_Multiplatform
                     }
                     else if (_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && (currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.Recording))
                     {
-                        _DeviceLabel.Text = $"Recovering Data from Sensor. This might take a while.";
+                        _DeviceLabel.Text = $"Recovering data from sensor. This might take a while.";
                     }
                     else if ((currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.Recording))
                     {
-                        _DeviceLabel.Text = $"Recovering Data from Sensor. This might take a while.";
+                        _DeviceLabel.Text = $"Recovering data from sensor. This might take a while.";
                     }
                     else
                     {
@@ -537,6 +537,12 @@ namespace IndoorCO2App_Multiplatform
                 //}
                 else if (BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
                 {
+                    //checking bondstate does not work for Aranet4 or BLE devices in general, would need to infer from trying to read characteristics
+                    //if (BluetoothManager.isBonded == false && (monitorType == CO2MonitorType.Airvalent || monitorType == CO2MonitorType.Aranet4))
+                    //{
+                    //    _DeviceLabel.Text = "Sensor found, but not paired with your Phone, restart the App and enter the PIN displayed on the Sensor when requested)";
+                    //}
+
                     if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
@@ -556,22 +562,23 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else if (BluetoothManager.outdatedVersion == true)
                 {
-                    _DeviceLabel.Text = "Sensor found, but the Firmware is outdated \r\nUpdate it using the official Aranet App ⓘ)";
+                    _DeviceLabel.Text = "Sensor found, but the firmware is outdated.\r\nUpdate it using the official Aranet app ⓘ)";
                 }
+                
 
                 else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
                 {
-                    _DeviceLabel.Text = "Sensor found, but 'Smart Home Integration' is disabled.\r\nEnable it using the offical Aranet App ⓘ";
+                    _DeviceLabel.Text = "Sensor found, but 'Smart Home Integration' is disabled.\r\nEnable it using the offical Aranet app ⓘ";
                 }
                 else if (BluetoothManager.currentCO2Reading == 0)
                 {
                     if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
-                        _DeviceLabel.Text = "initiating first Update in:" + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                        _DeviceLabel.Text = "initiating first update in:" + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
                     }
                     else
                     {
-                        _DeviceLabel.Text = "waiting for first data from Sensor" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                        _DeviceLabel.Text = "waiting for first data from sensor" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt status: " + BluetoothManager.gattStatus;
                     }
 
                     if (BluetoothManager.lastAttemptFailed)
@@ -595,12 +602,12 @@ namespace IndoorCO2App_Multiplatform
                 _StatusLabel.Text = ("");
                 _StatusLabel.IsVisible = true;
                 if (!gpsActive) _StatusLabel.Text += "GPS not enabled | ";
-                if (!gpsGranted) _StatusLabel.Text += "Location Permission missing |";
+                if (!gpsGranted) _StatusLabel.Text += "Location permission missing |";
                 if (!btActive) _StatusLabel.Text += "Bluetooth not enabled |";
                 if (!btGranted) _StatusLabel.Text += "Bluetooth permission not granted, press red button above";
                 if (gpsActive && gpsGranted && btActive && btGranted)
                 {
-                    _StatusLabel.Text = "GPS & Bluetooth Permissions and Status okay";
+                    _StatusLabel.Text = "GPS & Bluetooth permissions and status okay";
                     _StatusLabel.IsVisible = false;
                 }
             }
@@ -686,7 +693,7 @@ namespace IndoorCO2App_Multiplatform
                 else
                 {
                     _LocationLabel.IsVisible = true;
-                    _LocationLabel.Text = "GPS enabled & Location permissions granted. Getting Location Info. Might take a minute";
+                    _LocationLabel.Text = "GPS enabled & location permissions granted. Getting location info. Might take a minute";
                 }
             }
             else
@@ -694,7 +701,7 @@ namespace IndoorCO2App_Multiplatform
                 _LocationLabel.IsVisible = true;
                 _LocationLabel.Text = ("");
                 if (!gpsActive) _LocationLabel.Text += ("GPS not enabled ");
-                if (!gpsGranted) _LocationLabel.Text += ("Location Permission missing");
+                if (!gpsGranted) _LocationLabel.Text += ("Location permission missing");
             }
         }
 
@@ -798,15 +805,15 @@ namespace IndoorCO2App_Multiplatform
             }
             else if(currentMenuMode == MenuMode.Recording && selectedLocation == null)
             {
-                _LocationLabelRecording.Text = "No Location Selected"; //shouldnt even happen
+                _LocationLabelRecording.Text = "No location selected"; //shouldnt even happen
             }
             else if(currentMenuMode == MenuMode.TransportRecording && selectedTransitOriginLocation != null)
             {
-                _LocationLabelRecording.Text = "Transport Origin: " + selectedTransitOriginLocation;
+                _LocationLabelRecording.Text = "Transit origin: " + selectedTransitOriginLocation;
             }
             else if(currentMenuMode == MenuMode.TransportRecording && selectedTransitOriginLocation == null)
             {
-                _LocationLabelRecording.Text = "No Transit Origin Selected"; //shouldnt even happen
+                _LocationLabelRecording.Text = "No transit origin selected"; //shouldnt even happen
             }
         }
 
@@ -815,7 +822,7 @@ namespace IndoorCO2App_Multiplatform
 
             if (OverpassModule.everFetchedLocations == false && currentMenuMode == MenuMode.Standard)
             {
-                _LocationInfoLabel.Text = "Press Update Locations to get nearby locations";
+                _LocationInfoLabel.Text = "Press 'Update Locations' to get nearby locations";
             }            
             else if (OverpassModule.lastFetchWasSuccessButNoResults)
             {
@@ -823,7 +830,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (OverpassModule.lastFetchWasSuccess && (currentMenuMode == MenuMode.Standard))
             {
-                _LocationInfoLabel.Text = "Select Location:";
+                _LocationInfoLabel.Text = "Select location:";
             }
             else if (OverpassModule.lastFetchWasSuccess && (currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.TransportSelection))
             {
@@ -859,14 +866,14 @@ namespace IndoorCO2App_Multiplatform
 
             if (OverpassModule.everFetchedTransitLocations == false && currentMenuMode == MenuMode.TransportSelection)
             {
-                _LocationInfoLabel.Text = "Press Update Locations to get nearby locations";
+                _LocationInfoLabel.Text = "Press Update locations to get nearby locations";
             }
 
             if (OverpassModule.lastFetchWasFromCachedData)
             {
                 if(currentMenuMode == MenuMode.Standard && OverpassModule.BuildingLocationData != null && OverpassModule.BuildingLocationData.Count>0)
                 {
-                    _LocationInfoLabel.Text = "Retrieved locally stored Locations";
+                    _LocationInfoLabel.Text = "Retrieved locally stored locations";
                 }
                 else if(currentMenuMode == MenuMode.Standard)
                 {
@@ -874,7 +881,7 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else if(currentMenuMode == MenuMode.TransportSelection && OverpassModule.TransportStartLocationData != null && OverpassModule.TransportStartLocationData.Count>0)
                 {
-                    _LocationInfoLabel.Text = "Retrieved locally stored Locations";
+                    _LocationInfoLabel.Text = "Retrieved locally stored locations";
                 }
                 else if (currentMenuMode == MenuMode.TransportSelection)
                 {

@@ -119,7 +119,7 @@ namespace IndoorCO2App_Multiplatform
             Logger.WriteToLog("Requesting GPS Update using MAUI Geolocation API", false);
         
             // Request the location
-            var request = new GeolocationRequest(GeolocationAccuracy.Best);
+            var request = new GeolocationRequest(GeolocationAccuracy.Best,TimeSpan.FromSeconds(20));
             var location = await Geolocation.GetLocationAsync(request);
         
             if (location != null)
@@ -152,7 +152,7 @@ namespace IndoorCO2App_Multiplatform
         // Use CLLocationManager on iOS
         var locationManager = new CoreLocation.CLLocationManager();
         locationManager.RequestWhenInUseAuthorization(); // Request permission
-        locationManager.DesiredAccuracy = CoreLocation.CLLocation.AccuracyBest;
+        locationManager.DesiredAccuracy = CoreLocation.CLLocation.AccuracyNearestTenMeters;
         locationManager.LocationsUpdated += (sender, e) =>
         {
             var location = e.Locations.LastOrDefault();

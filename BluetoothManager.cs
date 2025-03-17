@@ -86,6 +86,7 @@ namespace IndoorCO2App_Multiplatform
         public static SubmissionDataTransport submissionDataTransport;
         public static string deviceID;
         public static bool isGattA2DP;
+        public static bool isBonded = false;
         public static int rssi;
         public static int txPower;
         public static int gattStatus;
@@ -152,9 +153,10 @@ namespace IndoorCO2App_Multiplatform
                 if (submissionDataManual != null && SpatialManager.currentLocation != null)
                 {
                     var lat = SpatialManager.currentLocation.Latitude;
-                    var lon = SpatialManager.currentLocation.Longitude;
+                    var lon = SpatialManager.currentLocation.Longitude;                    
                     submissionDataManual.LatitudeData.Add(lat);
                     submissionDataManual.LongitudeData.Add(lon);
+                    //submissionDataTransport.timeStampsOfGPSData.Add(DateTime.Now);
                 }
 
                 if (submissionDataTransport != null && SpatialManager.currentLocation != null)
@@ -165,6 +167,7 @@ namespace IndoorCO2App_Multiplatform
                     {
                         submissionDataTransport.LatitudeData.Add(lat);
                         submissionDataTransport.LongitudeData.Add(lon);
+                        submissionDataTransport.timeStampsOfGPSData.Add(DateTime.Now);
                     }
                     
                 }
@@ -725,13 +728,13 @@ namespace IndoorCO2App_Multiplatform
                             Logger.WriteToLog("airCoda CO2Value: " + CO2Value + " | " + hexString,false);
                             if(recordedData.Count==0)
                             {
-                                recordedData.Add(new SensorData(currentCO2Reading, 0));
+                                recordedData.Add(new SensorData(currentCO2Reading, 0,DateTime.Now));
                             }
                             else
                             {
                                 if(recordedData.Last().CO2ppm!=currentCO2Reading)
                                 {
-                                    recordedData.Add(new SensorData(currentCO2Reading, recordedData.Count()));
+                                    recordedData.Add(new SensorData(currentCO2Reading, recordedData.Count(),DateTime.Now));
                                 }
                             }
                                 
@@ -887,7 +890,7 @@ namespace IndoorCO2App_Multiplatform
                                 
                             }
                             catch
-                            {
+                            {                                
                                 Logger.WriteToLog($"reading aranet4CharacteristicTotalDataPoints failed | + Bondstate: {device.BondState}",true);
                                 return;
                             }
@@ -959,7 +962,7 @@ namespace IndoorCO2App_Multiplatform
                                 int t = 0;
                                 foreach (var e in co2dataArray)
                                 {
-                                    recordedData.Add(new SensorData(e, t));
+                                    recordedData.Add(new SensorData(e, t,DateTime.Now));
                                     if(sensorUpdateInterval==60)
                                     {
                                         t++;
@@ -975,7 +978,8 @@ namespace IndoorCO2App_Multiplatform
                                     else if(sensorUpdateInterval==600)
                                     {
                                         t+= 10;
-                                    }                                    
+                                    }
+                                    
                                 }
                                 RecoveryData.timeOfLastUpdate = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                                 RecoveryData.WriteToPreferences();
@@ -1063,7 +1067,7 @@ namespace IndoorCO2App_Multiplatform
                         int t = 0;
                         foreach (var e in valuesTaken)
                         {
-                            recordedData.Add(new SensorData(e, t));
+                            recordedData.Add(new SensorData(e, t,DateTime.Now));
                             if (sensorUpdateInterval == 60)
                             {
                                 t++;
@@ -1213,7 +1217,7 @@ namespace IndoorCO2App_Multiplatform
             if (isRecording)
             {
                 int t = recordedData.Count;
-                recordedData.Add(new SensorData(CO2LiveValue, t));
+                recordedData.Add(new SensorData(CO2LiveValue, t,DateTime.Now));
             }
         }
 
@@ -1244,7 +1248,7 @@ namespace IndoorCO2App_Multiplatform
                 if (currentTime - timeOfLastNotifyUpdate >= TimeSpan.FromSeconds(refreshTime - 1))
                 {
                     int t = recordedData.Count;
-                    recordedData.Add(new SensorData(CO2LiveValue, t));
+                    recordedData.Add(new SensorData(CO2LiveValue, t,DateTime.Now));
                     timeOfLastNotifyUpdate = currentTime;
                 }            
             }

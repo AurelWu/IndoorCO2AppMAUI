@@ -25,7 +25,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (currentMenuMode.HasFlag(MenuMode.TransportRecording))
             {
-                OverpassModule.GetNearbyCachedTransitstopLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange, false);
+                OverpassModule.GetNearbyCachedTransitstopLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, 250, false);
                 UpdateTransitDestinationPicker(true);
                 //OverpassModule.GetNearbyCachedTransitLineLocations(SpatialManager.currentLocation.Latitude, SpatialManager.currentLocation.Longitude, searchRange + 100);
                 //UpdateTransitLinesPicker(false);

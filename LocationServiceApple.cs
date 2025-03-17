@@ -16,6 +16,11 @@ namespace IndoorCO2App_Multiplatform
             //locationManager.AllowsBackgroundLocationUpdates = true;
             locationManager.DesiredAccuracy = CLLocation.AccuracyBest;
             locationManager.ActivityType = CLActivityType.Other;
+            locationManager.DistanceFilter = 10;
+            if (CLLocationManager.LocationServicesEnabled)
+            {
+                locationManager.StartUpdatingLocation();
+            }
         }
 
         public bool IsGpsEnabled()

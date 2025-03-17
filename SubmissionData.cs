@@ -57,7 +57,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 SensorData data = SensorData[i];
                 ppmArray[arrayIndex] = data.CO2ppm.ToString();
-                timestampArray[arrayIndex] = data.timeStamp.ToString();
+                timestampArray[arrayIndex] = data.relativeTimeStamp.ToString();
                 arrayIndex++;
             }
 

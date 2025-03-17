@@ -420,7 +420,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 return;
             }
-            OverpassModule.SortFavouriteBuildingsToTop();
+            OverpassModule.SortFavouriteBuildingsToTop(OverpassModule.sortAlphabetic);
             _LocationPicker.ItemsSource = null;
             _LocationPicker.Items.Clear();
             _LocationPicker.ItemsSource = locations;
