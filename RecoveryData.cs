@@ -101,7 +101,7 @@ namespace IndoorCO2App_Multiplatform
             {
 
             
-            Preferences.Set(prefRecoveryRecordingMode, recordingMode);
+            Preferences.Set(prefRecoveryRecordingMode, recordingMode);                
             Preferences.Set(prefRecoveryStartTime, startTime.ToString());
             Preferences.Set(prefRecoveryTimeOfLastUpdate, timeOfLastUpdate.ToString());
             Preferences.Set(prefRecoveryLocationID, locationID.ToString());

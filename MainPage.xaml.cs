@@ -245,11 +245,12 @@ namespace IndoorCO2App_Multiplatform
                     ChangeToRecordingUI();
                     long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     BluetoothManager.StartNewRecording(monitorType, selectedLocation, startTime, prerecording);
-                    RecoveryData.startTime = startTime;
+                    
                     if(prerecording)
                     {
                         startTime -= BluetoothManager.prerecordingLength * 60 * 1000; //minutes to milliseconds
                     }
+                    RecoveryData.startTime = startTime;
                     RecoveryData.timeOfLastUpdate = startTime;
                     RecoveryData.locationID = selectedLocation.ID;
                     RecoveryData.locationType = selectedLocation.Type;
@@ -288,6 +289,10 @@ namespace IndoorCO2App_Multiplatform
                 submissionMode = SubmissionMode.Transit;
                 selectedTransitOriginLocation = (LocationData)_TransitOriginPicker.SelectedItem;
                 selectedTransitLine = (TransitLineData)_TransitLinePicker.SelectedItem;
+                if(selectedTransitOriginLocation==null || selectedTransitLine==null)
+                {
+                    return;
+                }
                 BluetoothManager.recordedData = new List<SensorData>();
                 _TrimSlider.Minimum = 0;
                 _TrimSlider.Maximum = 1;
@@ -371,6 +376,8 @@ namespace IndoorCO2App_Multiplatform
             _TransitLineSearchFilterEditor.Text = "";
             _ManualAddressEditor.Text = "";
             _ManualNameEditor.Text = "";
+            _PrerecordingSwitch.IsToggled = false;
+            prerecording = false;
             OverpassModule.TransitLines.Clear();
             OverpassModule.TransportStartLocationData.Clear();
             OverpassModule.TransportDestinationLocationData.Clear();

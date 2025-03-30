@@ -398,8 +398,11 @@ namespace IndoorCO2App_Multiplatform
                     {
                         if(r.Data.Length == 24)
                         {
+                            Logger.WriteToLog("found advertisement record with 24 byte length",false);
                             majorVersion = r.Data[5];
+                            Logger.WriteToLog("major Version [byte at index 5]: " + majorVersion, false);
                             minorVersion = r.Data[4];
+                            Logger.WriteToLog("minor Version [byte at index 4]: " + minorVersion, false);
                             if (majorVersion < 1 || (majorVersion == 1 && minorVersion < 2))
                             {
                                 outdatedVersion = true;

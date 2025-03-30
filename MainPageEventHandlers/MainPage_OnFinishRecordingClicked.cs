@@ -37,7 +37,6 @@ namespace IndoorCO2App_Multiplatform
             {
                 ResetRecordingState();
                 await ShowSuccessNotificationAsync();
-
             }            
         }
 
