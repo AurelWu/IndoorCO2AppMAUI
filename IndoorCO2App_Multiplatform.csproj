@@ -46,6 +46,7 @@
 	
 	<PropertyGroup>
 		<Mtouchlink>None</Mtouchlink>
+		<PublishTrimmed>True</PublishTrimmed>
 	</PropertyGroup>
 
 
@@ -60,12 +61,13 @@
 		<ApplicationVersion>46</ApplicationVersion>
 		<MtouchUseLlvm>True</MtouchUseLlvm>
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
-		<Optimize>False</Optimize>
-		<OptimizePNGs>False</OptimizePNGs>
+		<Optimize>True</Optimize>
+		<OptimizePNGs>True</OptimizePNGs>
 		<DebugType>portable</DebugType>
 		<BuildIpa>False</BuildIpa>
 		<MtouchLink>Full</MtouchLink>
 		<MtouchDebug>True</MtouchDebug>
+		<IsTrimmable>True</IsTrimmable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
@@ -74,8 +76,7 @@
 		<ApplicationVersion>46</ApplicationVersion>
 		<MtouchUseLlvm>True</MtouchUseLlvm>
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
-		<Optimize>False</Optimize>
-		<OptimizePNGs>False</OptimizePNGs>
+		<Optimize>True</Optimize>
 		<DebugType>portable</DebugType>
 		<BuildIpa>False</BuildIpa>
 		<MtouchLink>Full</MtouchLink>
@@ -127,13 +128,19 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <DebugSymbols>True</DebugSymbols>
+	  <IsTrimmable>True</IsTrimmable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 	  <MtouchDebug>True</MtouchDebug>
 	  <MtouchLink>Full</MtouchLink>
 	  <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
-	  <OptimizePNGs>False</OptimizePNGs>
+	  <OptimizePNGs>True</OptimizePNGs>
+	  <IsTrimmable>True</IsTrimmable>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
+	  <IsTrimmable>True</IsTrimmable>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -157,9 +164,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.83" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
 		<PackageReference Include="DotNetEnv" Version="3.1.1" />
 		<PackageReference Include="Mapsui" Version="4.1.8" />
 		<PackageReference Include="Mapsui.Maui" Version="4.1.8" />
