@@ -10,7 +10,7 @@ namespace IndoorCO2App_Android
 {
     class QuickGuidePopUp : Popup
     {
-        static string userManualURL = "https://indoorco2map.com/IndoorCO2Map_App_User_Manual.pdf";
+        static string userManualURL = "https://indoorco2map.com/Manual.pdf";
 
         public QuickGuidePopUp()
         {

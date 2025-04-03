@@ -10,8 +10,16 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnShowQuickGuideClicked(object sender, EventArgs e)
         {
-            var popup = new QuickGuidePopUp();
-            this.ShowPopup(popup);
+            try
+            {
+                var popup = new QuickGuidePopUp();
+                this.ShowPopup(popup);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("PopupRequest", ex);
+            }
+            
             //TODO: display info text with images
         }            
     }
