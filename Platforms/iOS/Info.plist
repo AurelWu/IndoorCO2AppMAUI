@@ -39,6 +39,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
+		<string>fetch</string>
 	</array>
 	<key>CFBundleShortVersionString</key>
 	<string>87.0</string>

@@ -1,6 +1,4 @@
-﻿
-
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using IndoorCO2App_Android;
 using System.Collections.Generic;
 

@@ -164,19 +164,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.83" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
-		<PackageReference Include="DotNetEnv" Version="3.1.1" />
+		<!-- <PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" /> -->
+		<!--<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.83" /> -->
+		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" /> 
+		<PackageReference Include="Microsoft.Maui.Controls" Version ="9.0.50" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version ="9.0.50" />
+		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" /> -->
+		<PackageReference Include="DotNetEnv" Version="3.1.1" /> 
+		<!--<PackageReference Include="DotNetEnv" /> -->
 		<PackageReference Include="Mapsui" Version="4.1.8" />
 		<PackageReference Include="Mapsui.Maui" Version="4.1.8" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.100" />
+		<!--<PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.100" />  -->
+		<PackageReference Include="Microsoft.Maui.Essentials" Version ="9.0.50" />
 		<PackageReference Include="Microsoft.VisualStudio.Utilities" Version="17.11.40262" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Plugin.BLE" Version="3.1.0" />
-		<PackageReference Include="Syncfusion.Maui.Sliders" Version="26.2.11" />
+		<PackageReference Include="Syncfusion.Maui.Sliders" Version="26.2.11" /> 
 	</ItemGroup>
 
 	<ItemGroup>
