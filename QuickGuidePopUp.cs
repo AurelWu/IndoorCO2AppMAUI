@@ -8,7 +8,7 @@ using Microsoft.Maui.Controls;
 
 namespace IndoorCO2App_Android
 {
-    class QuickGuidePopUp : Popup
+    partial class QuickGuidePopUp : Popup
     {
         static string userManualURL = "https://indoorco2map.com/Manual.pdf";
 

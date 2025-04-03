@@ -8,7 +8,7 @@ using Microsoft.Maui.Controls;
 
 namespace IndoorCO2App_Android
 {
-    class UpdateAranetPopUp : Popup
+    partial class UpdateAranetPopUp : Popup
     {   
         public UpdateAranetPopUp()
         {

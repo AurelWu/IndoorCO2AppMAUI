@@ -8,7 +8,7 @@ using Microsoft.Maui.Controls;
 
 namespace IndoorCO2App_Android
 {
-    class SmarthomeInfoPopUp : Popup
+    partial class SmarthomeInfoPopUp : Popup
     {   
         public SmarthomeInfoPopUp()
         {
