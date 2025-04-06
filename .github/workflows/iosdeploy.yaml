@@ -9,6 +9,7 @@ on:
 jobs:
   build-ios:
     runs-on: macos-latest
+    environment: Main
     steps:
     - uses: actions/checkout@v3
     - name: Setup Xcode version
