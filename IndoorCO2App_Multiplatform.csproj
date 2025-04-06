@@ -50,10 +50,10 @@
 	</PropertyGroup>
 
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+	<!--<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
 		<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>
 		<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>
-	</PropertyGroup>
+	</PropertyGroup> -->
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
 		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
