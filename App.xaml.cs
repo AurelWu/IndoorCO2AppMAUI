@@ -13,7 +13,8 @@ namespace IndoorCO2App_Multiplatform
             //however including the serial key directly is not allowed so the file containing the key is not included. 
             //You need to either create your own account and your own key or replace the RangeSlider control.
             //It still works without license but shows an Info Popup at start of the App
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(SerialKey.SyncFusionKey);
+            string key = Environment.GetEnvironmentVariable("SYNC_FUSION_KEY");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(key);
             InitializeComponent();
 #if ANDROID
             MainPage = new AppShell();
