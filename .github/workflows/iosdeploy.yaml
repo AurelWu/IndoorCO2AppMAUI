@@ -9,6 +9,7 @@ on:
 jobs:
   build-ios:
     runs-on: macos-latest
+    environment: Main
     steps:
     - uses: actions/checkout@v3
     - name: Setup Xcode version
@@ -36,7 +37,7 @@ jobs:
     - name: Build
       run: dotnet publish IndoorCO2AppMAUI/IndoorCO2App_Multiplatform.csproj -f net9.0-ios -c Release -p:ArchiveOnBuild=true -p:EnableAssemblyILStripping=false
     - name: List build output
-       run: ls -R IndoorCO2AppMAUI/bin/Release/net9.0-ios/publish/
+      run: ls -R IndoorCO2AppMAUI/bin/Release/net9.0-ios/publish/
     - name: Upload app to TestFlight
       uses: Apple-Actions/upload-testflight-build@v1
       with:
