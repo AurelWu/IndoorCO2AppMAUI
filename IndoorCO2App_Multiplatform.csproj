@@ -51,8 +51,9 @@
 
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-		<CodesignKey>Apple Distribution: Aurel Wuensch (57992CLWV5)</CodesignKey>
-		<CodesignProvision>IndoorCO2DataCollectorProvisioningProfile2025</CodesignProvision>
+		<!--<CodesignKey>Apple Distribution: Aurel Wuensch (57992CLWV5)</CodesignKey> -->
+		<!--<CodesignProvision>IndoorCO2DataCollectorProvisioningProfile2025</CodesignProvision> -->
+		<ProvisioningType>automatic</ProvisioningType>
 		<!--<CodesignKey>Apple Development: Created via API (57992CLWV5)</CodesignKey>-->
 	</PropertyGroup> 
 
@@ -73,8 +74,8 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
 		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
-		<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
-		<ApplicationVersion>46</ApplicationVersion>
+		<!--<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
+		<ApplicationVersion>46</ApplicationVersion>-->
 		<MtouchUseLlvm>True</MtouchUseLlvm>
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 		<Optimize>True</Optimize>
