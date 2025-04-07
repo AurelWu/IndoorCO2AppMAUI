@@ -37,7 +37,7 @@ jobs:
     - name: Build
       run: dotnet publish IndoorCO2App_Multiplatform.csproj -f net9.0-ios -c Release -p:ArchiveOnBuild=true -p:EnableAssemblyILStripping=false
     - name: List build output
-      run: ls -R bin/Release/net9.0-ios/ios-arm64/publish/
+      run: ls -R bin/Release/net9.0-ios/ios-arm64
     - name: Upload app to TestFlight
       uses: Apple-Actions/upload-testflight-build@v1
       with:
