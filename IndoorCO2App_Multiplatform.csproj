@@ -51,7 +51,7 @@
 
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-		<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>
+		<CodesignKey>Apple Distribution: Aurel Wuensch (57992CLWV5)</CodesignKey>
 		<!--<CodesignKey>Apple Development: Created via API (57992CLWV5)</CodesignKey>-->
 	</PropertyGroup> 
 
