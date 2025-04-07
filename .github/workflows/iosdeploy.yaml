@@ -41,7 +41,7 @@ jobs:
     - name: Upload app to TestFlight
       uses: Apple-Actions/upload-testflight-build@v1
       with:
-        app-path: 'IndoorCO2AppMAUI/bin/Release/net9.0-ios/ios-arm64/publish/IndoorCO2App_Multiplatform.ipa'
+        app-path: 'bin/Release/net9.0-ios/ios-arm64/publish/IndoorCO2App_Multiplatform.ipa'
         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
         api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
         api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
