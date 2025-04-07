@@ -52,7 +52,6 @@
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
 		<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>
-	    <CodesignProvision>IndoorCO2DataCollectorProvisioningProfile</CodesignProvision>
 		<!--<CodesignKey>Apple Development: Created via API (57992CLWV5)</CodesignKey>-->
 	</PropertyGroup> 
 
