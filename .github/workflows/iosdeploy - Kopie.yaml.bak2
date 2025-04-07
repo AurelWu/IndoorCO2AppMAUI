@@ -35,7 +35,7 @@ jobs:
         api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
         api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
     - name: Build
-      run: dotnet publish IndoorCO2App_Multiplatform.csproj -f net9.0-ios -c Release -p:ArchiveOnBuild=true -p:BuildIpa=true -p:EnableAssemblyILStripping=false
+      run: dotnet publish IndoorCO2App_Multiplatform.csproj -f net9.0-ios -c Release -p:ArchiveOnBuild=true -p:EnableAssemblyILStripping=false
     - name: List build output
       run: ls -R bin/Release/net9.0-ios/ios-arm64/publish/
     - name: Upload app to TestFlight
