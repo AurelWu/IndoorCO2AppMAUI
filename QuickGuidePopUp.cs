@@ -118,7 +118,7 @@ namespace IndoorCO2App_Android
             {
 
                 Text = "User Manual 🔗",
-                Command = new Command(() => Launcher.OpenAsync(userManualURL))
+                Command = new Command(async () => await Launcher.OpenAsync(userManualURL))
             };
 
 

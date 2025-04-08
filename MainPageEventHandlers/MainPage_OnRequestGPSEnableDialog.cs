@@ -4,7 +4,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async void OnRequestGPSEnableDialog(object sender, EventArgs e)
+        private async Task OnRequestGPSEnableDialogAsync(object sender, EventArgs e)
         {
             bool isActive = SpatialManager.CheckIfGpsIsEnabled();
             if (isActive) return; // won't do anything already active

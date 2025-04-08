@@ -8,7 +8,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async void OnCrashLogButtonClicked(object sender, EventArgs e)
+        private async Task OnCrashLogButtonClickedAsync(object sender, EventArgs e)
         {
             try
             {

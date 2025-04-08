@@ -9,11 +9,11 @@ namespace IndoorCO2App_Multiplatform
             string mode = RecoveryData.recordingMode;
             if(mode == "Building")
             {
-                StartRecording(submissionMode, true);
+                StartRecordingAsync(submissionMode, true);
             }
             else if(mode == "Transit")
             {
-                StartTransportRecording(true);
+                StartTransportRecordingAsync(true);
             }
             
         }

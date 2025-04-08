@@ -4,7 +4,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async void OnUpdateLocationsClicked(object sender, EventArgs e)
+        private async Task OnUpdateLocationsClickedAsync(object sender, EventArgs e)
         {
             OverpassModule.lastFetchWasFromCachedData = false;
             if (SpatialManager.currentLocation!=null)

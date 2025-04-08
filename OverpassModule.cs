@@ -59,15 +59,23 @@ namespace IndoorCO2App_Multiplatform
             cachedBuildingLocations = new CircularBuffer<LocationDataWithTimeStamp>(10000);
             cachedTransitStopLocations = new CircularBuffer<LocationDataWithTimeStamp>(10000);
             cachedTransitLineLocations = new CircularBuffer<TransitLineDataWithTimeStamp>(10000);
-            LoadCachedBuildingLocations();
-            LoadCachedTransitStopLocations();
-            LoadCachedTransitLineLocations();
+            //LoadCachedBuildingLocationsAsync();
+            //LoadCachedTransitStopLocationsAsync();
+            //LoadCachedTransitLineLocationsAsync();
+        }
+
+        public static async Task InitializeAsync()
+        {
+            // Now, you can use await here
+            await LoadCachedBuildingLocationsAsync();
+            await LoadCachedTransitStopLocationsAsync();
+            await LoadCachedTransitLineLocationsAsync();
         }
 
         /// <summary>
         /// loads Locations stored in File Cache when app is started
         /// </summary>
-        private static async void LoadCachedBuildingLocations()
+        private static async Task LoadCachedBuildingLocationsAsync()
         {
             var savedCachedLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync(CacheDataCategory.Building);
             List<LocationDataWithTimeStamp> cachedList = savedCachedLocationsHashSet.ToList();
@@ -80,7 +88,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        private static async void LoadCachedTransitStopLocations()
+        private static async Task LoadCachedTransitStopLocationsAsync()
         {
             var savedCachedTransitLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync(CacheDataCategory.TransitStop);
             List<LocationDataWithTimeStamp> cachedList = savedCachedTransitLocationsHashSet.ToList();
@@ -93,7 +101,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        private static async void LoadCachedTransitLineLocations()
+        private static async Task LoadCachedTransitLineLocationsAsync()
         {
             var savedCachedTransitLineHashset = await FileStorage.LoadCachedTransitLineLocationsHashSetAsync();
             List<TransitLineDataWithTimeStamp> cachedList = savedCachedTransitLineHashset.ToList();
@@ -137,7 +145,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        private static void AddToCachedTransitStopLocations()
+        private static async Task AddToCachedTransitStopLocationsAsync()
         {
             try
             {
@@ -159,7 +167,7 @@ namespace IndoorCO2App_Multiplatform
                         cachedTransitStopLocations.Add(ld);
                     }
                 }
-                WriteTransitStopCachedToFileStorage();
+                await WriteTransitStopCachedToFileStorageAsync();
             }
             catch
             {
@@ -190,7 +198,7 @@ namespace IndoorCO2App_Multiplatform
                     }
                 }
                 TransitLines = tr.DistinctBy(c => new { c.NWRType, c.ID }).ToList();
-                WriteTransitLineCachedToFileStorage();
+                WriteTransitLineCachedToFileStorageAsync();
             }
             catch
             {
@@ -211,7 +219,7 @@ namespace IndoorCO2App_Multiplatform
             
         }
 
-        private static async void WriteTransitStopCachedToFileStorage()
+        private static async Task WriteTransitStopCachedToFileStorageAsync()
         {
             try
             {
@@ -224,7 +232,7 @@ namespace IndoorCO2App_Multiplatform
             
         }
 
-        private static async void WriteTransitLineCachedToFileStorage()
+        private static async Task WriteTransitLineCachedToFileStorageAsync()
         {
             try
             {
@@ -496,7 +504,7 @@ namespace IndoorCO2App_Multiplatform
             });
         }
 
-        private static void ParseTransitOverpassResponse(string response, double userLatitude, double userLongitude, bool isOrigin)
+        private static async Task ParseTransitOverpassResponseAsync(string response, double userLatitude, double userLongitude, bool isOrigin)
         {
             var elements = JsonDocument.Parse(response).RootElement.GetProperty("elements");
             HashSet<string> namesOfStops = new HashSet<string>(); //used to remove duplicates
@@ -533,12 +541,12 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
-                        AddToCachedTransitStopLocations();
+                        await AddToCachedTransitStopLocationsAsync();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
-                        AddToCachedTransitStopLocations();
+                        await AddToCachedTransitStopLocationsAsync();
                     }
                 }
                 // Tram line (relation)
@@ -568,12 +576,12 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
-                        AddToCachedTransitStopLocations();
+                        await AddToCachedTransitStopLocationsAsync();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
-                        AddToCachedTransitStopLocations();
+                        await AddToCachedTransitStopLocationsAsync();
                     }
                 }
                 // Bus line (relation)
@@ -601,12 +609,12 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
-                        AddToCachedTransitStopLocations();
+                        await AddToCachedTransitStopLocationsAsync();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
-                        AddToCachedTransitStopLocations();
+                        await AddToCachedTransitStopLocationsAsync();
                     }
                 }
                 // Subway line (relation)
@@ -633,12 +641,12 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
-                        AddToCachedTransitStopLocations();
+                        await AddToCachedTransitStopLocationsAsync();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
-                        AddToCachedTransitStopLocations();
+                        await AddToCachedTransitStopLocationsAsync();
                     }
                 }
 
@@ -884,7 +892,7 @@ namespace IndoorCO2App_Multiplatform
                     var jsonData = await response.Content.ReadAsStringAsync();
                     //ParseOverpassResponse(jsonData, userLatitude, userLongitude);
                     //mainPage.UpdateLocationPicker();
-                    ParseTransitOverpassResponse(jsonData, userLatitude, userLongitude, transitOrigin);
+                    await ParseTransitOverpassResponseAsync(jsonData, userLatitude, userLongitude, transitOrigin);
                     if (transitOrigin)
                     {
                         mainPage.UpdateTransitOriginPicker(true);

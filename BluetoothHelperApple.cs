@@ -84,7 +84,7 @@ namespace IndoorCO2App_Multiplatform
                 var url = new NSUrl("App-Prefs:root=Bluetooth");
                 if (UIApplication.SharedApplication.CanOpenUrl(url))
                 {
-                    UIApplication.SharedApplication.OpenUrl(url);
+                    UIApplication.SharedApplication.OpenUrl(url);                    
                 }
             }
         }

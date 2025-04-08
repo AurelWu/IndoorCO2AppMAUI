@@ -1,7 +1,4 @@
 ﻿
-
-using Microsoft.Extensions.Configuration;
-
 namespace IndoorCO2App_Multiplatform
 {
     public partial class App : Application
@@ -23,12 +20,14 @@ namespace IndoorCO2App_Multiplatform
                 Logger.WriteToLog("error getting/setting syncfusion license key",true);
             }
             
+
             InitializeComponent();
+            _ = InitializeAsync();
 #if ANDROID
             MainPage = new AppShell();
             Shell.SetNavBarIsVisible(this, false);
 #endif
-//Shell.SetNavBarIsVisible(this, false);
+            //Shell.SetNavBarIsVisible(this, false);
 
 #if IOS
             //Shell.SetNavBarIsVisible(this, false);
@@ -60,7 +59,10 @@ namespace IndoorCO2App_Multiplatform
             });
         }
 
-
+        private async Task InitializeAsync()
+        {
+            await Task.Run(async () => await OverpassModule.InitializeAsync());
+        }
 
 
         protected override void OnSleep()
@@ -74,11 +76,20 @@ namespace IndoorCO2App_Multiplatform
 
         protected override void OnResume()
         {
+            base.OnResume();
+
+            // Offload the async work to a separate task
+            Task.Run(async () => await OnResumeAsync());
+        }
+
+
+        protected async Task OnResumeAsync()
+        {
             Logger.WriteToLog("OnResume triggered" , false);
             Logger.WriteToLog("OnResume | before Resume Recording called",false);
             try
             {
-                ResumeRecording();
+                await ResumeRecordingAsync();
             }
             catch (Exception ex)
             {
@@ -89,16 +100,16 @@ namespace IndoorCO2App_Multiplatform
             Logger.WriteToLog("OnResume | Before GetCachedLocation called", false);
             try
             {
-                SpatialManager.GetCachedLocation();
+                await SpatialManager.GetCachedLocationAsync();
             }            
             catch (Exception ex)
             {
-                Logger.WriteToLog("Exception caused by GetCachedLocation()",true);
+                Logger.WriteToLog($"Exception caused by GetCachedLocation(): {ex}",true);
             }
             Logger.WriteToLog("OnResume | After GetCachedLocation called",false);
         }
 
-        public static void ResumeRecording()
+        public static async Task ResumeRecordingAsync()
         {
             string ost = Preferences.Get("OnSleepTriggeredTime", "never");
             Logger.WriteToLog("OnSleep triggered at " + ost,false);
@@ -126,12 +137,12 @@ namespace IndoorCO2App_Multiplatform
                 if (mode == "Building")
                 {
                     Logger.WriteToLog("recovering Building Recording", false);
-                    IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartRecording(SubmissionMode.Building, true);
+                    await IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartRecordingAsync(SubmissionMode.Building, true);
                 }
                 else if (mode == "Transit")
                 {
                     Logger.WriteToLog("recovering Transit Recording",false);
-                    IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartTransportRecording(true);
+                    await IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartTransportRecordingAsync(true);
                 }
             }
         }

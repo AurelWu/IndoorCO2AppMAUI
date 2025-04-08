@@ -4,7 +4,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async void OnRequestGPSPermissionDialog(object sender, EventArgs e)
+        private async Task OnRequestGPSPermissionDialogAsync(object sender, EventArgs e)
         {
 
             bool granted = await SpatialManager.IsLocationPermissionGrantedAsync();

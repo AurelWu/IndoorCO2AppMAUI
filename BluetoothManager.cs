@@ -88,9 +88,9 @@ namespace IndoorCO2App_Multiplatform
         public static bool isGattA2DP;
         public static bool isBonded = false;
         public static int rssi;
-        public static int txPower;
+        //public static int txPower;
         public static int gattStatus;
-        public static bool currentlyUpdating; //not yet used as updates seem to be reasonable fast
+        //public static bool currentlyUpdating; //not yet used as updates seem to be reasonable fast
         public static bool lastAttemptFailed = false;
         public static bool NotifyCharacteristicAlreadyHookedUp = false;
         public static bool directConnectToBondedDevice = false;
@@ -102,7 +102,7 @@ namespace IndoorCO2App_Multiplatform
         public static bool subscribedToAirCodaAdvertisement = false;
 
 
-        internal async static void Init()
+        internal static void Init()
         {
             serviceUUIDByMonitorType = new Dictionary<CO2MonitorType, Guid>();
             serviceUUIDByMonitorType.Add(CO2MonitorType.Aranet4, AranetServiceUUID);
@@ -131,7 +131,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        internal static void Update(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
+        internal static async Task UpdateAsync(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
         {
             //Logger.circularBuffer.Add($"Update() called for: {monitorType} with nameFilter: {nameFilter} | " + DateTime.Now);
             DateTime currentTime = DateTime.Now;
@@ -180,7 +180,7 @@ namespace IndoorCO2App_Multiplatform
                         discoveredDevices = null;
                     }
                     //Logger.circularBuffer.Add($"ScanForDevices() called | " + DateTime.Now);
-                    ScanForDevices(monitorType, nameFilter, bluetoothHelper);
+                    await ScanForDevicesAsync(monitorType, nameFilter, bluetoothHelper);
                 }
                 catch
                 {
@@ -244,7 +244,7 @@ namespace IndoorCO2App_Multiplatform
             isRecording = false;
         }
 
-        public static async Task<bool> FinishRecording(int start, int end, SubmissionMode submissionMode, string locationNameManual, string locationAddressManual)
+        public static async Task<bool> FinishRecordingAsync(int start, int end, SubmissionMode submissionMode, string locationNameManual, string locationAddressManual)
         {
             bool success = false;
             //Add co2 measurements to submissionData
@@ -253,7 +253,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 isRecording = false;
                 submissionData.SensorData = recordedData;
-                string response = await ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson(start, end), SubmissionMode.Building);
+                string response = await ApiGatewayCaller.SendJsonToApiGatewayAsync(submissionData.ToJson(start, end), SubmissionMode.Building);
                 if (response == "success")
                 {
                     success = true;
@@ -267,7 +267,7 @@ namespace IndoorCO2App_Multiplatform
                 submissionDataManual.sensorData = recordedData;
                 submissionDataManual.LocationName = locationNameManual;
                 submissionDataManual.LocationAddress = locationAddressManual;
-                string response = await ApiGatewayCaller.SendJsonToApiGateway(submissionDataManual.ToJson(start, end), SubmissionMode.BuildingManual);
+                string response = await ApiGatewayCaller.SendJsonToApiGatewayAsync(submissionDataManual.ToJson(start, end), SubmissionMode.BuildingManual);
                 if (response == "success")
                 {
                     success = true;
@@ -289,7 +289,7 @@ namespace IndoorCO2App_Multiplatform
                 submissionDataTransport.TransportNWRType = MainPage.MainPageSingleton.selectedTransitLine.NWRType;
                 submissionDataTransport.TransportName = MainPage.MainPageSingleton.selectedTransitLine.Name;
 
-                string response = await ApiGatewayCaller.SendJsonToApiGateway(submissionDataTransport.ToJson(start, end), SubmissionMode.Transit);
+                string response = await ApiGatewayCaller.SendJsonToApiGatewayAsync(submissionDataTransport.ToJson(start, end), SubmissionMode.Transit);
                 if (response == "success")
                 {
                     success = true;
@@ -299,7 +299,7 @@ namespace IndoorCO2App_Multiplatform
             return success;
         }
 
-        internal static async void ScanForDevices(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
+        internal static async Task ScanForDevicesAsync(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
         {
             Logger.WriteToLog($"ScanForDevices() called for: {monitorType} with nameFilter: {nameFilter} | " + DateTime.Now, false);
             //doesnt work like it should yet
@@ -345,7 +345,7 @@ namespace IndoorCO2App_Multiplatform
                     return;
                 }
                 //if (discoveredDevices[0].Name)
-                ConnectToDevice(discoveredDevices[0],monitorType);
+                ConnectToDeviceAsync(discoveredDevices[0],monitorType);
                 return;
             }
 
@@ -564,7 +564,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     try
                     {
-                        ConnectToDevice(discoveredDevices[0], monitorType);
+                        await ConnectToDeviceAsync(discoveredDevices[0], monitorType);
                     }
                     catch
                     {
@@ -593,7 +593,7 @@ namespace IndoorCO2App_Multiplatform
             //}
         }
 
-        internal static async void ConnectToDevice(IDevice device, CO2MonitorType monitorType)
+        internal static async Task ConnectToDeviceAsync(IDevice device, CO2MonitorType monitorType)
         {
             long cur = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             int elapsedSeconds = (int)Math.Ceiling((cur - startingTime) / 1000d);
@@ -622,13 +622,13 @@ namespace IndoorCO2App_Multiplatform
             if(monitorType==CO2MonitorType.AirCoda)
             {
                 //TODO: only do that if not already done
-                AuthenticateWithAirCoda(device);
+                await AuthenticateWithAirCodaAsync(device);
             }
 
             try
             {
                 IService service = null;
-                IReadOnlyList<IService> results;
+                //IReadOnlyList<IService> results;
                 if (monitorType != CO2MonitorType.AirCoda)
                 {
 
@@ -1261,7 +1261,7 @@ namespace IndoorCO2App_Multiplatform
 
 
 
-        public async static Task<IDevice> CheckBondedDevicesForCO2Sensor(CO2MonitorType monitorType, IBluetoothHelper bluetoothHelper)
+        public async static Task<IDevice> CheckBondedDevicesForCO2SensorAsync(CO2MonitorType monitorType, IBluetoothHelper bluetoothHelper)
         {
             var uuid = serviceUUIDByMonitorType[monitorType];
             // Ensure Bluetooth is turned on
@@ -1318,14 +1318,14 @@ namespace IndoorCO2App_Multiplatform
                 btCancellationTokenSource.Cancel();
         }
 
-        private static async void AuthenticateWithAirCoda(IDevice airCodaDevice)
+        private static async Task AuthenticateWithAirCodaAsync(IDevice airCodaDevice)
         {
             IService service = null;
             Guid authServiceGUID = Guid.Parse("0000FEA0-0000-1000-8000-00805f9b34fb");
             Guid reportCharacteristicGUID = Guid.Parse("0000FEA2-0000-1000-8000-00805f9b34fb");
-            Guid authCharacteristicWrite;
-            Guid authCharacteristicRead;
-            string firstMessageToSent;
+            //Guid authCharacteristicWrite;
+            //Guid authCharacteristicRead;
+            //string firstMessageToSent;
 
             IReadOnlyList<IService> services = await airCodaDevice.GetServicesAsync();
 

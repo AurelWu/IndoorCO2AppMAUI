@@ -120,9 +120,9 @@ namespace IndoorCO2App_Multiplatform
 
             List<Double> trimmedLatData = new List<Double>();
             List<Double> trimmedLonData = new List<Double>();
-            int gpsEntryCounter = 0;
-            int startIndex = 999999;
-            int endIndex = 0;
+            //int gpsEntryCounter = 0;
+            //int startIndex = 999999;
+            //int endIndex = 0;
             for(int i = 0; i < timeStampsOfGPSData.Count;i++)
             {
                 if (timeStampsOfGPSData[i] > cutOffBegin && timeStampsOfGPSData[i] < cutOffEnd)

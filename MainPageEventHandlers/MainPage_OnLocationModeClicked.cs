@@ -4,7 +4,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private void OnLocationModeClicked(object sender, EventArgs e)
+        private async Task OnLocationModeClickedAsync(object sender, EventArgs e)
         {
             Button clickedButton = (Button)sender;
             // Reset both buttons to inactive state
@@ -17,15 +17,15 @@ namespace IndoorCO2App_Multiplatform
             clickedButton.BackgroundColor = Color.Parse("#512BD4");
             clickedButton.TextColor = Colors.White;
 
-            if (clickedButton.Text=="Buildings")
+            if (clickedButton.Text == "Buildings")
             {
-                ChangeToStandardUI(true);
-                UpdateUI();
+                await ChangeToStandardUIAsync(true);
+                await UpdateUIAsync();
             }
-            else if(clickedButton.Text=="Transit")
+            else if (clickedButton.Text == "Transit")
             {
-                ChangeToTransportSelectionUI(true);
-                UpdateUI();
+                await ChangeToTransportSelectionUIAsync(true);
+                await UpdateUIAsync();
             }
         }
     }

@@ -22,7 +22,7 @@ namespace IndoorCO2App_Multiplatform
 {
     internal static class SpatialManager
     {
-        private static CancellationTokenSource gpsCancelTokenSource;
+        private static CancellationTokenSource gpsCancelTokenSource = new CancellationTokenSource();
         private static bool isCheckingLocation;
 
         internal static Location currentLocation;
@@ -33,7 +33,7 @@ namespace IndoorCO2App_Multiplatform
         {
 #if ANDROID
             ls = new LocationService();
-            OnStartListening();
+            OnStartListeningAsync();
 #endif
 #if IOS
             ls = new LocationServiceApple();
@@ -69,16 +69,16 @@ namespace IndoorCO2App_Multiplatform
             return await ls.ShowEnableGpsDialogAsync();
         }
 
-        internal static async void ResetLocation()
+        internal static async Task ResetLocationAsync()
         {
-            await GetCachedLocation();
+            await GetCachedLocationAsync();
             if (OverpassModule.BuildingLocationData != null)
             {
                 OverpassModule.BuildingLocationData.Clear();
             }
         }
 
-        internal static async Task GetCachedLocation()
+        internal static async Task GetCachedLocationAsync()
         {
             try
             {
@@ -109,10 +109,10 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        internal static async void UpdateLocation()
+        internal static async Task UpdateLocationAsync()
         {
 #if ANDROID
-            await GetCachedLocation();
+            await GetCachedLocationAsync();
         try
         {
             isCheckingLocation = true;
@@ -197,7 +197,7 @@ namespace IndoorCO2App_Multiplatform
            
         }
 
-        async static void OnStartListening()
+        async static Task OnStartListeningAsync()
         {
 #if ANDROID
             try

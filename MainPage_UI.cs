@@ -219,7 +219,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        private async void InitUILayout()
+        private async Task InitUILayoutAsync()
         {
             var screenWidth = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
             var screenHeight = DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density;
@@ -254,10 +254,10 @@ namespace IndoorCO2App_Multiplatform
             _BuildingModeButton.MinimumWidthRequest = buttonWidth40Percent;
             _LocationUpdateGrid.WidthRequest = _StartRecordingButton.Width;
             _GetCachedLocationsButton.HeightRequest = _StartRecordingButton.Height;
-            await CollapseExpanderWithDelay(500);
+            await CollapseExpanderWithDelayAsync(500);
         }
 
-        private async Task CollapseExpanderWithDelay(int delayMilliseconds)
+        private async Task CollapseExpanderWithDelayAsync(int delayMilliseconds)
         {
             // Wait for the specified delay
             await Task.Delay(delayMilliseconds);
@@ -267,12 +267,12 @@ namespace IndoorCO2App_Multiplatform
         }
 
 
-        public void UpdateUI()
+        public async Task UpdateUIAsync()
         {
             Application.Current.UserAppTheme = Application.Current.RequestedTheme;
             _VersionLabel.Text = appVersion;
             UpdateGPSStatusButton();
-            UpdateGPSPermissionButton();
+            await UpdateGPSPermissionButtonAsync();
             UpdateBluetoothStatusButton();
             UpdateBluetoothPermissionsButton();
 
@@ -300,7 +300,7 @@ namespace IndoorCO2App_Multiplatform
             //HideElementsWithStatusOK();
         }
 
-        private async void HideElementsWithStatusOK()
+        private async Task HideElementsWithStatusOKAsync()
         {
             bool hiddenElementThisTime = false;
             if (gpsActive && gpsGranted == btGranted == btActive)
@@ -628,7 +628,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        private async void UpdateGPSPermissionButton()
+        private async Task UpdateGPSPermissionButtonAsync()
         {
 
             gpsGranted = await SpatialManager.IsLocationPermissionGrantedAsync();
@@ -968,7 +968,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public async void ChangeToStandardUI(bool manualTriggered)
+        public async Task ChangeToStandardUIAsync(bool manualTriggered)
         {
             ChangeToUI(MenuMode.Standard);
             _TransitModeButton.BackgroundColor = Colors.LightGray;
@@ -991,28 +991,28 @@ namespace IndoorCO2App_Multiplatform
             //HideElementsWithStatusOK();
         }    
 
-        public async void ChangeToRecordingUI()
+        public async Task ChangeToRecordingUIAsync()
         {
             ChangeToUI(MenuMode.Recording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
             //HideElementsWithStatusOK();
         }
 
-        public async void ChangeToManualRecordingUI()
+        public async Task ChangeToManualRecordingUIAsync()
         {
             ChangeToUI(MenuMode.ManualRecording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
             //HideElementsWithStatusOK();
         }
 
-        public async void ChangeToTransportRecordingUI()
+        public async Task ChangeToTransportRecordingUIAsync()
         {
             ChangeToUI(MenuMode.TransportRecording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
             //HideElementsWithStatusOK();
         }
 
-        public async void ChangeToTransportSelectionUI(bool manualTriggered)
+        public async Task ChangeToTransportSelectionUIAsync(bool manualTriggered)
         {
             if (RecoveryData.recordingMode == "Building" || RecoveryData.recordingMode == "Transit")
             {

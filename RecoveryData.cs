@@ -124,7 +124,7 @@ namespace IndoorCO2App_Multiplatform
             }
             catch (Exception ex)
             {
-                Logger.WriteToLog("Error writing recovery data to preferences", false);
+                Logger.WriteToLog($"Error writing recovery data to preferences: {ex}" , false);
             }
         }
 

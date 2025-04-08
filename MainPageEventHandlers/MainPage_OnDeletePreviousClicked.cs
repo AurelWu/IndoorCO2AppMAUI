@@ -8,7 +8,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async void OnDeletePreviousClicked(object sender, EventArgs e)
+        private async Task OnDeletePreviousClickedAsync(object sender, EventArgs e)
         {
             //make button non-interactable and change button text to "fetching last submission"
             if (BluetoothManager.deviceID.Length == 0)

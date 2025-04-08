@@ -11,6 +11,7 @@ namespace IndoorCO2App_Multiplatform
     public static class Logger
     {
         public static CircularBuffer<string> circularBuffer = new CircularBuffer<string>(500000);
+        public static bool writeAlsoToConsole = true;
 
         public static void WriteToLog(string text, bool persistent)
         {
@@ -21,18 +22,22 @@ namespace IndoorCO2App_Multiplatform
             {
                 LogPersistent(textWithTimeStamp);
             }
+            if (writeAlsoToConsole)
+            {
+                Console.WriteLine(textWithTimeStamp);
+            }
         }
 
-        public static void CopyLogToClipboard()
+        public static async Task CopyLogToClipboardAsync()
         {
             // Convert CircularBuffer contents to a single string
             var content = string.Join(Environment.NewLine, circularBuffer);
 
             // Copy the content to clipboard
-            Clipboard.SetTextAsync(content);
+            await Clipboard.SetTextAsync(content);
         }
 
-        public static void LogError(string source, Exception? ex)
+        public static void LogError(string source, Exception ex)
         {
             if (ex != null)
             {
@@ -40,6 +45,11 @@ namespace IndoorCO2App_Multiplatform
                 const int maxFileSize = 100 * 1024; // 100 KB max size
 
                 string errorLog = $"{DateTime.UtcNow}: [{source}] {ex.Message}\n{ex.StackTrace}\n\n";
+
+                if (writeAlsoToConsole)
+                {
+                    Console.WriteLine(errorLog);
+                }
 
                 // If the file exists and is too large, trim it
                 if (File.Exists(logPath) && new FileInfo(logPath).Length > maxFileSize)

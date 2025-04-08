@@ -32,7 +32,6 @@
 
 		<UserSecretsId>52cfbcaf-df53-4fea-9d3f-680786743276</UserSecretsId>
 
-		<PublishAot>False</PublishAot>
 
 		<Version>46</Version>
 		<!--
@@ -51,8 +50,8 @@
 
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-		<CodesignKey>Apple Distribution: Aurel Wuensch (57992CLWV5)</CodesignKey> 
-		<CodesignProvision>IndoorCO2DataCollectorProvisioningProfile2025</CodesignProvision>
+		<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey> 
+		<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>
 		<ProvisioningType>automatic</ProvisioningType>
 		<!--<CodesignKey>Apple Development: Created via API (57992CLWV5)</CodesignKey>-->
 	</PropertyGroup> 
@@ -76,6 +75,7 @@
 		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
 		<!--<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
 		<ApplicationVersion>46</ApplicationVersion>-->
+		<PublishAot>False</PublishAot>
 		<MtouchUseLlvm>True</MtouchUseLlvm>
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 		<Optimize>True</Optimize>
@@ -174,16 +174,18 @@
 		<!--<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" /> -->
 		<PackageReference Include="DotNetEnv" Version="3.1.1" /> 
 		<!--<PackageReference Include="DotNetEnv" /> -->
-		<PackageReference Include="Mapsui" Version="4.1.8" />
-		<PackageReference Include="Mapsui.Maui" Version="4.1.8" />
+		<!--<PackageReference Include="Mapsui" Version="4.1.8" /> -->
+		<!--<PackageReference Include="Mapsui.Maui" Version="4.1.8" />-->
+		<PackageReference Include="Mapsui" Version="4.1.9" /> 
+		<PackageReference Include="Mapsui.Maui" Version="4.1.9" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<!--<PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.100" />  -->
 		<PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.50" />
 		<PackageReference Include="Microsoft.VisualStudio.Utilities" Version="17.11.40262" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Plugin.BLE" Version="3.1.0" />
-		<PackageReference Include="Syncfusion.Maui.Sliders" Version="26.2.11" /> 
+		<PackageReference Include="Syncfusion.Maui.Sliders" Version="26.2.11" />
+		<PackageReference Include="System.Text.Json" Version="9.0.3" /> 
 	</ItemGroup>
 
 	<ItemGroup>

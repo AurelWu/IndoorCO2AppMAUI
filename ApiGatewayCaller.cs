@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using IndoorCO2App_Android;
-using Newtonsoft.Json;
 
 namespace IndoorCO2App_Multiplatform
 {
@@ -16,7 +15,7 @@ namespace IndoorCO2App_Multiplatform
         };
 
         // Modify sendJsonToApiGateway to accept callback
-        public static async Task<string> SendJsonToApiGateway(string json, SubmissionMode submissionMode)
+        public static async Task<string> SendJsonToApiGatewayAsync(string json, SubmissionMode submissionMode)
         {
             var successState = string.Empty;
 

@@ -7,7 +7,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async void OnFavouriteBuildingIconClicked(object sender, EventArgs e)
+        private async Task OnFavouriteBuildingIconClickedAsync(object sender, EventArgs e)
         {
             ImageButton clickedButton = (ImageButton)sender;
             if(_LocationPicker.SelectedItem== null)
@@ -30,7 +30,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        private async void OnFavouriteTransitOriginIconClicked(object sender, EventArgs e)
+        private async Task OnFavouriteTransitOriginIconClickedAsync(object sender, EventArgs e)
         {
             //TODO: replace with transit origin specific code
             ImageButton clickedButton = (ImageButton)sender;
@@ -54,7 +54,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        private async void OnFavouriteTransitDestinationIconClicked(object sender, EventArgs e)
+        private async Task OnFavouriteTransitDestinationIconClickedAsync(object sender, EventArgs e)
         {
             //TODO: replace with transit origin specific code
             ImageButton clickedButton = (ImageButton)sender;
@@ -79,7 +79,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        private async void OnFavouriteTransitLineIconClicked(object sender, EventArgs e)
+        private async Task OnFavouriteTransitLineIconClickedAsync(object sender, EventArgs e)
         {
             ImageButton clickedButton = (ImageButton)sender;
             if (_TransitLinePicker.SelectedItem == null)

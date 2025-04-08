@@ -4,11 +4,11 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async void OnTransitFilterClicked(object sender, EventArgs e)
+        private async Task OnTransitFilterClickedAsync(object sender, EventArgs e)
         {
             if(currentMenuMode == MenuMode.TransportRecording)
             {
-                bool r = await DisplayFilterConfirmationDialog();
+                bool r = await DisplayFilterConfirmationDialogAsync();
                 if (!r) return;
             }
 
@@ -59,7 +59,7 @@ namespace IndoorCO2App_Multiplatform
             UpdateTransitLinesPicker(false);            
         }
 
-        private async Task<bool> DisplayFilterConfirmationDialog()
+        private async Task<bool> DisplayFilterConfirmationDialogAsync()
         {
             bool answer = await Application.Current.MainPage.DisplayAlert(
                 "Change Transport Mode Filter?", // Title

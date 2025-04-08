@@ -18,10 +18,10 @@ namespace IndoorCO2App_Multiplatform
         public List<Double> LatitudeData;
         public List<Double> LongitudeData;
 
-        public bool openWindowsDoors;
-        public bool ventilationSystem;
-        public string OccupancyLevel;
-        public string AdditionalNotes;
+        public bool openWindowsDoors = false;
+        public bool ventilationSystem = false;
+        public string OccupancyLevel = "";
+        public string AdditionalNotes = "";
 
         public string LocationName;
 

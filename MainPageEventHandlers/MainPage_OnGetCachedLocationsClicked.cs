@@ -4,7 +4,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async void OnGetCachedLocationsClicked(object sender, EventArgs e)
+        private async Task OnGetCachedLocationsClickedAsync(object sender, EventArgs e)
         {
             if(SpatialManager.currentLocation!=null)
             {

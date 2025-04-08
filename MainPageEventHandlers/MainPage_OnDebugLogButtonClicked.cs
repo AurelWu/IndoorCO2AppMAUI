@@ -10,7 +10,7 @@ namespace IndoorCO2App_Multiplatform
     {
         private void OnDebugLogButtonClicked(object sender, EventArgs e)
         {
-            Logger.CopyLogToClipboard();   
+            Logger.CopyLogToClipboardAsync();   
         }
 
 

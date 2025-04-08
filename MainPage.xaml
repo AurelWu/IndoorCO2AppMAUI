@@ -45,10 +45,10 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 <HorizontalStackLayout x:Name="StatusButtons"
             Spacing="10"
             HorizontalOptions="Center">
-                    <ImageButton x:Name="ButtonGPSStatus" Source="gps_icon_v2.png" Clicked="OnRequestGPSEnableDialog"  Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
-                    <ImageButton x:Name="ButtonGPSPermission" Source="gps_icon_permission.png" Clicked="OnRequestGPSPermissionDialog" Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
+                    <ImageButton x:Name="ButtonGPSStatus" Source="gps_icon_v2.png" Clicked="OnRequestGPSEnableDialogAsync"  Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
+                    <ImageButton x:Name="ButtonGPSPermission" Source="gps_icon_permission.png" Clicked="OnRequestGPSPermissionDialogAsync" Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
                     <ImageButton x:Name="ButtonBluetoothStatus" Source="bluetoothstatus.png" Clicked="OnRequestBluetoothEnableDialog" Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
-                    <ImageButton x:Name="ButtonBluetoothPermissions" Source="bluetoothscan.png" Clicked="OnRequestBluetoothPermissionsDialog" Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
+                    <ImageButton x:Name="ButtonBluetoothPermissions" Source="bluetoothscan.png" Clicked="OnRequestBluetoothPermissionsDialogAsync" Aspect="AspectFit" WidthRequest="75" HeightRequest="75" />
                 </HorizontalStackLayout>
 
 
@@ -199,8 +199,8 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             </ScrollView> -->
                 <HorizontalStackLayout x:Name="ButtonBuildingTransitSelectionStackLayout" Padding="10" HorizontalOptions="Center" Spacing="10" >
 
-                    <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClicked" TextColor="White" BackgroundColor="#512BD4" />
-                    <Button x:Name="ButtonTransitMode" Text="Transit" Clicked="OnLocationModeClicked" TextColor="Black" BackgroundColor="LightGray" />
+                    <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClickedAsync" TextColor="White" BackgroundColor="#512BD4" />
+                    <Button x:Name="ButtonTransitMode" Text="Transit" Clicked="OnLocationModeClickedAsync" TextColor="Black" BackgroundColor="LightGray" />
 
                 </HorizontalStackLayout>
 
@@ -227,14 +227,14 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
         x:Name="UpdateLocationsButton"
         Text="Update Locations"
         SemanticProperties.Hint="Update Locations Button"
-        Clicked="OnUpdateLocationsClicked"
+        Clicked="OnUpdateLocationsClickedAsync"
         HorizontalOptions="Fill"
         Grid.Column="0" />
 
                     <Button
     x:Name="GetCachedLocationsButton"
     ImageSource="{AppThemeBinding Light='folder_transparent.png', Dark='folder_transparent_dark.png'}"
-    Clicked="OnGetCachedLocationsClicked"
+    Clicked="OnGetCachedLocationsClickedAsync"
     HorizontalOptions="Fill"
     Grid.Column="1" />
                 </Grid>
@@ -275,7 +275,7 @@ StrokeThickness="{OnPlatform iOS=2, Android=0}">
                         <!-- Star Icon Toggle Button in the second column, with fixed width -->
                         <ImageButton 
             x:Name="StarIconToggleBuilding"
-            Clicked="OnFavouriteBuildingIconClicked"
+            Clicked="OnFavouriteBuildingIconClickedAsync"
             Grid.Column="1" 
             Source="star_icon.png" 
             WidthRequest="30" 
@@ -324,7 +324,7 @@ StrokeThickness="{OnPlatform iOS=2, Android=0}">
                         <!-- Star Icon Toggle Button in the second column, with fixed width -->
                         <ImageButton 
     x:Name="StarIconToggleTransitOrigin"
-    Clicked="OnFavouriteTransitOriginIconClicked"
+    Clicked="OnFavouriteTransitOriginIconClickedAsync"
     Grid.Column="1" 
     Source="star_icon.png" 
     WidthRequest="30" 
@@ -358,7 +358,7 @@ StrokeThickness="{OnPlatform iOS=2, Android=0}">
                         </Border>
                         <ImageButton 
 x:Name="StarIconToggleTransitDestination"
-Clicked="OnFavouriteTransitDestinationIconClicked"
+Clicked="OnFavouriteTransitDestinationIconClickedAsync"
 Grid.Column="1" 
 Source="star_icon.png" 
 WidthRequest="30" 
@@ -381,12 +381,12 @@ BackgroundColor="Transparent" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="ButtonAll" Text="All" Clicked="OnTransitFilterClicked" TextColor="White" BackgroundColor="#512BD4" Grid.Row="0" Grid.Column="0" />
-                    <Button x:Name="ButtonBus" Text="Bus" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" />
-                    <Button x:Name="ButtonTram" Text="Tram" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" />
-                    <Button x:Name="ButtonSubway" Text="Subway" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="0" />
-                    <Button x:Name="ButtonLightRail" Text="Lightrail" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" />
-                    <Button x:Name="ButtonTrain" Text="Train" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" />
+                    <Button x:Name="ButtonAll" Text="All" Clicked="OnTransitFilterClickedAsync" TextColor="White" BackgroundColor="#512BD4" Grid.Row="0" Grid.Column="0" />
+                    <Button x:Name="ButtonBus" Text="Bus" Clicked="OnTransitFilterClickedAsync" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" />
+                    <Button x:Name="ButtonTram" Text="Tram" Clicked="OnTransitFilterClickedAsync" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" />
+                    <Button x:Name="ButtonSubway" Text="Subway" Clicked="OnTransitFilterClickedAsync" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="0" />
+                    <Button x:Name="ButtonLightRail" Text="Lightrail" Clicked="OnTransitFilterClickedAsync" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" />
+                    <Button x:Name="ButtonTrain" Text="Train" Clicked="OnTransitFilterClickedAsync" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" />
                 </Grid>
 
 
@@ -430,7 +430,7 @@ StrokeThickness="{OnPlatform iOS=2, Android=0}">
                         <!-- Star Icon Toggle Button in the second column, with fixed width -->
                         <ImageButton 
             x:Name="StarIconToggleTransitLine"
-            Clicked="OnFavouriteTransitLineIconClicked"
+            Clicked="OnFavouriteTransitLineIconClickedAsync"
             Grid.Column="1" 
             Source="star_icon.png" 
             WidthRequest="30" 
@@ -493,7 +493,7 @@ Padding="0">
                 x:Name="StartManualRecordingButton"
                 Text="Start Manual Recording"
                 SemanticProperties.Hint="Start Manual Recording Button"
-                Clicked="OnStartManualRecordingClicked"
+                Clicked="OnStartManualRecordingClickedAsync"
                 HorizontalOptions="Center" />
 
                 <Button
@@ -528,7 +528,7 @@ Padding="0">
                 <Button
     x:Name="OpenImprintButton"
     Text="Data Protection Info and Imprint 🔗"  
-                    Clicked="OnImprintClicked"
+                    Clicked="OnImprintClickedAsync"
     FontFamily="fa"
     HorizontalOptions="Center" />
 
@@ -536,7 +536,7 @@ Padding="0">
                 x:Name="DeleteLastSubmissionButton"
                 Text="Delete Previous Submission"
                 SemanticProperties.Hint="Shows Dialot to Delete Previous Submission"
-                Clicked="OnDeletePreviousClicked"
+                Clicked="OnDeletePreviousClickedAsync"
                 HorizontalOptions="Center" />
 
                 <Label
@@ -561,14 +561,14 @@ Padding="0">
                     Text="Submit Data"
                     LineBreakMode="WordWrap"
                     SemanticProperties.Hint="FinishRecordingButton"
-                    Clicked="OnFinishRecordingClicked"
+                    Clicked="OnFinishRecordingClickedAsync"
                     HorizontalOptions="Center" />
                     <Button
                     x:Name="RequestCancelRecordingButton"
                     Text="Cancel Recording"
                     LineBreakMode="WordWrap"
                     SemanticProperties.Hint="RequestCancelRecordingButton"
-                    Clicked="OnRequestCancelRecordingClicked"
+                    Clicked="OnRequestCancelRecordingClickedAsync"
                     HorizontalOptions="Center" />
                     <Button
                     x:Name="ConfirmCancelRecordingButton"
@@ -788,7 +788,7 @@ Completed="OnEntryCompleted" />
     x:Name="CrashLogButton"
     Text="Copy Crash Log to Clipboard"
     SemanticProperties.Hint="Copy Debug Log to Clipboard Button"
-    Clicked="OnCrashLogButtonClicked"
+    Clicked="OnCrashLogButtonClickedAsync"
     HorizontalOptions="Center" />
                 
                 
