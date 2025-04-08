@@ -103,7 +103,7 @@ namespace IndoorCO2App_Multiplatform
 
 
         internal static void Init()
-        {
+        {            
             serviceUUIDByMonitorType = new Dictionary<CO2MonitorType, Guid>();
             serviceUUIDByMonitorType.Add(CO2MonitorType.Aranet4, AranetServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.Airvalent, AirvalentServiceUUID);
@@ -619,11 +619,11 @@ namespace IndoorCO2App_Multiplatform
                 Logger.WriteToLog($"deviceState of {device.Name} : {deviceState} | ",false);
             }
 
-            if(monitorType==CO2MonitorType.AirCoda)
-            {
-                //TODO: only do that if not already done
-                await AuthenticateWithAirCodaAsync(device);
-            }
+            //if(monitorType==CO2MonitorType.AirCoda)
+            //{
+            //    //TODO: only do that if not already done
+            //    await AuthenticateWithAirCodaAsync(device);
+            //}
 
             try
             {

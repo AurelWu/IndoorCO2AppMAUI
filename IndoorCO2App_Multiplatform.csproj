@@ -133,13 +133,13 @@
 	  <IsTrimmable>True</IsTrimmable>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
+	<!--<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
 	  <MtouchDebug>True</MtouchDebug>
 	  <MtouchLink>Full</MtouchLink>
 	  <MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
 	  <OptimizePNGs>True</OptimizePNGs>
 	  <IsTrimmable>True</IsTrimmable>
-	</PropertyGroup>
+	</PropertyGroup> -->
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
 	  <IsTrimmable>True</IsTrimmable>

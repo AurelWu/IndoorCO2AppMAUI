@@ -88,26 +88,16 @@ namespace IndoorCO2App_Multiplatform
         public async Task InitAsync()
         {
 
+
             favouredLocations = new HashSet<string>();
             InitializeComponent();
             appVersion = GetAppVersion();
             CreateMainPageSingleton();
+
+
+
+
             InitUIElements();
-            InitializeMap(0, 0); // Example: Berlin coordinates
-            await InitUILayoutAsync();
-            RecoveryData.ReadFromPreferences();
-            LoadHasAlreadySuccessfulTransmitted();
-            _CO2DeviceNameFilterEditor.Text = Preferences.Get(DeviceNameFilterPreferenceKey, "");
-            await ChangeToStandardUIAsync(false);
-            await LoadFavouredLocationsAsync();
-            LoadMonitorType();
-            Logger.WriteToLog("App started", true);
-            await App.ResumeRecordingAsync();
-
-            Logger.WriteToLog("App Version: " + appVersion,false);
-
-
-
 #if ANDROID
             bluetoothHelper = new BluetoothHelper();
 #endif
@@ -116,6 +106,24 @@ namespace IndoorCO2App_Multiplatform
 #endif
 
             BluetoothManager.Init();
+            bluetoothHelper.CheckStatus();
+            bluetoothHelper.CheckIfBTEnabled();
+
+            InitializeMap(0, 0); // Example: Berlin coordinates
+            InitUILayoutAsync();
+            RecoveryData.ReadFromPreferences();
+            LoadHasAlreadySuccessfulTransmitted();
+            _CO2DeviceNameFilterEditor.Text = Preferences.Get(DeviceNameFilterPreferenceKey, "");
+            ChangeToStandardUIAsync(false);
+            LoadFavouredLocationsAsync();
+            LoadMonitorType();
+            Logger.WriteToLog("App started", true);
+            await App.ResumeRecordingAsync();
+
+            Logger.WriteToLog("App Version: " + appVersion,false);
+            //TODO: => during start up show the bluetooth status as yellow or smth, meaning its still initializing
+
+
             await SpatialManager.GetCachedLocationAsync();
 #if ANDROID
             var tcs = new TaskCompletionSource<PermissionStatus>();
