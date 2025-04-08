@@ -50,10 +50,10 @@
 
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-		<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey> 
+		<!--<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey> 
 		<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>
-		<ProvisioningType>automatic</ProvisioningType>
-		<!--<CodesignKey>Apple Development: Created via API (57992CLWV5)</CodesignKey>-->
+		<ProvisioningType>automatic</ProvisioningType> -->
+		<CodesignKey>Apple Development: Created via API (57992CLWV5)</CodesignKey>
 	</PropertyGroup> 
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
@@ -73,8 +73,24 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
 		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
-		<!--<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
-		<ApplicationVersion>46</ApplicationVersion>-->
+		<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
+		<ApplicationVersion>46</ApplicationVersion>
+		<PublishAot>True</PublishAot>
+		<MtouchUseLlvm>True</MtouchUseLlvm>
+		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+		<Optimize>True</Optimize>
+		<OptimizePNGs>True</OptimizePNGs>
+		<DebugType>portable</DebugType>
+		<BuildIpa>False</BuildIpa>
+		<MtouchLink>Full</MtouchLink>
+		<MtouchDebug>True</MtouchDebug>
+		<IsTrimmable>True</IsTrimmable>
+	</PropertyGroup>
+
+	<!--<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
+		<ApplicationId>com.aurelwuensch.indoorco2datacollector</ApplicationId>
+		<ApplicationDisplayVersion>46</ApplicationDisplayVersion>
+		<ApplicationVersion>46</ApplicationVersion>
 		<PublishAot>False</PublishAot>
 		<MtouchUseLlvm>True</MtouchUseLlvm>
 		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
@@ -83,7 +99,7 @@
 		<BuildIpa>False</BuildIpa>
 		<MtouchLink>Full</MtouchLink>
 		<MtouchDebug>True</MtouchDebug>
-	</PropertyGroup>
+	</PropertyGroup>-->
 
 
 

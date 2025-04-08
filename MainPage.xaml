@@ -260,7 +260,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
                         <Border
 BackgroundColor="Transparent"
-Stroke="{OnPlatform iOS={StaticResource ThemeLineColor}, Android=Transparent}"
+Stroke="{SolidColorBrush #808080}"
 StrokeThickness="{OnPlatform iOS=2, Android=0}">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="4"/>
@@ -313,7 +313,7 @@ StrokeThickness="{OnPlatform iOS=2, Android=0}">
                         HorizontalOptions="Fill">
                         <Border
 BackgroundColor="Transparent"
-Stroke="{OnPlatform iOS={StaticResource ThemeLineColor}, Android=Transparent}"
+Stroke="{SolidColorBrush #808080}"
 StrokeThickness="{OnPlatform iOS=2, Android=0}">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="4"/>
@@ -348,7 +348,7 @@ StrokeThickness="{OnPlatform iOS=2, Android=0}">
                          HorizontalOptions="Fill">
                         <Border
 BackgroundColor="Transparent"
-Stroke="{OnPlatform iOS={StaticResource ThemeLineColor}, Android=Transparent}"
+Stroke="{SolidColorBrush #808080}"
 StrokeThickness="{OnPlatform iOS=2, Android=0}">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="4"/>
@@ -412,7 +412,7 @@ BackgroundColor="Transparent" />
 
                         <Border
 BackgroundColor="Transparent"
-Stroke="{OnPlatform iOS={StaticResource ThemeLineColor}, Android=Transparent}"
+Stroke="{SolidColorBrush #808080}"
 StrokeThickness="{OnPlatform iOS=2, Android=0}">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="4"/>
