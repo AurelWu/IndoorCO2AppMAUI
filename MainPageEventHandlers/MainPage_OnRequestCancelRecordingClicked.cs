@@ -4,12 +4,20 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async Task OnRequestCancelRecordingClickedAsync(object sender, EventArgs e)
+        private async void OnRequestCancelRecordingClicked(object sender, EventArgs e)
         {
-            bool result = await DisplayAlert("Cancel Recording", "Are you sure you want to cancel the recording?", "Yes", "No");
-            if (result == true)
+            try
             {
-                CancelRecordingAsync();
+
+                bool result = await DisplayAlert("Cancel Recording", "Are you sure you want to cancel the recording?", "Yes", "No");
+                if (result == true)
+                {
+                    await CancelRecordingAsync();
+                }
+            }
+            catch (Exception ex) 
+            {
+                Logger.WriteToLog($"Error when calling OnRequestCancelRecordingClicked: {ex}", false);
             }
         }
 

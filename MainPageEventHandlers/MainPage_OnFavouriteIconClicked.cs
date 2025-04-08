@@ -7,98 +7,131 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async Task OnFavouriteBuildingIconClickedAsync(object sender, EventArgs e)
+        private async void OnFavouriteBuildingIconClicked(object sender, EventArgs e)
         {
-            ImageButton clickedButton = (ImageButton)sender;
-            if(_LocationPicker.SelectedItem== null)
+            try
             {
-                return;
-            }
 
-            LocationData d = (LocationData)_LocationPicker.SelectedItem;
-            if (d != null)
-            {
-                long id =d.ID;
-                string type = d.Type;
-                string combined = type + "_" + id.ToString();
-                if (!favouredLocations.Add(combined))
+
+                ImageButton clickedButton = (ImageButton)sender;
+                if (_LocationPicker.SelectedItem == null)
                 {
-                    favouredLocations.Remove(combined);
+                    return;
                 }
-                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);                
-                UpdateLocationPicker(false);
+
+                LocationData d = (LocationData)_LocationPicker.SelectedItem;
+                if (d != null)
+                {
+                    long id = d.ID;
+                    string type = d.Type;
+                    string combined = type + "_" + id.ToString();
+                    if (!favouredLocations.Add(combined))
+                    {
+                        favouredLocations.Remove(combined);
+                    }
+                    await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
+                    UpdateLocationPicker(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToLog($"Error when calling OnFavouriteBuildingIconClicked: {ex}", false);
             }
         }
 
-        private async Task OnFavouriteTransitOriginIconClickedAsync(object sender, EventArgs e)
+        private async void OnFavouriteTransitOriginIconClicked(object sender, EventArgs e)
         {
-            //TODO: replace with transit origin specific code
-            ImageButton clickedButton = (ImageButton)sender;
-            if (_TransitOriginPicker.SelectedItem == null)
+            try
             {
-                return;
-            }
-            
-            LocationData d = (LocationData)_TransitOriginPicker.SelectedItem;
-            if (d != null)
-            {
-                long id = d.ID;
-                string type = d.Type;
-                string combined = type + "_" + id.ToString();
-                if (!favouredLocations.Add(combined))
+
+
+                //TODO: replace with transit origin specific code
+                ImageButton clickedButton = (ImageButton)sender;
+                if (_TransitOriginPicker.SelectedItem == null)
                 {
-                    favouredLocations.Remove(combined);
+                    return;
                 }
-                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
-                UpdateTransitOriginPicker(false);
+
+                LocationData d = (LocationData)_TransitOriginPicker.SelectedItem;
+                if (d != null)
+                {
+                    long id = d.ID;
+                    string type = d.Type;
+                    string combined = type + "_" + id.ToString();
+                    if (!favouredLocations.Add(combined))
+                    {
+                        favouredLocations.Remove(combined);
+                    }
+                    await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
+                    UpdateTransitOriginPicker(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToLog($"Error when calling OnFavouriteTransitOriginIconClicked: {ex}", false);
             }
         }
 
-        private async Task OnFavouriteTransitDestinationIconClickedAsync(object sender, EventArgs e)
+        private async void OnFavouriteTransitDestinationIconClicked(object sender, EventArgs e)
         {
-            //TODO: replace with transit origin specific code
-            ImageButton clickedButton = (ImageButton)sender;
-            if (_TransitDestinationPicker.SelectedItem == null)
+            try
             {
-                return;
-            }            
-
-            LocationData d = (LocationData)_TransitDestinationPicker.SelectedItem;
-            if (d != null)
-            {
-                long id = d.ID;
-                string type = d.Type;
-                string combined = type + "_" + id.ToString();
-                if (!favouredLocations.Add(combined))
+                //TODO: replace with transit origin specific code
+                ImageButton clickedButton = (ImageButton)sender;
+                if (_TransitDestinationPicker.SelectedItem == null)
                 {
-                    favouredLocations.Remove(combined);
+                    return;
                 }
-                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
-                
-                UpdateTransitDestinationPicker(false);
+
+                LocationData d = (LocationData)_TransitDestinationPicker.SelectedItem;
+                if (d != null)
+                {
+                    long id = d.ID;
+                    string type = d.Type;
+                    string combined = type + "_" + id.ToString();
+                    if (!favouredLocations.Add(combined))
+                    {
+                        favouredLocations.Remove(combined);
+                    }
+                    await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
+
+                    UpdateTransitDestinationPicker(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToLog($"Error when calling OnFavouriteTransitDestinationIconClicked: {ex}", false);
             }
         }
 
-        private async Task OnFavouriteTransitLineIconClickedAsync(object sender, EventArgs e)
+        private async void OnFavouriteTransitLineIconClicked(object sender, EventArgs e)
         {
-            ImageButton clickedButton = (ImageButton)sender;
-            if (_TransitLinePicker.SelectedItem == null)
+            try
             {
-                return;
-            }
 
-            TransitLineData d = (TransitLineData)_TransitLinePicker.SelectedItem;
-            if (d != null)
-            {
-                long id = d.ID;
-                string type = d.NWRType;
-                string combined = type + "_" + id.ToString();
-                if (!favouredLocations.Add(combined))
+                ImageButton clickedButton = (ImageButton)sender;
+                if (_TransitLinePicker.SelectedItem == null)
                 {
-                    favouredLocations.Remove(combined);
+                    return;
                 }
-                await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
-                UpdateTransitLinesPicker(false);
+
+                TransitLineData d = (TransitLineData)_TransitLinePicker.SelectedItem;
+                if (d != null)
+                {
+                    long id = d.ID;
+                    string type = d.NWRType;
+                    string combined = type + "_" + id.ToString();
+                    if (!favouredLocations.Add(combined))
+                    {
+                        favouredLocations.Remove(combined);
+                    }
+                    await FileStorage.SaveFavouritesHashSetAsync(favouredLocations);
+                    UpdateTransitLinesPicker(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToLog($"Error when calling OnFavouriteTransitLineIconClicked: {ex}", false);
             }
         }
     }

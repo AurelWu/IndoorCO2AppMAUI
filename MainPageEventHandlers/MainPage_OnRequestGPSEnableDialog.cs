@@ -4,11 +4,19 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async Task OnRequestGPSEnableDialogAsync(object sender, EventArgs e)
+        private async void OnRequestGPSEnableDialog(object sender, EventArgs e)
         {
-            bool isActive = SpatialManager.CheckIfGpsIsEnabled();
-            if (isActive) return; // won't do anything already active
-            bool result = await SpatialManager.ShowEnableGPSDialogAsync();
+            try
+            {
+                bool isActive = SpatialManager.CheckIfGpsIsEnabled();
+                if (isActive) return; // won't do anything already active
+                bool result = await SpatialManager.ShowEnableGPSDialogAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToLog($"Error when calling OnRequestGPSEnableDialog {ex}", false);
+            }
+            
         }
 
     }

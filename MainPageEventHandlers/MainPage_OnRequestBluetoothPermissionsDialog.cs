@@ -4,9 +4,17 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async Task OnRequestBluetoothPermissionsDialogAsync(object sender, EventArgs e)
+        private async void OnRequestBluetoothPermissionsDialog(object sender, EventArgs e)
         {
-            var status = await bluetoothHelper.RequestAsync();
+            try
+            {
+                var status = await bluetoothHelper.RequestAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToLog($"Error when calling OnRequestBluetoothPermissionsDialog {ex}", false);
+            }
+            
         }
 
     }

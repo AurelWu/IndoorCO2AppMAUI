@@ -7,37 +7,45 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async Task OnFinishRecordingClickedAsync(object sender, EventArgs e)
+        private async void OnFinishRecordingClicked(object sender, EventArgs e)
         {
-            if (submissionMode == SubmissionMode.Transit)
+            try
             {
-                selectedTransitTargetLocation = (LocationData)_TransitDestinationPicker.SelectedItem;
-                selectedTransitLine = (TransitLineData)_TransitLinePicker.SelectedItem;
-                if (selectedTransitTargetLocation == null)
+
+                if (submissionMode == SubmissionMode.Transit)
                 {
-                    bool result = await DisplayTransitSubmissionNoDestinationConfirmationDialogAsync();
-                    if (result == false)
+                    selectedTransitTargetLocation = (LocationData)_TransitDestinationPicker.SelectedItem;
+                    selectedTransitLine = (TransitLineData)_TransitLinePicker.SelectedItem;
+                    if (selectedTransitTargetLocation == null)
+                    {
+                        bool result = await DisplayTransitSubmissionNoDestinationConfirmationDialogAsync();
+                        if (result == false)
+                        {
+                            return;
+                        }
+                    }
+                    if (selectedTransitLine == null)
                     {
                         return;
                     }
+
                 }
-                if (selectedTransitLine == null)
+                _FinishRecordingButton.Text = "Submitting Data";
+                _FinishRecordingButton.IsEnabled = false; ;
+
+                int trimStart = (int)Math.Floor(_TrimSlider.RangeStart);
+                int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
+                bool success = await BluetoothManager.FinishRecordingAsync(trimStart, trimEnd, submissionMode, _ManualNameEditor.Text, _ManualAddressEditor.Text);
+                if (success)
                 {
-                    return;
+                    ResetRecordingStateAsync();
+                    await ShowSuccessNotificationAsync();
                 }
-
             }
-            _FinishRecordingButton.Text = "Submitting Data";
-            _FinishRecordingButton.IsEnabled = false; ;
-
-            int trimStart = (int)Math.Floor(_TrimSlider.RangeStart);
-            int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
-            bool success = await BluetoothManager.FinishRecordingAsync(trimStart, trimEnd, submissionMode ,_ManualNameEditor.Text, _ManualAddressEditor.Text);            
-            if(success)
+            catch (Exception ex)
             {
-                ResetRecordingStateAsync();
-                await ShowSuccessNotificationAsync();
-            }            
+                Logger.WriteToLog($"Error when calling OnFinishRecordingClicked: {ex}", false);
+            }
         }
 
         private async Task ShowSuccessNotificationAsync()

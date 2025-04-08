@@ -4,59 +4,68 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private async Task OnTransitFilterClickedAsync(object sender, EventArgs e)
+        private async void OnTransitFilterClicked(object sender, EventArgs e)
         {
-            if(currentMenuMode == MenuMode.TransportRecording)
+            try
             {
-                bool r = await DisplayFilterConfirmationDialogAsync();
-                if (!r) return;
+
+                if (currentMenuMode == MenuMode.TransportRecording)
+                {
+                    bool r = await DisplayFilterConfirmationDialogAsync();
+                    if (!r) return;
+                }
+
+                Button clickedButton = (Button)sender;
+                // Reset both buttons to inactive state
+                _TransitFilterAllButton.BackgroundColor = Colors.LightGray;
+                _TransitFilterBusButton.BackgroundColor = Colors.LightGray;
+                _TransitFilterTramButton.BackgroundColor = Colors.LightGray;
+                _TransitFilterSubwayButton.BackgroundColor = Colors.LightGray;
+                _TransitFilterLightRailButton.BackgroundColor = Colors.LightGray;
+                _TransitFilterTrainButton.BackgroundColor = Colors.LightGray;
+                _TransitFilterAllButton.TextColor = Colors.Black;
+                _TransitFilterBusButton.TextColor = Colors.Black;
+                _TransitFilterTramButton.TextColor = Colors.Black;
+                _TransitFilterSubwayButton.TextColor = Colors.Black;
+                _TransitFilterLightRailButton.TextColor = Colors.Black;
+                _TransitFilterTrainButton.TextColor = Colors.Black;
+
+                // Set the clicked button to active state
+                clickedButton.BackgroundColor = Color.Parse("#512BD4");
+                clickedButton.TextColor = Colors.White;
+                //set filter to this text
+                //this will not work well with translation!
+                if (clickedButton.Text.ToLower() == "all")
+                {
+                    TransitFilter = TransitFilterMode.All;
+                }
+                else if (clickedButton.Text.ToLower() == "bus")
+                {
+                    TransitFilter = TransitFilterMode.Bus;
+                }
+                else if (clickedButton.Text.ToLower() == "tram")
+                {
+                    TransitFilter = TransitFilterMode.Tram;
+                }
+                else if (clickedButton.Text.ToLower() == "subway")
+                {
+                    TransitFilter = TransitFilterMode.Subway;
+                }
+                else if (clickedButton.Text.ToLower() == "lightrail")
+                {
+                    TransitFilter = TransitFilterMode.LightRail;
+                }
+                else if (clickedButton.Text.ToLower() == "train")
+                {
+                    TransitFilter = TransitFilterMode.Train;
+                }
+                UpdateTransitLinesPicker(false);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToLog($"Error when calling OnTransitFilterClicked: {ex}", false);
             }
 
-            Button clickedButton = (Button)sender;
-            // Reset both buttons to inactive state
-            _TransitFilterAllButton.BackgroundColor = Colors.LightGray;
-            _TransitFilterBusButton.BackgroundColor = Colors.LightGray;
-            _TransitFilterTramButton.BackgroundColor = Colors.LightGray;
-            _TransitFilterSubwayButton.BackgroundColor = Colors.LightGray;
-            _TransitFilterLightRailButton.BackgroundColor = Colors.LightGray;
-            _TransitFilterTrainButton.BackgroundColor = Colors.LightGray;
-            _TransitFilterAllButton.TextColor = Colors.Black;
-            _TransitFilterBusButton.TextColor = Colors.Black;
-            _TransitFilterTramButton.TextColor = Colors.Black;
-            _TransitFilterSubwayButton.TextColor = Colors.Black;
-            _TransitFilterLightRailButton.TextColor = Colors.Black;
-            _TransitFilterTrainButton.TextColor = Colors.Black;
-
-            // Set the clicked button to active state
-            clickedButton.BackgroundColor = Color.Parse("#512BD4");
-            clickedButton.TextColor = Colors.White;
-            //set filter to this text
-            //this will not work well with translation!
-            if (clickedButton.Text.ToLower()=="all")
-            {
-                TransitFilter = TransitFilterMode.All;
-            }
-            else if(clickedButton.Text.ToLower() == "bus")
-            {
-                TransitFilter = TransitFilterMode.Bus;
-            }
-            else if (clickedButton.Text.ToLower() == "tram")
-            {
-                TransitFilter = TransitFilterMode.Tram;
-            }
-            else if(clickedButton.Text.ToLower() == "subway")
-            {
-                TransitFilter = TransitFilterMode.Subway;
-            }
-            else if(clickedButton.Text.ToLower() == "lightrail")
-            {
-                TransitFilter = TransitFilterMode.LightRail;
-            }
-            else if (clickedButton.Text.ToLower() == "train")
-            {
-                TransitFilter = TransitFilterMode.Train;
-            }
-            UpdateTransitLinesPicker(false);            
         }
 
         private async Task<bool> DisplayFilterConfirmationDialogAsync()
