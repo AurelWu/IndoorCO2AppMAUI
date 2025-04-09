@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: 9.0.202
     - name: Install MAUI workload
-      run: dotnet workload install maui
+      run: dotnet workload install maui --version 9.0.202
     - name: Import Code-Signing Certificates
       uses: Apple-Actions/import-codesign-certs@v1
       with:
