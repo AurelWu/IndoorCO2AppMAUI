@@ -452,6 +452,7 @@ namespace IndoorCO2App_Multiplatform
 
         private void UpdateFinishRecordingButton()
         {
+            _FinishRecordingButton.IsEnabled = false;
             int original = BluetoothManager.recordedData.Count;
             int trimStart = (int)Math.Floor(_TrimSlider.RangeStart);
             int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
@@ -483,7 +484,7 @@ namespace IndoorCO2App_Multiplatform
                     _FinishRecordingButton.IsEnabled = false;
                     _FinishRecordingButton.Text = "Submit data (needs address & name)";
                 }
-                else
+                else 
                 {
                     _FinishRecordingButton.IsEnabled = true;
                     _FinishRecordingButton.Text = "Submit data";

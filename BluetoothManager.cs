@@ -247,12 +247,21 @@ namespace IndoorCO2App_Multiplatform
         public static async Task<bool> FinishRecordingAsync(int start, int end, SubmissionMode submissionMode, string locationNameManual, string locationAddressManual)
         {
             bool success = false;
+            if (recordedData == null && recordedData.Count == 0)
+            {
+                return false;
+            }
             //Add co2 measurements to submissionData
             //ApiGatewayCaller.SendJsonToApiGateway(submissionData.ToJson());
             if (submissionMode== SubmissionMode.Building)
             {
                 isRecording = false;
+                if(recordedData==null && recordedData.Count== 0)
+                {
+                    return false;
+                }
                 submissionData.SensorData = recordedData;
+                
                 string response = await ApiGatewayCaller.SendJsonToApiGatewayAsync(submissionData.ToJson(start, end), SubmissionMode.Building);
                 if (response == "success")
                 {

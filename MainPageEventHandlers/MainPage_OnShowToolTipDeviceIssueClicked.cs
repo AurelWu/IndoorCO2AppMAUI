@@ -17,16 +17,17 @@ namespace IndoorCO2App_Multiplatform
                 this.ShowPopup(popup);
                 //TODO: display info text with images
             }
-            else if((monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent) && BluetoothManager.isBonded ==false && BluetoothManager.discoveredDevices!=null)
-            {
-                //var popup = [TODO: popup how to bond device)
-                //this.ShowPopup(popup);
-            }
             else if (monitorType == CO2MonitorType.Aranet4 && BluetoothManager.outdatedVersion == true)
             {
                 var popup = new UpdateAranetPopUp();
                 this.ShowPopup(popup);
             }
+            //else if((monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent) && BluetoothManager.isBonded ==false && BluetoothManager.discoveredDevices!=null)
+            //{
+            //    //var popup = [TODO: popup how to bond device)
+            //    //this.ShowPopup(popup);
+            //}
+            
         }            
     }
 

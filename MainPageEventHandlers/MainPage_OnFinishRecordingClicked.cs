@@ -41,6 +41,10 @@ namespace IndoorCO2App_Multiplatform
                     ResetRecordingStateAsync();
                     await ShowSuccessNotificationAsync();
                 }
+                else
+                {
+                    Logger.WriteToLog($"FinishRecordingAsync returned no success", false);
+                }
             }
             catch (Exception ex)
             {
