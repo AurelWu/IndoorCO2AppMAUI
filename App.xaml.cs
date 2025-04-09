@@ -22,7 +22,7 @@ namespace IndoorCO2App_Multiplatform
             
 
             InitializeComponent();
-            _ = InitializeAsync();
+            Initialize();
 #if ANDROID
             MainPage = new AppShell();
             Shell.SetNavBarIsVisible(this, false);
@@ -59,9 +59,9 @@ namespace IndoorCO2App_Multiplatform
             });
         }
 
-        private async Task InitializeAsync()
+        private async void Initialize()
         {
-            await Task.Run(async () => await OverpassModule.InitializeAsync());
+            OverpassModule.Initialize();
         }
 
 
@@ -79,21 +79,15 @@ namespace IndoorCO2App_Multiplatform
             base.OnResume();
 
             // Offload the async work to a separate task
-            await OnResumeAsync();
-        }
-
-
-        protected async Task OnResumeAsync()
-        {
-            Logger.WriteToLog("OnResume triggered" , false);
-            Logger.WriteToLog("OnResume | before Resume Recording called",false);
+            Logger.WriteToLog("OnResume triggered", false);
+            Logger.WriteToLog("OnResume | before Resume Recording called", false);
             try
             {
-                await ResumeRecordingAsync();
+                ResumeRecordingAsync();
             }
             catch (Exception ex)
             {
-                Logger.WriteToLog("Exception caused by ResumeRecordingAsync() " + ex.Source + " | " + ex.Message,false);
+                Logger.WriteToLog("Exception caused by ResumeRecordingAsync() " + ex.Source + " | " + ex.Message, false);
             }
 
             Logger.WriteToLog("OnResume | After Resume Recording called", false);
@@ -101,15 +95,21 @@ namespace IndoorCO2App_Multiplatform
             try
             {
                 await SpatialManager.GetCachedLocationAsync();
-            }            
+            }
             catch (Exception ex)
             {
-                Logger.WriteToLog($"Exception caused by GetCachedLocation(): {ex}",true);
+                Logger.WriteToLog($"Exception caused by GetCachedLocation(): {ex}", true);
             }
-            Logger.WriteToLog("OnResume | After GetCachedLocation called",false);
+            Logger.WriteToLog("OnResume | After GetCachedLocation called", false);
         }
 
-        public static async Task ResumeRecordingAsync()
+
+        protected async void OnResumeAsync()
+        {
+            
+        }
+
+        public static async void ResumeRecordingAsync()
         {
             string ost = Preferences.Get("OnSleepTriggeredTime", "never");
             Logger.WriteToLog("OnSleep triggered at " + ost,false);

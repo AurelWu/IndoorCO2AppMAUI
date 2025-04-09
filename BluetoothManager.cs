@@ -1333,7 +1333,7 @@ namespace IndoorCO2App_Multiplatform
                 btCancellationTokenSource.Cancel();
         }
 
-        private static async Task AuthenticateWithAirCodaAsync(IDevice airCodaDevice)
+        private static async void AuthenticateWithAirCodaAsync(IDevice airCodaDevice)
         {
             IService service = null;
             Guid authServiceGUID = Guid.Parse("0000FEA0-0000-1000-8000-00805f9b34fb");

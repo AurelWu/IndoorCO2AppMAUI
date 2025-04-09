@@ -118,7 +118,7 @@ namespace IndoorCO2App_Multiplatform
             LoadFavouredLocationsAsync();
             LoadMonitorType();
             Logger.WriteToLog("App started", true);
-            await App.ResumeRecordingAsync();
+            App.ResumeRecordingAsync();
 
             Logger.WriteToLog("App Version: " + appVersion,false);
             //TODO: => during start up show the bluetooth status as yellow or smth, meaning its still initializing
@@ -146,9 +146,8 @@ namespace IndoorCO2App_Multiplatform
             locationMap = new Mapsui.Map
             {
                 CRS = "EPSG:3857", // Web Mercator projection, standard for OSM
-                Layers = { Mapsui.Tiling.OpenStreetMap.CreateTileLayer() }
+                Layers = { Mapsui.Tiling.OpenStreetMap.CreateTileLayer() },                
             };            
-            
             UpdateMap(latitude, longitude);
 
         }

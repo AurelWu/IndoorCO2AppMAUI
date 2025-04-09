@@ -64,18 +64,18 @@ namespace IndoorCO2App_Multiplatform
             //LoadCachedTransitLineLocationsAsync();
         }
 
-        public static async Task InitializeAsync()
+        public static async void Initialize()
         {
             // Now, you can use await here
-            await LoadCachedBuildingLocationsAsync();
-            await LoadCachedTransitStopLocationsAsync();
-            await LoadCachedTransitLineLocationsAsync();
+            LoadCachedBuildingLocations();
+            LoadCachedTransitStopLocations();
+            LoadCachedTransitLineLocations();
         }
 
         /// <summary>
         /// loads Locations stored in File Cache when app is started
         /// </summary>
-        private static async Task LoadCachedBuildingLocationsAsync()
+        private static async void LoadCachedBuildingLocations()
         {
             var savedCachedLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync(CacheDataCategory.Building);
             List<LocationDataWithTimeStamp> cachedList = savedCachedLocationsHashSet.ToList();
@@ -88,7 +88,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        private static async Task LoadCachedTransitStopLocationsAsync()
+        private static async void LoadCachedTransitStopLocations()
         {
             var savedCachedTransitLocationsHashSet = await FileStorage.LoadCachedLocationsHashSetAsync(CacheDataCategory.TransitStop);
             List<LocationDataWithTimeStamp> cachedList = savedCachedTransitLocationsHashSet.ToList();
@@ -101,7 +101,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        private static async Task LoadCachedTransitLineLocationsAsync()
+        private static async void LoadCachedTransitLineLocations()
         {
             var savedCachedTransitLineHashset = await FileStorage.LoadCachedTransitLineLocationsHashSetAsync();
             List<TransitLineDataWithTimeStamp> cachedList = savedCachedTransitLineHashset.ToList();
@@ -145,7 +145,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        private static async Task AddToCachedTransitStopLocationsAsync()
+        private static async void AddToCachedTransitStopLocations()
         {
             try
             {
@@ -167,7 +167,7 @@ namespace IndoorCO2App_Multiplatform
                         cachedTransitStopLocations.Add(ld);
                     }
                 }
-                await WriteTransitStopCachedToFileStorageAsync();
+                WriteTransitStopCachedToFileStorageAsync();
             }
             catch
             {
@@ -219,7 +219,7 @@ namespace IndoorCO2App_Multiplatform
             
         }
 
-        private static async Task WriteTransitStopCachedToFileStorageAsync()
+        private static async void WriteTransitStopCachedToFileStorageAsync()
         {
             try
             {
@@ -232,7 +232,7 @@ namespace IndoorCO2App_Multiplatform
             
         }
 
-        private static async Task WriteTransitLineCachedToFileStorageAsync()
+        private static async void WriteTransitLineCachedToFileStorageAsync()
         {
             try
             {
@@ -504,7 +504,7 @@ namespace IndoorCO2App_Multiplatform
             });
         }
 
-        private static async Task ParseTransitOverpassResponseAsync(string response, double userLatitude, double userLongitude, bool isOrigin)
+        private static async void ParseTransitOverpassResponseAsync(string response, double userLatitude, double userLongitude, bool isOrigin)
         {
             var elements = JsonDocument.Parse(response).RootElement.GetProperty("elements");
             HashSet<string> namesOfStops = new HashSet<string>(); //used to remove duplicates
@@ -541,12 +541,12 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
-                        await AddToCachedTransitStopLocationsAsync();
+                        AddToCachedTransitStopLocations();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
-                        await AddToCachedTransitStopLocationsAsync();
+                        AddToCachedTransitStopLocations();
                     }
                 }
                 // Tram line (relation)
@@ -576,12 +576,12 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
-                        await AddToCachedTransitStopLocationsAsync();
+                        AddToCachedTransitStopLocations();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
-                        await AddToCachedTransitStopLocationsAsync();
+                        AddToCachedTransitStopLocations();
                     }
                 }
                 // Bus line (relation)
@@ -609,12 +609,12 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
-                        await AddToCachedTransitStopLocationsAsync();
+                        AddToCachedTransitStopLocations();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
-                        await AddToCachedTransitStopLocationsAsync();
+                        AddToCachedTransitStopLocations();
                     }
                 }
                 // Subway line (relation)
@@ -641,12 +641,12 @@ namespace IndoorCO2App_Multiplatform
                     if (isOrigin)
                     {
                         TransportStartLocationData.Add(bd);
-                        await AddToCachedTransitStopLocationsAsync();
+                        AddToCachedTransitStopLocations();
                     }
                     else
                     {
                         TransportDestinationLocationData.Add(bd);
-                        await AddToCachedTransitStopLocationsAsync();
+                        AddToCachedTransitStopLocations();
                     }
                 }
 
@@ -756,7 +756,7 @@ namespace IndoorCO2App_Multiplatform
         }
 
 
-        public static async Task FetchNearbyBuildingsAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage)
+        public static async void FetchNearbyBuildings(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage)
         {
             //Logger.circularBuffer.Add("location send to Overpass Building request: " + userLatitude + "|" + userLongitude); //TODO remove again
             everFetchedLocations = true;
@@ -815,7 +815,7 @@ namespace IndoorCO2App_Multiplatform
                 if (!isAlreadyRetry)
                 {
                     isAlreadyRetry = true;
-                    await FetchNearbyBuildingsAsync(userLatitude, userLongitude, searchRadius, mainPage);
+                    FetchNearbyBuildings(userLatitude, userLongitude, searchRadius, mainPage);
                 }            
             }
             catch (System.Net.Sockets.SocketException ex)
@@ -843,7 +843,7 @@ namespace IndoorCO2App_Multiplatform
                 if (!isAlreadyRetry)
                 {
                     isAlreadyRetry = true;
-                    await FetchNearbyBuildingsAsync(userLatitude, userLongitude, searchRadius, mainPage);
+                    FetchNearbyBuildings(userLatitude, userLongitude, searchRadius, mainPage);
                 }
             }
 
@@ -861,7 +861,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        public static async Task FetchNearbyTransitAsync(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage, bool transitOrigin)
+        public static async void FetchNearbyTransit(double userLatitude, double userLongitude, double searchRadius, MainPage mainPage, bool transitOrigin)
         {
             //Logger.circularBuffer.Add("location send to Overpass Transit request: " + userLatitude + "|" + userLongitude); //TODO remove again
             everFetchedTransitLocations = true;
@@ -892,7 +892,7 @@ namespace IndoorCO2App_Multiplatform
                     var jsonData = await response.Content.ReadAsStringAsync();
                     //ParseOverpassResponse(jsonData, userLatitude, userLongitude);
                     //mainPage.UpdateLocationPicker();
-                    await ParseTransitOverpassResponseAsync(jsonData, userLatitude, userLongitude, transitOrigin);
+                    ParseTransitOverpassResponseAsync(jsonData, userLatitude, userLongitude, transitOrigin);
                     if (transitOrigin)
                     {
                         mainPage.UpdateTransitOriginPicker(true);
@@ -924,7 +924,7 @@ namespace IndoorCO2App_Multiplatform
                 if(!isAlreadyRetry)
                 {
                     isAlreadyRetry = true;
-                    await FetchNearbyTransitAsync(userLatitude, userLongitude, searchRadius, mainPage, transitOrigin);
+                    FetchNearbyTransit(userLatitude, userLongitude, searchRadius, mainPage, transitOrigin);
                 }
                 
             }
