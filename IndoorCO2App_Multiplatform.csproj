@@ -86,6 +86,7 @@
 		<BuildIpa>False</BuildIpa>
 		<MtouchDebug>True</MtouchDebug>
 		<IsTrimmable>True</IsTrimmable>
+		<MtouchLink>Full</MtouchLink>
 	</PropertyGroup>
 
 	<!--<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
