@@ -212,7 +212,7 @@ namespace IndoorCO2App_Multiplatform
 
                     if ((DateTime.Now - timeOfLastGPSUpdate) > TimeSpan.FromSeconds(21))
                     {
-                        await SpatialManager.UpdateLocationAsync();
+                        SpatialManager.UpdateLocationAsync();
 
                         timeOfLastGPSUpdate = DateTime.Now;
                     }

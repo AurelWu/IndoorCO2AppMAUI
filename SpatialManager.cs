@@ -109,7 +109,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        internal static async Task UpdateLocationAsync()
+        internal static async void UpdateLocationAsync()
         {
 #if ANDROID
             await GetCachedLocationAsync();
