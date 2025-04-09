@@ -131,7 +131,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        internal static async Task UpdateAsync(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
+        internal static async void Update(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
         {
             //Logger.circularBuffer.Add($"Update() called for: {monitorType} with nameFilter: {nameFilter} | " + DateTime.Now);
             DateTime currentTime = DateTime.Now;
@@ -180,7 +180,7 @@ namespace IndoorCO2App_Multiplatform
                         discoveredDevices = null;
                     }
                     //Logger.circularBuffer.Add($"ScanForDevices() called | " + DateTime.Now);
-                    await ScanForDevicesAsync(monitorType, nameFilter, bluetoothHelper);
+                    ScanForDevices(monitorType, nameFilter, bluetoothHelper);
                 }
                 catch
                 {
@@ -308,7 +308,7 @@ namespace IndoorCO2App_Multiplatform
             return success;
         }
 
-        internal static async Task ScanForDevicesAsync(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
+        internal static async void ScanForDevices(CO2MonitorType monitorType, string nameFilter, IBluetoothHelper bluetoothHelper)
         {
             Logger.WriteToLog($"ScanForDevices() called for: {monitorType} with nameFilter: {nameFilter} | " + DateTime.Now, false);
             //doesnt work like it should yet
@@ -354,7 +354,7 @@ namespace IndoorCO2App_Multiplatform
                     return;
                 }
                 //if (discoveredDevices[0].Name)
-                ConnectToDeviceAsync(discoveredDevices[0],monitorType);
+                ConnectToDevice(discoveredDevices[0],monitorType);
                 return;
             }
 
@@ -579,7 +579,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     try
                     {
-                        await ConnectToDeviceAsync(discoveredDevices[0], monitorType);
+                        ConnectToDevice(discoveredDevices[0], monitorType);
                     }
                     catch
                     {
@@ -608,7 +608,7 @@ namespace IndoorCO2App_Multiplatform
             //}
         }
 
-        internal static async Task ConnectToDeviceAsync(IDevice device, CO2MonitorType monitorType)
+        internal static async void ConnectToDevice(IDevice device, CO2MonitorType monitorType)
         {
             long cur = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             int elapsedSeconds = (int)Math.Ceiling((cur - startingTime) / 1000d);

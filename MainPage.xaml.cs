@@ -82,10 +82,10 @@ namespace IndoorCO2App_Multiplatform
 
         public MainPage()
         {
-            InitAsync();
+            Init();
         }
 
-        public async Task InitAsync()
+        public async void Init()
         {
 
 
@@ -110,11 +110,11 @@ namespace IndoorCO2App_Multiplatform
             bluetoothHelper.CheckIfBTEnabled();
 
             InitializeMap(0, 0); // Example: Berlin coordinates
-            InitUILayoutAsync();
+            InitUILayout();
             RecoveryData.ReadFromPreferences();
             LoadHasAlreadySuccessfulTransmitted();
             _CO2DeviceNameFilterEditor.Text = Preferences.Get(DeviceNameFilterPreferenceKey, "");
-            ChangeToStandardUIAsync(false);
+            ChangeToStandardUI(false);
             LoadFavouredLocationsAsync();
             LoadMonitorType();
             Logger.WriteToLog("App started", true);
@@ -132,10 +132,10 @@ namespace IndoorCO2App_Multiplatform
 
             firstInit = false;
 
-            await UpdateUIAsync();
+            UpdateUI();
 
             _timer = new PeriodicTimer(TimeSpan.FromSeconds(0.4));
-            await UpdateAsync();
+            Update();
         }
 
         
@@ -195,21 +195,21 @@ namespace IndoorCO2App_Multiplatform
         }
 
 
-        private async Task LoadFavouredLocationsAsync()
+        private async void LoadFavouredLocationsAsync()
         {
             favouredLocations = await FileStorage.LoadFavouritesHashSetAsync();
         }
 
-        private async Task UpdateAsync()
+        private async void Update()
         {            
 
             try
             {
                 while (await _timer.WaitForNextTickAsync())
                 {
-                    await UpdateUIAsync();
+                    UpdateUI();
 
-                    await BluetoothManager.UpdateAsync(monitorType, _CO2DeviceNameFilterEditor.Text, bluetoothHelper);
+                    BluetoothManager.Update(monitorType, _CO2DeviceNameFilterEditor.Text, bluetoothHelper);
 
                     if ((DateTime.Now - timeOfLastGPSUpdate) > TimeSpan.FromSeconds(21))
                     {
@@ -235,7 +235,7 @@ namespace IndoorCO2App_Multiplatform
         
 
 
-        public async Task StartRecordingAsync(SubmissionMode submissionMode, bool resumedRecording)
+        public async void StartRecording(SubmissionMode submissionMode, bool resumedRecording)
         {
             this.submissionMode = submissionMode;
             BluetoothManager.recordedData = new List<SensorData>();
@@ -250,7 +250,7 @@ namespace IndoorCO2App_Multiplatform
                 if (!resumedRecording && _LocationPicker != null && _LocationPicker.SelectedItem != null && locations.Count > 0)
                 {
                     selectedLocation = (LocationData)_LocationPicker.SelectedItem;
-                    await ChangeToRecordingUIAsync();
+                    ChangeToRecordingUI();
                     long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     BluetoothManager.StartNewRecording(monitorType, selectedLocation, startTime, prerecording);
                     
@@ -275,7 +275,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     LocationData ld = new LocationData(RecoveryData.locationType, RecoveryData.locationID, RecoveryData.locationName, RecoveryData.locationLat, RecoveryData.locationLon, RecoveryData.locationLat, RecoveryData.locationLon);
                     selectedLocation = ld;
-                    await ChangeToRecordingUIAsync();                    
+                    ChangeToRecordingUI();                    
                     BluetoothManager.StartNewRecording(monitorType, selectedLocation, RecoveryData.startTime, false);
                     await _MainScrollView.ScrollToAsync(0, 0, false);
                 }
@@ -284,13 +284,13 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (submissionMode == SubmissionMode.BuildingManual)
             {
-                await ChangeToManualRecordingUIAsync(); ;
+                ChangeToManualRecordingUI(); ;
                 BluetoothManager.StartNewManualRecording(selectedLocation, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), prerecording);
                 await _MainScrollView.ScrollToAsync(0, 0, false);
             }
         }
 
-        public async Task StartTransportRecordingAsync(bool resumedRecording)
+        public async void StartTransportRecording(bool resumedRecording)
         {
             if(!resumedRecording)
             {
@@ -322,7 +322,7 @@ namespace IndoorCO2App_Multiplatform
                 RecoveryData.CO2MonitorType = monitorType.ToString();
                 RecoveryData.WriteToPreferences();
 
-                await ChangeToTransportRecordingUIAsync();
+                ChangeToTransportRecordingUI();
                 BluetoothManager.StartTransportRecording(monitorType, startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine);
                 await _MainScrollView.ScrollToAsync(0, 0, true);
             }
@@ -354,22 +354,22 @@ namespace IndoorCO2App_Multiplatform
                 startTrimSliderHasBeenUsed = false;
                 endTrimSliderHasBeenUsed = false;
                 previousDataCount = 0;
-                await ChangeToTransportRecordingUIAsync();
+                ChangeToTransportRecordingUI();
                 BluetoothManager.StartTransportRecording(monitorType, RecoveryData.startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine);
                 await _MainScrollView.ScrollToAsync(0, 0, false);
             }
 
         }
 
-        private async Task CancelRecordingAsync()
+        private async void CancelRecording()
         {
-            await ResetRecordingStateAsync();
+            ResetRecordingState();
             BluetoothManager.StopRecording();
             RecoveryData.ResetRecoveryData();
-            await ChangeToStandardUIAsync(false);
+            ChangeToStandardUI(false);
         }
 
-        private async Task ResetRecordingStateAsync()
+        private async void ResetRecordingState()
         {
             BluetoothManager.recordedData.Clear();
             await SpatialManager.ResetLocationAsync();
@@ -391,7 +391,7 @@ namespace IndoorCO2App_Multiplatform
             OverpassModule.TransportDestinationLocationData.Clear();
             _CheckBoxDoorsWindows.IsChecked = false;
             _CheckBoxVentilation.IsChecked = false;
-            await ChangeToStandardUIAsync(false);
+            ChangeToStandardUI(false);
         }
         private void ResetNotes()
         {

@@ -38,7 +38,7 @@ namespace IndoorCO2App_Multiplatform
                 bool success = await BluetoothManager.FinishRecordingAsync(trimStart, trimEnd, submissionMode, _ManualNameEditor.Text, _ManualAddressEditor.Text);
                 if (success)
                 {
-                    ResetRecordingStateAsync();
+                    ResetRecordingState();
                     await ShowSuccessNotificationAsync();
                 }
                 else

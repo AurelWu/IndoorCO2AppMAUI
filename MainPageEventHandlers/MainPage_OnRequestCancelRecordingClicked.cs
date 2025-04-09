@@ -12,7 +12,7 @@ namespace IndoorCO2App_Multiplatform
                 bool result = await DisplayAlert("Cancel Recording", "Are you sure you want to cancel the recording?", "Yes", "No");
                 if (result == true)
                 {
-                    await CancelRecordingAsync();
+                    await CancelRecording();
                 }
             }
             catch (Exception ex) 

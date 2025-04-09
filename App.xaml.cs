@@ -137,12 +137,12 @@ namespace IndoorCO2App_Multiplatform
                 if (mode == "Building")
                 {
                     Logger.WriteToLog("recovering Building Recording", false);
-                    await IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartRecordingAsync(SubmissionMode.Building, true);
+                    await IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartRecording(SubmissionMode.Building, true);
                 }
                 else if (mode == "Transit")
                 {
                     Logger.WriteToLog("recovering Transit Recording",false);
-                    await IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartTransportRecordingAsync(true);
+                    await IndoorCO2App_Multiplatform.MainPage.MainPageSingleton.StartTransportRecording(true);
                 }
             }
         }

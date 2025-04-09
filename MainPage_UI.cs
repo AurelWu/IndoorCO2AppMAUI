@@ -219,7 +219,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        private async Task InitUILayoutAsync()
+        private async void InitUILayout()
         {
             var screenWidth = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
             var screenHeight = DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density;
@@ -254,10 +254,10 @@ namespace IndoorCO2App_Multiplatform
             _BuildingModeButton.MinimumWidthRequest = buttonWidth40Percent;
             _LocationUpdateGrid.WidthRequest = _StartRecordingButton.Width;
             _GetCachedLocationsButton.HeightRequest = _StartRecordingButton.Height;
-            await CollapseExpanderWithDelayAsync(500);
+            CollapseExpanderWithDelay(500);
         }
 
-        private async Task CollapseExpanderWithDelayAsync(int delayMilliseconds)
+        private async void CollapseExpanderWithDelay(int delayMilliseconds)
         {
             // Wait for the specified delay
             await Task.Delay(delayMilliseconds);
@@ -267,12 +267,12 @@ namespace IndoorCO2App_Multiplatform
         }
 
 
-        public async Task UpdateUIAsync()
+        public async void UpdateUI()
         {
             Application.Current.UserAppTheme = Application.Current.RequestedTheme;
             _VersionLabel.Text = appVersion;
             UpdateGPSStatusButton();
-            await UpdateGPSPermissionButtonAsync();
+            UpdateGPSPermissionButton();
             UpdateBluetoothStatusButton();
             UpdateBluetoothPermissionsButton();
 
@@ -300,7 +300,7 @@ namespace IndoorCO2App_Multiplatform
             //HideElementsWithStatusOK();
         }
 
-        private async Task HideElementsWithStatusOKAsync()
+        private async void HideElementsWithStatusOK()
         {
             bool hiddenElementThisTime = false;
             if (gpsActive && gpsGranted == btGranted == btActive)
@@ -563,7 +563,7 @@ namespace IndoorCO2App_Multiplatform
                 }
                 else if (BluetoothManager.outdatedVersion == true)
                 {
-                    _DeviceLabel.Text = "Sensor found, but the firmware is outdated.\r\nUpdate it using the official Aranet app ⓘ)";
+                    _DeviceLabel.Text = "Sensor found, but the firmware is outdated.\r\nUpdate it using the official Aranet app ⓘ";
                 }
                 
 
@@ -629,7 +629,7 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        private async Task UpdateGPSPermissionButtonAsync()
+        private async void UpdateGPSPermissionButton()
         {
 
             gpsGranted = await SpatialManager.IsLocationPermissionGrantedAsync();
@@ -969,7 +969,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public async Task ChangeToStandardUIAsync(bool manualTriggered)
+        public async void ChangeToStandardUI(bool manualTriggered)
         {
             ChangeToUI(MenuMode.Standard);
             _TransitModeButton.BackgroundColor = Colors.LightGray;
@@ -992,28 +992,28 @@ namespace IndoorCO2App_Multiplatform
             //HideElementsWithStatusOK();
         }    
 
-        public async Task ChangeToRecordingUIAsync()
+        public async void ChangeToRecordingUI()
         {
             ChangeToUI(MenuMode.Recording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
             //HideElementsWithStatusOK();
         }
 
-        public async Task ChangeToManualRecordingUIAsync()
+        public async void ChangeToManualRecordingUI()
         {
             ChangeToUI(MenuMode.ManualRecording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
             //HideElementsWithStatusOK();
         }
 
-        public async Task ChangeToTransportRecordingUIAsync()
+        public async void ChangeToTransportRecordingUI()
         {
             ChangeToUI(MenuMode.TransportRecording);
             await _MainScrollView.ScrollToAsync(0, 0, true);
             //HideElementsWithStatusOK();
         }
 
-        public async Task ChangeToTransportSelectionUIAsync(bool manualTriggered)
+        public async void ChangeToTransportSelectionUI(bool manualTriggered)
         {
             if (RecoveryData.recordingMode == "Building" || RecoveryData.recordingMode == "Transit")
             {

@@ -13,7 +13,7 @@ namespace IndoorCO2App_Multiplatform
                 bool result = await DisplayAlert("Manual Recording Mode", msg, "Understood", "Cancel");
                 if (result == true)
                 {
-                    await StartRecordingAsync(SubmissionMode.BuildingManual, false);
+                    await StartRecording(SubmissionMode.BuildingManual, false);
                 }
             }
             catch (Exception ex) 
