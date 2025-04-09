@@ -74,12 +74,12 @@ namespace IndoorCO2App_Multiplatform
             BluetoothManager.CancelScanRequest();
         }
 
-        protected override void OnResume()
+        protected override async void OnResume()
         {
             base.OnResume();
 
             // Offload the async work to a separate task
-            Task.Run(async () => await OnResumeAsync());
+            await OnResumeAsync();
         }
 
 
@@ -93,7 +93,7 @@ namespace IndoorCO2App_Multiplatform
             }
             catch (Exception ex)
             {
-                Logger.WriteToLog("Exception caused by ResumeRecording() " + ex.Source + " | " + ex.Message,false);
+                Logger.WriteToLog("Exception caused by ResumeRecordingAsync() " + ex.Source + " | " + ex.Message,false);
             }
 
             Logger.WriteToLog("OnResume | After Resume Recording called", false);
