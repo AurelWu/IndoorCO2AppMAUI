@@ -394,10 +394,12 @@ namespace IndoorCO2App_Multiplatform
 
                     int majorVersion = 0;
                     int minorVersion = 0;
+                    bool found24byteEntry = false;
                     foreach(var r in adRecords)
                     {
                         if(r.Data.Length == 24)
                         {
+                            found24byteEntry = true;
                             Logger.WriteToLog("found advertisement record with 24 byte length",false);
                             majorVersion = r.Data[5];
                             Logger.WriteToLog("major Version [byte at index 5]: " + majorVersion, false);
@@ -412,6 +414,10 @@ namespace IndoorCO2App_Multiplatform
                                 outdatedVersion = false;
                             }
                         }
+                    }
+                    if (!found24byteEntry)
+                    {
+                        outdatedVersion = true;
                     }
                     
 
