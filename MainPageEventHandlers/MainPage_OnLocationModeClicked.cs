@@ -23,12 +23,12 @@ namespace IndoorCO2App_Multiplatform
 
                 if (clickedButton.Text == "Buildings")
                 {
-                    await ChangeToStandardUI(true);
+                    ChangeToStandardUI(true);
                     UpdateUI();
                 }
                 else if (clickedButton.Text == "Transit")
                 {
-                    await ChangeToTransportSelectionUI(true);
+                    ChangeToTransportSelectionUI(true);
                     UpdateUI();
                 }
             }
