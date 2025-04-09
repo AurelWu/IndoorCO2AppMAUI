@@ -68,7 +68,7 @@
 		<OptimizePNGs>True</OptimizePNGs>
 		<DebugType>portable</DebugType>
 		<BuildIpa>False</BuildIpa>
-		<MtouchLink>SdkOnly</MtouchLink>
+		<MtouchLink>Full</MtouchLink>
 		<MtouchDebug>True</MtouchDebug>
 		<IsTrimmable>True</IsTrimmable>
 	</PropertyGroup>
@@ -84,7 +84,6 @@
 		<OptimizePNGs>True</OptimizePNGs>
 		<DebugType>portable</DebugType>
 		<BuildIpa>False</BuildIpa>
-		<MtouchLink>SdkOnly</MtouchLink>
 		<MtouchDebug>True</MtouchDebug>
 		<IsTrimmable>True</IsTrimmable>
 	</PropertyGroup>
