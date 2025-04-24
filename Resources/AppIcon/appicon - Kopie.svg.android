@@ -11,11 +11,8 @@
    data-name="Layer 1"
    viewBox="0 0 229.72 229.72"
    version="1.1"
-   sodipodi:docname="splash.svg"
-   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
-   inkscape:export-filename="C:\Users\aurel\Downloads\icon512_512.png"
-   inkscape:export-xdpi="211.46101"
-   inkscape:export-ydpi="211.46101">
+   sodipodi:docname="appicon.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
   <metadata
      id="metadata73">
     <rdf:RDF>
@@ -46,8 +43,7 @@
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
-     inkscape:current-layer="Layer_1"
-     inkscape:document-rotation="0" />
+     inkscape:current-layer="Layer_1" />
   <defs
      id="defs4">
     <style
@@ -82,7 +78,7 @@
      id="rect6" />
   <g
      id="g68"
-     transform="matrix(1.4336037,0,0,1.4336037,-45.925822,-44.004793)">
+     transform="matrix(0.84689604,0,0,0.84689604,19.876375,21.011216)">
     <g
        id="g12">
       <rect
@@ -217,4 +213,12 @@
          id="polygon64" />
     </g>
   </g>
+  <rect
+     style="fill:none;fill-opacity:1;stroke:#e4be52;stroke-width:5;stroke-miterlimit:9.30000019;stroke-dasharray:none;stroke-opacity:1"
+     id="rect902"
+     width="198.84323"
+     height="198.84322"
+     x="15.438385"
+     y="15.438393"
+     ry="0" />
 </svg>
