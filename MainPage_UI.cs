@@ -561,15 +561,14 @@ namespace IndoorCO2App_Multiplatform
                         _DeviceLabel.Text += " | previous update failed";
                     }
                 }
-                else if (BluetoothManager.outdatedVersion == true)
-                {
-                    _DeviceLabel.Text = "Sensor found, but the firmware is outdated.\r\nUpdate it using the official Aranet app ⓘ";
-                }
                 
-
                 else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
                 {
                     _DeviceLabel.Text = "Sensor found, but 'Smart Home Integration' is disabled.\r\nEnable it using the offical Aranet app ⓘ";
+                }
+                else if (BluetoothManager.outdatedVersion == true)
+                {
+                    _DeviceLabel.Text = "Sensor found, but the firmware is outdated.\r\nUpdate it using the official Aranet app ⓘ";
                 }
                 else if (BluetoothManager.currentCO2Reading == 0)
                 {
