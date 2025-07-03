@@ -75,7 +75,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                         </Border.StrokeShape>
                         <Picker x:Name="CO2MonitorPicker" VerticalOptions="Center" HorizontalOptions="FillAndExpand" SelectedIndexChanged="OnCO2MonitorPickerSelectedIndexChanged">
                             <Picker.Items>
-                                <x:String>Aranet</x:String>
+                                <x:String>Aranet4</x:String>
                                 <x:String>Airvalent</x:String>
                                 <x:String>Inkbird IAM-T1</x:String>
                                 <x:String>AirSpot Health</x:String>

@@ -50,9 +50,12 @@
 
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-		<CodesignKey>Apple Distribution: Aurel Wuensch (57992CLWV5)</CodesignKey> 
-		<CodesignProvision>IndoorCO2DataCollectorProvisioningProfile2025</CodesignProvision>
+		<!--<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey> -->
+		<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>
+		<!-- <CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision> -->
+		<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>
 		<ProvisioningType>automatic</ProvisioningType>
+		<!--<ProvisioningType>automatic</ProvisioningType> -->
 		<!--<CodesignKey>Apple Development: Created via API (57992CLWV5)</CodesignKey>-->
 	</PropertyGroup> 
 
@@ -207,6 +210,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="AppStrings.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AppStrings.resx</DependentUpon>
+	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnCheckBoxDoorsWindows_CheckedChanged - Kopieren.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
@@ -315,6 +323,13 @@
 	  <Compile Update="MainPageEventHandlers\MainPage_OnShowMapInBrowserClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="AppStrings.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>AppStrings.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 </Project>

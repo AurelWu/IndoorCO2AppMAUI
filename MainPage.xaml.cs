@@ -565,7 +565,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     _CO2DevicePicker.SelectedIndex = savedIndex;
 
-                    if (_CO2DevicePicker.SelectedItem.ToString() == "Aranet")
+                    if (_CO2DevicePicker.SelectedItem.ToString() == "Aranet4")
                     {
                         monitorType = CO2MonitorType.Aranet4;
                     }

@@ -20,6 +20,7 @@ namespace IndoorCO2App_Multiplatform
 {
     internal static class BluetoothManager
     {
+        public static bool lowCO2ValueDetected = false;
         public static string deviceName ="";
         private static CancellationTokenSource btCancellationTokenSource;
         private static bool isScanning = false;
@@ -35,7 +36,7 @@ namespace IndoorCO2App_Multiplatform
         public static bool subscribedAlreadyToReportChar = false;
 
         static Guid airspotServiceGUID = new Guid("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
-        static Guid airspotWriteCharacteristic = new Guid("6e400002-b5a3-f393-e0a9-e50e24dcca9e"); //probably write characteristic to change settings (and maybe request history?)
+        static Guid airspotWriteCharacteristicGUID = new Guid("6e400002-b5a3-f393-e0a9-e50e24dcca9e"); //probably write characteristic to change settings (and maybe request history?)
         static Guid airspotNotifyCharacteristic = new Guid("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
 
 
@@ -177,7 +178,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     if(monitorType== CO2MonitorType.AirSpot || monitorType==CO2MonitorType.AirCoda)
                     {
-                        discoveredDevices = null;
+                        //discoveredDevices = null;
                     }
                     //Logger.circularBuffer.Add($"ScanForDevices() called | " + DateTime.Now);
                     ScanForDevices(monitorType, nameFilter, bluetoothHelper);
@@ -195,8 +196,8 @@ namespace IndoorCO2App_Multiplatform
             previousUpdate = DateTime.Now.AddMinutes(-3);
             isRecording = true;
             recordedData = new List<SensorData>();
-            submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,false), location.Type, location.ID, location.Name, location.Latitude, location.Longitude, startTime);
             startingTime = startTime;
+            submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,false), location.Type, location.ID, location.Name, location.Latitude, location.Longitude, startTime);
             NotifyCharacteristicAlreadyHookedUp = false;
             if (prerecording)
             {
@@ -231,11 +232,11 @@ namespace IndoorCO2App_Multiplatform
             isRecording = true;
             isTransportRecording = true;
             recordedData = new List<SensorData>();
-            submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,true), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.Type,startLocation.Name);
             startingTime = startTime;
+            submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,true), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.Type,startLocation.Name);
             NotifyCharacteristicAlreadyHookedUp = false;
             prerecordingLength = 0; // no prerecording for now
-
+            Logger.WriteToLog("Transportrecording starttime used: " + startingTime + " | current Time: " + DateTime.UtcNow, false);
             //throw new System.NotImplementedException();
         }
 
@@ -398,38 +399,43 @@ namespace IndoorCO2App_Multiplatform
                 // Check if the discovered device matches criteria, as we currently only check serviceUUIDs of airvalent and aranet we only do this for them (only  they are necessarily paired)
                 if ((monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent) && device.Name.ToLower().Contains(nameFilter.Trim().ToLower()))
                 {
-                    var adRecords = device.AdvertisementRecords;
-                    Logger.WriteToLog("Target device found. Stopping scan early",false);
-
-                    int majorVersion = 0;
-                    int minorVersion = 0;
-                    bool found24byteEntry = false;
-                    foreach(var r in adRecords)
+                    if (monitorType == CO2MonitorType.Aranet4)
                     {
-                        if(r.Data.Length == 24)
+
+
+                        var adRecords = device.AdvertisementRecords;
+                        Logger.WriteToLog("Target device found. Stopping scan early", false);
+
+                        int majorVersion = 0;
+                        int minorVersion = 0;
+                        bool found24byteEntry = false;
+                        foreach (var r in adRecords)
                         {
-                            found24byteEntry = true;
-                            Logger.WriteToLog("found advertisement record with 24 byte length",false);
-                            majorVersion = r.Data[5];
-                            Logger.WriteToLog("major Version [byte at index 5]: " + majorVersion, false);
-                            minorVersion = r.Data[4];
-                            Logger.WriteToLog("minor Version [byte at index 4]: " + minorVersion, false);
-                            if (majorVersion < 1 || (majorVersion == 1 && minorVersion < 2))
+                            if (r.Data.Length == 24)
                             {
-                                outdatedVersion = true;
-                            }
-                            else
-                            {
-                                outdatedVersion = false;
+                                found24byteEntry = true;
+                                Logger.WriteToLog("found advertisement record with 24 byte length", false);
+                                majorVersion = r.Data[5];
+                                Logger.WriteToLog("major Version [byte at index 5]: " + majorVersion, false);
+                                minorVersion = r.Data[4];
+                                Logger.WriteToLog("minor Version [byte at index 4]: " + minorVersion, false);
+                                if (majorVersion < 1 || (majorVersion == 1 && minorVersion < 2))
+                                {
+                                    outdatedVersion = true;
+                                }
+                                else
+                                {
+                                    outdatedVersion = false;
+                                }
                             }
                         }
+                        if (!found24byteEntry)
+                        {
+                            outdatedVersion = true;
+                        }
                     }
-                    if (!found24byteEntry)
-                    {
-                        outdatedVersion = true;
-                    }
-                    
 
+                    //todo version check for Airvalent
                     Console.WriteLine("Target device found. Stopping scan...");
                     btCancellationTokenSource.Cancel(); // Stop scanning
                 }
@@ -717,6 +723,7 @@ namespace IndoorCO2App_Multiplatform
                 //    }
                 //}
 
+
                 if (monitorType == CO2MonitorType.AirCoda)
                 {
                     //device.UpdateConnectionParameters();                    
@@ -767,59 +774,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     if (monitorType == CO2MonitorType.Aranet4)
                     {
-                        //if(sensorVersion == "")
-                        //{                        
-                        //    //IService versionService = await device.GetServiceAsync(AranetVersionServiceUUID);
-                        //    //if(versionService==null)
-                        //    //{
-                        //    //    Logger.circularBuffer.Add($".GetServiceAsync(AranetVersionServiceUUID) returned null | " + DateTime.Now);
-                        //    //}
-                        //    //
-                        //    //if (versionService != null)
-                        //    //{
-                        //    //    ICharacteristic versionCharacteristic = await versionService.GetCharacteristicAsync(ARANET_VersionNumber_CHARACTERISTIC_UUID);
-                        //    //    if(versionCharacteristic==null)
-                        //    //    {
-                        //    //        Logger.circularBuffer.Add($".GetCharacteristicAsync(ARANET_VersionNumber_CHARACTERISTIC_UUID) returned null | " + DateTime.Now);
-                        //    //    }
-                        //    //    if (versionCharacteristic != null)
-                        //    //    {
-                        //    //        //Disabled for now as it always seems to return null
-                        //    //        //(byte[] data, int resultCode) result;
-                        //    //        //try
-                        //    //        //{                                        
-                        //    //        //    {
-                        //    //        //        Logger.circularBuffer.Add($" trying to read versionCharacteristic | " + DateTime.Now);
-                        //    //        //        result = await versionCharacteristic.ReadAsync();
-                        //    //        //        if (result.resultCode == 0)
-                        //    //        //        {
-                        //    //        //            sensorVersion = Encoding.ASCII.GetString(result.data);
-                        //    //        //            byte majorVersion = (byte)result.data[1];
-                        //    //        //            byte minorVersion = (byte)result.data[3];
-                        //    //        //            Logger.circularBuffer.Add("Aranet Version: " + sensorVersion);
-                        //    //        //            if (majorVersion == 0)
-                        //    //        //            {
-                        //    //        //                outdatedVersion = true;
-                        //    //        //            }
-                        //    //        //            else if (majorVersion == 1 && minorVersion <= 2)
-                        //    //        //            {
-                        //    //        //                outdatedVersion = true;
-                        //    //        //            }
-                        //    //        //            else outdatedVersion = false;//TODO change back to false, TRUE just for testing as no device with outdata 
-                        //    //        //        }
-                        //    //        //        else
-                        //    //        //        {
-                        //    //        //            Logger.circularBuffer.Add($"got resultcode {result.resultCode} instead of 0 trying to read versionCharacteristic | " + DateTime.Now);
-                        //    //        //        }
-                        //    //        //    }                                        
-                        //    //        //}
-                        //    //        //catch (Exception e)
-                        //    //        //{
-                        //    //        //    Logger.circularBuffer.Add($"exception raised while trying to read versionCharacteristic: {e} | " + DateTime.Now);
-                        //    //        //}
-                        //    //    }
-                        //    //}
-                        //}
+                        
 
                         Logger.WriteToLog($"trying to read characteristics from {device.Name}", false);
                         
@@ -878,7 +833,6 @@ namespace IndoorCO2App_Multiplatform
                                 sensorUpdateInterval = (data[10] << 8) | (data[9] & 0xFF);
                                 Logger.WriteToLog($"current CO Reading from {device.Name}: {currentCO2Reading}", false);
                             }
-
 
                             else
                             {
@@ -1131,15 +1085,40 @@ namespace IndoorCO2App_Multiplatform
                     }
                     else if (monitorType == CO2MonitorType.AirSpot)
                     {
-                        sensorUpdateInterval = 60; //TODO => read actual interval!
-                        if (NotifyCharacteristicAlreadyHookedUp) return;
-                        airspotCO2NotifyCharacteristic = await service.GetCharacteristicAsync(airspotNotifyCharacteristic);
-                        airspotCO2NotifyCharacteristic.ValueUpdated -= OnAirspotCO2CharacteristicValueChanged; //if already had been subscribed - not sure if that works?
-                        airspotCO2NotifyCharacteristic.ValueUpdated += OnAirspotCO2CharacteristicValueChanged;
+
+
+                        //FF AA 0B 01 00 A7 => Get Current Page => used as starting point, then request backwards
+                        //FF AA 0C 02 03 E8 FA => Get Page 1000 ( 03 E8 ) => FA is checksum
+                        //
+
+                        byte[] requestCurrentPageCmd = ReadCurrentAirspotPageCommand();
+                        int currentPage = -1;
+
+                        ICharacteristic airSpotCharacteristicWriter = await service.GetCharacteristicAsync(airspotWriteCharacteristicGUID);
+
+                        if (airSpotCharacteristicWriter == null)
+                        {
+                            Logger.WriteToLog($"airSpotCharacteristicWriter is null", false);
+                            return;
+                        }
+                        int response = await airSpotCharacteristicWriter.WriteAsync(requestCurrentPageCmd);
+
+                        Console.WriteLine(response);
+
+
+
+                        //sensorUpdateInterval = 60; //TODO => read actual interval!
+                        //if (NotifyCharacteristicAlreadyHookedUp) return;
+                        //airspotCO2NotifyCharacteristic = await service.GetCharacteristicAsync(airspotNotifyCharacteristic);
+                        //airspotCO2NotifyCharacteristic.ValueUpdated -= OnAirspotCO2CharacteristicValueChanged; //if already had been subscribed - not sure if that works?
+                        //airspotCO2NotifyCharacteristic.ValueUpdated += OnAirspotCO2CharacteristicValueChanged;
 
                         //await characteristic.StartUpdatesAsync();
-                        await airspotCO2NotifyCharacteristic.StartUpdatesAsync();
-                        NotifyCharacteristicAlreadyHookedUp = true;
+                        //await airspotCO2NotifyCharacteristic.StartUpdatesAsync();
+                        //NotifyCharacteristicAlreadyHookedUp = true;
+
+                        //TODO write to characteristics to get all the data from the history
+
 
                     }
 
@@ -1152,6 +1131,15 @@ namespace IndoorCO2App_Multiplatform
                         //    Console.WriteLine(r.ToString());
                         //}
                         //await adapter.DisconnectDeviceAsync(discoveredDevices[0]);
+                    }
+
+                    if(currentCO2Reading > 0 && currentCO2Reading <380)
+                    {
+                        lowCO2ValueDetected = true;
+                    }
+                    else
+                    { 
+                        lowCO2ValueDetected = false; 
                     }
                 }
             }
@@ -1181,6 +1169,7 @@ namespace IndoorCO2App_Multiplatform
                 //System.Diagnostics.Debug.WriteLine("Sent data: " + BitConverter.ToString(data));
                 return memoryStream.ToArray();
             }
+            
         }
 
         public static byte[] AirvalentSetHistoryPointerMsgData() //sets it to the last but one data array (the newest already completely filled one)
@@ -1241,35 +1230,36 @@ namespace IndoorCO2App_Multiplatform
 
         public static void OnAirspotCO2CharacteristicValueChanged(object sender, CharacteristicUpdatedEventArgs e)
         {
-            if(sender == null) return;
-            var data = e.Characteristic.Value;
-            if(data == null) return;
-            if (data.Length != 7) return;
-            Logger.WriteToLog("Airspot|Data: " + ByteArrayToString(data), false);
-            byte fb = data[4];
-            byte sb = data[5];
-            byte[] c = new byte[] { sb, fb }; //might be the other way around?
-            ushort CO2LiveValue = BitConverter.ToUInt16(c, 0);
-            if (CO2LiveValue < 100 || CO2LiveValue >= 10000) //sanity check
-            {
-                return;
-            }
-            currentCO2Reading = CO2LiveValue;
-            DateTime currentTime = DateTime.Now;
-            if(timeOfLastNotifyUpdate.Year < currentTime.Year)
-            {
-                timeOfLastNotifyUpdate = currentTime;
-            }
-
-            if (isRecording)
-            {
-                if (currentTime - timeOfLastNotifyUpdate >= TimeSpan.FromSeconds(refreshTime - 1))
-                {
-                    int t = recordedData.Count;
-                    recordedData.Add(new SensorData(CO2LiveValue, t,DateTime.Now));
-                    timeOfLastNotifyUpdate = currentTime;
-                }            
-            }
+            //Outdated and wont be used anymore, we now read the history of the airspot like we do for airvalent and aranet
+            //if(sender == null) return;
+            //var data = e.Characteristic.Value;
+            //if(data == null) return;
+            //if (data.Length != 7) return;
+            //Logger.WriteToLog("Airspot|Data: " + ByteArrayToString(data), false);
+            //byte fb = data[4];
+            //byte sb = data[5];
+            //byte[] c = new byte[] { sb, fb }; //might be the other way around?
+            //ushort CO2LiveValue = BitConverter.ToUInt16(c, 0);
+            //if (CO2LiveValue < 100 || CO2LiveValue >= 10000) //sanity check
+            //{
+            //    return;
+            //}
+            //currentCO2Reading = CO2LiveValue;
+            //DateTime currentTime = DateTime.Now;
+            //if(timeOfLastNotifyUpdate.Year < currentTime.Year)
+            //{
+            //    timeOfLastNotifyUpdate = currentTime;
+            //}
+            //
+            //if (isRecording)
+            //{
+            //    if (currentTime - timeOfLastNotifyUpdate >= TimeSpan.FromSeconds(refreshTime - 1))
+            //    {
+            //        int t = recordedData.Count;
+            //        recordedData.Add(new SensorData(CO2LiveValue, t,DateTime.Now));
+            //        timeOfLastNotifyUpdate = currentTime;
+            //    }            
+            //}
 
 
         }
@@ -1331,6 +1321,62 @@ namespace IndoorCO2App_Multiplatform
         {
             if (isScanning && btCancellationTokenSource != null && btCancellationTokenSource.IsCancellationRequested == false)
                 btCancellationTokenSource.Cancel();
+        }
+
+        public static byte CalculateAirSpotChecksum(byte[] commandWithoutChecksum)
+        {
+            int sum = 0;
+            foreach (var b in commandWithoutChecksum)
+            {
+                sum += b;
+            }
+            return (byte)(sum & 0xFF);
+        }
+
+        public static byte[] CreateAirSpotReadPageCommand(ushort pageNumber)
+        {
+            byte header1 = 0xFF;
+            byte header2 = 0xAA;
+            byte cmd = 0x0C;
+            byte length = 0x02;
+
+            byte highByte = (byte)(pageNumber >> 8);   // 0x03
+            byte lowByte = (byte)(pageNumber & 0xFF);  // 0xE8
+
+            var command = new List<byte> { header1, header2, cmd, length, highByte, lowByte };
+
+            byte checksum = CalculateAirSpotChecksum(command.ToArray());
+            command.Add(checksum);
+
+            return command.ToArray();
+        }
+
+        public static byte[] ReadCurrentAirspotPageCommand()
+        {
+            byte header1 = 0xFF;
+            byte header2 = 0xAA;
+            byte cmd = 0x0B;
+            byte length = 0x01;
+            byte payload = 0x00;
+
+            var command = new List<byte> { header1, header2, cmd, length, payload };
+
+            byte checksum = CalculateAirSpotChecksum(command.ToArray());
+            command.Add(checksum);
+
+            return command.ToArray();
+        }
+
+        public static bool IsValidAirSpotResponseChecksum(byte[] response)
+        {
+            if (response == null || response.Length < 2)
+                return false;
+
+            int lengthWithoutChecksum = response.Length - 1;
+            byte calculated = CalculateAirSpotChecksum(response.Take(lengthWithoutChecksum).ToArray());
+            byte received = response[^1]; // Last byte
+
+            return calculated == received;
         }
 
         private static async void AuthenticateWithAirCodaAsync(IDevice airCodaDevice)

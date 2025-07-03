@@ -376,6 +376,7 @@ namespace IndoorCO2App_Multiplatform
                 "(" +
                 $"nwr(around:{rString},{latString},{lonString})[office=employment_agency];" +
                 $"nwr(around:{rString},{latString},{lonString})[office=lawyer];" +
+                $"nwr(around:{rString},{latString},{lonString})[office=educational_institution];" +
                 $"nwr(around:{rString},{latString},{lonString})[office=government];" +
                 $"nwr(around:{rString},{latString},{lonString})[office=political_party];" +
                 $"nwr(around:{rString},{latString},{lonString})[shop];" +
@@ -442,6 +443,7 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[amenity=bank];" +
                 $"nwr(around:{rString},{latString},{lonString})[healthcare];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=museum];" +
+                $"nwr(around:{rString},{latString},{lonString})[tourism=attraction];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=zoo];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=gallery];" +
                 $"nwr(around:{rString},{latString},{lonString})[tourism=hotel];" +

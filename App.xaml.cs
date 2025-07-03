@@ -1,4 +1,6 @@
 ﻿
+using IndoorCO2App_Android;
+
 namespace IndoorCO2App_Multiplatform
 {
     public partial class App : Application
@@ -22,6 +24,10 @@ namespace IndoorCO2App_Multiplatform
             
 
             InitializeComponent();
+
+            var resourceManager = AppStrings.ResourceManager; // Replace with your actual resx class
+            LocalisationResourceManager.Instance.Init(resourceManager);
+
             Initialize();
 #if ANDROID
             MainPage = new AppShell();

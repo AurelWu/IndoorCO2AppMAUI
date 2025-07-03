@@ -547,13 +547,49 @@ namespace IndoorCO2App_Multiplatform
                     if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
-                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
+                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n + | id:" + BluetoothManager.deviceName;
+                        if(BluetoothManager.lowCO2ValueDetected==true)
+                        {
+                            _DeviceLabel.FormattedText = new FormattedString
+                            {
+                                Spans =
+                                {
+                                    new Span { Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " " },
+                                    new Span
+                                    {
+                                        Text = "| low CO2 Value! Sensor might need recalibration ",
+                                        TextColor = Colors.OrangeRed, // Pick your desired warning color
+                                        FontAttributes = FontAttributes.Bold
+                                    },
+                                    new Span { Text = "| Update in: " + BluetoothManager.timeToNextUpdate + "s" },
+                                    new Span { Text = "\r\n | id: " + BluetoothManager.deviceName }
+                                }
+                            };
+                        }
                     }
                     else
                     {
                         var secondsSinceLastUpdate = DateTime.Now - BluetoothManager.timeOfLastNotifyUpdate;
                         _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
+                        if (BluetoothManager.lowCO2ValueDetected == true)
+                        {
+                            _DeviceLabel.FormattedText = new FormattedString
+                            {
+                                Spans =
+                                {
+                                    new Span { Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " " },
+                                    new Span
+                                    {
+                                        Text = "| low CO2 Value! Sensor might need recalibration ",
+                                        TextColor = Colors.OrangeRed, // Pick your desired warning color
+                                        FontAttributes = FontAttributes.Bold
+                                    },
+                                    new Span { Text = "| Update in: " + BluetoothManager.timeToNextUpdate + "s" },
+                                    new Span { Text = "\r\n | id: " + BluetoothManager.deviceName }
+                                }
+                            };
+                        }
                     }
 
                     if (BluetoothManager.lastAttemptFailed)
@@ -561,7 +597,12 @@ namespace IndoorCO2App_Multiplatform
                         _DeviceLabel.Text += " | previous update failed";
                     }
                 }
-                
+                else if(BluetoothManager.currentCO2Reading != 0 && monitorType == CO2MonitorType.AirSpot)
+                {
+                    _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
+                }
+
+
                 else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
                 {
                     _DeviceLabel.Text = "Sensor found, but 'Smart Home Integration' is disabled.\r\nEnable it using the offical Aranet app ⓘ";
