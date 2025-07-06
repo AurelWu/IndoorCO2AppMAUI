@@ -547,7 +547,7 @@ namespace IndoorCO2App_Multiplatform
                     if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
-                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n + | id:" + BluetoothManager.deviceName;
+                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n  | id:" + BluetoothManager.deviceName;
                         if(BluetoothManager.lowCO2ValueDetected==true)
                         {
                             _DeviceLabel.FormattedText = new FormattedString

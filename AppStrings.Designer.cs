@@ -61,6 +61,24 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Bluetooth not enabled | ähnelt.
+        /// </summary>
+        internal static string BluetoothNotEnabled {
+            get {
+                return ResourceManager.GetString("BluetoothNotEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Bluetooth permission not granted, press red button above ähnelt.
+        /// </summary>
+        internal static string BluetoothPermissionMissing {
+            get {
+                return ResourceManager.GetString("BluetoothPermissionMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Cancel Recording ähnelt.
         /// </summary>
         internal static string CancelRecordingButton {
@@ -106,7 +124,7 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Data Protection Info and Imprint ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Data Protection Info and Imprint 🔗 ähnelt.
         /// </summary>
         internal static string DataProtectionAndImprintButton {
             get {
@@ -142,11 +160,56 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sensor found, but &apos;Smart Home Integration&apos; is disabled.\r\nEnable it using the offical Aranet app ⓘ ähnelt.
+        /// </summary>
+        internal static string DisabledSmarthomeIntegration {
+            get {
+                return ResourceManager.GetString("DisabledSmarthomeIntegration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die GPS enabled &amp; location permissions granted. Getting location info. Might take a minute ähnelt.
+        /// </summary>
+        internal static string DuringFirstGPSLocationUpdate {
+            get {
+                return ResourceManager.GetString("DuringFirstGPSLocationUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Filter Device by Name: ähnelt.
         /// </summary>
         internal static string FilterDeviceByNameLabel {
             get {
                 return ResourceManager.GetString("FilterDeviceByNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die initiating first update in ähnelt.
+        /// </summary>
+        internal static string FirstUpdate {
+            get {
+                return ResourceManager.GetString("FirstUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die GPS &amp; Bluetooth permissions and status okay ähnelt.
+        /// </summary>
+        internal static string GPSAndBTOkay {
+            get {
+                return ResourceManager.GetString("GPSAndBTOkay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die GPS not enabled | ähnelt.
+        /// </summary>
+        internal static string GPSNotEnabled {
+            get {
+                return ResourceManager.GetString("GPSNotEnabled", resourceCulture);
             }
         }
         
@@ -160,11 +223,65 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Location permission missing | ähnelt.
+        /// </summary>
+        internal static string LocationPermissionMissing {
+            get {
+                return ResourceManager.GetString("LocationPermissionMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Update locations request timed out, try again ähnelt.
+        /// </summary>
+        internal static string LocationSearchTimeout {
+            get {
+                return ResourceManager.GetString("LocationSearchTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Locations Found ähnelt.
+        /// </summary>
+        internal static string LocationsFoundStatus {
+            get {
+                return ResourceManager.GetString("LocationsFoundStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die | low CO2 Value! Sensor might need recalibration  ähnelt.
+        /// </summary>
+        internal static string LowCO2Levels {
+            get {
+                return ResourceManager.GetString("LowCO2Levels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die select your CO2-Monitor ähnelt.
         /// </summary>
         internal static string MonitorSelectionLabel {
             get {
                 return ResourceManager.GetString("MonitorSelectionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die No locations in range ähnelt.
+        /// </summary>
+        internal static string NoLocationsInRange {
+            get {
+                return ResourceManager.GetString("NoLocationsInRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die No location selected ähnelt.
+        /// </summary>
+        internal static string NoSelectedLocation {
+            get {
+                return ResourceManager.GetString("NoSelectedLocation", resourceCulture);
             }
         }
         
@@ -178,6 +295,15 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die No transit origin selected ähnelt.
+        /// </summary>
+        internal static string NoTransitOriginSelected {
+            get {
+                return ResourceManager.GetString("NoTransitOriginSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Open Doors / Windows ähnelt.
         /// </summary>
         internal static string OpenDoorsWindowsCheckbox {
@@ -187,11 +313,29 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Open Map in Browser ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Open Map in Browser 🔗 ähnelt.
         /// </summary>
         internal static string OpenMapInBrowserButton {
             get {
                 return ResourceManager.GetString("OpenMapInBrowserButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sensor found, but the firmware is outdated.\r\nUpdate it using the official Aranet app ⓘ ähnelt.
+        /// </summary>
+        internal static string OutDatedFirmware {
+            get {
+                return ResourceManager.GetString("OutDatedFirmware", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die  | previous update failed ähnelt.
+        /// </summary>
+        internal static string PreviousUpdateFailed {
+            get {
+                return ResourceManager.GetString("PreviousUpdateFailed", resourceCulture);
             }
         }
         
@@ -214,7 +358,7 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die User Manual ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die User Manual 🔗 ähnelt.
         /// </summary>
         internal static string QuickGuidePopupLinkManual {
             get {
@@ -295,6 +439,15 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Location:  ähnelt.
+        /// </summary>
+        internal static string RecordedDataLabel {
+            get {
+                return ResourceManager.GetString("RecordedDataLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Search Range ähnelt.
         /// </summary>
         internal static string SearchRangeLabel {
@@ -304,7 +457,7 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Show on map ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Show on map ▼ ähnelt.
         /// </summary>
         internal static string ShowOnMapFoldOut {
             get {
@@ -331,6 +484,15 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Start Transit Recording ähnelt.
+        /// </summary>
+        internal static string StartTransitRecordingButton {
+            get {
+                return ResourceManager.GetString("StartTransitRecordingButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Submit data (needs 5 data points) ähnelt.
         /// </summary>
         internal static string SubmitRecordingButtonNotEnoughData {
@@ -345,6 +507,69 @@ namespace IndoorCO2App_Android {
         internal static string SubmitRecordingButtonOkay {
             get {
                 return ResourceManager.GetString("SubmitRecordingButtonOkay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Transit origin:  ähnelt.
+        /// </summary>
+        internal static string TransitOrigin {
+            get {
+                return ResourceManager.GetString("TransitOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die All ähnelt.
+        /// </summary>
+        internal static string TypeOfTransitAll {
+            get {
+                return ResourceManager.GetString("TypeOfTransitAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Bus ähnelt.
+        /// </summary>
+        internal static string TypeOfTransitBus {
+            get {
+                return ResourceManager.GetString("TypeOfTransitBus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Lightrail ähnelt.
+        /// </summary>
+        internal static string TypeOfTransitLightrail {
+            get {
+                return ResourceManager.GetString("TypeOfTransitLightrail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Subway ähnelt.
+        /// </summary>
+        internal static string TypeOfTransitSubway {
+            get {
+                return ResourceManager.GetString("TypeOfTransitSubway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Train ähnelt.
+        /// </summary>
+        internal static string TypeOfTransitTrain {
+            get {
+                return ResourceManager.GetString("TypeOfTransitTrain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Tram ähnelt.
+        /// </summary>
+        internal static string TypeOfTransitTram {
+            get {
+                return ResourceManager.GetString("TypeOfTransitTram", resourceCulture);
             }
         }
         
@@ -367,6 +592,15 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die update failed - next attempt in:  ähnelt.
+        /// </summary>
+        internal static string UpdateFailedNextIn {
+            get {
+                return ResourceManager.GetString("UpdateFailedNextIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Update Locations ähnelt.
         /// </summary>
         internal static string UpdateLocationsButton {
@@ -376,7 +610,7 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Presse &apos;Update Locations&apos; to get nearby locations ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Press &apos;Update Locations&apos; to get nearby locations ähnelt.
         /// </summary>
         internal static string UpdateLocationsButtonDefaultInfoLabel {
             get {
@@ -403,11 +637,29 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Press &apos;Update Locations&apos; to get nearby locations ähnelt.
+        /// </summary>
+        internal static string UpdateLocationUsageInfo {
+            get {
+                return ResourceManager.GetString("UpdateLocationUsageInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Ventilation System ähnelt.
         /// </summary>
         internal static string VentilationSystemCheckBox {
             get {
                 return ResourceManager.GetString("VentilationSystemCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die waiting for first data from sensor ähnelt.
+        /// </summary>
+        internal static string WaitingForFirstUpdate {
+            get {
+                return ResourceManager.GetString("WaitingForFirstUpdate", resourceCulture);
             }
         }
     }

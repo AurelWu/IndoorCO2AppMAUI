@@ -21,12 +21,12 @@ namespace IndoorCO2App_Multiplatform
                 clickedButton.BackgroundColor = Color.Parse("#512BD4");
                 clickedButton.TextColor = Colors.White;
 
-                if (clickedButton.Text == "Buildings")
+                if (clickedButton.ClassId == "buildingModeButton")
                 {
                     ChangeToStandardUI(true);
                     UpdateUI();
                 }
-                else if (clickedButton.Text == "Transit")
+                else if (clickedButton.ClassId == "transitModeButton")
                 {
                     ChangeToTransportSelectionUI(true);
                     UpdateUI();

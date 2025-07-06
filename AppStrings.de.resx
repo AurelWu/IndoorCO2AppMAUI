@@ -118,112 +118,95 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CancelRecordingButton" xml:space="preserve">
-    <value>Cancel Recording</value>
+    <value>Aufnahme abbrechen</value>
   </data>
   <data name="CancelRecordingConfirmationBody" xml:space="preserve">
-    <value>Are you sure you want to cancel the recording?</value>
+    <value>Sind sie sicher, dass sie die Aufnahme abbrechen möchten?</value>
   </data>
   <data name="CancelRecordingConfirmationHeadline" xml:space="preserve">
-    <value>Cancel Recording</value>
+    <value>Aufnahme abbrechen</value>
   </data>
   <data name="CopyCrashLogToClipBoardButton" xml:space="preserve">
-    <value>Copy Crash Log to Clipboard</value>
+    <value>Crash Log in Zwischenablage kopieren</value>
   </data>
   <data name="CopyDebugLogToClipBoardButton" xml:space="preserve">
-    <value>Copy Debug Log to Clipboard</value>
+    <value>Debug Log in Zwischenablage kopieren</value>
   </data>
   <data name="DataProtectionAndImprintButton" xml:space="preserve">
-    <value>Data Protection Info and Imprint 🔗</value>
+    <value>Datenschutz und Impressum 🔗</value>
   </data>
   <data name="DeletePreviousSubmissionButton" xml:space="preserve">
-    <value>Delete Previous Submission</value>
+    <value>Vorige Aufzeichnung löschen</value>
   </data>
   <data name="DeviceInfoLabel_CO2levels" xml:space="preserve">
-    <value>CO2 Levels:</value>
+    <value>CO2 Wert:</value>
   </data>
   <data name="DeviceInfoLabel_UpdateIn" xml:space="preserve">
-    <value>Update in:</value>
+    <value>Aktualisierung in:</value>
   </data>
   <data name="FilterDeviceByNameLabel" xml:space="preserve">
-    <value>Filter Device by Name:</value>
+    <value>CO2-Monitor nach Namen filtern</value>
   </data>
   <data name="Include15mBeforeRecordingToggle" xml:space="preserve">
-    <value>include 15m before Recording</value>
+    <value>15m vor Aufnahmebeginn einbeziehen</value>
   </data>
   <data name="MonitorSelectionLabel" xml:space="preserve">
-    <value>select your CO2-Monitor</value>
+    <value>CO2-Monitortyp auswählen</value>
   </data>
   <data name="NotesLabel" xml:space="preserve">
-    <value>Notes:</value>
+    <value>Notizen:</value>
   </data>
   <data name="OpenDoorsWindowsCheckbox" xml:space="preserve">
-    <value>Open Doors / Windows</value>
+    <value>Offene Türen / Fenster</value>
   </data>
   <data name="OpenMapInBrowserButton" xml:space="preserve">
-    <value>Open Map in Browser 🔗</value>
+    <value>Karte im Browser öffen 🔗</value>
   </data>
   <data name="QuickGuidePopupCloseButton" xml:space="preserve">
-    <value>Close</value>
+    <value>Schließen</value>
   </data>
   <data name="QuickGuidePopupHeadline" xml:space="preserve">
-    <value>Quick Guide</value>
+    <value>Kurzanleitung</value>
   </data>
   <data name="QuickGuidePopupLinkManual" xml:space="preserve">
-    <value>User Manual 🔗</value>
+    <value>Nutzerhandbuch 🔗</value>
   </data>
-  <data name="QuickGuidePopupPart1" xml:space="preserve">
-    <value>1) if not all icons on the top are green, follow the guidance texts below them or read the manual linked at the bottom</value>
-  </data>
-  <data name="QuickGuidePopupPart2" xml:space="preserve">
-    <value>2) Select your Sensor Type</value>
-  </data>
-  <data name="QuickGuidePopupPart3" xml:space="preserve">
-    <value>3) Press 'Update Locations'</value>
-  </data>
-  <data name="QuickGuidePopupPart4" xml:space="preserve">
-    <value>4) Select the Location you want to measure from the result list</value>
-  </data>
-  <data name="QuickGuidePopupPart5" xml:space="preserve">
-    <value>5) Press 'Start Recording'</value>
-  </data>
-  <data name="QuickGuidePopupPart6" xml:space="preserve">
-    <value>6) Record for at least 5 Minutes (if your sensor is not set to 1 minute update interval it needs to be longer)</value>
-  </data>
-  <data name="QuickGuidePopupPart7" xml:space="preserve">
-    <value>7) Press 'Submit Data'</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="QuickGuidePopupPart2" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="QuickGuideUserManualButton" xml:space="preserve">
-    <value>Quick Guide / User Manual</value>
+    <value>Kurzanleitung / Handbuch</value>
   </data>
   <data name="RecordedDataLabel" xml:space="preserve">
-    <value>Location: </value>
+    <value>Messort:</value>
   </data>
   <data name="SearchRangeLabel" xml:space="preserve">
-    <value>Search Range</value>
+    <value>Suchradius</value>
   </data>
   <data name="ShowOnMapFoldOut" xml:space="preserve">
-    <value>Show on map ▼</value>
+    <value>Kartendarstellung</value>
   </data>
   <data name="SliderInfoLabel" xml:space="preserve">
-    <value>Use Sliders to trim start &amp; end if required</value>
+    <value>Regler nutzen um Beginn &amp; Ende der Aufzeichnung zu kappen</value>
   </data>
   <data name="StartRecordingButton" xml:space="preserve">
-    <value>Start Recording</value>
+    <value>Aufnahme starten</value>
   </data>
   <data name="StartTransitRecordingButton" xml:space="preserve">
-    <value>Start Transit Recording</value>
+    <value>Aufnahme starten</value>
   </data>
   <data name="SubmitRecordingButtonNotEnoughData" xml:space="preserve">
-    <value>Submit data (needs 5 data points)</value>
+    <value>Daten übermitteln (5 Datenpunkte benötigt)</value>
   </data>
   <data name="SubmitRecordingButtonOkay" xml:space="preserve">
-    <value>Submit data</value>
+    <value>Daten übermitteln</value>
   </data>
   <data name="TypeOfTransitTrain" xml:space="preserve">
-    <value>Train</value>
+    <value>Zug</value>
   </data>
   <data name="TypeOfTransitAll" xml:space="preserve">
-    <value>All</value>
+    <value>Alle</value>
   </data>
   <data name="TypeOfTransitBus" xml:space="preserve">
     <value>Bus</value>
@@ -232,97 +215,90 @@
     <value>Tram</value>
   </data>
   <data name="TypeSelectionButton_Buildings" xml:space="preserve">
-    <value>Buildings</value>
+    <value>Gebäude</value>
   </data>
   <data name="TypeSelectionButton_Transit" xml:space="preserve">
-    <value>Transit</value>
+    <value>Verkehrsmittel</value>
   </data>
   <data name="UpdateLocationsButton" xml:space="preserve">
-    <value>Update Locations</value>
-    <comment>Update Locations</comment>
+    <value>Ortssuche</value>
   </data>
   <data name="UpdateLocationsButtonDefaultInfoLabel" xml:space="preserve">
-    <value>Press 'Update Locations' to get nearby locations</value>
+    <value>"Ortssuche" betätigen um naheliegende messbare Orte zu finden</value>
   </data>
   <data name="UpdateLocationsButtonFoundLocationsLabel" xml:space="preserve">
-    <value>Select location:</value>
+    <value>Messort Auswählen</value>
   </data>
   <data name="UpdateLocationsButtonSearchingInfoLabel" xml:space="preserve">
-    <value>currently retrieving nearby locations</value>
+    <value>Ortssuche laufend</value>
   </data>
   <data name="VentilationSystemCheckBox" xml:space="preserve">
-    <value>Ventilation System</value>
+    <value>Lüftungsanlage</value>
   </data>
   <data name="TypeOfTransitLightrail" xml:space="preserve">
     <value>Lightrail</value>
   </data>
   <data name="TypeOfTransitSubway" xml:space="preserve">
-    <value>Subway</value>
+    <value>U-Bahn</value>
   </data>
   <data name="GPSNotEnabled" xml:space="preserve">
-    <value>GPS not enabled |</value>
+    <value>GPS ist nicht aktiviert</value>
   </data>
   <data name="LocationPermissionMissing" xml:space="preserve">
-    <value>Location permission missing |</value>
+    <value>Fehlende Ortsberechtigungen |</value>
   </data>
   <data name="BluetoothNotEnabled" xml:space="preserve">
-    <value>Bluetooth not enabled |</value>
+    <value>Bluetooth nicht eingeschalten</value>
   </data>
   <data name="BluetoothPermissionMissing" xml:space="preserve">
-    <value>Bluetooth permission not granted, press red button above</value>
+    <value>Bluetooth Berechtigungen nicht erteilt, drücken sie den roten Button in der oberen Leiste</value>
   </data>
   <data name="GPSAndBTOkay" xml:space="preserve">
-    <value>GPS &amp; Bluetooth permissions and status okay</value>
+    <value>GPS &amp; Bluetooth Berechtigungen erteilt und aktiv</value>
   </data>
   <data name="DuringFirstGPSLocationUpdate" xml:space="preserve">
-    <value>GPS enabled &amp; location permissions granted. Getting location info. Might take a minute</value>
+    <value>GPS aktiviert &amp; Ortsberechtigungen erteilt. GPS-Koordinaten werden bestimmt, dies kann etwas dauern.</value>
   </data>
   <data name="OutDatedFirmware" xml:space="preserve">
-    <value>Sensor found, but the firmware is outdated.\r\nUpdate it using the official Aranet app ⓘ</value>
+    <value>Sensor gefunden, aber die firmware is veraltet.\r\nUpdate via offizieller Aranet App erforderlich ⓘ</value>
   </data>
   <data name="DisabledSmarthomeIntegration" xml:space="preserve">
-    <value>Sensor found, but 'Smart Home Integration' is disabled.\r\nEnable it using the offical Aranet app ⓘ</value>
+    <value>Sensor gefunden - 'Smart Home Integration' ist deaktiviert.\r\nAktivierung mit der offiziellen Aranet App erforderlichⓘ</value>
   </data>
   <data name="LowCO2Levels" xml:space="preserve">
-    <value>| low CO2 Value! Sensor might need recalibration </value>
+    <value>| niedriger CO2-Wert! Sensor muss eventuell neu kalibriert werden</value>
   </data>
   <data name="FirstUpdate" xml:space="preserve">
-    <value>initiating first update in</value>
-    <comment>[followed by amount of seconds]</comment>
+    <value>Erstes Update wird angefordert in: </value>
   </data>
   <data name="WaitingForFirstUpdate" xml:space="preserve">
-    <value>waiting for first data from sensor</value>
+    <value>erste Sensorwerte werden abgefragt</value>
   </data>
   <data name="PreviousUpdateFailed" xml:space="preserve">
-    <value> | previous update failed</value>
+    <value>| vorige Aktualisierung fehlgeschlagen</value>
   </data>
   <data name="UpdateFailedNextIn" xml:space="preserve">
-    <value>update failed - next attempt in: </value>
-    <comment>[followed by time til next update in seconds]</comment>
+    <value>Aktualisierung fehlgeschlagen - nächster Versuch in: </value>
   </data>
   <data name="NoSelectedLocation" xml:space="preserve">
-    <value>No location selected</value>
+    <value>Kein Ort ausgewählt</value>
   </data>
   <data name="TransitOrigin" xml:space="preserve">
-    <value>Transit origin: </value>
-    <comment>[the station/stop where the user entered the moyen de transport</comment>
+    <value>Start-Haltestelle</value>
   </data>
   <data name="NoTransitOriginSelected" xml:space="preserve">
-    <value>No transit origin selected</value>
-    <comment>shows when the user has not selected a station/stop yet</comment>
+    <value>Kein Start-Haltestelle ausgewählt</value>
   </data>
   <data name="UpdateLocationUsageInfo" xml:space="preserve">
-    <value>Press 'Update Locations' to get nearby locations</value>
-    <comment>shown below the Update Locations button if it hasnt been used yet</comment>
+    <value> 'Ortssuche' betätigen um messbare Orte in der Umgebung zu finden</value>
   </data>
   <data name="NoLocationsInRange" xml:space="preserve">
-    <value>No locations in range</value>
-    <comment>shown if the location search finds no results within range</comment>
+    <value>Keine messbaren Orte in Reichweite</value>
   </data>
   <data name="LocationsFoundStatus" xml:space="preserve">
-    <value>Locations Found</value>
+    <value>Ortssuche erfolgreich</value>
   </data>
   <data name="LocationSearchTimeout" xml:space="preserve">
-    <value>Update locations request timed out, try again</value>
+    <value>Zeitüberschreitung bei der Ortssuche, bitte erneut versuchen</value>
   </data>
 </root>

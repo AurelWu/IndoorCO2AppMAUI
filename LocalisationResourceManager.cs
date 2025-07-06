@@ -13,7 +13,7 @@ namespace IndoorCO2App_Multiplatform
 
         public static LocalisationResourceManager Instance => _instance ??= new LocalisationResourceManager();
 
-        private LocalisationResourceManager() { }
+        public LocalisationResourceManager() { }
 
         public void Init(ResourceManager resourceManager)
         {

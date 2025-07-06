@@ -1,13 +1,37 @@
 ﻿
 using IndoorCO2App_Android;
+using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 
 namespace IndoorCO2App_Multiplatform
 {
     public partial class App : Application
     {
+        public static void SetCulture(string cultureString)
+        {
+            try
+            {
+                var culture = new CultureInfo(cultureString);
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+
+                Thread.CurrentThread.CurrentUICulture = culture;
+                Thread.CurrentThread.CurrentCulture = culture;
+                LocalisationResourceManager.Instance.SetCulture(culture);
+            }
+            catch (CultureNotFoundException)
+            {
+                // Fallback to neutral (invariant) culture
+                var fallback = CultureInfo.InvariantCulture;
+                CultureInfo.DefaultThreadCurrentUICulture = fallback;
+                CultureInfo.DefaultThreadCurrentCulture = fallback;
+                LocalisationResourceManager.Instance.SetCulture(fallback);
+            }
+        }
+
         public App()
         {
-
+          
             //currently it uses Syncfusion for the Rangeslider, which requires a license which is free as long as your revenue is below some millions
             //however including the serial key directly is not allowed so the file containing the key is not included. 
             //You need to either create your own account and your own key or replace the RangeSlider control.
@@ -25,9 +49,14 @@ namespace IndoorCO2App_Multiplatform
 
             InitializeComponent();
 
-            var resourceManager = AppStrings.ResourceManager; // Replace with your actual resx class
-            LocalisationResourceManager.Instance.Init(resourceManager);
+            string applang = Preferences.Get("AppLanguage","en");
 
+
+            var loc = LocalisationResourceManager.Instance;
+            loc.Init(AppStrings.ResourceManager);
+            // ✅ Im globalen ResourceDictionary registrieren
+            Current.Resources["Loc"] = loc;
+            App.SetCulture(applang);
             Initialize();
 #if ANDROID
             MainPage = new AppShell();

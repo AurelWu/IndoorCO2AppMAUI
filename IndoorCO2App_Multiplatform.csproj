@@ -224,6 +224,9 @@
 	  <Compile Update="MainPageEventHandlers\MainPage_OnCO2MonitorPickerSelectedIndexChanged.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
+	  <Compile Update="MainPageEventHandlers\MainPage_OnLanguagePickerChanged.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnCrashLogButtonClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>

@@ -8,10 +8,10 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
              x:Class="IndoorCO2App_Multiplatform.MainPage">
 
 
-        
 
 
-            <AbsoluteLayout
+
+    <AbsoluteLayout
         x:Name="MainLayout"
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand">
@@ -54,7 +54,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
                 <Button
                 x:Name="QuickGuideButtonTop"
-                Text="Quick Guide / User Manual"
+                Text="{Binding [QuickGuideUserManualButton], Source={StaticResource Loc}}"
                 SemanticProperties.Hint="Quick Guide Button"
                 Clicked="OnShowQuickGuideClicked"
                 HorizontalOptions="Center" />
@@ -64,7 +64,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 x:Name="CO2MonitorPickerStackLayout"
                 Spacing="10"
                 VerticalOptions="Start">
-                    <Label x:Name="DevicePickerLabel" Text="select your CO2-Monitor:" FontSize="14" VerticalOptions="Center" />
+                    <Label x:Name="DevicePickerLabel" Text="{Binding [MonitorSelectionLabel], Source={StaticResource Loc}}" FontSize="14" VerticalOptions="Center" />
 
                     <Border
     BackgroundColor="Transparent"
@@ -199,8 +199,8 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             </ScrollView> -->
                 <HorizontalStackLayout x:Name="ButtonBuildingTransitSelectionStackLayout" Padding="10" HorizontalOptions="Center" Spacing="10" >
 
-                    <Button x:Name="ButtonBuildingMode" Text="Buildings" Clicked="OnLocationModeClicked" TextColor="White" BackgroundColor="#512BD4" />
-                    <Button x:Name="ButtonTransitMode" Text="Transit" Clicked="OnLocationModeClicked" TextColor="Black" BackgroundColor="LightGray" />
+                    <Button x:Name="ButtonBuildingMode" ClassId="buildingModeButton"  Text="{Binding [TypeSelectionButton_Buildings], Source={StaticResource Loc}}" Clicked="OnLocationModeClicked" TextColor="White" BackgroundColor="#512BD4" />
+                    <Button x:Name="ButtonTransitMode" ClassId="transitModeButton" Text="{Binding [TypeSelectionButton_Transit], Source={StaticResource Loc}}" Clicked="OnLocationModeClicked" TextColor="Black" BackgroundColor="LightGray" />
 
                 </HorizontalStackLayout>
 
@@ -209,7 +209,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             x:Name="SearchRangeStackLayout"
             Spacing="5"
             VerticalOptions="Start">
-                    <Label Text="Search Range: " FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Center" />
+                    <Label Text="{Binding [SearchRangeLabel], Source={StaticResource Loc}}"  FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Center" />
                     <StackLayout Orientation="Horizontal" Spacing="10" >
                         <!--    <Label Text="50m" HorizontalOptions="Start" VerticalOptions="Center" />
                     <RadioButton x:Name="RadioButton50m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start"  CheckedChanged="OnRadioButtonCheckedChanged"  />
@@ -225,7 +225,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                 <Grid x:Name="LocationUpdateGrid" ColumnDefinitions="3*,1*" HorizontalOptions="Fill" ColumnSpacing="10">
                     <Button
         x:Name="UpdateLocationsButton"
-        Text="Update Locations"
+        Text="{Binding [UpdateLocationsButton], Source={StaticResource Loc}}" 
         SemanticProperties.Hint="Update Locations Button"
         Clicked="OnUpdateLocationsClicked"
         HorizontalOptions="Fill"
@@ -242,7 +242,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
                 <Label 
         x:Name="LocationInfoLabel" 
-        Text="Select Location:" 
+        Text="{Binding [UpdateLocationsButtonFoundLocationsLabel], Source={StaticResource Loc}}" 
         FontSize="14" 
         VerticalOptions="Center" />
 
@@ -293,7 +293,7 @@ StrokeThickness="{OnPlatform iOS=2, Android=0}">
                 <StackLayout>
                     <toolkit:Expander x:Name="mapViewExpander" IsExpanded="True">
                         <toolkit:Expander.Header>
-                            <Label x:Name="mapViewExpanderLabel" Text="Show on Map ▼" FontFamily="Arial" FontSize="16" />
+                            <Label x:Name="mapViewExpanderLabel" Text="{Binding [ShowOnMapFoldOut], Source={StaticResource Loc}}" FontFamily="Arial" FontSize="16" />
                         </toolkit:Expander.Header>
                         <toolkit:Expander.Content>
                             <mapsui:MapView x:Name="mapView" HeightRequest="300" WidthRequest="400"/>
@@ -381,12 +381,12 @@ BackgroundColor="Transparent" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="ButtonAll" Text="All" Clicked="OnTransitFilterClicked" TextColor="White" BackgroundColor="#512BD4" Grid.Row="0" Grid.Column="0" />
-                    <Button x:Name="ButtonBus" Text="Bus" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" />
-                    <Button x:Name="ButtonTram" Text="Tram" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" />
-                    <Button x:Name="ButtonSubway" Text="Subway" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="0" />
-                    <Button x:Name="ButtonLightRail" Text="Lightrail" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" />
-                    <Button x:Name="ButtonTrain" Text="Train" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" />
+                    <Button x:Name="ButtonAll" Text="{Binding [TypeOfTransitAll], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="White" BackgroundColor="#512BD4" Grid.Row="0" Grid.Column="0" />
+                    <Button x:Name="ButtonBus" Text="{Binding [TypeOfTransitBus], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" />
+                    <Button x:Name="ButtonTram" Text="{Binding [TypeOfTransitTram], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" />
+                    <Button x:Name="ButtonSubway" Text="{Binding [TypeOfTransitSubway], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="0" />
+                    <Button x:Name="ButtonLightRail" Text="{Binding [TypeOfTransitLightrail], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" />
+                    <Button x:Name="ButtonTrain" Text="{Binding [TypeOfTransitTrain], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" />
                 </Grid>
 
 
@@ -484,7 +484,7 @@ Padding="0">
 
                 <Button
                 x:Name="StartRecordingButton"
-                Text="Start Recording"
+                Text="{Binding [StartRecordingButton], Source={StaticResource Loc}}"
                 SemanticProperties.Hint="Start Recording Button"
                 Clicked="OnStartRecordingClicked"
                 HorizontalOptions="Center" />
@@ -498,7 +498,7 @@ Padding="0">
 
                 <Button
                 x:Name="StartTransportRecordingButton"
-                Text="Start Transit Recording"
+                Text="{Binding [StartTransitRecordingButton], Source={StaticResource Loc}}"
                 SemanticProperties.Hint="Start Transport Recording Button"
                 Clicked="OnStartTransportRecordingClicked"
                 HorizontalOptions="Center" />
@@ -508,7 +508,7 @@ Padding="0">
                 HorizontalOptions="Center">
                     <Label
                     x:Name="PrerecordingLabel"
-                    Text="Include 15m before Recording " 
+                    Text="{Binding [Include15mBeforeRecordingToggle], Source={StaticResource Loc}}" 
                VerticalOptions="CenterAndExpand" 
                HorizontalOptions="CenterAndExpand" />
 
@@ -520,14 +520,14 @@ Padding="0">
 
                 <Button
                 x:Name="OpenMapButton"
-                Text="Open Map in Browser 🔗"
+                Text="{Binding [OpenMapInBrowserButton], Source={StaticResource Loc}}"
                 SemanticProperties.Hint="Open the Map in your default Browser"
                 Clicked="OnShowMapInBrowserClicked"
                 HorizontalOptions="Center" />
 
                 <Button
     x:Name="OpenImprintButton"
-    Text="Data Protection Info and Imprint 🔗"  
+    Text="{Binding [DataProtectionAndImprintButton], Source={StaticResource Loc}}"  
                     Clicked="OnImprintClicked"
     FontFamily="fa"
     HorizontalOptions="Center" />
@@ -718,7 +718,7 @@ Padding="0">
                 </Grid>
                 <HorizontalStackLayout
                 x:Name="StackCheckboxesDoor">
-                    <Label Text="Open Doors/Windows"
+                    <Label Text="{Binding [OpenDoorsWindowsCheckbox], Source={StaticResource Loc}}"
                VerticalOptions="CenterAndExpand" 
                HorizontalOptions="CenterAndExpand" />
                     <CheckBox x:Name="CheckBoxDoorsWindows"
@@ -730,7 +730,7 @@ Padding="0">
 
                 <HorizontalStackLayout                
                 x:Name="StackCheckboxesVentilation">
-                    <Label Text="Ventilation System"
+                    <Label Text="{Binding [VentilationSystemCheckBox], Source={StaticResource Loc}}"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand"/>
                     <CheckBox x:Name="CheckBoxVentilation"
@@ -790,8 +790,24 @@ Completed="OnEntryCompleted" />
     SemanticProperties.Hint="Copy Debug Log to Clipboard Button"
     Clicked="OnCrashLogButtonClicked"
     HorizontalOptions="Center" />
-                
-                
+
+                <!-- Label to the left of the language dropdown -->
+                <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                    <Label Text="Language:" VerticalOptions="Center" />
+                    <Picker
+            x:Name="LanguagePicker"
+            Title="Select"
+            SelectedIndexChanged="OnLanguagePickerChanged"
+            WidthRequest="150">
+                        <Picker.Items>
+                            <x:String>English</x:String>
+                            <x:String>Français</x:String>
+                            <x:String>Deutsch</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </HorizontalStackLayout>
+
+
                 <Label x:Name="VersionLabel" Text="Version: 2024-10-01" FontSize="12" VerticalOptions="Center" />
     
 

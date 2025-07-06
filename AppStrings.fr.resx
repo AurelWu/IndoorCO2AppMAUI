@@ -118,121 +118,204 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CancelRecordingButton" xml:space="preserve">
-    <value />
+    <value>Annuler l'enregistrement</value>
   </data>
   <data name="CancelRecordingConfirmationBody" xml:space="preserve">
-    <value />
+    <value>Êtes-vous sûr de vouloir annuler l'enregistrement ?</value>
   </data>
   <data name="CancelRecordingConfirmationHeadline" xml:space="preserve">
-    <value />
+    <value>Annuler l'enregistrement</value>
   </data>
   <data name="CopyCrashLogToClipBoardButton" xml:space="preserve">
-    <value />
+    <value>Copier le journal des débogages dans le presse-papiers</value>
   </data>
   <data name="CopyDebugLogToClipBoardButton" xml:space="preserve">
-    <value />
+    <value>Copier le journal de dépannage dans le presse-papiers</value>
   </data>
   <data name="DataProtectionAndImprintButton" xml:space="preserve">
-    <value />
+    <value>Informations sur la protection des données et mentions légales 🔗</value>
   </data>
   <data name="DeletePreviousSubmissionButton" xml:space="preserve">
-    <value />
+    <value>Supprimer la soumission précédente</value>
   </data>
   <data name="DeviceInfoLabel_CO2levels" xml:space="preserve">
-    <value />
+    <value>Niveaux de CO2 :</value>
   </data>
   <data name="DeviceInfoLabel_UpdateIn" xml:space="preserve">
-    <value />
+    <value>Mise à jour dans :</value>
   </data>
   <data name="FilterDeviceByNameLabel" xml:space="preserve">
-    <value />
+    <value>Filtrer les appareils par nom :</value>
   </data>
   <data name="Include15mBeforeRecordingToggle" xml:space="preserve">
-    <value />
+    <value>Inclure 15 m avant l'enregistrement</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="MonitorSelectionLabel" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="MonitorSelectionLabel" xml:space="preserve">
+    <value>Sélectionnez votre détecteur de CO2</value>
   </data>
   <data name="NotesLabel" xml:space="preserve">
-    <value />
+    <value>Notes:</value>
   </data>
   <data name="OpenDoorsWindowsCheckbox" xml:space="preserve">
-    <value />
+    <value>Portes ouvertes / Fenêtres ouvertes</value>
   </data>
   <data name="OpenMapInBrowserButton" xml:space="preserve">
-    <value />
+    <value>Ouvrir la carte dans le navigateur 🔗</value>
   </data>
   <data name="QuickGuidePopupCloseButton" xml:space="preserve">
-    <value />
+    <value>Fermer</value>
   </data>
   <data name="QuickGuidePopupHeadline" xml:space="preserve">
-    <value />
+    <value>Guide d'utilisation rapide</value>
   </data>
   <data name="QuickGuidePopupLinkManual" xml:space="preserve">
-    <value />
+    <value>Mode d'emploi 🔗</value>
   </data>
   <data name="QuickGuidePopupPart1" xml:space="preserve">
-    <value />
+    <value>1) Si toutes les icônes en haut ne sont pas vertes, suivez les instructions qui se trouvent en dessous ou consultez le mode d'emploi accessible via le lien en bas de page.</value>
   </data>
   <data name="QuickGuidePopupPart2" xml:space="preserve">
-    <value />
+    <value>2) Sélectionnez votre type de capteur</value>
   </data>
   <data name="QuickGuidePopupPart3" xml:space="preserve">
-    <value />
+    <value>3) Appuyez sur « Mettre à jour les lieux ».</value>
   </data>
   <data name="QuickGuidePopupPart4" xml:space="preserve">
-    <value />
+    <value>4) Sélectionnez le lieu que vous souhaitez mesurer dans la liste des résultats.</value>
   </data>
   <data name="QuickGuidePopupPart5" xml:space="preserve">
-    <value />
+    <value>5) Appuyez sur « Démarrer l'enregistrement ».</value>
   </data>
   <data name="QuickGuidePopupPart6" xml:space="preserve">
-    <value />
+    <value>6) Enregistrez pendant au moins 5 minutes (si votre capteur n'est pas réglé sur un intervalle de mise à jour d'une minute, vous devez prolonger la durée).</value>
   </data>
   <data name="QuickGuidePopupPart7" xml:space="preserve">
-    <value />
+    <value>7) Appuyez sur « Soumettre les données ».</value>
   </data>
   <data name="QuickGuideUserManualButton" xml:space="preserve">
-    <value />
+    <value>Guide rapide / Mode d'emploi</value>
+  </data>
+  <data name="RecordedDataLabel" xml:space="preserve">
+    <value>Localisation:</value>
   </data>
   <data name="SearchRangeLabel" xml:space="preserve">
-    <value />
+    <value>Zone de recherche</value>
   </data>
   <data name="ShowOnMapFoldOut" xml:space="preserve">
-    <value />
+    <value>Show on map ▼</value>
   </data>
   <data name="SliderInfoLabel" xml:space="preserve">
-    <value />
+    <value>Utilisez les curseurs pour ajuster le début et la fin si nécessaire.</value>
   </data>
   <data name="StartRecordingButton" xml:space="preserve">
-    <value />
+    <value>Démarrer l'enregistrement</value>
+  </data>
+  <data name="StartTransitRecordingButton" xml:space="preserve">
+    <value>Démarrer l'enregistrement</value>
   </data>
   <data name="SubmitRecordingButtonNotEnoughData" xml:space="preserve">
-    <value />
+    <value>Somettre les données (nécessite 5 points de mesure)</value>
   </data>
   <data name="SubmitRecordingButtonOkay" xml:space="preserve">
-    <value />
+    <value>Soumettre les données</value>
+  </data>
+  <data name="TypeOfTransitTrain" xml:space="preserve">
+    <value>Train</value>
+  </data>
+  <data name="TypeOfTransitAll" xml:space="preserve">
+    <value>Tous</value>
+  </data>
+  <data name="TypeOfTransitBus" xml:space="preserve">
+    <value>Bus</value>
+  </data>
+  <data name="TypeOfTransitTram" xml:space="preserve">
+    <value>Tramway</value>
   </data>
   <data name="TypeSelectionButton_Buildings" xml:space="preserve">
-    <value />
+    <value>Bâtiments</value>
   </data>
   <data name="TypeSelectionButton_Transit" xml:space="preserve">
-    <value />
+    <value>Transports</value>
   </data>
   <data name="UpdateLocationsButton" xml:space="preserve">
-    <value />
+    <value>Mettre à jour les lieux</value>
   </data>
   <data name="UpdateLocationsButtonDefaultInfoLabel" xml:space="preserve">
-    <value />
+    <value>Appuyez sur « Mettre à jour les lieux » pour obtenir les lieux à proximité.</value>
   </data>
   <data name="UpdateLocationsButtonFoundLocationsLabel" xml:space="preserve">
-    <value />
+    <value>Sélectionnez un lieu :</value>
   </data>
   <data name="UpdateLocationsButtonSearchingInfoLabel" xml:space="preserve">
-    <value />
+    <value>Récupération en cours des lieux à proximité</value>
   </data>
   <data name="VentilationSystemCheckBox" xml:space="preserve">
-    <value />
+    <value>Système de ventilation</value>
+  </data>
+  <data name="TypeOfTransitLightrail" xml:space="preserve">
+    <value>Lightrail</value>
+  </data>
+  <data name="TypeOfTransitSubway" xml:space="preserve">
+    <value>Métro</value>
+  </data>
+  <data name="GPSNotEnabled" xml:space="preserve">
+    <value>Le GPS n'est pas activé |</value>
+  </data>
+  <data name="LocationPermissionMissing" xml:space="preserve">
+    <value>Autorisation de localisation manquante |</value>
+  </data>
+  <data name="BluetoothNotEnabled" xml:space="preserve">
+    <value>Bluetooth n'est pas activé.</value>
+  </data>
+  <data name="BluetoothPermissionMissing" xml:space="preserve">
+    <value>Autorisation Bluetooth non accordée, appuyez sur le bouton rouge ci-dessus.</value>
+  </data>
+  <data name="GPSAndBTOkay" xml:space="preserve">
+    <value>Autorisations et statut GPS et Bluetooth valides</value>
+  </data>
+  <data name="DuringFirstGPSLocationUpdate" xml:space="preserve">
+    <value>GPS activé et autorisations de localisation accordées. Récupération des informations de localisation. Cela peut prendre une minute.</value>
+  </data>
+  <data name="OutDatedFirmware" xml:space="preserve">
+    <value>Capteur détecté, mais le firmware est obsolète.\r\nMettez-le à jour à l'aide de l'application officielle Aranet ⓘ</value>
+  </data>
+  <data name="DisabledSmarthomeIntegration" xml:space="preserve">
+    <value>Capteur détecté, mais la fonction « Smart Home Integration » est désactivée.\r\nActivez-la à l'aide de l'application officielle Aranet ⓘ</value>
+  </data>
+  <data name="LowCO2Levels" xml:space="preserve">
+    <value>| Faible valeur de CO2 ! Le capteur doit peut-être être recalibré.</value>
+  </data>
+  <data name="FirstUpdate" xml:space="preserve">
+    <value>Lancement de la première mise à jour dans</value>
+  </data>
+  <data name="WaitingForFirstUpdate" xml:space="preserve">
+    <value>En attente des premières données du capteur</value>
+  </data>
+  <data name="PreviousUpdateFailed" xml:space="preserve">
+    <value>| La mise à jour précédente a échoué.</value>
+  </data>
+  <data name="UpdateFailedNextIn" xml:space="preserve">
+    <value>Échec de la mise à jour - prochaine tentative dans :</value>
+  </data>
+  <data name="NoSelectedLocation" xml:space="preserve">
+    <value>Aucun lieu sélectionné</value>
+  </data>
+  <data name="TransitOrigin" xml:space="preserve">
+    <value>Origine du trajet :</value>
+  </data>
+  <data name="NoTransitOriginSelected" xml:space="preserve">
+    <value>Aucune origine de transport sélectionnée</value>
+  </data>
+  <data name="UpdateLocationUsageInfo" xml:space="preserve">
+    <value>Appuyez sur « Mettre à jour les lieux » pour obtenir les lieux à proximité.</value>
+  </data>
+  <data name="NoLocationsInRange" xml:space="preserve">
+    <value>Aucun lieu dans la zone de couverture</value>
+  </data>
+  <data name="LocationsFoundStatus" xml:space="preserve">
+    <value>Lieux trouvés</value>
+  </data>
+  <data name="LocationSearchTimeout" xml:space="preserve">
+    <value>La demande de mise à jour des lieux a expiré, veuillez réessayer.</value>
   </data>
 </root>
