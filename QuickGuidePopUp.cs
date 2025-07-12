@@ -10,7 +10,7 @@ namespace IndoorCO2App_Android
 {
     partial class QuickGuidePopUp : Popup
     {
-        static string userManualURL = "https://indoorco2map.com/Manual.pdf";
+        public static string userManualURL = "https://indoorco2map.com/Manual.pdf";
 
         public QuickGuidePopUp()
         {
@@ -116,7 +116,6 @@ namespace IndoorCO2App_Android
             
             var LinkToManualButton = new Button
             {
-
                 Text = AppStrings.QuickGuidePopupLinkManual,
                 Command = new Command(async () => await Launcher.OpenAsync(userManualURL))
             };

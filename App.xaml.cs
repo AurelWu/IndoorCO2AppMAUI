@@ -1,19 +1,28 @@
 ﻿
 using IndoorCO2App_Android;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 
 namespace IndoorCO2App_Multiplatform
 {
     public partial class App : Application
     {
+        public static string langString = "en";
+        public static string userManualStringWithoutExtension = "https://indoorco2map.com/Manual";
         public static void SetCulture(string cultureString)
         {
             try
             {
+                langString = cultureString;
                 var culture = new CultureInfo(cultureString);
                 CultureInfo.DefaultThreadCurrentUICulture = culture;
                 CultureInfo.DefaultThreadCurrentCulture = culture;
+                QuickGuidePopUp.userManualURL = userManualStringWithoutExtension + "_" + cultureString + ".pdf";
+                if (langString == "en")
+                {
+                    QuickGuidePopUp.userManualURL = userManualStringWithoutExtension +".pdf";
+                }
 
                 Thread.CurrentThread.CurrentUICulture = culture;
                 Thread.CurrentThread.CurrentCulture = culture;
@@ -21,6 +30,8 @@ namespace IndoorCO2App_Multiplatform
             }
             catch (CultureNotFoundException)
             {
+                langString = "en";
+                QuickGuidePopUp.userManualURL = userManualStringWithoutExtension + ".pdf";
                 // Fallback to neutral (invariant) culture
                 var fallback = CultureInfo.InvariantCulture;
                 CultureInfo.DefaultThreadCurrentUICulture = fallback;
