@@ -802,6 +802,7 @@ Completed="OnEntryCompleted" />
                             <x:String>English</x:String>
                             <x:String>Français</x:String>
                             <x:String>Deutsch</x:String>
+                            <x:String>Português</x:String>
                         </Picker.Items>
                     </Picker>
                 </HorizontalStackLayout>

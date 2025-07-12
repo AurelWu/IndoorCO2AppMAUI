@@ -203,6 +203,7 @@ namespace IndoorCO2App_Multiplatform
                 {
                     int value = (response[8] << 8) | response[9];
                     Console.WriteLine("current CO2: " + value);
+                    BluetoothManager.currentCO2Reading = value;
                 }
                 else
                 {

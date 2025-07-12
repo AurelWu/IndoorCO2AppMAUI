@@ -118,204 +118,206 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CancelRecordingButton" xml:space="preserve">
-    <value>Aufnahme abbrechen</value>
+    <value>Cancelar gravação</value>
   </data>
   <data name="CancelRecordingConfirmationBody" xml:space="preserve">
-    <value>Sind sie sicher, dass sie die Aufnahme abbrechen möchten?</value>
+    <value>Tem a certeza de que pretende cancelar a gravação?</value>
   </data>
   <data name="CancelRecordingConfirmationHeadline" xml:space="preserve">
-    <value>Aufnahme abbrechen</value>
+    <value>Cancelar gravação</value>
   </data>
   <data name="CopyCrashLogToClipBoardButton" xml:space="preserve">
-    <value>Crash Log in Zwischenablage kopieren</value>
+    <value>Copiar registo de falhas para a área de transferência</value>
   </data>
   <data name="CopyDebugLogToClipBoardButton" xml:space="preserve">
-    <value>Debug Log in Zwischenablage kopieren</value>
+    <value>Copiar registo de depuração para a área de transferência</value>
   </data>
   <data name="DataProtectionAndImprintButton" xml:space="preserve">
-    <value>Datenschutz und Impressum 🔗</value>
+    <value>Informações sobre a proteção de dados e nota legal 🔗</value>
   </data>
   <data name="DeletePreviousSubmissionButton" xml:space="preserve">
-    <value>Vorige Aufzeichnung löschen</value>
+    <value>Eliminar submissão anterior</value>
   </data>
   <data name="DeviceInfoLabel_CO2levels" xml:space="preserve">
-    <value>CO2 Wert:</value>
+    <value>Níveis de CO2:</value>
   </data>
   <data name="DeviceInfoLabel_UpdateIn" xml:space="preserve">
-    <value>Aktualisierung in:</value>
+    <value>Atualização em:</value>
   </data>
   <data name="FilterDeviceByNameLabel" xml:space="preserve">
-    <value>CO2-Monitor nach Namen filtern</value>
+    <value>Filtrar dispositivo por nome:</value>
   </data>
   <data name="Include15mBeforeRecordingToggle" xml:space="preserve">
-    <value>15m vor Aufnahmebeginn einbeziehen</value>
+    <value>incluir 15 min antes da gravação</value>
   </data>
   <data name="MonitorSelectionLabel" xml:space="preserve">
-    <value>CO2-Monitortyp auswählen</value>
+    <value>selecione o seu monitor de CO2</value>
   </data>
   <data name="NotesLabel" xml:space="preserve">
-    <value>Notizen:</value>
+    <value>Notas:</value>
   </data>
   <data name="OpenDoorsWindowsCheckbox" xml:space="preserve">
-    <value>Offene Türen / Fenster</value>
+    <value>Abrir portas / janelas</value>
   </data>
   <data name="OpenMapInBrowserButton" xml:space="preserve">
-    <value>Karte im Browser öffen 🔗</value>
+    <value>Abrir mapa no navegador 🔗</value>
   </data>
   <data name="QuickGuidePopupCloseButton" xml:space="preserve">
-    <value>Schließen</value>
+    <value>Fechar</value>
   </data>
   <data name="QuickGuidePopupHeadline" xml:space="preserve">
-    <value>Kurzanleitung</value>
+    <value>Guia rápido</value>
   </data>
   <data name="QuickGuidePopupLinkManual" xml:space="preserve">
-    <value>Nutzerhandbuch 🔗</value>
+    <value>Manual do utilizador 🔗</value>
   </data>
   <data name="QuickGuidePopupPart1" xml:space="preserve">
-    <value>1) if not all icons on the top are green, follow the guidance texts below them or read the manual linked at the bottom</value>
+    <value>1) se nem todos os ícones no topo estiverem verdes, siga as instruções abaixo deles ou leia o manual no link no final</value>
   </data>
   <data name="QuickGuidePopupPart2" xml:space="preserve">
-    <value>2) CO2-Monitor Typ auswählen</value>
+    <value>2) Selecione o tipo de sensor</value>
   </data>
   <data name="QuickGuidePopupPart3" xml:space="preserve">
-    <value>3) 'Ortssuche' betätigen</value>
+    <value>3) Carregue em 'Atualizar localizações'</value>
   </data>
   <data name="QuickGuidePopupPart4" xml:space="preserve">
-    <value>4) Ort aus der Ergebnisliste auswählen</value>
+    <value>4) Selecione a localização que pretende medir da lista de resultados</value>
   </data>
   <data name="QuickGuidePopupPart5" xml:space="preserve">
-    <value>5) 'Aufnahme starten' betätigen</value>
+    <value>5) Carregue em 'Iniciar gravação'</value>
   </data>
   <data name="QuickGuidePopupPart6" xml:space="preserve">
-    <value>6) Mindestens 5 Minuten lang aufnehmen (falls der Sensor auf ein längeres Aktualisierungsintervall als 1 Minute gestellt ist dann mindestens 5 Datenpunkte)</value>
+    <value>6) Grave durante pelo menos 5 minutos (se o sensor não estiver com intervalo de atualização de 1 minuto, grave por mais tempo)</value>
   </data>
   <data name="QuickGuidePopupPart7" xml:space="preserve">
-    <value>7) 'Daten übermitteln' betätigen</value>
+    <value>7) Carregue em 'Submeter dados'</value>
   </data>
   <data name="QuickGuideUserManualButton" xml:space="preserve">
-    <value>Kurzanleitung / Handbuch</value>
+    <value>Guia rápido / Manual do utilizador</value>
   </data>
   <data name="RecordedDataLabel" xml:space="preserve">
-    <value>Messort:</value>
+    <value>Localização:</value>
   </data>
   <data name="SearchRangeLabel" xml:space="preserve">
-    <value>Suchradius</value>
+    <value>Alcance de pesquisa</value>
   </data>
   <data name="ShowOnMapFoldOut" xml:space="preserve">
-    <value>Kartendarstellung</value>
+    <value>Mostrar no mapa ▼</value>
   </data>
   <data name="SliderInfoLabel" xml:space="preserve">
-    <value>Regler nutzen um Beginn &amp; Ende der Aufzeichnung zu kappen</value>
+    <value>Use os controlos deslizantes para ajustar início e fim, se necessário</value>
   </data>
   <data name="StartRecordingButton" xml:space="preserve">
-    <value>Aufnahme starten</value>
+    <value>Iniciar gravação</value>
   </data>
   <data name="StartTransitRecordingButton" xml:space="preserve">
-    <value>Aufnahme starten</value>
+    <value>Iniciar gravação</value>
   </data>
   <data name="SubmitRecordingButtonNotEnoughData" xml:space="preserve">
-    <value>Daten übermitteln (5 Datenpunkte benötigt)</value>
+    <value>Submeter dados (necessário 5 pontos de dados)</value>
   </data>
   <data name="SubmitRecordingButtonOkay" xml:space="preserve">
-    <value>Daten übermitteln</value>
+    <value>Submeter dados</value>
   </data>
   <data name="TypeOfTransitTrain" xml:space="preserve">
-    <value>Zug</value>
+    <value>Comboio</value>
   </data>
   <data name="TypeOfTransitAll" xml:space="preserve">
-    <value>Alle</value>
+    <value>Todos</value>
   </data>
   <data name="TypeOfTransitBus" xml:space="preserve">
-    <value>Bus</value>
+    <value>Autocarro</value>
   </data>
   <data name="TypeOfTransitTram" xml:space="preserve">
-    <value>Tram</value>
+    <value>Elétrico</value>
   </data>
   <data name="TypeSelectionButton_Buildings" xml:space="preserve">
-    <value>Gebäude</value>
+    <value>Edifícios</value>
   </data>
   <data name="TypeSelectionButton_Transit" xml:space="preserve">
-    <value>Verkehrsmittel</value>
+    <value>Transporte</value>
   </data>
   <data name="UpdateLocationsButton" xml:space="preserve">
-    <value>Ortssuche</value>
+    <value>Atualizar localizações</value>
   </data>
   <data name="UpdateLocationsButtonDefaultInfoLabel" xml:space="preserve">
-    <value>"Ortssuche" betätigen um naheliegende messbare Orte zu finden</value>
+    <value>Carregue em 'Atualizar localizações' para obter locais próximos</value>
   </data>
   <data name="UpdateLocationsButtonFoundLocationsLabel" xml:space="preserve">
-    <value>Messort Auswählen</value>
+    <value>Selecionar localização:</value>
   </data>
   <data name="UpdateLocationsButtonSearchingInfoLabel" xml:space="preserve">
-    <value>Ortssuche laufend</value>
+    <value>a obter localizações próximas</value>
   </data>
   <data name="VentilationSystemCheckBox" xml:space="preserve">
-    <value>Lüftungsanlage</value>
+    <value>Sistema de ventilação</value>
   </data>
   <data name="TypeOfTransitLightrail" xml:space="preserve">
-    <value>Lightrail</value>
+    <value>Metro ligeiro</value>
   </data>
   <data name="TypeOfTransitSubway" xml:space="preserve">
-    <value>U-Bahn</value>
+    <value>Metro</value>
   </data>
   <data name="GPSNotEnabled" xml:space="preserve">
-    <value>GPS ist nicht aktiviert</value>
+    <value>GPS não está ativado |</value>
   </data>
   <data name="LocationPermissionMissing" xml:space="preserve">
-    <value>Fehlende Ortsberechtigungen |</value>
+    <value>Permissão de localização em falta</value>
   </data>
   <data name="BluetoothNotEnabled" xml:space="preserve">
-    <value>Bluetooth nicht eingeschalten</value>
+    <value>Bluetooth não está ativado.</value>
   </data>
   <data name="BluetoothPermissionMissing" xml:space="preserve">
-    <value>Bluetooth Berechtigungen nicht erteilt, drücken sie den roten Button in der oberen Leiste</value>
+    <value>Permissão Bluetooth não concedida, carregue no botão vermelho acima</value>
   </data>
   <data name="GPSAndBTOkay" xml:space="preserve">
-    <value>GPS &amp; Bluetooth Berechtigungen erteilt und aktiv</value>
+    <value>Permissões e estado do GPS e Bluetooth corretos</value>
   </data>
   <data name="DuringFirstGPSLocationUpdate" xml:space="preserve">
-    <value>GPS aktiviert &amp; Ortsberechtigungen erteilt. GPS-Koordinaten werden bestimmt, dies kann etwas dauern.</value>
+    <value>GPS ativado e permissões de localização concedidas. A obter informações de localização. Pode demorar um minuto</value>
   </data>
   <data name="OutDatedFirmware" xml:space="preserve">
-    <value>Sensor gefunden, aber die firmware is veraltet.\r\nUpdate via offizieller Aranet App erforderlich ⓘ</value>
+    <value>Sensor encontrado, mas o firmware está desatualizado.
+Atualize-o com a aplicação oficial Aranet ⓘ</value>
   </data>
   <data name="DisabledSmarthomeIntegration" xml:space="preserve">
-    <value>Sensor gefunden - 'Smart Home Integration' ist deaktiviert.\r\nAktivierung mit der offiziellen Aranet App erforderlichⓘ</value>
+    <value>Sensor encontrado, mas a 'Integração com Casa Inteligente' está desativada.
+Ative-a usando a aplicação oficial Aranet ⓘ</value>
   </data>
   <data name="LowCO2Levels" xml:space="preserve">
-    <value>| niedriger CO2-Wert! Sensor muss eventuell neu kalibriert werden</value>
+    <value>| lor de CO2 baixo! O sensor pode precisar de recalibração</value>
   </data>
   <data name="FirstUpdate" xml:space="preserve">
-    <value>Erstes Update wird angefordert in: </value>
+    <value>a iniciar a primeira atualização em</value>
   </data>
   <data name="WaitingForFirstUpdate" xml:space="preserve">
-    <value>erste Sensorwerte werden abgefragt</value>
+    <value>a aguardar os primeiros dados do sensor</value>
   </data>
   <data name="PreviousUpdateFailed" xml:space="preserve">
-    <value>| vorige Aktualisierung fehlgeschlagen</value>
+    <value>atualização anterior falhou</value>
   </data>
   <data name="UpdateFailedNextIn" xml:space="preserve">
-    <value>Aktualisierung fehlgeschlagen - nächster Versuch in: </value>
+    <value>atualização falhou - próxima tentativa em:</value>
   </data>
   <data name="NoSelectedLocation" xml:space="preserve">
-    <value>Kein Ort ausgewählt</value>
+    <value>Nenhuma localização selecionada</value>
   </data>
   <data name="TransitOrigin" xml:space="preserve">
-    <value>Start-Haltestelle</value>
+    <value>Origem do transporte:</value>
   </data>
   <data name="NoTransitOriginSelected" xml:space="preserve">
-    <value>Kein Start-Haltestelle ausgewählt</value>
+    <value>Nenhuma origem de transporte selecionada</value>
   </data>
   <data name="UpdateLocationUsageInfo" xml:space="preserve">
-    <value> 'Ortssuche' betätigen um messbare Orte in der Umgebung zu finden</value>
+    <value>Carregue em 'Atualizar localizações' para obter locais próximos</value>
   </data>
   <data name="NoLocationsInRange" xml:space="preserve">
-    <value>Keine messbaren Orte in Reichweite</value>
+    <value>Nenhuma localização na área</value>
   </data>
   <data name="LocationsFoundStatus" xml:space="preserve">
-    <value>Ortssuche erfolgreich</value>
+    <value>Localizações encontradas</value>
   </data>
   <data name="LocationSearchTimeout" xml:space="preserve">
-    <value>Zeitüberschreitung bei der Ortssuche, bitte erneut versuchen</value>
+    <value>Pedido de atualização de localizações expirou, tente novamente</value>
   </data>
 </root>

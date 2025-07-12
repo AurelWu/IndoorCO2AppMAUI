@@ -28,6 +28,10 @@ namespace IndoorCO2App_Multiplatform
                     App.SetCulture("de");
                     Preferences.Set("AppLanguage", "de");
                     break;
+                case "Português":
+                    App.SetCulture("pt");
+                    Preferences.Set("AppLanguage", "pt");
+                    break;
             }            
         }
     }

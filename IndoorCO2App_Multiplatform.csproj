@@ -215,6 +215,11 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>AppStrings.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="Appstrings.pt.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AppStrings.pt.resx</DependentUpon>
+	  </Compile>
 	  <Compile Update="MainPageEventHandlers\MainPage_OnCheckBoxDoorsWindows_CheckedChanged - Kopieren.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
@@ -332,6 +337,10 @@
 	  <EmbeddedResource Update="AppStrings.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>AppStrings.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="AppStrings.pt.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Appstrings.pt.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
 
