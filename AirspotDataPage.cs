@@ -23,6 +23,7 @@ namespace IndoorCO2App_Multiplatform
 
         private void parseData(byte[] data)
         {
+            string hex = AirspotManager.ByteArrayToString(data);
             finishedPage = true;
 
             int offset = 4;
@@ -52,7 +53,7 @@ namespace IndoorCO2App_Multiplatform
                 offset += 2;
 
                 DateTime time = new DateTime(2000, 1, 1).AddSeconds(timestamp);
-                //Console.WriteLine($"Entry {i}: Time={time}, CO2={co2} ppm");
+                Console.WriteLine($"Entry {i}: Time={time}, CO2={co2} ppm");
             }
             byte pageNumberHigh = data[offset];
             byte pageNumberLow = data[offset + 1];

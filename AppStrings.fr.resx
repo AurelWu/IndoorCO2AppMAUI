@@ -151,7 +151,7 @@
     <value>Inclure 15 m avant l'enregistrement</value>
   </data>
   <data name="MonitorSelectionLabel" xml:space="preserve">
-    <value>Sélectionnez votre détecteur de CO2</value>
+    <value>votre détecteur de CO2</value>
   </data>
   <data name="NotesLabel" xml:space="preserve">
     <value>Notes:</value>

@@ -533,7 +533,7 @@ Padding="0">
 
                     <Button
                 x:Name="DeleteLastSubmissionButton"
-                Text="Delete Previous Submission"
+                Text="{Binding [DeletePreviousSubmissionButton], Source={StaticResource Loc}}"
                 SemanticProperties.Hint="Shows Dialot to Delete Previous Submission"
                 Clicked="OnDeletePreviousClicked"
                 HorizontalOptions="Center" />
@@ -778,21 +778,21 @@ Completed="OnEntryCompleted" />
 
                 <Button
     x:Name="DebugLogButton"
-    Text="Copy Debug Log to Clipboard"
+    Text="{Binding [CopyDebugLogToClipBoardButton], Source={StaticResource Loc}}"
     SemanticProperties.Hint="Copy Debug Log to Clipboard Button"
     Clicked="OnDebugLogButtonClicked"
     HorizontalOptions="Center" />
 
                 <Button
     x:Name="CrashLogButton"
-    Text="Copy Crash Log to Clipboard"
+    Text="{Binding [CopyCrashLogToClipBoardButton], Source={StaticResource Loc}}"
     SemanticProperties.Hint="Copy Debug Log to Clipboard Button"
     Clicked="OnCrashLogButtonClicked"
     HorizontalOptions="Center" />
 
                 <!-- Label to the left of the language dropdown -->
                 <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                    <Label Text="Language:" VerticalOptions="Center" />
+                    <Label Text="🌐 Language:" VerticalOptions="Center" />
                     <Picker
             x:Name="LanguagePicker"
             Title="Select"

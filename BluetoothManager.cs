@@ -968,17 +968,30 @@ namespace IndoorCO2App_Multiplatform
                     }
                     else if (monitorType == CO2MonitorType.AirSpot)
                     {
+                        if(AirspotManager.writeCharacteristic == null)
+                        {
+                            var airspotWriteCharacteristic = await service.GetCharacteristicAsync(airspotWriteCharacteristicGUID);
+                            AirspotManager.writeCharacteristic = airspotWriteCharacteristic;
+                        }
+                        
+                        if (!NotifyCharacteristicAlreadyHookedUp)
+                        {
+                            
+                            airspotCO2NotifyCharacteristic = await service.GetCharacteristicAsync(airspotNotifyCharacteristic);
+                            airspotCO2NotifyCharacteristic.ValueUpdated -= AirspotManager.OnNotifyValueChanged;
+                            airspotCO2NotifyCharacteristic.ValueUpdated += AirspotManager.OnNotifyValueChanged;
 
-                        if (NotifyCharacteristicAlreadyHookedUp) return;
-                        airspotCO2NotifyCharacteristic =  await service.GetCharacteristicAsync(airspotNotifyCharacteristic);
-                        airspotCO2NotifyCharacteristic.ValueUpdated -= AirspotManager.OnNotifyValueChanged; 
-                        airspotCO2NotifyCharacteristic.ValueUpdated += AirspotManager.OnNotifyValueChanged;
+                            await airspotCO2NotifyCharacteristic.StartUpdatesAsync();
+                            NotifyCharacteristicAlreadyHookedUp = true;
+                        }
+                        
 
-                        await airspotCO2NotifyCharacteristic.StartUpdatesAsync();
-                        NotifyCharacteristicAlreadyHookedUp = true;
+                        var rcpc = AirspotManager.ReadCurrentAirspotPageCommand();
+                        await AirspotManager.SendCommandAsync(rcpc);
+                        await AirspotManager.CollectPageDataAsync();
 
-                        AirspotManager.ReadCurrentAirspotPageCommand();
 
+                        AirspotManager.SetRecordedData(elapsedIntervals + 1 + prerecordingLength);
                         //TODO get the data which is stored in AirspotManager (or at least will be once finished)
                         //and put that into recordedData
                     }

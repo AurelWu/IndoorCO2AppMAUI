@@ -1,4 +1,5 @@
-﻿using Plugin.BLE;
+﻿
+using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using System;
@@ -17,7 +18,7 @@ namespace IndoorCO2App_Multiplatform
 
         public static List<int> co2Values = new();
         public static int updateInterval;
-        public static int currentPage = 0;
+        public static int currentPage = -1;
 
         public static List<string> notifyResponses = new();
         public static List<string> writeResponses = new();
@@ -145,11 +146,12 @@ namespace IndoorCO2App_Multiplatform
 
         public static byte[] ReadCurrentAirspotPageCommand()
         {
-            byte[] command = { 0xFF, 0xAA, 0x0B, 0x01, 0x00 };
-            byte checksum = CalculateAirSpotChecksum(command);
-            byte[] fullCommand = command.Concat(new byte[] { checksum }).ToArray();
-            //Console.WriteLine("SendToAirSpot: " + ByteArrayToString(fullCommand));
-            return fullCommand;
+            var command = new List<byte> { 0xFF, 0xAA, 0x0B, 0x01, 0x00 };
+            byte checksum = CalculateAirSpotChecksum(command.ToArray());
+            command.Add(checksum);
+            string hex = ByteArrayToString(command.ToArray());
+            Console.WriteLine("SendToAirSpot: " + hex + " | " + DateTime.UtcNow);
+            return command.ToArray();
         }
 
         public static async Task SendCommandAsync(byte[] command)
@@ -159,7 +161,8 @@ namespace IndoorCO2App_Multiplatform
                 return;
 
             await writeCharacteristic.WriteAsync(command);
-            Console.WriteLine("Command written to AirSpot.");
+            string hex = ByteArrayToString(command.ToArray());
+            Console.WriteLine("Command written to AirSpot: " + hex);
         }
 
         public static bool IsValidAirSpotResponseChecksum(byte[] response)
@@ -171,7 +174,7 @@ namespace IndoorCO2App_Multiplatform
 
         public static string ByteArrayToString(byte[] ba) => BitConverter.ToString(ba).Replace("-", "");
 
-        public static void ProcessResponse(byte[] response)
+        public static async void ProcessResponse(byte[] response)
         {
             currentTime = DateTime.Now;
             timeSinceStart = (currentTime - startTime).TotalSeconds;
@@ -195,7 +198,7 @@ namespace IndoorCO2App_Multiplatform
                 Console.WriteLine("page ID: " + page);
                 currentPage = page;
                 var readPageCommand = CreateAirSpotReadPageCommand(page);
-                SendCommandAsync(readPageCommand).ConfigureAwait(false);
+                await SendCommandAsync(readPageCommand);
             }
             else if (response[2] == 0x01 && response[3] == 0x02)
             {
@@ -214,11 +217,12 @@ namespace IndoorCO2App_Multiplatform
             {
                 Console.WriteLine("automatic timer message, ignored");
             }
-            else if (response[2] == 0x0C && response[3] == 0x80)
+            else if (response[0] == 0xFF && response[1] == 0xAA && response[2] == 0x0C && response[3] == 0x80)
             {
+                string hex = AirspotManager.ByteArrayToString(response);
                 var page = new AirSpotDataPage(response);
                 dataPages[page.pageID] = page;
-                SetCurrentCO2Value();
+                //SetCurrentCO2Value();
 
             }
             else
@@ -227,28 +231,101 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public static void SetCurrentCO2Value()
+        //public static void SetCurrentCO2Value()
+        //{
+        //    if (!dataPages.ContainsKey(currentPage)) return; 
+        //    AirSpotDataPage curPage = dataPages[currentPage];
+        //    int curValue = 0;
+        //    for (int i = 0; i < curPage.timestamps.Count; i++)
+        //    {
+        //        if (curPage.timestamps[i] != 0xFFFFFFFF)// 0xFFFFFFFF = not filled yet, still empty page
+        //        {
+        //            curValue = curPage.CO2values[i];
+        //        }
+        //        else
+        //        {
+        //            break;
+        //        }
+        //    }
+        //    BluetoothManager.UpdateAirspotLiveData(curValue);
+        //}
+
+        public static async Task CollectPageDataAsync()
         {
-            if (!dataPages.ContainsKey(currentPage)) return; 
-            AirSpotDataPage curPage = dataPages[currentPage];
-            int curValue = 0;
-            for (int i = 0; i < curPage.timestamps.Count; i++)
+            Console.WriteLine("AirspotManager.CollectPageData called");
+
+            int maxPageId = 16384; // 0-indexed: valid range is 0..16383
+            int pagesToCollectCount = 10;
+            List<int> pagesToCollect = new List<int>();
+
+            if (currentPage != -1)
             {
-                if (curPage.timestamps[i] != 0xFFFFFFFF)// 0xFFFFFFFF = not filled yet, still empty page
+                for (int i = 0; i < pagesToCollectCount; i++)
                 {
-                    curValue = curPage.CO2values[i];
-                }
-                else
-                {
-                    break;
+                    int page = (currentPage - i + maxPageId) % maxPageId;
+                    pagesToCollect.Add(page);
                 }
             }
-            BluetoothManager.UpdateAirspotLiveData(curValue);
+
+            foreach (var p in pagesToCollect)
+            {
+                if (dataPages.ContainsKey(p) && dataPages[p].finishedPage == true)
+                {
+                    continue;
+                }
+
+                Console.WriteLine("Collecting Page: " + p);
+                var c = CreateAirSpotReadPageCommand((ushort)p);
+                await SendCommandAsync(c);
+            }
+
+            Console.WriteLine("Amount of collected pages total: " + dataPages.Count);
         }
 
-        public static void SetRecordedData()
+        public static void CreateHistoryData()
         {
+            //uses current time and start time to calculate interval, then goes back from largest timestamp (excluding FFFFFFFF)
+        }
 
+        public static void SetRecordedData(int minutesinceBeginning)
+        {
+            List<(long, int)> timeValueTuples = new();
+
+            foreach (var p in dataPages.Values)
+            {
+                for(int i = 0; i < p.timestamps.Count;i++)
+                {
+                    if (p.timestamps[i] != 0xFFFFFFFF)
+                    {
+                        timeValueTuples.Add((p.timestamps[i],p.CO2values[i]));
+                    }                    
+                }
+            }
+
+            var sorted = timeValueTuples.OrderByDescending(x => x.Item1).ToList();
+            co2Values = new();
+            if (sorted.Count < 2) return;
+
+            int interval = (int)((long)sorted[0].Item1 - (long)sorted[1].Item1);
+
+            int elements = ((minutesinceBeginning * 60) / interval) + 1;
+            elements = Math.Min(elements,sorted.Count);
+            for (int i = 0; i < elements; i++)
+            {
+                co2Values.Add(sorted[i].Item2);
+            }
+            co2Values.Reverse();
+            List<SensorData> sensorData = new List<SensorData>();
+            int c = 0;
+            foreach (var s in co2Values)
+            {
+                SensorData d = new SensorData(s, c, DateTime.Now);
+                c += interval / 60;
+                sensorData.Add(d);
+            }
+
+
+            BluetoothManager.UpdateAirspotHistoryData(sensorData);
             //TODO: BluetoothManager.UpdateAirspotHistoryData()
         }
     }
