@@ -577,10 +577,7 @@ namespace IndoorCO2App_Multiplatform
                     {
                         monitorType = CO2MonitorType.InkbirdIAMT1;
                     }
-                    else if (_CO2DevicePicker.SelectedItem.ToString() == "airCoda")
-                    {
-                        monitorType = CO2MonitorType.AirCoda;
-                    }
+
                     else if (_CO2DevicePicker.SelectedItem.ToString() == "AirSpot Health")
                     {
                         monitorType = CO2MonitorType.AirSpot;

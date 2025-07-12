@@ -17,7 +17,7 @@ namespace IndoorCO2App_Android
 
             var titleLabel = new Label
             {
-                Text = "Quick Guide",
+                Text = AppStrings.QuickGuidePopupHeadline,
                 TextColor = Colors.Black,
                 FontSize = 16,
                 FontAttributes = FontAttributes.Bold,
@@ -26,7 +26,7 @@ namespace IndoorCO2App_Android
 
             var description1 = new Label
             {
-                Text = "1) If not all Icons on the top are green, follow the guidance texts below them or read the manual linked at the bottom",
+                Text = AppStrings.QuickGuidePopupPart1,
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -43,7 +43,7 @@ namespace IndoorCO2App_Android
 
             var description2 = new Label
             {
-                Text = "2) Select your Sensor Type",
+                Text = AppStrings.QuickGuidePopupPart2,
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -59,7 +59,7 @@ namespace IndoorCO2App_Android
 
             var description3 = new Label
             {
-                Text = "3) Press 'Update Locations' ",
+                Text = AppStrings.QuickGuidePopupPart3,
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -75,7 +75,7 @@ namespace IndoorCO2App_Android
 
             var description4 = new Label
             {
-                Text = "4) Select the Location you want to measure from the result list",
+                Text = AppStrings.QuickGuidePopupPart4,
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -83,7 +83,7 @@ namespace IndoorCO2App_Android
 
             var description5 = new Label
             {
-                Text = "5) Press 'Start Recording'",
+                Text = AppStrings.QuickGuidePopupPart5,
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -91,7 +91,7 @@ namespace IndoorCO2App_Android
 
             var description6 = new Label
             {
-                Text = "6) Record for at least 5 Minutes (if your sensor is not set to 1 Minute Update Interval it needs to be longer)",
+                Text = AppStrings.QuickGuidePopupPart6,
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -99,7 +99,7 @@ namespace IndoorCO2App_Android
 
             var description7 = new Label
             {
-                Text = "7) Press 'Submit Data'",
+                Text = AppStrings.QuickGuidePopupPart7,
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -117,14 +117,14 @@ namespace IndoorCO2App_Android
             var LinkToManualButton = new Button
             {
 
-                Text = "User Manual 🔗",
+                Text = AppStrings.QuickGuidePopupLinkManual,
                 Command = new Command(async () => await Launcher.OpenAsync(userManualURL))
             };
 
 
             var closeButton = new Button
             {
-                Text = "Close",
+                Text = AppStrings.QuickGuidePopupCloseButton,
                 Command = new Command(() => this.Close())
             };
 

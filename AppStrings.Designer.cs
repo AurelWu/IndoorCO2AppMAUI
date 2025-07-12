@@ -439,7 +439,7 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Location:  ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Location: ähnelt.
         /// </summary>
         internal static string RecordedDataLabel {
             get {

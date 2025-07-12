@@ -196,7 +196,7 @@
     <value>Quick Guide / User Manual</value>
   </data>
   <data name="RecordedDataLabel" xml:space="preserve">
-    <value>Location: </value>
+    <value>Location:</value>
   </data>
   <data name="SearchRangeLabel" xml:space="preserve">
     <value>Search Range</value>

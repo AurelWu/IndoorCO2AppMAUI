@@ -35,27 +35,27 @@ namespace IndoorCO2App_Multiplatform
                 clickedButton.TextColor = Colors.White;
                 //set filter to this text
                 //this will not work well with translation!
-                if (clickedButton.Text.ToLower() == "all")
+                if (clickedButton.ClassId.ToLower() == "all")
                 {
                     TransitFilter = TransitFilterMode.All;
                 }
-                else if (clickedButton.Text.ToLower() == "bus")
+                else if (clickedButton.ClassId.ToLower() == "bus")
                 {
                     TransitFilter = TransitFilterMode.Bus;
                 }
-                else if (clickedButton.Text.ToLower() == "tram")
+                else if (clickedButton.ClassId.ToLower() == "tram")
                 {
                     TransitFilter = TransitFilterMode.Tram;
                 }
-                else if (clickedButton.Text.ToLower() == "subway")
+                else if (clickedButton.ClassId.ToLower() == "subway")
                 {
                     TransitFilter = TransitFilterMode.Subway;
                 }
-                else if (clickedButton.Text.ToLower() == "lightrail")
+                else if (clickedButton.ClassId.ToLower() == "lightrail")
                 {
                     TransitFilter = TransitFilterMode.LightRail;
                 }
-                else if (clickedButton.Text.ToLower() == "train")
+                else if (clickedButton.ClassId.ToLower() == "train")
                 {
                     TransitFilter = TransitFilterMode.Train;
                 }

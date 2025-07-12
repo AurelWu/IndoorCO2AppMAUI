@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using IndoorCO2App_Android;
 using Microsoft.Maui.Controls.PlatformConfiguration;
 using Microsoft.VisualStudio.Composition;
 using Microsoft.VisualStudio.Settings;
@@ -32,7 +33,6 @@ namespace IndoorCO2App_Multiplatform
         public static int sensorUpdateInterval = 0;
         public static IReadOnlyList<IDevice> discoveredDevices;
 
-        public static Guid aircodaServiceUUID = Guid.Parse("0000fea0-0000-1000-8000-00805f9b34fb");
         public static bool subscribedAlreadyToReportChar = false;
 
         static Guid airspotServiceGUID = new Guid("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
@@ -100,7 +100,6 @@ namespace IndoorCO2App_Multiplatform
         public static ICharacteristic inkbirdCO2NotifyCharacteristic;
         public static ICharacteristic airspotCO2NotifyCharacteristic;
 
-        public static bool subscribedToAirCodaAdvertisement = false;
 
 
         internal static void Init()
@@ -109,7 +108,6 @@ namespace IndoorCO2App_Multiplatform
             serviceUUIDByMonitorType.Add(CO2MonitorType.Aranet4, AranetServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.Airvalent, AirvalentServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.InkbirdIAMT1, InkbirdServiceUUID);
-            serviceUUIDByMonitorType.Add(CO2MonitorType.AirCoda, aircodaServiceUUID);
             serviceUUIDByMonitorType.Add(CO2MonitorType.AirSpot, airspotServiceGUID);
             recordedData = new List<SensorData>();
             ble = CrossBluetoothLE.Current;
@@ -176,7 +174,7 @@ namespace IndoorCO2App_Multiplatform
                 previousUpdate = currentTime;
                 try
                 {
-                    if(monitorType== CO2MonitorType.AirSpot || monitorType==CO2MonitorType.AirCoda)
+                    if(monitorType== CO2MonitorType.AirSpot)
                     {
                         //discoveredDevices = null;
                     }
@@ -378,7 +376,7 @@ namespace IndoorCO2App_Multiplatform
 
             if (ble == null) return; // if still null after trying to Init we abort
             var scanFilterOptions = new ScanFilterOptions();
-            if (monitorType != CO2MonitorType.InkbirdIAMT1 && monitorType != CO2MonitorType.AirCoda && monitorType != CO2MonitorType.AirSpot)
+            if (monitorType != CO2MonitorType.InkbirdIAMT1 && monitorType != CO2MonitorType.AirSpot)
             {
                 Logger.WriteToLog($"setting serviceUUId filter to: {serviceUUID}", false);
                 scanFilterOptions.ServiceUuids = new[] { serviceUUID };
@@ -456,13 +454,7 @@ namespace IndoorCO2App_Multiplatform
                     inkbirdFilter.RemoveAll(x => !x.Name.Contains("Inkbird"));
                     discoveredDevices = inkbirdFilter;
                 }
-                else if(monitorType == CO2MonitorType.AirCoda)
-                {
-                    List<IDevice> airCodaFilter = discoveredDevices.ToList();
-                    airCodaFilter.RemoveAll(x => x.Name == null);
-                    airCodaFilter.RemoveAll(x => !x.Name.ToLower().Contains("aircoda"));
-                    discoveredDevices = airCodaFilter;
-                }
+               
                 else if (monitorType == CO2MonitorType.AirSpot)
                 {
                     List<IDevice> airSpotFilter = discoveredDevices.ToList();
@@ -523,14 +515,7 @@ namespace IndoorCO2App_Multiplatform
                     }
                     discoveredDevices = filteredDevices;
                 }
-                else if (monitorType == CO2MonitorType.AirCoda)
-                {
-                    List<IDevice> airCodaFilter = discoveredDevices.ToList();
-                    airCodaFilter.RemoveAll(x => x.Name == null);
-                    airCodaFilter.RemoveAll(x => !x.Name.ToLower().Contains("aircoda"));
-                    discoveredDevices = airCodaFilter;
-                }
-
+                
                 else if (monitorType == CO2MonitorType.AirSpot)
                 {
                     List<IDevice> airSpotFilter = discoveredDevices.ToList();
@@ -632,143 +617,41 @@ namespace IndoorCO2App_Multiplatform
                 elapsedIntervals = elapsedIntervals / 10;
             }
             //TODO if interval is 
-            if (monitorType != CO2MonitorType.AirCoda)
-            {                
-                deviceID = device.Id.ToString();
-                rssi = device.Rssi;
-                DeviceState deviceState = device.State;
-                Logger.WriteToLog($"deviceState of {device.Name} : {deviceState} | ",false);
-            }
-
-            //if(monitorType==CO2MonitorType.AirCoda)
-            //{
-            //    //TODO: only do that if not already done
-            //    await AuthenticateWithAirCodaAsync(device);
-            //}
+            
+            deviceID = device.Id.ToString();
+            rssi = device.Rssi;
+            DeviceState deviceState = device.State;
+            Logger.WriteToLog($"deviceState of {device.Name} : {deviceState} | ",false);
 
             try
             {
                 IService service = null;
                 //IReadOnlyList<IService> results;
-                if (monitorType != CO2MonitorType.AirCoda)
+               
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(TimeSpan.FromSeconds(8)); // Cancel after 10 seconds.
+
+                try
                 {
-
-                    var cts = new CancellationTokenSource();
-                    cts.CancelAfter(TimeSpan.FromSeconds(8)); // Cancel after 10 seconds.
-
-                    try
+                    service = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType], cts.Token);
+                    if (service == null)
                     {
-                        service = await device.GetServiceAsync(serviceUUIDByMonitorType[monitorType], cts.Token);
-                        if (service == null)
-                        {
-                            Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) returned null",false);
-                        }
-                        else
-                        {
-                            Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]) returned serviceID:  {service.Id}",false);
-                        }
+                        Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) returned null",false);
                     }
-                    catch (TaskCanceledException)
+                    else
                     {
-                        Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) TaskCanceledException",false);
+                        Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]) returned serviceID:  {service.Id}",false);
                     }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) Error during service discovery: {ex.Message}",false);
-                    }
-                                                            
-                    //results = await device.GetServicesAsync();
-                    //if(results==null)
-                    //{
-                    //    Logger.circularBuffer.Add($"device.GetServicesAsync() returned null | " + DateTime.Now);                    
-                    //}
-                    //else
-                    //{
-                    //    Logger.circularBuffer.Add($"found {results.Count} services | " + DateTime.Now);
-                    //    foreach(var s in results)
-                    //    {
-                    //        Logger.circularBuffer.Add($"found service: {s.Id} | " + DateTime.Now);
-                    //    }
-                    //
-                    //}
-                       
-                    
                 }
-                
-
-                //TEMP for debugging
-                //if (monitorType == CO2MonitorType.AirCoda)
-                //{
-                //    var advertisement = device.AdvertisementRecords;
-                //
-                //    foreach(var ad in advertisement)
-                //    {
-                //        Console.WriteLine("Advertisement Data:");
-                //        string hexString = ad.Data.ToHexString();
-                //        Console.WriteLine("Ad |" + ad.Type.ToString() + " | " + hexString);
-                //    }
-                //
-                //    var result = await device.GetServicesAsync();
-                //    foreach (var r in results)
-                //    {
-                //        Logger.circularBuffer.Add(r.Id.ToString());
-                //        Console.WriteLine(device.Name + "| Service: | " + r.Id.ToString());
-                //    }
-                //
-                //    var characteristics = await service.GetCharacteristicsAsync();
-                //    foreach(var c in characteristics)
-                //    {
-                //        Logger.circularBuffer.Add(c.Id.ToString());
-                //        Console.WriteLine(device.Name + " | " + "Characteristic: | " + c.Id.ToString());
-                //    }
-                //}
-
-
-                if (monitorType == CO2MonitorType.AirCoda)
+                catch (TaskCanceledException)
                 {
-                    //device.UpdateConnectionParameters();                    
-                    var advertisement = device.AdvertisementRecords;
-                    
-                    if (advertisement != null && advertisement.Count >= 4)
-                    {
-                        int correctIndex = -0;
-                        for (int i = 0; i < advertisement.Count; i++)
-                        {
-                            if(advertisement[i].Data.Length == 19)
-                            {
-                                correctIndex= i;
-                            }
-                        }
-                        
-
-                        var serviceData = advertisement[correctIndex].Data;
-                        if (serviceData.Length == 19)
-                        {
-                            byte ageSinceUpdate = serviceData[16]; //multiply with 10
-                            byte CO2firstByte = serviceData[17];
-                            byte CO2secondByte = serviceData[18];
-                            int CO2Value = (CO2firstByte << 8) | CO2secondByte;
-                            currentCO2Reading = CO2Value;
-                            string hexString = serviceData.ToHexString();
-                            Logger.WriteToLog("airCoda CO2Value: " + CO2Value + " | " + hexString,false);
-                            if(recordedData.Count==0)
-                            {
-                                recordedData.Add(new SensorData(currentCO2Reading, 0,DateTime.Now));
-                            }
-                            else
-                            {
-                                if(recordedData.Last().CO2ppm!=currentCO2Reading)
-                                {
-                                    recordedData.Add(new SensorData(currentCO2Reading, recordedData.Count(),DateTime.Now));
-                                }
-                            }
-                                
-                        }
-                        //Bytes 17 and 18 are what we want
-                    }
-
+                    Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) TaskCanceledException",false);
                 }
-
+                catch (Exception ex)
+                {
+                    Logger.WriteToLog($".GetServiceAsync(serviceUUIDByMonitorType[monitorType]({serviceUUIDByMonitorType[monitorType]})) Error during service discovery: {ex.Message}",false);
+                }                                                                                                                          
+                                            
 
                 if (service != null)
                 {
@@ -1086,52 +969,20 @@ namespace IndoorCO2App_Multiplatform
                     else if (monitorType == CO2MonitorType.AirSpot)
                     {
 
+                        if (NotifyCharacteristicAlreadyHookedUp) return;
+                        airspotCO2NotifyCharacteristic =  await service.GetCharacteristicAsync(airspotNotifyCharacteristic);
+                        airspotCO2NotifyCharacteristic.ValueUpdated -= AirspotManager.OnNotifyValueChanged; 
+                        airspotCO2NotifyCharacteristic.ValueUpdated += AirspotManager.OnNotifyValueChanged;
 
-                        //FF AA 0B 01 00 A7 => Get Current Page => used as starting point, then request backwards
-                        //FF AA 0C 02 03 E8 FA => Get Page 1000 ( 03 E8 ) => FA is checksum
-                        //
+                        await airspotCO2NotifyCharacteristic.StartUpdatesAsync();
+                        NotifyCharacteristicAlreadyHookedUp = true;
 
-                        byte[] requestCurrentPageCmd = ReadCurrentAirspotPageCommand();
-                        int currentPage = -1;
+                        AirspotManager.ReadCurrentAirspotPageCommand();
 
-                        ICharacteristic airSpotCharacteristicWriter = await service.GetCharacteristicAsync(airspotWriteCharacteristicGUID);
-
-                        if (airSpotCharacteristicWriter == null)
-                        {
-                            Logger.WriteToLog($"airSpotCharacteristicWriter is null", false);
-                            return;
-                        }
-                        int response = await airSpotCharacteristicWriter.WriteAsync(requestCurrentPageCmd);
-
-                        Console.WriteLine(response);
-
-
-
-                        //sensorUpdateInterval = 60; //TODO => read actual interval!
-                        //if (NotifyCharacteristicAlreadyHookedUp) return;
-                        //airspotCO2NotifyCharacteristic = await service.GetCharacteristicAsync(airspotNotifyCharacteristic);
-                        //airspotCO2NotifyCharacteristic.ValueUpdated -= OnAirspotCO2CharacteristicValueChanged; //if already had been subscribed - not sure if that works?
-                        //airspotCO2NotifyCharacteristic.ValueUpdated += OnAirspotCO2CharacteristicValueChanged;
-
-                        //await characteristic.StartUpdatesAsync();
-                        //await airspotCO2NotifyCharacteristic.StartUpdatesAsync();
-                        //NotifyCharacteristicAlreadyHookedUp = true;
-
-                        //TODO write to characteristics to get all the data from the history
-
-
+                        //TODO get the data which is stored in AirspotManager (or at least will be once finished)
+                        //and put that into recordedData
                     }
 
-                    else if (monitorType == CO2MonitorType.AirCoda)
-                    {
-                        //var result = await service.GetCharacteristicsAsync();
-                        //foreach(var r in results)
-                        //{
-                        //    Logger.circularBuffer.Add(r.ToString());
-                        //    Console.WriteLine(r.ToString());
-                        //}
-                        //await adapter.DisconnectDeviceAsync(discoveredDevices[0]);
-                    }
 
                     if(currentCO2Reading > 0 && currentCO2Reading <380)
                     {
@@ -1194,15 +1045,6 @@ namespace IndoorCO2App_Multiplatform
         }
 
 
-        public static void OnAirCodaReportCharacteristicValueChanged(object sender, CharacteristicUpdatedEventArgs e)
-        {
-            if (sender == null) return;
-            var data = e.Characteristic.Value;
-            if (data == null) return;
-            Console.WriteLine("|AircodaReportChar|Datalength: " +data.Length);
-            Console.WriteLine("|AircodaReportChar|Data: " + ByteArrayToString(data));
-        }
-
         public static void OnInkbirdCO2haracteristicValueChanged(object sender, CharacteristicUpdatedEventArgs e)
         {            
             if (sender == null) return;
@@ -1228,41 +1070,7 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public static void OnAirspotCO2CharacteristicValueChanged(object sender, CharacteristicUpdatedEventArgs e)
-        {
-            //Outdated and wont be used anymore, we now read the history of the airspot like we do for airvalent and aranet
-            //if(sender == null) return;
-            //var data = e.Characteristic.Value;
-            //if(data == null) return;
-            //if (data.Length != 7) return;
-            //Logger.WriteToLog("Airspot|Data: " + ByteArrayToString(data), false);
-            //byte fb = data[4];
-            //byte sb = data[5];
-            //byte[] c = new byte[] { sb, fb }; //might be the other way around?
-            //ushort CO2LiveValue = BitConverter.ToUInt16(c, 0);
-            //if (CO2LiveValue < 100 || CO2LiveValue >= 10000) //sanity check
-            //{
-            //    return;
-            //}
-            //currentCO2Reading = CO2LiveValue;
-            //DateTime currentTime = DateTime.Now;
-            //if(timeOfLastNotifyUpdate.Year < currentTime.Year)
-            //{
-            //    timeOfLastNotifyUpdate = currentTime;
-            //}
-            //
-            //if (isRecording)
-            //{
-            //    if (currentTime - timeOfLastNotifyUpdate >= TimeSpan.FromSeconds(refreshTime - 1))
-            //    {
-            //        int t = recordedData.Count;
-            //        recordedData.Add(new SensorData(CO2LiveValue, t,DateTime.Now));
-            //        timeOfLastNotifyUpdate = currentTime;
-            //    }            
-            //}
-
-
-        }
+        
 
 
 
@@ -1321,92 +1129,16 @@ namespace IndoorCO2App_Multiplatform
         {
             if (isScanning && btCancellationTokenSource != null && btCancellationTokenSource.IsCancellationRequested == false)
                 btCancellationTokenSource.Cancel();
+        }   
+        
+        public static void UpdateAirspotLiveData(int co2Value) //called by AirspotManager
+        {
+            currentCO2Reading = co2Value;
         }
 
-        public static byte CalculateAirSpotChecksum(byte[] commandWithoutChecksum)
+        public static void UpdateAirspotHistoryData(List<SensorData> sensorData) //called by AirspotManager
         {
-            int sum = 0;
-            foreach (var b in commandWithoutChecksum)
-            {
-                sum += b;
-            }
-            return (byte)(sum & 0xFF);
-        }
-
-        public static byte[] CreateAirSpotReadPageCommand(ushort pageNumber)
-        {
-            byte header1 = 0xFF;
-            byte header2 = 0xAA;
-            byte cmd = 0x0C;
-            byte length = 0x02;
-
-            byte highByte = (byte)(pageNumber >> 8);   // 0x03
-            byte lowByte = (byte)(pageNumber & 0xFF);  // 0xE8
-
-            var command = new List<byte> { header1, header2, cmd, length, highByte, lowByte };
-
-            byte checksum = CalculateAirSpotChecksum(command.ToArray());
-            command.Add(checksum);
-
-            return command.ToArray();
-        }
-
-        public static byte[] ReadCurrentAirspotPageCommand()
-        {
-            byte header1 = 0xFF;
-            byte header2 = 0xAA;
-            byte cmd = 0x0B;
-            byte length = 0x01;
-            byte payload = 0x00;
-
-            var command = new List<byte> { header1, header2, cmd, length, payload };
-
-            byte checksum = CalculateAirSpotChecksum(command.ToArray());
-            command.Add(checksum);
-
-            return command.ToArray();
-        }
-
-        public static bool IsValidAirSpotResponseChecksum(byte[] response)
-        {
-            if (response == null || response.Length < 2)
-                return false;
-
-            int lengthWithoutChecksum = response.Length - 1;
-            byte calculated = CalculateAirSpotChecksum(response.Take(lengthWithoutChecksum).ToArray());
-            byte received = response[^1]; // Last byte
-
-            return calculated == received;
-        }
-
-        private static async void AuthenticateWithAirCodaAsync(IDevice airCodaDevice)
-        {
-            IService service = null;
-            Guid authServiceGUID = Guid.Parse("0000FEA0-0000-1000-8000-00805f9b34fb");
-            Guid reportCharacteristicGUID = Guid.Parse("0000FEA2-0000-1000-8000-00805f9b34fb");
-            //Guid authCharacteristicWrite;
-            //Guid authCharacteristicRead;
-            //string firstMessageToSent;
-
-            IReadOnlyList<IService> services = await airCodaDevice.GetServicesAsync();
-
-            service = await airCodaDevice.GetServiceAsync(authServiceGUID);
-            ICharacteristic reportCharacteristic = await service.GetCharacteristicAsync(reportCharacteristicGUID);
-            var x = reportCharacteristic.Properties;
-            if (reportCharacteristic != null)
-            {
-                if(subscribedAlreadyToReportChar==false)
-                {
-                    subscribedAlreadyToReportChar = true;
-                    reportCharacteristic.ValueUpdated += OnAirCodaReportCharacteristicValueChanged;
-                }                
-                
-            }
-            await adapter.DisconnectDeviceAsync(airCodaDevice);
-            //connect to service id,
-            //read report characteristic
-            //==> "0x1301 if starts with that
-            // const deviceRandom = valueHex.substring(6, 6 + 8); // 4 bytes => value depends on sensor
+            recordedData = sensorData;
         }
 
         public static void ToggleAranet4SmartHomeIntegration()

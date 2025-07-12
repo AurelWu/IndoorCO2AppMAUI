@@ -5,6 +5,7 @@ using Mapsui.UI.Maui;
 using Mapsui;
 using CommunityToolkit.Maui.Views;
 using Microsoft.VisualStudio.RpcContracts.Commands;
+using IndoorCO2App_Android;
 
 
 namespace IndoorCO2App_Multiplatform
@@ -399,7 +400,7 @@ namespace IndoorCO2App_Multiplatform
         {
             if (!_mapViewExpander.IsExpanded)
             {
-                _mapViewExpanderLabel.Text = "Show on map ▼";
+                _mapViewExpanderLabel.Text = AppStrings.ShowOnMapFoldOut;
             }
             else
             {
@@ -470,7 +471,7 @@ namespace IndoorCO2App_Multiplatform
                     else
                     {
                         _FinishRecordingButton.IsEnabled = true;
-                        _FinishRecordingButton.Text = "Submit Data";
+                        _FinishRecordingButton.Text = AppStrings.SubmitRecordingButtonOkay;
                     }
                 }
 
@@ -493,7 +494,7 @@ namespace IndoorCO2App_Multiplatform
             else if (BluetoothManager.isRecording)
             {
                 _FinishRecordingButton.IsEnabled = false;
-                _FinishRecordingButton.Text = "Submit data (needs 5 data points)";
+                _FinishRecordingButton.Text = AppStrings.SubmitRecordingButtonNotEnoughData;
             }
 
 
@@ -505,7 +506,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 if (!btGranted || !btActive)
                 {
-                    _DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch sensor data";
+                    _DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch sensor data"; //TODO
                 }
                 else if (BluetoothManager.discoveredDevices == null || BluetoothManager.discoveredDevices.Count == 0)
                 {
@@ -529,7 +530,7 @@ namespace IndoorCO2App_Multiplatform
 
                     if (BluetoothManager.lastAttemptFailed)
                     {
-                        _DeviceLabel.Text += " | previous update failed";
+                        _DeviceLabel.Text += AppStrings.PreviousUpdateFailed;
                     }
                 }
                 //else if (BluetoothManager.sensorUpdateInterval > 60)
@@ -547,21 +548,21 @@ namespace IndoorCO2App_Multiplatform
                     if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
-                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n  | id:" + BluetoothManager.deviceName;
+                        _DeviceLabel.Text = AppStrings.DeviceInfoLabel_CO2levels + " " + BluetoothManager.currentCO2Reading + " | " + AppStrings.DeviceInfoLabel_UpdateIn + BluetoothManager.timeToNextUpdate + "s" + "\r\n  | id:" + BluetoothManager.deviceName;
                         if(BluetoothManager.lowCO2ValueDetected==true)
                         {
                             _DeviceLabel.FormattedText = new FormattedString
                             {
                                 Spans =
                                 {
-                                    new Span { Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " " },
+                                    new Span { Text = AppStrings.DeviceInfoLabel_CO2levels + " " + BluetoothManager.currentCO2Reading + " " },
                                     new Span
                                     {
-                                        Text = "| low CO2 Value! Sensor might need recalibration ",
+                                        Text = AppStrings.LowCO2Levels,
                                         TextColor = Colors.OrangeRed, // Pick your desired warning color
                                         FontAttributes = FontAttributes.Bold
                                     },
-                                    new Span { Text = "| Update in: " + BluetoothManager.timeToNextUpdate + "s" },
+                                    new Span { Text = "| " + AppStrings.DeviceInfoLabel_UpdateIn + BluetoothManager.timeToNextUpdate + "s" },
                                     new Span { Text = "\r\n | id: " + BluetoothManager.deviceName }
                                 }
                             };
@@ -570,7 +571,7 @@ namespace IndoorCO2App_Multiplatform
                     else
                     {
                         var secondsSinceLastUpdate = DateTime.Now - BluetoothManager.timeOfLastNotifyUpdate;
-                        _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
+                        _DeviceLabel.Text = AppStrings.DeviceInfoLabel_CO2levels + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                         if (BluetoothManager.lowCO2ValueDetected == true)
                         {
@@ -578,14 +579,14 @@ namespace IndoorCO2App_Multiplatform
                             {
                                 Spans =
                                 {
-                                    new Span { Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " " },
+                                    new Span { Text = AppStrings.DeviceInfoLabel_CO2levels + " " + BluetoothManager.currentCO2Reading + " " },
                                     new Span
                                     {
-                                        Text = "| low CO2 Value! Sensor might need recalibration ",
+                                        Text = AppStrings.LowCO2Levels,
                                         TextColor = Colors.OrangeRed, // Pick your desired warning color
                                         FontAttributes = FontAttributes.Bold
                                     },
-                                    new Span { Text = "| Update in: " + BluetoothManager.timeToNextUpdate + "s" },
+                                    new Span { Text = AppStrings.DeviceInfoLabel_UpdateIn + " " + BluetoothManager.timeToNextUpdate + "s" },
                                     new Span { Text = "\r\n | id: " + BluetoothManager.deviceName }
                                 }
                             };
@@ -594,43 +595,43 @@ namespace IndoorCO2App_Multiplatform
 
                     if (BluetoothManager.lastAttemptFailed)
                     {
-                        _DeviceLabel.Text += " | previous update failed";
+                        _DeviceLabel.Text += AppStrings.PreviousUpdateFailed;
                     }
                 }
                 else if(BluetoothManager.currentCO2Reading != 0 && monitorType == CO2MonitorType.AirSpot)
                 {
-                    _DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
+                    _DeviceLabel.Text = AppStrings.DeviceInfoLabel_CO2levels + " " + BluetoothManager.currentCO2Reading + " | "+ AppStrings.DeviceInfoLabel_UpdateIn + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                 }
 
 
                 else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
                 {
-                    _DeviceLabel.Text = "Sensor found, but 'Smart Home Integration' is disabled.\r\nEnable it using the offical Aranet app ⓘ";
+                    _DeviceLabel.Text = AppStrings.DisabledSmarthomeIntegration;
                 }
                 else if (BluetoothManager.outdatedVersion == true)
                 {
-                    _DeviceLabel.Text = "Sensor found, but the firmware is outdated.\r\nUpdate it using the official Aranet app ⓘ";
+                    _DeviceLabel.Text = AppStrings.OutDatedFirmware;
                 }
                 else if (BluetoothManager.currentCO2Reading == 0)
                 {
                     if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
-                        _DeviceLabel.Text = "initiating first update in:" + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                        _DeviceLabel.Text = AppStrings.FirstUpdate + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
                     }
                     else
                     {
-                        _DeviceLabel.Text = "waiting for first data from sensor" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt status: " + BluetoothManager.gattStatus;
+                        _DeviceLabel.Text = AppStrings.WaitingForFirstUpdate + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt status: " + BluetoothManager.gattStatus;
                     }
 
                     if (BluetoothManager.lastAttemptFailed)
                     {
-                        _DeviceLabel.Text += " | previous update failed";
+                        _DeviceLabel.Text += AppStrings.PreviousUpdateFailed;
                     }
                 }
             }
             catch
             {
-                _DeviceLabel.Text = "update failed - next attempt in: " + BluetoothManager.timeToNextUpdate;
+                _DeviceLabel.Text = AppStrings.UpdateFailedNextIn + " " + BluetoothManager.timeToNextUpdate;
                 //Debug.WriteLine("UpdateDeviceLabel - exception caught");
             }
 
@@ -642,13 +643,13 @@ namespace IndoorCO2App_Multiplatform
             {
                 _StatusLabel.Text = ("");
                 _StatusLabel.IsVisible = true;
-                if (!gpsActive) _StatusLabel.Text += "GPS not enabled | ";
-                if (!gpsGranted) _StatusLabel.Text += "Location permission missing |";
-                if (!btActive) _StatusLabel.Text += "Bluetooth not enabled |";
-                if (!btGranted) _StatusLabel.Text += "Bluetooth permission not granted, press red button above";
+                if (!gpsActive) _StatusLabel.Text += AppStrings.GPSNotEnabled;
+                if (!gpsGranted) _StatusLabel.Text += AppStrings.LocationPermissionMissing;
+                if (!btActive) _StatusLabel.Text +=  AppStrings.BluetoothNotEnabled;
+                if (!btGranted) _StatusLabel.Text += AppStrings.BluetoothPermissionMissing;
                 if (gpsActive && gpsGranted && btActive && btGranted)
                 {
-                    _StatusLabel.Text = "GPS & Bluetooth permissions and status okay";
+                    _StatusLabel.Text = AppStrings.GPSAndBTOkay;
                     _StatusLabel.IsVisible = false;
                 }
             }
@@ -734,15 +735,15 @@ namespace IndoorCO2App_Multiplatform
                 else
                 {
                     _LocationLabel.IsVisible = true;
-                    _LocationLabel.Text = "GPS enabled & location permissions granted. Getting location info. Might take a minute";
+                    _LocationLabel.Text = AppStrings.DuringFirstGPSLocationUpdate;
                 }
             }
             else
             {
                 _LocationLabel.IsVisible = true;
                 _LocationLabel.Text = ("");
-                if (!gpsActive) _LocationLabel.Text += ("GPS not enabled ");
-                if (!gpsGranted) _LocationLabel.Text += ("Location permission missing");
+                if (!gpsActive) _LocationLabel.Text += AppStrings.GPSNotEnabled;
+                if (!gpsGranted) _LocationLabel.Text += AppStrings.LocationPermissionMissing;
             }
         }
 
@@ -840,21 +841,21 @@ namespace IndoorCO2App_Multiplatform
             if (currentMenuMode == MenuMode.Recording && selectedLocation != null)
             {                
                 {                    
-                    _LocationLabelRecording.Text = "Location: " + selectedLocation.Name;
+                    _LocationLabelRecording.Text = AppStrings.RecordedDataLabel + " " + selectedLocation.Name;
                 }             
                 
             }
             else if(currentMenuMode == MenuMode.Recording && selectedLocation == null)
             {
-                _LocationLabelRecording.Text = "No location selected"; //shouldnt even happen
+                _LocationLabelRecording.Text = AppStrings.NoSelectedLocation; //shouldnt even happen
             }
             else if(currentMenuMode == MenuMode.TransportRecording && selectedTransitOriginLocation != null)
             {
-                _LocationLabelRecording.Text = "Transit origin: " + selectedTransitOriginLocation;
+                _LocationLabelRecording.Text = AppStrings.TransitOrigin + selectedTransitOriginLocation;
             }
             else if(currentMenuMode == MenuMode.TransportRecording && selectedTransitOriginLocation == null)
             {
-                _LocationLabelRecording.Text = "No transit origin selected"; //shouldnt even happen
+                _LocationLabelRecording.Text = AppStrings.NoTransitOriginSelected; //shouldnt even happen
             }
         }
 
@@ -863,25 +864,25 @@ namespace IndoorCO2App_Multiplatform
 
             if (OverpassModule.everFetchedLocations == false && currentMenuMode == MenuMode.Standard)
             {
-                _LocationInfoLabel.Text = "Press 'Update Locations' to get nearby locations";
+                _LocationInfoLabel.Text = AppStrings.UpdateLocationsButtonDefaultInfoLabel;
             }            
             else if (OverpassModule.lastFetchWasSuccessButNoResults)
             {
-                _LocationInfoLabel.Text = "No locations in range";
+                _LocationInfoLabel.Text = AppStrings.NoLocationsInRange;
             }
             else if (OverpassModule.lastFetchWasSuccess && (currentMenuMode == MenuMode.Standard))
             {
-                _LocationInfoLabel.Text = "Select location:";
+                _LocationInfoLabel.Text = AppStrings.UpdateLocationsButtonFoundLocationsLabel;
             }
             else if (OverpassModule.lastFetchWasSuccess && (currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.TransportSelection))
             {
-                _LocationInfoLabel.Text = "Locations Found";
+                _LocationInfoLabel.Text = AppStrings.LocationsFoundStatus;
             }
             else if (OverpassModule.lastFetchWasSuccess == false && !OverpassModule.currentlyFetching)
             {
                 if(OverpassModule.lastFetchWasATimeout)
                 {
-                    _LocationInfoLabel.Text = "Update locations request timed out, try again";                    
+                    _LocationInfoLabel.Text = AppStrings.LocationSearchTimeout;                  
                 }
                 else
                 {
@@ -907,7 +908,7 @@ namespace IndoorCO2App_Multiplatform
 
             if (OverpassModule.everFetchedTransitLocations == false && currentMenuMode == MenuMode.TransportSelection)
             {
-                _LocationInfoLabel.Text = "Press Update locations to get nearby locations";
+                _LocationInfoLabel.Text = AppStrings.UpdateLocationUsageInfo;
             }
 
             if (OverpassModule.lastFetchWasFromCachedData)

@@ -79,7 +79,6 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
                                 <x:String>Airvalent</x:String>
                                 <x:String>Inkbird IAM-T1</x:String>
                                 <x:String>AirSpot Health</x:String>
-                                <x:String>airCoda</x:String>
                             </Picker.Items>
                         </Picker>
                     </Border>
@@ -381,12 +380,12 @@ BackgroundColor="Transparent" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="ButtonAll" Text="{Binding [TypeOfTransitAll], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="White" BackgroundColor="#512BD4" Grid.Row="0" Grid.Column="0" />
-                    <Button x:Name="ButtonBus" Text="{Binding [TypeOfTransitBus], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" />
-                    <Button x:Name="ButtonTram" Text="{Binding [TypeOfTransitTram], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" />
-                    <Button x:Name="ButtonSubway" Text="{Binding [TypeOfTransitSubway], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="0" />
-                    <Button x:Name="ButtonLightRail" Text="{Binding [TypeOfTransitLightrail], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" />
-                    <Button x:Name="ButtonTrain" Text="{Binding [TypeOfTransitTrain], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" />
+                    <Button x:Name="ButtonAll" ClassId="All" Text="{Binding [TypeOfTransitAll], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="White" BackgroundColor="#512BD4" Grid.Row="0" Grid.Column="0" />
+                    <Button x:Name="ButtonBus" ClassId="Bus" Text="{Binding [TypeOfTransitBus], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="1" />
+                    <Button x:Name="ButtonTram" ClassId="Tram"  Text="{Binding [TypeOfTransitTram], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="0" Grid.Column="2" />
+                    <Button x:Name="ButtonSubway" ClassId="Subway" Text="{Binding [TypeOfTransitSubway], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="0" />
+                    <Button x:Name="ButtonLightRail" ClassId="LightRail" Text="{Binding [TypeOfTransitLightrail], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="1" />
+                    <Button x:Name="ButtonTrain" ClassId="Train" Text="{Binding [TypeOfTransitTrain], Source={StaticResource Loc}}" Clicked="OnTransitFilterClicked" TextColor="Black" BackgroundColor="LightGray" Grid.Row="1" Grid.Column="2" />
                 </Grid>
 
 
