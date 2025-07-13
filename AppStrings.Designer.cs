@@ -214,6 +214,15 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Hide Map ▲ ähnelt.
+        /// </summary>
+        internal static string HideMapLabel {
+            get {
+                return ResourceManager.GetString("HideMapLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die include 15m before Recording ähnelt.
         /// </summary>
         internal static string Include15mBeforeRecordingToggle {

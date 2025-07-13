@@ -50,8 +50,8 @@
 
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-		<CodesignKey>Apple Distribution: Aurel Wuensch (57992CLWV5)</CodesignKey>
-		<CodesignProvision>IndoorCO2DataCollectorProvisioningProfile2025</CodesignProvision>
+		<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>
+		<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>
 		<!--<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey> -->
 		<!--CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>-->
 		<!-- <CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision> -->
@@ -172,7 +172,7 @@
 		<!-- App Icon -->		
 		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" /> -->
 		<!--<MauiIcon Include="Resources\AppIcon\appicon.png" /> -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" />
+		<MauiIcon Include="Resources\AppIcon\appicon.png" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#1d8eff" BaseSize="256,256" />

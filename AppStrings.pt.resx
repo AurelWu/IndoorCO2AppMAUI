@@ -320,4 +320,7 @@ Ative-a usando a aplicação oficial Aranet ⓘ</value>
   <data name="LocationSearchTimeout" xml:space="preserve">
     <value>Pedido de atualização de localizações expirou, tente novamente</value>
   </data>
+  <data name="HideMapLabel" xml:space="preserve">
+    <value />
+  </data>
 </root>

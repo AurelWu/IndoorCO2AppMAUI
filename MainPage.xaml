@@ -241,7 +241,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
                 <Label 
         x:Name="LocationInfoLabel" 
-        Text="{Binding [UpdateLocationsButtonFoundLocationsLabel], Source={StaticResource Loc}}" 
+        Text="{Binding [UpdateLocationsButtonDefaultInfoLabel], Source={StaticResource Loc}}" 
         FontSize="14" 
         VerticalOptions="Center" />
 
@@ -558,13 +558,13 @@ Padding="0">
                     <Button
                     x:Name="FinishRecordingButton"
                     Text="Submit Data"
-                    LineBreakMode="WordWrap"
+                    LineBreakMode="WordWrap"                    
                     SemanticProperties.Hint="FinishRecordingButton"
                     Clicked="OnFinishRecordingClicked"
                     HorizontalOptions="Center" />
                     <Button
                     x:Name="RequestCancelRecordingButton"
-                    Text="Cancel Recording"
+                    Text="{Binding [CancelRecordingConfirmationHeadline], Source={StaticResource Loc}}"
                     LineBreakMode="WordWrap"
                     SemanticProperties.Hint="RequestCancelRecordingButton"
                     Clicked="OnRequestCancelRecordingClicked"
@@ -672,11 +672,15 @@ Padding="0">
             -->
 
                 <Label
-                x:Name="TrimSliderInfoText"
-                Text="↑↑↑  ↑↑↑ &#10; Use sliders to trim start &amp; end if required"
-                HorizontalTextAlignment="Center"
-                HorizontalOptions="Center">
-
+                    x:Name="TrimSliderInfoText"
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="↑↑↑  ↑↑↑&#10;" />
+                            <Span Text="{Binding [SliderInfoLabel], Source={StaticResource Loc}}" />
+                        </FormattedString>
+                    </Label.FormattedText>
                 </Label>
 
                 <Grid
@@ -750,7 +754,7 @@ Padding="0">
                     <Label
         VerticalOptions="Center"
         VerticalTextAlignment="Center"
-        Text="Filter Device by Name:"
+        Text="{Binding [FilterDeviceByNameLabel], Source={StaticResource Loc}}"
         Grid.Column="0" />
                     <Border                    
     Stroke="{StaticResource Secondary}"

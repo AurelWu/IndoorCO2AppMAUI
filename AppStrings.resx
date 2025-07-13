@@ -325,4 +325,7 @@
   <data name="LocationSearchTimeout" xml:space="preserve">
     <value>Update locations request timed out, try again</value>
   </data>
+  <data name="HideMapLabel" xml:space="preserve">
+    <value>Hide Map ▲</value>
+  </data>
 </root>

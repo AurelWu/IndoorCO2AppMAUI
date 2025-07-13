@@ -18,7 +18,7 @@ namespace IndoorCO2App_Multiplatform
             {
                 case "English":
                     App.SetCulture("en");
-                    Preferences.Set("AppLanguage", "en");
+                    Preferences.Set("AppLanguage", "en");                    
                     break;
                 case "Français":
                     App.SetCulture("fr");
@@ -32,7 +32,16 @@ namespace IndoorCO2App_Multiplatform
                     App.SetCulture("pt");
                     Preferences.Set("AppLanguage", "pt");
                     break;
-            }            
+            }
+
+#if ANDROID
+    Application.Current.MainPage = new AppShell();
+    Shell.SetNavBarIsVisible(Application.Current.MainPage, false);
+#endif
+
+#if IOS
+            Application.Current.MainPage = new MainPage();
+#endif
         }
     }
 

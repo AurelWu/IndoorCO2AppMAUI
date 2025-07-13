@@ -318,4 +318,7 @@
   <data name="LocationSearchTimeout" xml:space="preserve">
     <value>La demande de mise à jour des lieux a expiré, veuillez réessayer.</value>
   </data>
+  <data name="HideMapLabel" xml:space="preserve">
+    <value />
+  </data>
 </root>

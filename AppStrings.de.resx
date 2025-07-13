@@ -318,4 +318,7 @@
   <data name="LocationSearchTimeout" xml:space="preserve">
     <value>Zeitüberschreitung bei der Ortssuche, bitte erneut versuchen</value>
   </data>
+  <data name="HideMapLabel" xml:space="preserve">
+    <value>Karte verbergen ▲</value>
+  </data>
 </root>

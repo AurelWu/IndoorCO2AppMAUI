@@ -18,6 +18,9 @@ namespace IndoorCO2App_Multiplatform
                 var culture = new CultureInfo(cultureString);
                 CultureInfo.DefaultThreadCurrentUICulture = culture;
                 CultureInfo.DefaultThreadCurrentCulture = culture;
+
+
+
                 QuickGuidePopUp.userManualURL = userManualStringWithoutExtension + "_" + cultureString + ".pdf";
                 if (langString == "en")
                 {
@@ -27,16 +30,27 @@ namespace IndoorCO2App_Multiplatform
                 Thread.CurrentThread.CurrentUICulture = culture;
                 Thread.CurrentThread.CurrentCulture = culture;
                 LocalisationResourceManager.Instance.SetCulture(culture);
+                var loc = LocalisationResourceManager.Instance;
+                loc.Init(AppStrings.ResourceManager);
+                // ✅ Im globalen ResourceDictionary registrieren
+                Current.Resources["Loc"] = loc;
             }
             catch (CultureNotFoundException)
             {
                 langString = "en";
+
+
+
                 QuickGuidePopUp.userManualURL = userManualStringWithoutExtension + ".pdf";
                 // Fallback to neutral (invariant) culture
                 var fallback = CultureInfo.InvariantCulture;
                 CultureInfo.DefaultThreadCurrentUICulture = fallback;
                 CultureInfo.DefaultThreadCurrentCulture = fallback;
                 LocalisationResourceManager.Instance.SetCulture(fallback);
+                var loc = LocalisationResourceManager.Instance;
+                loc.Init(AppStrings.ResourceManager);
+                // ✅ Im globalen ResourceDictionary registrieren
+                Current.Resources["Loc"] = loc;
             }
         }
 
@@ -49,7 +63,8 @@ namespace IndoorCO2App_Multiplatform
             //It still works without license but shows an Info Popup at start of the App
             try
             {
-                string key = Environment.GetEnvironmentVariable("SYNC_FUSION_KEY");                
+                string key = Environment.GetEnvironmentVariable("SYNC_FUSION_KEY");
+                //string key = "MzQ4NjA3NkAzMjM2MmUzMDJlMzBJRHJJWVZ0THlwU3MzVy9MaVhOTHh5azZyWXhqVHBwdGFMSFNiNm00dHI0PQ==";
                 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(key);
             }
             catch

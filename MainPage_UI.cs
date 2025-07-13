@@ -404,7 +404,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else
             {
-                _mapViewExpanderLabel.Text = "Hide map ▲";
+                _mapViewExpanderLabel.Text = AppStrings.HideMapLabel;
             }
         }
 
@@ -488,7 +488,7 @@ namespace IndoorCO2App_Multiplatform
                 else 
                 {
                     _FinishRecordingButton.IsEnabled = true;
-                    _FinishRecordingButton.Text = "Submit data";
+                    _FinishRecordingButton.Text = AppStrings.SubmitRecordingButtonOkay;
                 }
             }
             else if (BluetoothManager.isRecording)
@@ -899,7 +899,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (OverpassModule.currentlyFetching)
             {
-                _LocationInfoLabel.Text = $"currently retrieving nearby locations ({Math.Round((DateTime.Now-OverpassModule.startTimeOfFetch).TotalSeconds)}s) ";
+                _LocationInfoLabel.Text = $"{AppStrings.UpdateLocationsButtonSearchingInfoLabel} ({Math.Round((DateTime.Now-OverpassModule.startTimeOfFetch).TotalSeconds)}s) ";
                 if(OverpassModule.isAlreadyRetry && OverpassModule.useAlternative)
                 {
                     _LocationInfoLabel.Text = $"trying alternative location service ({Math.Round((DateTime.Now - OverpassModule.startTimeOfFetch).TotalSeconds)}s)";
