@@ -168,6 +168,12 @@
 	  <IsTrimmable>True</IsTrimmable>
 	</PropertyGroup>
 
+	<Project>
+		<PropertyGroup>
+			<GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
+		</PropertyGroup>
+	</Project>
+
 	<ItemGroup>
 		<!-- App Icon -->		
 		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" /> -->
@@ -339,7 +345,7 @@
 	  <EmbeddedResource Update="AppStrings.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>AppStrings.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
+	  </EmbeddedResource>	
 	  <EmbeddedResource Update="AppStrings.pt.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>Appstrings.pt.Designer.cs</LastGenOutput>
