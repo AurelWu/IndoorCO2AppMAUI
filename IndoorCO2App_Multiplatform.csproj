@@ -173,6 +173,10 @@
 		</PropertyGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Include="**\*.resx" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<!-- App Icon -->		
 		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" /> -->
 		<!--<MauiIcon Include="Resources\AppIcon\appicon.png" /> -->
