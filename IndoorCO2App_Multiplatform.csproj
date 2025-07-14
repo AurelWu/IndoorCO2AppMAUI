@@ -168,11 +168,9 @@
 	  <IsTrimmable>True</IsTrimmable>
 	</PropertyGroup>
 
-	<Project>
 		<PropertyGroup>
 			<GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
 		</PropertyGroup>
-	</Project>
 
 	<ItemGroup>
 		<!-- App Icon -->		
