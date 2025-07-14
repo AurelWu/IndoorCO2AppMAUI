@@ -34,6 +34,7 @@ namespace IndoorCO2App_Multiplatform
                 var loc = LocalisationResourceManager.Instance;
                                 
                 loc.Init(AppStrings.ResourceManager);
+                loc.SetCulture(culture);
                 // ✅ Im globalen ResourceDictionary registrieren
                 Current.Resources["Loc"] = loc;
             }

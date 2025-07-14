@@ -8,7 +8,7 @@ namespace IndoorCO2App_Multiplatform
 {
     public partial class MainPage : ContentPage
     {
-        private void OnLanguagePickerChanged(object sender, EventArgs e)
+        private async void OnLanguagePickerChanged(object sender, EventArgs e)
         {
             var picker = (Picker)sender;
             var selectedLanguage = picker.SelectedItem as string;
@@ -32,7 +32,7 @@ namespace IndoorCO2App_Multiplatform
                     App.SetCulture("pt");
                     Preferences.Set("AppLanguage", "pt");
                     break;
-            }
+            }                        
         }
     }
 
