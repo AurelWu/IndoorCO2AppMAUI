@@ -10,7 +10,6 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
 
 
 
-
     <AbsoluteLayout
         x:Name="MainLayout"
         HorizontalOptions="FillAndExpand"

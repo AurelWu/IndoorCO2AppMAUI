@@ -172,9 +172,6 @@
 			<GenerateSatelliteAssembliesForCore>true</GenerateSatelliteAssembliesForCore>
 		</PropertyGroup>
 
-	<ItemGroup>
-		<EmbeddedResource Include="**\*.resx" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->		

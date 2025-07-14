@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Controls;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
+
     partial class QuickGuidePopUp : Popup
     {
         public static string userManualURL = "https://indoorco2map.com/Manual.pdf";
@@ -113,7 +114,7 @@ namespace IndoorCO2App_Android
                 HorizontalOptions = LayoutOptions.Center
             };
 
-            
+
             var LinkToManualButton = new Button
             {
                 Text = AppStrings.QuickGuidePopupLinkManual,
@@ -136,21 +137,21 @@ namespace IndoorCO2App_Android
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
                 Children =
-            {
-                titleLabel,
-                description1,
-                //image1,
-                description2,
-                //image2,
-                description3,
-                description4,
-                description5,
-                description6,
-                description7,
-                //image3,
-                LinkToManualButton,
-                closeButton
-            }
+        {
+            titleLabel,
+            description1,
+            //image1,
+            description2,
+            //image2,
+            description3,
+            description4,
+            description5,
+            description6,
+            description7,
+            //image3,
+            LinkToManualButton,
+            closeButton
+        }
             };
 
             var tapGestureRecognizer = new TapGestureRecognizer();

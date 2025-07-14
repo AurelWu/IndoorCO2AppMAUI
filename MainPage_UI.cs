@@ -273,6 +273,7 @@ namespace IndoorCO2App_Multiplatform
             loc = LocalisationResourceManager.Instance;
             Application.Current.UserAppTheme = Application.Current.RequestedTheme;
             _VersionLabel.Text = appVersion;
+            UpdateStaticMenuItems();
             UpdateGPSStatusButton();
             UpdateGPSPermissionButton();
             UpdateBluetoothStatusButton();
@@ -300,6 +301,12 @@ namespace IndoorCO2App_Multiplatform
             UpdateBackgroundColor();
             UpdateQuickGuideButton();
             //HideElementsWithStatusOK();
+        }
+
+        private void UpdateStaticMenuItems()
+        {
+            _QuickGuideButtonTop.Text = AppStrings.QuickGuideUserManualButton;
+            _QuickGuideButtonBottom.Text = AppStrings.QuickGuideUserManualButton;
         }
 
         private async void HideElementsWithStatusOK()
