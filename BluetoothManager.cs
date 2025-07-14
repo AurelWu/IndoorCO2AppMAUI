@@ -997,7 +997,7 @@ namespace IndoorCO2App_Multiplatform
                     }
 
 
-                    if(currentCO2Reading > 0 && currentCO2Reading <380)
+                    if(currentCO2Reading > 0 && currentCO2Reading <385)
                     {
                         lowCO2ValueDetected = true;
                     }

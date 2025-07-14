@@ -63,8 +63,8 @@ namespace IndoorCO2App_Multiplatform
             //It still works without license but shows an Info Popup at start of the App
             try
             {
-                string key = Environment.GetEnvironmentVariable("SYNC_FUSION_KEY");
-                //string key = "MzQ4NjA3NkAzMjM2MmUzMDJlMzBJRHJJWVZ0THlwU3MzVy9MaVhOTHh5azZyWXhqVHBwdGFMSFNiNm00dHI0PQ==";
+                //string key = Environment.GetEnvironmentVariable("SYNC_FUSION_KEY");
+                string key = "MzQ4NjA3NkAzMjM2MmUzMDJlMzBJRHJJWVZ0THlwU3MzVy9MaVhOTHh5azZyWXhqVHBwdGFMSFNiNm00dHI0PQ==";
                 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(key);
             }
             catch
