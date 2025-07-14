@@ -202,7 +202,7 @@
     <value>Suchradius</value>
   </data>
   <data name="ShowOnMapFoldOut" xml:space="preserve">
-    <value>Kartendarstellung</value>
+    <value>Kartendarstellung ▼</value>
   </data>
   <data name="SliderInfoLabel" xml:space="preserve">
     <value>Regler nutzen um Beginn &amp; Ende der Aufzeichnung zu kappen</value>

@@ -88,7 +88,7 @@ namespace IndoorCO2App_Multiplatform
 
         public Button _QuickGuideButtonTop;
         public Button _QuickGuideButtonBottom;
-
+        LocalisationResourceManager loc;
 
 
         public void InitUIElements()
@@ -270,6 +270,7 @@ namespace IndoorCO2App_Multiplatform
 
         public async void UpdateUI()
         {
+            loc = LocalisationResourceManager.Instance;
             Application.Current.UserAppTheme = Application.Current.RequestedTheme;
             _VersionLabel.Text = appVersion;
             UpdateGPSStatusButton();
@@ -863,8 +864,8 @@ namespace IndoorCO2App_Multiplatform
         {
 
             if (OverpassModule.everFetchedLocations == false && currentMenuMode == MenuMode.Standard)
-            {
-                _LocationInfoLabel.Text = AppStrings.UpdateLocationsButtonDefaultInfoLabel;
+            {                                
+                _LocationInfoLabel.Text = loc["UpdateLocationsButtonDefaultInfoLabel"];
             }            
             else if (OverpassModule.lastFetchWasSuccessButNoResults)
             {

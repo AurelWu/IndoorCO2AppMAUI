@@ -18,7 +18,8 @@ namespace IndoorCO2App_Multiplatform
                 var culture = new CultureInfo(cultureString);
                 CultureInfo.DefaultThreadCurrentUICulture = culture;
                 CultureInfo.DefaultThreadCurrentCulture = culture;
-
+                Thread.CurrentThread.CurrentUICulture = culture;
+                Thread.CurrentThread.CurrentCulture = culture;
 
 
                 QuickGuidePopUp.userManualURL = userManualStringWithoutExtension + "_" + cultureString + ".pdf";
@@ -27,10 +28,11 @@ namespace IndoorCO2App_Multiplatform
                     QuickGuidePopUp.userManualURL = userManualStringWithoutExtension +".pdf";
                 }
 
-                Thread.CurrentThread.CurrentUICulture = culture;
-                Thread.CurrentThread.CurrentCulture = culture;
+
                 LocalisationResourceManager.Instance.SetCulture(culture);
+                AppStrings.ResourceManager.ReleaseAllResources();
                 var loc = LocalisationResourceManager.Instance;
+                                
                 loc.Init(AppStrings.ResourceManager);
                 // ✅ Im globalen ResourceDictionary registrieren
                 Current.Resources["Loc"] = loc;
@@ -47,6 +49,7 @@ namespace IndoorCO2App_Multiplatform
                 CultureInfo.DefaultThreadCurrentUICulture = fallback;
                 CultureInfo.DefaultThreadCurrentCulture = fallback;
                 LocalisationResourceManager.Instance.SetCulture(fallback);
+                AppStrings.ResourceManager.ReleaseAllResources();
                 var loc = LocalisationResourceManager.Instance;
                 loc.Init(AppStrings.ResourceManager);
                 // ✅ Im globalen ResourceDictionary registrieren
@@ -80,6 +83,7 @@ namespace IndoorCO2App_Multiplatform
 
             var loc = LocalisationResourceManager.Instance;
             loc.Init(AppStrings.ResourceManager);
+            
             // ✅ Im globalen ResourceDictionary registrieren
             Current.Resources["Loc"] = loc;
             App.SetCulture(applang);

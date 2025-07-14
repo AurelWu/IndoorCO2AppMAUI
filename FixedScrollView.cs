@@ -21,17 +21,26 @@ namespace IndoorCO2App_Multiplatform.Controls
 #if IOS
         private void OnKeyboardShowing(object sender, UIKeyboardEventArgs args)
         {
-            //if (Application.Current.MainPage is ContentPage page)
+            var handler = Handler;
+            var context = handler?.MauiContext;
+
+            if (handler == null || context == null)
+                return;
+
+            var control = this.ToPlatform(context)?.FindFirstResponder();
+            if (control == null)
+                return;
+
+            var rootUiView = Application.Current.MainPage?.ToPlatform(context);
+            if (rootUiView == null)
+                return;
+
+            var kbFrame = UIKeyboard.FrameEndFromNotification(args.Notification);
+            double distance = control.GetOverlapDistance(rootUiView, kbFrame);
+
+            if (distance > 0)
             {
-                UIView control = this.ToPlatform(Handler.MauiContext).FindFirstResponder();
-                //UIView rootUiView = page.Content.ToPlatform(Handler.MauiContext);
-                UIView rootUiView = Application.Current.MainPage.ToPlatform(Handler.MauiContext);
-                CGRect kbFrame = UIKeyboard.FrameEndFromNotification(args.Notification);
-                double distance = control.GetOverlapDistance(rootUiView, kbFrame);
-                if (distance > 0)
-                {
-                    Margin = new Thickness(Margin.Left, -distance, Margin.Right, distance);
-                }
+                Margin = new Thickness(Margin.Left, -distance, Margin.Right, distance);
             }
         }
         private void OnKeyboardHiding(object sender, UIKeyboardEventArgs args)

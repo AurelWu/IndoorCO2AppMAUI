@@ -9,6 +9,7 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <local:LocalisationResourceManager x:Key="Loc" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

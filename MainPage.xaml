@@ -775,7 +775,7 @@ Completed="OnEntryCompleted" />
 
                 <Button
                 x:Name="QuickGuideButtonBottom"
-                Text="Quick Guide / User Manual"
+                Text="{Binding [QuickGuideUserManualButton], Source={StaticResource Loc}}"
                 SemanticProperties.Hint="Quick Guide Button"
                 Clicked="OnShowQuickGuideClicked"
                 HorizontalOptions="Center" />

@@ -33,15 +33,6 @@ namespace IndoorCO2App_Multiplatform
                     Preferences.Set("AppLanguage", "pt");
                     break;
             }
-
-#if ANDROID
-    Application.Current.MainPage = new AppShell();
-    Shell.SetNavBarIsVisible(Application.Current.MainPage, false);
-#endif
-
-#if IOS
-            Application.Current.MainPage = new MainPage();
-#endif
         }
     }
 

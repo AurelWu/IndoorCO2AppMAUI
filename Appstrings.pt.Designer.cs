@@ -22,14 +22,14 @@ namespace IndoorCO2App_Android {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Appstrings_pt {
+    internal class AppStrings_pt {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Appstrings_pt() {
+        internal AppStrings_pt() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace IndoorCO2App_Android {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("IndoorCO2App_Android.Appstrings_pt", typeof(Appstrings_pt).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("IndoorCO2App_Android.Appstrings_pt", typeof(AppStrings_pt).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

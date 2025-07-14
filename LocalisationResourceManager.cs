@@ -29,6 +29,8 @@ namespace IndoorCO2App_Multiplatform
         {
             CultureInfo.CurrentUICulture = culture;
             CultureInfo.CurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
         }
