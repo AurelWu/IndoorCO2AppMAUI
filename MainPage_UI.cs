@@ -326,33 +326,33 @@ namespace IndoorCO2App_Multiplatform
         {
             //this is ugly but release builds on iPhone dont work with xaml bindings for some reason...
 
-            _QuickGuideButtonTop.Text = AppStrings.QuickGuideUserManualButton;
-            _QuickGuideButtonBottom.Text = AppStrings.QuickGuideUserManualButton;
-            _DevicePickerLabel.Text = AppStrings.MonitorSelectionLabel;
-            _BuildingModeButton.Text = AppStrings.TypeSelectionButton_Buildings;
-            _TransitModeButton.Text = AppStrings.TypeSelectionButton_Transit;
-            _SearchRange.Text = AppStrings.SearchRangeLabel;
-            _UpdateLocationsButton.Text = AppStrings.UpdateLocationsButton;
-            _StartRecordingButton.Text = AppStrings.StartRecordingButton;
-            _StartTransportRecordingButton.Text = AppStrings.StartTransitRecordingButton;
-            _OpenMapButton.Text = AppStrings.OpenMapInBrowserButton;            
-            _OpenImprintButton.Text = AppStrings.DataProtectionAndImprintButton;
-            _DeleteLastSubmissionButton.Text = AppStrings.DeletePreviousSubmissionButton;
+            _QuickGuideButtonTop.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuideUserManualButton));
+            _QuickGuideButtonBottom.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuideUserManualButton));
+            _DevicePickerLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.MonitorSelectionLabel));
+            _BuildingModeButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TypeSelectionButton_Buildings));
+            _TransitModeButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TypeSelectionButton_Transit));
+            _SearchRange.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SearchRangeLabel));
+            _UpdateLocationsButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.UpdateLocationsButton));
+            _StartRecordingButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.StartRecordingButton));
+            _StartTransportRecordingButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.StartTransitRecordingButton));
+            _OpenMapButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.OpenMapInBrowserButton));            
+            _OpenImprintButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DataProtectionAndImprintButton));
+            _DeleteLastSubmissionButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeletePreviousSubmissionButton));
             //TODO: FilterEditor Label
-            _DebugLogButton.Text = AppStrings.CopyDebugLogToClipBoardButton;
-            _CrashLogButton.Text = AppStrings.CopyCrashLogToClipBoardButton;
-            _TransitFilterAllButton.Text = AppStrings.TypeOfTransitAll;
-            _TransitFilterBusButton.Text = AppStrings.TypeOfTransitBus;
-            _TransitFilterTramButton.Text = AppStrings.TypeOfTransitTram;
-            _TransitFilterSubwayButton.Text = AppStrings.TypeOfTransitSubway;
-            _TransitFilterLightRailButton.Text = AppStrings.TypeOfTransitLightrail;
-            _TransitFilterTrainButton.Text = AppStrings.TypeOfTransitTrain;
-            _PrerecordingLabel.Text = AppStrings.Include15mBeforeRecordingToggle;
-            _RequestCancelRecordingButton.Text = AppStrings.CancelRecordingButton;
-            _TrimSliderInfoText.Text = AppStrings.SliderInfoLabel;
-            _VentilationLabel.Text = AppStrings.VentilationSystemCheckBox;
-            _OpenWindowsLabel.Text = AppStrings.OpenDoorsWindowsCheckbox;
-            _FilterDeviceByNameLabel.Text = AppStrings.FilterDeviceByNameLabel;
+            _DebugLogButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.CopyDebugLogToClipBoardButton));
+            _CrashLogButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.CopyCrashLogToClipBoardButton));
+            _TransitFilterAllButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TypeOfTransitAll));
+            _TransitFilterBusButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TypeOfTransitBus));
+            _TransitFilterTramButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TypeOfTransitTram));
+            _TransitFilterSubwayButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TypeOfTransitSubway));
+            _TransitFilterLightRailButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TypeOfTransitLightrail));
+            _TransitFilterTrainButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TypeOfTransitTrain));
+            _PrerecordingLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.Include15mBeforeRecordingToggle));
+            _RequestCancelRecordingButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.CancelRecordingButton));
+            _TrimSliderInfoText.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SliderInfoLabel));
+            _VentilationLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.VentilationSystemCheckBox));
+            _OpenWindowsLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.OpenDoorsWindowsCheckbox));
+            _FilterDeviceByNameLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.FilterDeviceByNameLabel));
             
 
             
@@ -461,11 +461,11 @@ namespace IndoorCO2App_Multiplatform
         {
             if (!_mapViewExpander.IsExpanded)
             {
-                _mapViewExpanderLabel.Text = AppStrings.ShowOnMapFoldOut;
+                _mapViewExpanderLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.ShowOnMapFoldOut));
             }
             else
             {
-                _mapViewExpanderLabel.Text = AppStrings.HideMapLabel;
+                _mapViewExpanderLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.HideMapLabel));
             }
         }
 
@@ -532,30 +532,30 @@ namespace IndoorCO2App_Multiplatform
                     else
                     {
                         _FinishRecordingButton.IsEnabled = true;
-                        _FinishRecordingButton.Text = AppStrings.SubmitRecordingButtonOkay;
+                        _FinishRecordingButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SubmitRecordingButtonOkay));
                     }
                 }
 
                 else if (submissionMode == SubmissionMode.BuildingManual && (_ManualNameEditor.Text == null || _ManualAddressEditor.Text == null))
                 {
                     _FinishRecordingButton.IsEnabled = false;
-                    _FinishRecordingButton.Text = "Submit data (needs address & name)";
+                    //_FinishRecordingButton.Text = "Submit data (needs address & name)";
                 }
                 else if (submissionMode == SubmissionMode.BuildingManual && (_ManualNameEditor.Text.Length < 1 || _ManualAddressEditor.Text.Length < 1))
                 {
                     _FinishRecordingButton.IsEnabled = false;
-                    _FinishRecordingButton.Text = "Submit data (needs address & name)";
+                    //_FinishRecordingButton.Text = "Submit data (needs address & name)";
                 }
                 else 
                 {
                     _FinishRecordingButton.IsEnabled = true;
-                    _FinishRecordingButton.Text = AppStrings.SubmitRecordingButtonOkay;
+                    _FinishRecordingButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SubmitRecordingButtonOkay));
                 }
             }
             else if (BluetoothManager.isRecording)
             {
                 _FinishRecordingButton.IsEnabled = false;
-                _FinishRecordingButton.Text = AppStrings.SubmitRecordingButtonNotEnoughData;
+                _FinishRecordingButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SubmitRecordingButtonNotEnoughData));
             }
 
 
@@ -591,7 +591,7 @@ namespace IndoorCO2App_Multiplatform
 
                     if (BluetoothManager.lastAttemptFailed)
                     {
-                        _DeviceLabel.Text += AppStrings.PreviousUpdateFailed;
+                        _DeviceLabel.Text += LocalisationResourceManager.Instance.GetString(nameof(AppStrings.PreviousUpdateFailed));
                     }
                 }
                 //else if (BluetoothManager.sensorUpdateInterval > 60)
@@ -609,21 +609,21 @@ namespace IndoorCO2App_Multiplatform
                     if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
-                        _DeviceLabel.Text = AppStrings.DeviceInfoLabel_CO2levels + " " + BluetoothManager.currentCO2Reading + " | " + AppStrings.DeviceInfoLabel_UpdateIn + BluetoothManager.timeToNextUpdate + "s" + "\r\n  | id:" + BluetoothManager.deviceName;
+                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_CO2levels)) + " " + BluetoothManager.currentCO2Reading + " | " + LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_UpdateIn)) + BluetoothManager.timeToNextUpdate + "s" + "\r\n  | id:" + BluetoothManager.deviceName;
                         if(BluetoothManager.lowCO2ValueDetected==true)
                         {
                             _DeviceLabel.FormattedText = new FormattedString
                             {
                                 Spans =
                                 {
-                                    new Span { Text = AppStrings.DeviceInfoLabel_CO2levels + " " + BluetoothManager.currentCO2Reading + " " },
+                                    new Span { Text =  LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_CO2levels)) + " " + BluetoothManager.currentCO2Reading + " " },
                                     new Span
                                     {
-                                        Text = AppStrings.LowCO2Levels,
+                                        Text =  LocalisationResourceManager.Instance.GetString(nameof(AppStrings.LowCO2Levels)),
                                         TextColor = Colors.OrangeRed, // Pick your desired warning color
                                         FontAttributes = FontAttributes.Bold
                                     },
-                                    new Span { Text = "| " + AppStrings.DeviceInfoLabel_UpdateIn + BluetoothManager.timeToNextUpdate + "s" },
+                                    new Span { Text = "| " + LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_UpdateIn)) + BluetoothManager.timeToNextUpdate + "s" },
                                     new Span { Text = "\r\n | id: " + BluetoothManager.deviceName }
                                 }
                             };
@@ -632,7 +632,7 @@ namespace IndoorCO2App_Multiplatform
                     else
                     {
                         var secondsSinceLastUpdate = DateTime.Now - BluetoothManager.timeOfLastNotifyUpdate;
-                        _DeviceLabel.Text = AppStrings.DeviceInfoLabel_CO2levels + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
+                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_CO2levels)) + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Updated " + secondsSinceLastUpdate.Seconds + " seconds ago" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                         if (BluetoothManager.lowCO2ValueDetected == true)
                         {
@@ -640,14 +640,14 @@ namespace IndoorCO2App_Multiplatform
                             {
                                 Spans =
                                 {
-                                    new Span { Text = AppStrings.DeviceInfoLabel_CO2levels + " " + BluetoothManager.currentCO2Reading + " " },
+                                    new Span { Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_CO2levels)) + " " + BluetoothManager.currentCO2Reading + " " },
                                     new Span
                                     {
-                                        Text = AppStrings.LowCO2Levels,
+                                        Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.LowCO2Levels)),
                                         TextColor = Colors.OrangeRed, // Pick your desired warning color
                                         FontAttributes = FontAttributes.Bold
                                     },
-                                    new Span { Text = AppStrings.DeviceInfoLabel_UpdateIn + " " + BluetoothManager.timeToNextUpdate + "s" },
+                                    new Span { Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_UpdateIn)) + " " + BluetoothManager.timeToNextUpdate + "s" },
                                     new Span { Text = "\r\n | id: " + BluetoothManager.deviceName }
                                 }
                             };
@@ -656,43 +656,43 @@ namespace IndoorCO2App_Multiplatform
 
                     if (BluetoothManager.lastAttemptFailed)
                     {
-                        _DeviceLabel.Text += AppStrings.PreviousUpdateFailed;
+                        _DeviceLabel.Text += LocalisationResourceManager.Instance.GetString(nameof(AppStrings.PreviousUpdateFailed));
                     }
                 }
                 else if(BluetoothManager.currentCO2Reading != 0 && monitorType == CO2MonitorType.AirSpot)
                 {
-                    _DeviceLabel.Text = AppStrings.DeviceInfoLabel_CO2levels + " " + BluetoothManager.currentCO2Reading + " | "+ AppStrings.DeviceInfoLabel_UpdateIn + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
+                    _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_CO2levels)) + " " + BluetoothManager.currentCO2Reading + " | "+ LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_UpdateIn)) + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
                 }
 
 
                 else if (BluetoothManager.currentCO2Reading == 0 && BluetoothManager.isGattA2DP == true)
                 {
-                    _DeviceLabel.Text = AppStrings.DisabledSmarthomeIntegration;
+                    _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DisabledSmarthomeIntegration));
                 }
                 else if (BluetoothManager.outdatedVersion == true)
                 {
-                    _DeviceLabel.Text = AppStrings.OutDatedFirmware;
+                    _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.OutDatedFirmware));
                 }
                 else if (BluetoothManager.currentCO2Reading == 0)
                 {
                     if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
-                        _DeviceLabel.Text = AppStrings.FirstUpdate + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
+                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.FirstUpdate)) + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt Status: " + BluetoothManager.gattStatus;
                     }
                     else
                     {
-                        _DeviceLabel.Text = AppStrings.WaitingForFirstUpdate + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt status: " + BluetoothManager.gattStatus;
+                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.WaitingForFirstUpdate)) + "\r\n | rssi: " + BluetoothManager.rssi + " | Gatt status: " + BluetoothManager.gattStatus;
                     }
 
                     if (BluetoothManager.lastAttemptFailed)
                     {
-                        _DeviceLabel.Text += AppStrings.PreviousUpdateFailed;
+                        _DeviceLabel.Text += LocalisationResourceManager.Instance.GetString(nameof(AppStrings.PreviousUpdateFailed));
                     }
                 }
             }
             catch
             {
-                _DeviceLabel.Text = AppStrings.UpdateFailedNextIn + " " + BluetoothManager.timeToNextUpdate;
+                _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.UpdateFailedNextIn)) + " " + BluetoothManager.timeToNextUpdate;
                 //Debug.WriteLine("UpdateDeviceLabel - exception caught");
             }
 
@@ -704,13 +704,13 @@ namespace IndoorCO2App_Multiplatform
             {
                 _StatusLabel.Text = ("");
                 _StatusLabel.IsVisible = true;
-                if (!gpsActive) _StatusLabel.Text += AppStrings.GPSNotEnabled;
-                if (!gpsGranted) _StatusLabel.Text += AppStrings.LocationPermissionMissing;
-                if (!btActive) _StatusLabel.Text +=  AppStrings.BluetoothNotEnabled;
-                if (!btGranted) _StatusLabel.Text += AppStrings.BluetoothPermissionMissing;
+                if (!gpsActive) _StatusLabel.Text += LocalisationResourceManager.Instance.GetString(nameof(AppStrings.GPSNotEnabled));
+                if (!gpsGranted) _StatusLabel.Text += LocalisationResourceManager.Instance.GetString(nameof(AppStrings.LocationPermissionMissing));
+                if (!btActive) _StatusLabel.Text +=  LocalisationResourceManager.Instance.GetString(nameof(AppStrings.BluetoothNotEnabled));
+                if (!btGranted) _StatusLabel.Text += LocalisationResourceManager.Instance.GetString(nameof(AppStrings.BluetoothPermissionMissing));
                 if (gpsActive && gpsGranted && btActive && btGranted)
                 {
-                    _StatusLabel.Text = AppStrings.GPSAndBTOkay;
+                    _StatusLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.GPSAndBTOkay));
                     _StatusLabel.IsVisible = false;
                 }
             }
@@ -796,15 +796,15 @@ namespace IndoorCO2App_Multiplatform
                 else
                 {
                     _LocationLabel.IsVisible = true;
-                    _LocationLabel.Text = AppStrings.DuringFirstGPSLocationUpdate;
+                    _LocationLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DuringFirstGPSLocationUpdate));
                 }
             }
             else
             {
                 _LocationLabel.IsVisible = true;
                 _LocationLabel.Text = ("");
-                if (!gpsActive) _LocationLabel.Text += AppStrings.GPSNotEnabled;
-                if (!gpsGranted) _LocationLabel.Text += AppStrings.LocationPermissionMissing;
+                if (!gpsActive) _LocationLabel.Text += LocalisationResourceManager.Instance.GetString(nameof(AppStrings.GPSNotEnabled));
+                if (!gpsGranted) _LocationLabel.Text += LocalisationResourceManager.Instance.GetString(nameof(AppStrings.LocationPermissionMissing));
             }
         }
 
@@ -902,21 +902,21 @@ namespace IndoorCO2App_Multiplatform
             if (currentMenuMode == MenuMode.Recording && selectedLocation != null)
             {                
                 {                    
-                    _LocationLabelRecording.Text = AppStrings.RecordedDataLabel + " " + selectedLocation.Name;
+                    _LocationLabelRecording.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.RecordedDataLabel)) + " " + selectedLocation.Name;
                 }             
                 
             }
             else if(currentMenuMode == MenuMode.Recording && selectedLocation == null)
             {
-                _LocationLabelRecording.Text = AppStrings.NoSelectedLocation; //shouldnt even happen
+                _LocationLabelRecording.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.NoSelectedLocation)); //shouldnt even happen
             }
             else if(currentMenuMode == MenuMode.TransportRecording && selectedTransitOriginLocation != null)
             {
-                _LocationLabelRecording.Text = AppStrings.TransitOrigin + selectedTransitOriginLocation;
+                _LocationLabelRecording.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TransitOrigin)) + selectedTransitOriginLocation;
             }
             else if(currentMenuMode == MenuMode.TransportRecording && selectedTransitOriginLocation == null)
             {
-                _LocationLabelRecording.Text = AppStrings.NoTransitOriginSelected; //shouldnt even happen
+                _LocationLabelRecording.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.NoTransitOriginSelected)); //shouldnt even happen
             }
         }
 
@@ -925,25 +925,25 @@ namespace IndoorCO2App_Multiplatform
 
             if (OverpassModule.everFetchedLocations == false && currentMenuMode == MenuMode.Standard)
             {                                
-                _LocationInfoLabel.Text = loc["UpdateLocationsButtonDefaultInfoLabel"];
+                _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.UpdateLocationsButtonDefaultInfoLabel)); 
             }            
             else if (OverpassModule.lastFetchWasSuccessButNoResults)
             {
-                _LocationInfoLabel.Text = AppStrings.NoLocationsInRange;
+                _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.NoLocationsInRange));
             }
             else if (OverpassModule.lastFetchWasSuccess && (currentMenuMode == MenuMode.Standard))
             {
-                _LocationInfoLabel.Text = AppStrings.UpdateLocationsButtonFoundLocationsLabel;
+                _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.UpdateLocationsButtonFoundLocationsLabel));
             }
             else if (OverpassModule.lastFetchWasSuccess && (currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.TransportSelection))
             {
-                _LocationInfoLabel.Text = AppStrings.LocationsFoundStatus;
+                _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.LocationsFoundStatus));
             }
             else if (OverpassModule.lastFetchWasSuccess == false && !OverpassModule.currentlyFetching)
             {
                 if(OverpassModule.lastFetchWasATimeout)
                 {
-                    _LocationInfoLabel.Text = AppStrings.LocationSearchTimeout;                  
+                    _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.LocationSearchTimeout));                  
                 }
                 else
                 {
@@ -960,7 +960,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (OverpassModule.currentlyFetching)
             {
-                _LocationInfoLabel.Text = $"{AppStrings.UpdateLocationsButtonSearchingInfoLabel} ({Math.Round((DateTime.Now-OverpassModule.startTimeOfFetch).TotalSeconds)}s) ";
+                _LocationInfoLabel.Text = $"{LocalisationResourceManager.Instance.GetString(nameof(AppStrings.UpdateLocationsButtonSearchingInfoLabel))} ({Math.Round((DateTime.Now-OverpassModule.startTimeOfFetch).TotalSeconds)}s) ";
                 if(OverpassModule.isAlreadyRetry && OverpassModule.useAlternative)
                 {
                     _LocationInfoLabel.Text = $"trying alternative location service ({Math.Round((DateTime.Now - OverpassModule.startTimeOfFetch).TotalSeconds)}s)";
@@ -969,7 +969,7 @@ namespace IndoorCO2App_Multiplatform
 
             if (OverpassModule.everFetchedTransitLocations == false && currentMenuMode == MenuMode.TransportSelection)
             {
-                _LocationInfoLabel.Text = AppStrings.UpdateLocationUsageInfo;
+                _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.UpdateLocationUsageInfo));
             }
 
             if (OverpassModule.lastFetchWasFromCachedData)

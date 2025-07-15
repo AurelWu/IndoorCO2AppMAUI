@@ -18,7 +18,7 @@ namespace IndoorCO2App_Multiplatform
 
             var titleLabel = new Label
             {
-                Text = AppStrings.QuickGuidePopupHeadline,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupHeadline)),
                 TextColor = Colors.Black,
                 FontSize = 16,
                 FontAttributes = FontAttributes.Bold,
@@ -27,7 +27,7 @@ namespace IndoorCO2App_Multiplatform
 
             var description1 = new Label
             {
-                Text = AppStrings.QuickGuidePopupPart1,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupPart1)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -44,7 +44,7 @@ namespace IndoorCO2App_Multiplatform
 
             var description2 = new Label
             {
-                Text = AppStrings.QuickGuidePopupPart2,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupPart2)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -60,7 +60,7 @@ namespace IndoorCO2App_Multiplatform
 
             var description3 = new Label
             {
-                Text = AppStrings.QuickGuidePopupPart3,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupPart3)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -76,7 +76,7 @@ namespace IndoorCO2App_Multiplatform
 
             var description4 = new Label
             {
-                Text = AppStrings.QuickGuidePopupPart4,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupPart4)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -84,7 +84,7 @@ namespace IndoorCO2App_Multiplatform
 
             var description5 = new Label
             {
-                Text = AppStrings.QuickGuidePopupPart5,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupPart5)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -92,7 +92,7 @@ namespace IndoorCO2App_Multiplatform
 
             var description6 = new Label
             {
-                Text = AppStrings.QuickGuidePopupPart6,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupPart6)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -100,7 +100,7 @@ namespace IndoorCO2App_Multiplatform
 
             var description7 = new Label
             {
-                Text = AppStrings.QuickGuidePopupPart7,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupPart7)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -117,14 +117,14 @@ namespace IndoorCO2App_Multiplatform
 
             var LinkToManualButton = new Button
             {
-                Text = AppStrings.QuickGuidePopupLinkManual,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupLinkManual)),
                 Command = new Command(async () => await Launcher.OpenAsync(userManualURL))
             };
 
 
             var closeButton = new Button
             {
-                Text = AppStrings.QuickGuidePopupCloseButton,
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupCloseButton)),
                 Command = new Command(() => this.Close())
             };
 

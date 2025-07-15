@@ -21,8 +21,14 @@ namespace IndoorCO2App_Multiplatform
         }
 
         public string this[string key]
+        {            
+            get => _resourceManager?.GetString(key, App.appCulture) ?? $"!{key}!";
+        }
+
+        public string GetString(string key)
         {
-            get => _resourceManager?.GetString(key, CultureInfo.CurrentUICulture) ?? $"!{key}!";
+            //Console.WriteLine("currentCulture when calling GetString from LocalisationManager: " + CultureInfo.CurrentUICulture);
+            return _resourceManager?.GetString(key, App.appCulture) ?? $"!{key}!";
         }
 
         public void SetCulture(CultureInfo culture)

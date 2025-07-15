@@ -10,14 +10,18 @@ namespace IndoorCO2App_Multiplatform
     {
         public static string langString = "en";
         public static string userManualStringWithoutExtension = "https://indoorco2map.com/Manual";
+        public static CultureInfo appCulture = CultureInfo.InvariantCulture;
         public static void SetCulture(string cultureString)
         {
             try
             {
-                langString = cultureString;
+                langString = cultureString;                
                 var culture = new CultureInfo(cultureString);
+                appCulture = culture;
                 CultureInfo.DefaultThreadCurrentUICulture = culture;
                 CultureInfo.DefaultThreadCurrentCulture = culture;
+                CultureInfo.CurrentCulture = culture;
+                CultureInfo.CurrentUICulture = culture;
                 Thread.CurrentThread.CurrentUICulture = culture;
                 Thread.CurrentThread.CurrentCulture = culture;
 
@@ -37,6 +41,7 @@ namespace IndoorCO2App_Multiplatform
                 loc.SetCulture(culture);
                 // ✅ Im globalen ResourceDictionary registrieren
                 Current.Resources["Loc"] = loc;
+                
             }
             catch (CultureNotFoundException)
             {
@@ -49,6 +54,8 @@ namespace IndoorCO2App_Multiplatform
                 var fallback = CultureInfo.InvariantCulture;
                 CultureInfo.DefaultThreadCurrentUICulture = fallback;
                 CultureInfo.DefaultThreadCurrentCulture = fallback;
+                CultureInfo.CurrentCulture = fallback;
+                CultureInfo.CurrentUICulture = fallback;
                 LocalisationResourceManager.Instance.SetCulture(fallback);
                 AppStrings.ResourceManager.ReleaseAllResources();
                 var loc = LocalisationResourceManager.Instance;
