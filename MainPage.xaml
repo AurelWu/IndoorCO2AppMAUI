@@ -207,7 +207,7 @@ xmlns:slider="clr-namespace:Syncfusion.Maui.Sliders;assembly=Syncfusion.Maui.Sli
             x:Name="SearchRangeStackLayout"
             Spacing="5"
             VerticalOptions="Start">
-                    <Label Text="{Binding [SearchRangeLabel], Source={StaticResource Loc}}"  FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Center" />
+                    <Label x:Name="LabelSearchRange" Text="{Binding [SearchRangeLabel], Source={StaticResource Loc}}"  FontSize="14" LineBreakMode="WordWrap" VerticalOptions="Center" />
                     <StackLayout Orientation="Horizontal" Spacing="10" >
                         <!--    <Label Text="50m" HorizontalOptions="Start" VerticalOptions="Center" />
                     <RadioButton x:Name="RadioButton50m" GroupName="SearchRange" VerticalOptions="Center" HorizontalOptions="Start"  CheckedChanged="OnRadioButtonCheckedChanged"  />
@@ -720,7 +720,7 @@ Padding="0">
                 </Grid>
                 <HorizontalStackLayout
                 x:Name="StackCheckboxesDoor">
-                    <Label Text="{Binding [OpenDoorsWindowsCheckbox], Source={StaticResource Loc}}"
+                    <Label x:Name="OpenWindowsLabel" Text="{Binding [OpenDoorsWindowsCheckbox], Source={StaticResource Loc}}"
                VerticalOptions="CenterAndExpand" 
                HorizontalOptions="CenterAndExpand" />
                     <CheckBox x:Name="CheckBoxDoorsWindows"
@@ -732,7 +732,7 @@ Padding="0">
 
                 <HorizontalStackLayout                
                 x:Name="StackCheckboxesVentilation">
-                    <Label Text="{Binding [VentilationSystemCheckBox], Source={StaticResource Loc}}"
+                    <Label x:Name="VentilationLabel" Text="{Binding [VentilationSystemCheckBox], Source={StaticResource Loc}}"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand"/>
                     <CheckBox x:Name="CheckBoxVentilation"
@@ -751,8 +751,9 @@ Padding="0">
     HorizontalOptions="FillAndExpand"
     Margin="5">
                     <Label
+        x:Name="FilterDeviceByNameLabel"
         VerticalOptions="Center"
-        VerticalTextAlignment="Center"
+        VerticalTextAlignment="Center"        
         Text="{Binding [FilterDeviceByNameLabel], Source={StaticResource Loc}}"
         Grid.Column="0" />
                     <Border                    

@@ -6,6 +6,7 @@ using Mapsui;
 using CommunityToolkit.Maui.Views;
 using Microsoft.VisualStudio.RpcContracts.Commands;
 using IndoorCO2App_Android;
+using Microsoft.Maui.Controls.Platform;
 
 
 namespace IndoorCO2App_Multiplatform
@@ -14,13 +15,20 @@ namespace IndoorCO2App_Multiplatform
     {
         Dictionary<VisualElement, MenuMode> MenuModesOfUIElements;
 
+        public Label _FilterDeviceByNameLabel;
+        public Label _OpenWindowsLabel;
+        public Label _VentilationLabel;
+        public Label _TrimSliderInfoText;
+        public Label _PrerecordingLabel;
         public FixedScrollView _MainScrollView;
         public ImageButton _GPSPermissionButton;
         public ImageButton _GPSStatusButton;
         public ImageButton _BluetoothEnabledButton;
         public ImageButton _BluetoothPermissionsButton;
+        public Label _SearchRange;
         public Label _StatusLabel;
         public Label _DeviceLabel;
+        public Label _DevicePickerLabel;
         public Label _LocationLabel;
         public Label _LocationLabelRecording;
         public Label _LocationInfoLabel;
@@ -56,6 +64,7 @@ namespace IndoorCO2App_Multiplatform
         public SfRangeSlider _TrimSlider;
         public Entry _CO2DeviceNameFilterEditor;
         public Button _DebugLogButton;
+        public Button _CrashLogButton;
         public Button _BuildingModeButton;
         public Button _TransitModeButton;
         public Button _TransitFilterAllButton;
@@ -93,6 +102,12 @@ namespace IndoorCO2App_Multiplatform
 
         public void InitUIElements()
         {
+            _FilterDeviceByNameLabel = this.FindByName<Label>("FilterDeviceByNameLabel");
+            _OpenWindowsLabel = this.FindByName<Label>("OpenWindowsLabel");
+            _VentilationLabel = this.FindByName<Label>("VentilationLabel");
+            _TrimSliderInfoText = this.FindByName<Label>("TrimSliderInfoText");
+            _PrerecordingLabel = this.FindByName<Label>("PrerecordingLabel");
+            _SearchRange = this.FindByName<Label>("LabelSearchRange");
             _QuickGuideButtonTop = this.FindByName<Button>("QuickGuideButtonTop");
             _QuickGuideButtonBottom = this.FindByName<Button>("QuickGuideButtonBottom");
             _LocationUpdateGrid = this.FindByName<Grid>("LocationUpdateGrid");
@@ -146,6 +161,7 @@ namespace IndoorCO2App_Multiplatform
             _CO2DeviceNameFilterEditor = this.FindByName<Entry>("CO2DeviceNameFilterEditor");
             _ResumeRecordingButton.IsVisible = false; //TODO Enable again once completely implemented
             _DebugLogButton = this.FindByName<Button>("DebugLogButton");
+            _CrashLogButton = this.FindByName<Button>("CrashLogButton");
 
             _BuildingModeButton = this.FindByName<Button>("ButtonBuildingMode");
             _TransitModeButton = this.FindByName<Button>("ButtonTransitMode");
@@ -165,10 +181,13 @@ namespace IndoorCO2App_Multiplatform
             _mapViewExpander = this.FindByName<Expander>("mapViewExpander");
             _mapViewExpanderLabel = this.FindByName<Label>("mapViewExpanderLabel");
             _SuccessNotificationLabel = this.FindByName<Label>("SuccessNotificationLabel");
+            _DevicePickerLabel = this.FindByName<Label>("DevicePickerLabel");
 
 
 
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
+            
+            MenuModesOfUIElements.Add(_DevicePickerLabel, MenuMode.Standard);
             MenuModesOfUIElements.Add(_GPSStatusButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_GPSPermissionButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_BluetoothEnabledButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
@@ -305,8 +324,42 @@ namespace IndoorCO2App_Multiplatform
 
         private void UpdateStaticMenuItems()
         {
+            //this is ugly but release builds on iPhone dont work with xaml bindings for some reason...
+
             _QuickGuideButtonTop.Text = AppStrings.QuickGuideUserManualButton;
             _QuickGuideButtonBottom.Text = AppStrings.QuickGuideUserManualButton;
+            _DevicePickerLabel.Text = AppStrings.MonitorSelectionLabel;
+            _BuildingModeButton.Text = AppStrings.TypeSelectionButton_Buildings;
+            _TransitModeButton.Text = AppStrings.TypeSelectionButton_Transit;
+            _SearchRange.Text = AppStrings.SearchRangeLabel;
+            _UpdateLocationsButton.Text = AppStrings.UpdateLocationsButton;
+            _StartRecordingButton.Text = AppStrings.StartRecordingButton;
+            _StartTransportRecordingButton.Text = AppStrings.StartTransitRecordingButton;
+            _OpenMapButton.Text = AppStrings.OpenMapInBrowserButton;            
+            _OpenImprintButton.Text = AppStrings.DataProtectionAndImprintButton;
+            _DeleteLastSubmissionButton.Text = AppStrings.DeletePreviousSubmissionButton;
+            //TODO: FilterEditor Label
+            _DebugLogButton.Text = AppStrings.CopyDebugLogToClipBoardButton;
+            _CrashLogButton.Text = AppStrings.CopyCrashLogToClipBoardButton;
+            _TransitFilterAllButton.Text = AppStrings.TypeOfTransitAll;
+            _TransitFilterBusButton.Text = AppStrings.TypeOfTransitBus;
+            _TransitFilterTramButton.Text = AppStrings.TypeOfTransitTram;
+            _TransitFilterSubwayButton.Text = AppStrings.TypeOfTransitSubway;
+            _TransitFilterLightRailButton.Text = AppStrings.TypeOfTransitLightrail;
+            _TransitFilterTrainButton.Text = AppStrings.TypeOfTransitTrain;
+            _PrerecordingLabel.Text = AppStrings.Include15mBeforeRecordingToggle;
+            _RequestCancelRecordingButton.Text = AppStrings.CancelRecordingButton;
+            _TrimSliderInfoText.Text = AppStrings.SliderInfoLabel;
+            _VentilationLabel.Text = AppStrings.VentilationSystemCheckBox;
+            _OpenWindowsLabel.Text = AppStrings.OpenDoorsWindowsCheckbox;
+            _FilterDeviceByNameLabel.Text = AppStrings.FilterDeviceByNameLabel;
+            
+
+            
+
+            
+
+            //TODO: add all the other Elements
         }
 
         private async void HideElementsWithStatusOK()

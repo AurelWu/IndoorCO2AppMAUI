@@ -379,6 +379,7 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[office=educational_institution];" +
                 $"nwr(around:{rString},{latString},{lonString})[office=government];" +
                 $"nwr(around:{rString},{latString},{lonString})[office=political_party];" +
+                $"nwr(around:{rString},{latString},{lonString})[government=register_office];" +                
                 $"nwr(around:{rString},{latString},{lonString})[shop];" +
                 $"nwr(around:{rString},{latString},{lonString})[craft];" +
                 $"nwr(around:{rString},{latString},{lonString})[aeroway=aerodrome];" +
