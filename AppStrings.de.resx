@@ -142,7 +142,7 @@
     <value>CO2 Wert:</value>
   </data>
   <data name="DeviceInfoLabel_UpdateIn" xml:space="preserve">
-    <value>Aktualisierung in:</value>
+    <value>Aktualisierung in: </value>
   </data>
   <data name="FilterDeviceByNameLabel" xml:space="preserve">
     <value>CO2-Monitor nach Namen filtern</value>
@@ -320,5 +320,59 @@
   </data>
   <data name="HideMapLabel" xml:space="preserve">
     <value>Karte verbergen ▲</value>
+  </data>
+  <data name="SubmitRecordingButtonTransitLineMissing" xml:space="preserve">
+    <value>Daten übermitteln (Verkehrsmittel-Linie benötigt)</value>
+  </data>
+  <data name="BluetoothInactiveOrPermissionsMissing" xml:space="preserve">
+    <value>Bluetooth ist nicht aktiviert oder Berechtigungen fehlen, Sensor-Daten können nicht abgerufen werden.</value>
+  </data>
+  <data name="DeviceNotYetFound" xml:space="preserve">
+    <value>Gerät noch nicht gefunden. Dies kann eine Weile dauern.</value>
+  </data>
+  <data name="NameFilterInfo" xml:space="preserve">
+    <value>Namensfilter:</value>
+  </data>
+  <data name="RecoveringInfo" xml:space="preserve">
+    <value>Daten werden vom Sensor neu ausgelesen. Dies kann eine Weile dauern.</value>
+  </data>
+  <data name="UpdateLocationsFailed" xml:space="preserve">
+    <value>Ortssuche fehlgeschlagen, bitte erneut versuchen</value>
+  </data>
+  <data name="AlternateLocationInfo" xml:space="preserve">
+    <value>alternativer Ortssuche-Dienst läuft</value>
+  </data>
+  <data name="RetrievedStored" xml:space="preserve">
+    <value>Lokal gespeicherte Standorte abgerufen</value>
+  </data>
+  <data name="NoStoredLocations" xml:space="preserve">
+    <value>Keine nahelegende Orte local gespeichert</value>
+  </data>
+  <data name="TransmissionSuccessful" xml:space="preserve">
+    <value>Übetragung erfolgreich!</value>
+  </data>
+  <data name="FirmwareGuideHeader" xml:space="preserve">
+    <value>Aktualisierung der Firmware</value>
+  </data>
+  <data name="FirmwareGuideText1" xml:space="preserve">
+    <value>Schritte um die Firmware zu aktualisieren: \r\n Öffne die offizielle Aranet Home App (aus dem App Store installieren, falls noch nicht installiert)</value>
+  </data>
+  <data name="FirmwareGuideText2" xml:space="preserve">
+    <value>2) Tippe auf das Zahnradsymbol oben rechts beim Sensor</value>
+  </data>
+  <data name="FirmwareGuideText3" xml:space="preserve">
+    <value>3) Tippe auf die Versionsnummer und folge den Anweisungen</value>
+  </data>
+  <data name="SmarthomeGuideHeader" xml:space="preserve">
+    <value>Smart Home Integration aktivieren</value>
+  </data>
+  <data name="SmartHomeGuideText1" xml:space="preserve">
+    <value>zum auslesen der Daten eines Aranet4, muss die Smart-Home-Integration aktiviert sein. \r\n Öffne die offizielle Aranet Home App (aus dem App Store installieren, falls noch nicht installiert)</value>
+  </data>
+  <data name="SmartHomeGuideText2" xml:space="preserve">
+    <value>2) Tippe auf das Zahnradsymbol oben rechts beim Sensor</value>
+  </data>
+  <data name="SmartHomeGuideText3" xml:space="preserve">
+    <value>3) Schiebe den Regler für die Smart-Home-Integration nach rechts</value>
   </data>
 </root>

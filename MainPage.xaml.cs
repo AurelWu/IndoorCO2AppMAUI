@@ -414,7 +414,7 @@ namespace IndoorCO2App_Multiplatform
         }
         public void OnTransmissionSuccess(string msg)
         {
-            _FinishRecordingButton.Text = "Transmission successful!";
+            _FinishRecordingButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TransmissionSuccessful));
             OverpassModule.lastFetchWasSuccess = false;
             OverpassModule.lastFetchWasSuccessButNoResults = false;
             OverpassModule.everFetchedLocations = false;

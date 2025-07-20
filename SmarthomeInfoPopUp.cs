@@ -4,18 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
+using IndoorCO2App_Android;
 using Microsoft.Maui.Controls;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
+
     partial class SmarthomeInfoPopUp : Popup
-    {   
+    {
         public SmarthomeInfoPopUp()
         {
 
             var titleLabel = new Label
             {
-                Text = "Enabling Smart Home Integration",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SmarthomeGuideHeader)),
                 TextColor = Colors.Black,
                 FontSize = 16,
                 FontAttributes = FontAttributes.Bold,
@@ -24,7 +26,7 @@ namespace IndoorCO2App_Android
 
             var description1 = new Label
             {
-                Text = "To read the data from your Aranet4, Smart Home Integration needs to be enabled. \r\n 1) Open the official Aranet Home App (install from App Store if not installed)",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SmartHomeGuideText1)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -32,7 +34,7 @@ namespace IndoorCO2App_Android
 
             var image1 = new Image
             {
-                Source = "aranetlogo.png", 
+                Source = "aranetlogo.png",
                 HeightRequest = 64,
                 WidthRequest = 64,
                 //Aspect = Aspect.AspectFit,
@@ -41,7 +43,7 @@ namespace IndoorCO2App_Android
 
             var description2 = new Label
             {
-                Text = "2) Press the Gears Icon in top right of the sensor",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SmartHomeGuideText2)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -49,7 +51,7 @@ namespace IndoorCO2App_Android
 
             var image2 = new Image
             {
-                Source = "smarthome_gears.png", 
+                Source = "smarthome_gears.png",
                 HeightRequest = 125,
                 Aspect = Aspect.AspectFit,
                 HorizontalOptions = LayoutOptions.Center
@@ -57,7 +59,7 @@ namespace IndoorCO2App_Android
 
             var description3 = new Label
             {
-                Text = "3) move to Smart Home Integration Slider to the right ",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SmartHomeGuideText3)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -65,7 +67,7 @@ namespace IndoorCO2App_Android
 
             var image3 = new Image
             {
-                Source = "smarthome_slider.png", 
+                Source = "smarthome_slider.png",
                 HeightRequest = 200,
                 Aspect = Aspect.AspectFit,
                 HorizontalOptions = LayoutOptions.Center
@@ -74,7 +76,7 @@ namespace IndoorCO2App_Android
 
             var closeButton = new Button
             {
-                Text = "Close",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupCloseButton)),
                 Command = new Command(() => this.Close())
             };
 
@@ -87,16 +89,16 @@ namespace IndoorCO2App_Android
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
                 Children =
-            {
-                titleLabel,
-                description1,
-                image1,
-                description2,
-                image2,
-                description3,
-                image3,
-                closeButton
-            }
+        {
+            titleLabel,
+            description1,
+            image1,
+            description2,
+            image2,
+            description3,
+            image3,
+            closeButton
+        }
             };
 
             var tapGestureRecognizer = new TapGestureRecognizer();

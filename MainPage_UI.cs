@@ -187,7 +187,7 @@ namespace IndoorCO2App_Multiplatform
 
             MenuModesOfUIElements = new Dictionary<VisualElement, MenuMode>();
             
-            MenuModesOfUIElements.Add(_DevicePickerLabel, MenuMode.Standard);
+            //MenuModesOfUIElements.Add(_DevicePickerLabel, MenuMode.Standard);
             MenuModesOfUIElements.Add(_GPSStatusButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_GPSPermissionButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_BluetoothEnabledButton, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.Standard | MenuMode.TransportRecording | MenuMode.TransportSelection);
@@ -222,7 +222,7 @@ namespace IndoorCO2App_Multiplatform
             MenuModesOfUIElements.Add(this.FindByName<Grid>("StackNotes"), MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesDoor"), MenuMode.Recording | MenuMode.ManualRecording);
             MenuModesOfUIElements.Add(this.FindByName<HorizontalStackLayout>("StackCheckboxesVentilation"), MenuMode.Recording | MenuMode.ManualRecording);
-            MenuModesOfUIElements.Add(this.FindByName<Grid>("StackDeviceNameFilter"), MenuMode.Standard | MenuMode.TransportSelection);
+            MenuModesOfUIElements.Add(this.FindByName<VerticalStackLayout>("StackDeviceNameFilter"), MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_TrimSlider, MenuMode.Recording | MenuMode.ManualRecording | MenuMode.TransportRecording);
             MenuModesOfUIElements.Add(_CO2DeviceNameFilterEditor, MenuMode.Standard | MenuMode.TransportSelection);
             MenuModesOfUIElements.Add(_VersionLabel, MenuMode.Standard | MenuMode.TransportSelection);
@@ -527,7 +527,7 @@ namespace IndoorCO2App_Multiplatform
                     if (selectedTransitLine == null)
                     {
                         _FinishRecordingButton.IsEnabled = false;
-                        _FinishRecordingButton.Text = "Submit data (needs transit line)";
+                        _FinishRecordingButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.SubmitRecordingButtonTransitLineMissing));
                     }
                     else
                     {
@@ -567,25 +567,25 @@ namespace IndoorCO2App_Multiplatform
             {
                 if (!btGranted || !btActive)
                 {
-                    _DeviceLabel.Text = "Bluetooth not enabled or permissions missing, can not fetch sensor data"; //TODO
+                    _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.BluetoothInactiveOrPermissionsMissing)); 
                 }
                 else if (BluetoothManager.discoveredDevices == null || BluetoothManager.discoveredDevices.Count == 0)
                 {
                     if (_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && currentMenuMode != MenuMode.TransportRecording && currentMenuMode != MenuMode.Recording)
                     {
-                        _DeviceLabel.Text = $"Device not yet found. This might take a while. Namefilter set to: {_CO2DeviceNameFilterEditor.Text}";
+                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceNotYetFound)) + " " + LocalisationResourceManager.Instance.GetString(nameof(AppStrings.NameFilterInfo)) + " " + $"{_CO2DeviceNameFilterEditor.Text}";
                     }
                     else if (_CO2DeviceNameFilterEditor.Text != null && _CO2DeviceNameFilterEditor.Text.Length > 0 && (currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.Recording))
                     {
-                        _DeviceLabel.Text = $"Recovering data from sensor. This might take a while.";
+                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.RecoveringInfo));
                     }
                     else if ((currentMenuMode == MenuMode.TransportRecording || currentMenuMode == MenuMode.Recording))
                     {
-                        _DeviceLabel.Text = $"Recovering data from sensor. This might take a while.";
+                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.RecoveringInfo));
                     }
                     else
                     {
-                        _DeviceLabel.Text = $"Device not yet found. This might take a while";
+                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceNotYetFound));
                     }
 
 
@@ -609,7 +609,7 @@ namespace IndoorCO2App_Multiplatform
                     if (monitorType == CO2MonitorType.Aranet4 || monitorType == CO2MonitorType.Airvalent)
                     {
                         //_DeviceLabel.Text = "CO2 Levels: " + BluetoothManager.currentCO2Reading + " |  Update in: " + BluetoothManager.timeToNextUpdate + "s" + "\r\n | rssi: " + BluetoothManager.rssi + " | id: " + BluetoothManager.deviceName;
-                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_CO2levels)) + " " + BluetoothManager.currentCO2Reading + " | " + LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_UpdateIn)) + BluetoothManager.timeToNextUpdate + "s" + "\r\n  | id:" + BluetoothManager.deviceName;
+                        _DeviceLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_CO2levels)) + " " + BluetoothManager.currentCO2Reading + " | " + LocalisationResourceManager.Instance.GetString(nameof(AppStrings.DeviceInfoLabel_UpdateIn)) + BluetoothManager.timeToNextUpdate + "s" + "\r\n  | id: " + BluetoothManager.deviceName;
                         if(BluetoothManager.lowCO2ValueDetected==true)
                         {
                             _DeviceLabel.FormattedText = new FormattedString
@@ -949,11 +949,11 @@ namespace IndoorCO2App_Multiplatform
                 {
                     if(OverpassModule.everFetchedTransitLocations && currentMenuMode != MenuMode.Standard)
                     {
-                        _LocationInfoLabel.Text = "Update locations request failed, try again";
+                        _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.UpdateLocationsFailed));
                     }
                     else if(OverpassModule.everFetchedLocations && currentMenuMode == MenuMode.Standard)
                     {
-                        _LocationInfoLabel.Text = "Update locations request failed, try again";
+                        _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.UpdateLocationsFailed));
                     }
                     
                 }                
@@ -963,7 +963,7 @@ namespace IndoorCO2App_Multiplatform
                 _LocationInfoLabel.Text = $"{LocalisationResourceManager.Instance.GetString(nameof(AppStrings.UpdateLocationsButtonSearchingInfoLabel))} ({Math.Round((DateTime.Now-OverpassModule.startTimeOfFetch).TotalSeconds)}s) ";
                 if(OverpassModule.isAlreadyRetry && OverpassModule.useAlternative)
                 {
-                    _LocationInfoLabel.Text = $"trying alternative location service ({Math.Round((DateTime.Now - OverpassModule.startTimeOfFetch).TotalSeconds)}s)";
+                    _LocationInfoLabel.Text = $"{LocalisationResourceManager.Instance.GetString(nameof(AppStrings.AlternateLocationInfo))} ({Math.Round((DateTime.Now - OverpassModule.startTimeOfFetch).TotalSeconds)}s)";
                 }
             }
 
@@ -976,27 +976,27 @@ namespace IndoorCO2App_Multiplatform
             {
                 if(currentMenuMode == MenuMode.Standard && OverpassModule.BuildingLocationData != null && OverpassModule.BuildingLocationData.Count>0)
                 {
-                    _LocationInfoLabel.Text = "Retrieved locally stored locations";
+                    _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.RetrievedStored));
                 }
                 else if(currentMenuMode == MenuMode.Standard)
                 {
-                    _LocationInfoLabel.Text = "No nearby Locations stored locally";
+                    _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.NoStoredLocations));
                 }
                 else if(currentMenuMode == MenuMode.TransportSelection && OverpassModule.TransportStartLocationData != null && OverpassModule.TransportStartLocationData.Count>0)
                 {
-                    _LocationInfoLabel.Text = "Retrieved locally stored locations";
+                    _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.RetrievedStored));
                 }
                 else if (currentMenuMode == MenuMode.TransportSelection)
                 {
-                    _LocationInfoLabel.Text = "No nearby Locations stored locally";
+                    _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.NoStoredLocations));
                 }
                 else if (currentMenuMode == MenuMode.TransportRecording && OverpassModule.TransportDestinationLocationData != null && OverpassModule.TransportDestinationLocationData.Count > 0)
                 {
-                    _LocationInfoLabel.Text = "Retrieved locally stored Locations";
+                    _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.RetrievedStored));
                 }
                 else if (currentMenuMode == MenuMode.TransportRecording)
                 {
-                    _LocationInfoLabel.Text = "No nearby Locations stored locally";
+                    _LocationInfoLabel.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.NoStoredLocations));
                 }
             }            
         }

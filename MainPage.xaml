@@ -742,35 +742,32 @@ Padding="0">
                    HorizontalOptions="CenterAndExpand" />
                 </HorizontalStackLayout>
 
-                <Grid
-    x:Name="StackDeviceNameFilter"    
-    RowDefinitions="50"
-    ColumnDefinitions="90,*"
-    RowSpacing="0"
-    ColumnSpacing="5"
-    HorizontalOptions="FillAndExpand"
-    Margin="5">
+                <VerticalStackLayout
+    x:Name="StackDeviceNameFilter"
+    Spacing="5"
+    Padding="5">
+
                     <Label
         x:Name="FilterDeviceByNameLabel"
-        VerticalOptions="Center"
-        VerticalTextAlignment="Center"        
         Text="{Binding [FilterDeviceByNameLabel], Source={StaticResource Loc}}"
-        Grid.Column="0" />
-                    <Border                    
-    Stroke="{StaticResource Secondary}"
-    StrokeThickness="2"
-    Grid.Column="1"
-    Padding="0">
+        VerticalOptions="Center"
+        VerticalTextAlignment="Center" />
+
+                    <Border
+        Stroke="{StaticResource Secondary}"
+        StrokeThickness="2"
+        Padding="0">
 
                         <Entry
-x:Name="CO2DeviceNameFilterEditor"  
-VerticalTextAlignment="Start"
-BackgroundColor="Transparent" 
-TextChanged="OnDeviceNameFilterValueChanged"
-Focused="OnEditorFocused"
-Completed="OnEntryCompleted" />
+            x:Name="CO2DeviceNameFilterEditor"
+            VerticalTextAlignment="Start"
+            BackgroundColor="Transparent"
+            TextChanged="OnDeviceNameFilterValueChanged"
+            Focused="OnEditorFocused"
+            Completed="OnEntryCompleted" />
                     </Border>
-                </Grid>
+
+                </VerticalStackLayout>
 
 
                 <Button

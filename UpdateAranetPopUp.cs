@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
+using IndoorCO2App_Android;
 using Microsoft.Maui.Controls;
 
-namespace IndoorCO2App_Android
+namespace IndoorCO2App_Multiplatform
 {
     partial class UpdateAranetPopUp : Popup
     {   
@@ -15,7 +16,7 @@ namespace IndoorCO2App_Android
 
             var titleLabel = new Label
             {
-                Text = "Updating the Firmware",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.FirmwareGuideHeader)),
                 FontSize = 16,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Colors.Black,
@@ -24,7 +25,7 @@ namespace IndoorCO2App_Android
 
             var description1 = new Label
             {
-                Text = "To Update The Firmware follow these steps: \r\n 1) Open the official Aranet Home App (install from App Store if not installed)",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.FirmwareGuideText1)),
                 FontSize = 12,
                 TextColor = Colors.Black,
                 HorizontalOptions = LayoutOptions.Center
@@ -41,7 +42,7 @@ namespace IndoorCO2App_Android
 
             var description2 = new Label
             {
-                Text = "2) Press the Gears Icon in top right of the sensor",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.FirmwareGuideText2)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -57,7 +58,7 @@ namespace IndoorCO2App_Android
 
             var description3 = new Label
             {
-                Text = "3) press the Version number and follow the instructions ",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.FirmwareGuideText3)),
                 TextColor = Colors.Black,
                 FontSize = 12,
                 HorizontalOptions = LayoutOptions.Center
@@ -74,7 +75,7 @@ namespace IndoorCO2App_Android
 
             var closeButton = new Button
             {
-                Text = "Close",
+                Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.QuickGuidePopupCloseButton)),
                 TextColor = Colors.Black,
                 Command = new Command(() => this.Close())
             };

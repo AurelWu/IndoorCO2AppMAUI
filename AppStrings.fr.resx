@@ -142,7 +142,7 @@
     <value>Niveaux de CO2 :</value>
   </data>
   <data name="DeviceInfoLabel_UpdateIn" xml:space="preserve">
-    <value>Mise à jour dans :</value>
+    <value>Mise à jour dans : </value>
   </data>
   <data name="FilterDeviceByNameLabel" xml:space="preserve">
     <value>Filtrer les appareils par nom :</value>
@@ -320,5 +320,59 @@
   </data>
   <data name="HideMapLabel" xml:space="preserve">
     <value />
+  </data>
+  <data name="SubmitRecordingButtonTransitLineMissing" xml:space="preserve">
+    <value>Transmettre les données (nécessite un trajet en transport)</value>
+  </data>
+  <data name="BluetoothInactiveOrPermissionsMissing" xml:space="preserve">
+    <value>Bluetooth non activé ou autorisations manquantes, impossible de récupérer les données du détecteur</value>
+  </data>
+  <data name="DeviceNotYetFound" xml:space="preserve">
+    <value>Appareil pas encore détecté. Cela peut prendre un certain temps.</value>
+  </data>
+  <data name="NameFilterInfo" xml:space="preserve">
+    <value>Filtre de nom défini comme suit : </value>
+  </data>
+  <data name="RecoveringInfo" xml:space="preserve">
+    <value>Récupération des données du détecteur. Cela peut prendre un certain temps.</value>
+  </data>
+  <data name="UpdateLocationsFailed" xml:space="preserve">
+    <value>La demande de mise à jour des lieux a échoué, veuillez réessayer.</value>
+  </data>
+  <data name="AlternateLocationInfo" xml:space="preserve">
+    <value>En recherche d'un autre service de localisation</value>
+  </data>
+  <data name="RetrievedStored" xml:space="preserve">
+    <value>Lieux enregistrés localement récupérés</value>
+  </data>
+  <data name="NoStoredLocations" xml:space="preserve">
+    <value>Aucun lieux à proximité enregistré localement</value>
+  </data>
+  <data name="TransmissionSuccessful" xml:space="preserve">
+    <value>Transmission réussie !</value>
+  </data>
+  <data name="FirmwareGuideHeader" xml:space="preserve">
+    <value>Mise à jour du firmware</value>
+  </data>
+  <data name="FirmwareGuideText1" xml:space="preserve">
+    <value>Pour mettre à jour le firmware, procédez comme suit : \r\n 1) Ouvrez l'application officielle Aranet Home (installez-la depuis l'App Store si elle n'est pas déjà installée).</value>
+  </data>
+  <data name="FirmwareGuideText2" xml:space="preserve">
+    <value>2) Appuyez sur l'icône en forme d'engrenage en haut à droite du détecteur.</value>
+  </data>
+  <data name="FirmwareGuideText3" xml:space="preserve">
+    <value>3) Appuyez sur le numéro de version et suivez les instructions.</value>
+  </data>
+  <data name="SmarthomeGuideHeader" xml:space="preserve">
+    <value>Activer « intégration Smart Home »</value>
+  </data>
+  <data name="SmartHomeGuideText1" xml:space="preserve">
+    <value>Pour lire les données de votre Aranet4, « intégration Smart Home » doit être activée. \r\n 1) Ouvrez l'application officielle Aranet Home (installez-la depuis l'App Store si elle n'est pas déjà installée).</value>
+  </data>
+  <data name="SmartHomeGuideText2" xml:space="preserve">
+    <value>2) Appuyez sur l'icône en forme d'engrenage en haut à droite du capteur.</value>
+  </data>
+  <data name="SmartHomeGuideText3" xml:space="preserve">
+    <value>3) Déplacez le curseur « Intégration Smart Home » vers la droite.</value>
   </data>
 </root>

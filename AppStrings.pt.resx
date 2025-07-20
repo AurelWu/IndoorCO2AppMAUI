@@ -142,7 +142,7 @@
     <value>Níveis de CO2:</value>
   </data>
   <data name="DeviceInfoLabel_UpdateIn" xml:space="preserve">
-    <value>Atualização em:</value>
+    <value>Atualização em: </value>
   </data>
   <data name="FilterDeviceByNameLabel" xml:space="preserve">
     <value>Filtrar dispositivo por nome:</value>
@@ -322,5 +322,59 @@ Ative-a usando a aplicação oficial Aranet ⓘ</value>
   </data>
   <data name="HideMapLabel" xml:space="preserve">
     <value />
+  </data>
+  <data name="SubmitRecordingButtonTransitLineMissing" xml:space="preserve">
+    <value>Submeter dados (necessita de linha de trânsito)</value>
+  </data>
+  <data name="BluetoothInactiveOrPermissionsMissing" xml:space="preserve">
+    <value>Bluetooth não está ativado ou as permissões estão em falta, não é possível obter dados do sensor</value>
+  </data>
+  <data name="DeviceNotYetFound" xml:space="preserve">
+    <value>Dispositivo ainda não encontrado. Isto pode demorar um pouco.</value>
+  </data>
+  <data name="NameFilterInfo" xml:space="preserve">
+    <value>Filtro de nome definido para: </value>
+  </data>
+  <data name="RecoveringInfo" xml:space="preserve">
+    <value>A recuperar dados do sensor. Isto pode demorar um pouco.</value>
+  </data>
+  <data name="UpdateLocationsFailed" xml:space="preserve">
+    <value>Pedido de atualização de localizações falhou, tente novamente</value>
+  </data>
+  <data name="AlternateLocationInfo" xml:space="preserve">
+    <value>a tentar serviço de localização alternativo</value>
+  </data>
+  <data name="RetrievedStored" xml:space="preserve">
+    <value>Localizações guardadas localmente recuperadas</value>
+  </data>
+  <data name="NoStoredLocations" xml:space="preserve">
+    <value>Sem localizações próximas guardadas localmente</value>
+  </data>
+  <data name="TransmissionSuccessful" xml:space="preserve">
+    <value>Transmissão bem-sucedida!</value>
+  </data>
+  <data name="FirmwareGuideHeader" xml:space="preserve">
+    <value>A atualizar o firmware</value>
+  </data>
+  <data name="FirmwareGuideText1" xml:space="preserve">
+    <value>Para atualizar o firmware, siga estes passos: \r\n 1) Abra a aplicação oficial Aranet Home (instale a partir da App Store se ainda não estiver instalada)</value>
+  </data>
+  <data name="FirmwareGuideText2" xml:space="preserve">
+    <value>2) Carregue no ícone da engrenagem no canto superior direito do sensor</value>
+  </data>
+  <data name="FirmwareGuideText3" xml:space="preserve">
+    <value>3) Carregue no número da versão e siga as instruções</value>
+  </data>
+  <data name="SmarthomeGuideHeader" xml:space="preserve">
+    <value>A ativar a integração Smart Home </value>
+  </data>
+  <data name="SmartHomeGuideText1" xml:space="preserve">
+    <value>Para ler os dados do seu Aranet4, a integração com casa inteligente tem de estar ativada. \r\n 1) Abra a aplicação oficial Aranet Home (instale a partir da App Store se ainda não estiver instalada)</value>
+  </data>
+  <data name="SmartHomeGuideText2" xml:space="preserve">
+    <value>2) Carregue no ícone da engrenagem no canto superior direito do sensor</value>
+  </data>
+  <data name="SmartHomeGuideText3" xml:space="preserve">
+    <value>3) Mova o controlo deslizante de Integração com Casa Inteligente para a direita</value>
   </data>
 </root>

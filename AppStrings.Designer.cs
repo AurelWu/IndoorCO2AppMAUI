@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace IndoorCO2App_Multiplatform {
+namespace IndoorCO2App_Android {
     using System;
     
     
@@ -57,6 +57,24 @@ namespace IndoorCO2App_Multiplatform {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die trying alternative location service ähnelt.
+        /// </summary>
+        internal static string AlternateLocationInfo {
+            get {
+                return ResourceManager.GetString("AlternateLocationInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Bluetooth not enabled or permissions missing, can not fetch sensor data ähnelt.
+        /// </summary>
+        internal static string BluetoothInactiveOrPermissionsMissing {
+            get {
+                return ResourceManager.GetString("BluetoothInactiveOrPermissionsMissing", resourceCulture);
             }
         }
         
@@ -151,11 +169,20 @@ namespace IndoorCO2App_Multiplatform {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Update in: ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Update in:  ähnelt.
         /// </summary>
         internal static string DeviceInfoLabel_UpdateIn {
             get {
                 return ResourceManager.GetString("DeviceInfoLabel_UpdateIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Device not yet found. This might take a while. ähnelt.
+        /// </summary>
+        internal static string DeviceNotYetFound {
+            get {
+                return ResourceManager.GetString("DeviceNotYetFound", resourceCulture);
             }
         }
         
@@ -178,11 +205,47 @@ namespace IndoorCO2App_Multiplatform {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Filter Device by Name: ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Filter CO2-Monitor by Name: ähnelt.
         /// </summary>
         internal static string FilterDeviceByNameLabel {
             get {
                 return ResourceManager.GetString("FilterDeviceByNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Updating the Firmware ähnelt.
+        /// </summary>
+        internal static string FirmwareGuideHeader {
+            get {
+                return ResourceManager.GetString("FirmwareGuideHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die To Update The Firmware follow these steps: \r\n 1) Open the official Aranet Home App (install from App Store if not installed) ähnelt.
+        /// </summary>
+        internal static string FirmwareGuideText1 {
+            get {
+                return ResourceManager.GetString("FirmwareGuideText1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 2) Press the Gears Icon in top right of the sensor ähnelt.
+        /// </summary>
+        internal static string FirmwareGuideText2 {
+            get {
+                return ResourceManager.GetString("FirmwareGuideText2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 3) press the Version number and follow the instructions ähnelt.
+        /// </summary>
+        internal static string FirmwareGuideText3 {
+            get {
+                return ResourceManager.GetString("FirmwareGuideText3", resourceCulture);
             }
         }
         
@@ -277,6 +340,15 @@ namespace IndoorCO2App_Multiplatform {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Namefilter set to:  ähnelt.
+        /// </summary>
+        internal static string NameFilterInfo {
+            get {
+                return ResourceManager.GetString("NameFilterInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die No locations in range ähnelt.
         /// </summary>
         internal static string NoLocationsInRange {
@@ -291,6 +363,15 @@ namespace IndoorCO2App_Multiplatform {
         internal static string NoSelectedLocation {
             get {
                 return ResourceManager.GetString("NoSelectedLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die No nearby Locations stored locally ähnelt.
+        /// </summary>
+        internal static string NoStoredLocations {
+            get {
+                return ResourceManager.GetString("NoStoredLocations", resourceCulture);
             }
         }
         
@@ -457,6 +538,24 @@ namespace IndoorCO2App_Multiplatform {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Recovering data from sensor. This might take a while. ähnelt.
+        /// </summary>
+        internal static string RecoveringInfo {
+            get {
+                return ResourceManager.GetString("RecoveringInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Retrieved locally stored locations ähnelt.
+        /// </summary>
+        internal static string RetrievedStored {
+            get {
+                return ResourceManager.GetString("RetrievedStored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Search Range ähnelt.
         /// </summary>
         internal static string SearchRangeLabel {
@@ -480,6 +579,42 @@ namespace IndoorCO2App_Multiplatform {
         internal static string SliderInfoLabel {
             get {
                 return ResourceManager.GetString("SliderInfoLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Enabling Smart Home Integration ähnelt.
+        /// </summary>
+        internal static string SmarthomeGuideHeader {
+            get {
+                return ResourceManager.GetString("SmarthomeGuideHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die To read the data from your Aranet4, Smart Home Integration needs to be enabled. \r\n 1) Open the official Aranet Home App (install from App Store if not installed) ähnelt.
+        /// </summary>
+        internal static string SmartHomeGuideText1 {
+            get {
+                return ResourceManager.GetString("SmartHomeGuideText1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 2) Press the Gears Icon in top right of the sensor ähnelt.
+        /// </summary>
+        internal static string SmartHomeGuideText2 {
+            get {
+                return ResourceManager.GetString("SmartHomeGuideText2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 3) move the Smart Home Integration Slider to the right ähnelt.
+        /// </summary>
+        internal static string SmartHomeGuideText3 {
+            get {
+                return ResourceManager.GetString("SmartHomeGuideText3", resourceCulture);
             }
         }
         
@@ -520,11 +655,29 @@ namespace IndoorCO2App_Multiplatform {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Submit data (needs transit line) ähnelt.
+        /// </summary>
+        internal static string SubmitRecordingButtonTransitLineMissing {
+            get {
+                return ResourceManager.GetString("SubmitRecordingButtonTransitLineMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Transit origin:  ähnelt.
         /// </summary>
         internal static string TransitOrigin {
             get {
                 return ResourceManager.GetString("TransitOrigin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Transmission successful! ähnelt.
+        /// </summary>
+        internal static string TransmissionSuccessful {
+            get {
+                return ResourceManager.GetString("TransmissionSuccessful", resourceCulture);
             }
         }
         
@@ -642,6 +795,15 @@ namespace IndoorCO2App_Multiplatform {
         internal static string UpdateLocationsButtonSearchingInfoLabel {
             get {
                 return ResourceManager.GetString("UpdateLocationsButtonSearchingInfoLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Update locations request failed, try again ähnelt.
+        /// </summary>
+        internal static string UpdateLocationsFailed {
+            get {
+                return ResourceManager.GetString("UpdateLocationsFailed", resourceCulture);
             }
         }
         

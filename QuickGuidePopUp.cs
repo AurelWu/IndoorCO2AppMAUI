@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Maui.Views;
+using IndoorCO2App_Android;
 using Microsoft.Maui.Controls;
 
 namespace IndoorCO2App_Multiplatform
