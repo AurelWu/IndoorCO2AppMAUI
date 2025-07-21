@@ -676,7 +676,8 @@ Padding="0">
                     HorizontalOptions="Center">
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="↑↑↑  ↑↑↑&#10;" />
+                            <Span Text="↑↑↑  ↑↑↑" />
+                            <Span Text="&#10;" />
                             <Span Text="{Binding [SliderInfoLabel], Source={StaticResource Loc}}" />
                         </FormattedString>
                     </Label.FormattedText>
