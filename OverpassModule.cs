@@ -395,6 +395,7 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[leisure=sauna];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=hackerspace];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=townhall];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=car_rental];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=convention_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=conference_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=congress_centre];" +
