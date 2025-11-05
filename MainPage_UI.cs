@@ -518,7 +518,7 @@ namespace IndoorCO2App_Multiplatform
             int original = BluetoothManager.recordedData.Count;
             int trimStart = (int)Math.Floor(_TrimSlider.RangeStart);
             int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
-            if (trimEnd - trimStart >= 4 && BluetoothManager.isRecording)
+            if (trimEnd - trimStart >= 4 && (BluetoothManager.isRecording || TransmissionFailed == true))
             {
 
                 if (submissionMode == SubmissionMode.Transit)

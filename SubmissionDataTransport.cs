@@ -40,7 +40,7 @@ namespace IndoorCO2App_Multiplatform
         public string EndPointNWRType;
 
 
-        public SubmissionDataTransport(string sensorType,string sensorID, long startTime, long transportID, string transportNWRType, string transportName, long startingPointID, string startingPointNWRType, string startingPointName)
+        public SubmissionDataTransport(string sensorType,string sensorID, long startTime, long transportID, string transportNWRType, string transportName, long startingPointID, string startingPointNWRType, string startingPointName, bool isRecovery)
         {
             this.sensorID = sensorID;            
             this.sensorType = sensorType;
@@ -60,6 +60,10 @@ namespace IndoorCO2App_Multiplatform
             this.EndPointName = "";                        
             this.EndPointNWRType = "";
             AdditionalNotes = String.Empty;
+            if (MainPage.MainPageSingleton._NotesEditor.Text != null && isRecovery)
+            {
+                AdditionalNotes = MainPage.MainPageSingleton._NotesEditor.Text;
+            }
         }
         public string ToJson(int rangeSliderMin, int rangeSliderMax)
         {

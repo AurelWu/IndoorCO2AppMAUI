@@ -49,22 +49,26 @@
 	</PropertyGroup>
 
 
+	
+	<!--for deployed builds-->
+	<!--
 	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
 		<CodesignKey>Apple Distribution: Aurel Wuensch (57992CLWV5)</CodesignKey>
 		<CodesignProvision>IndoorCO2DataCollectorProvisioningProfile2025</CodesignProvision>
 		<ProvisioningType>manual</ProvisioningType>
+	</PropertyGroup>-->
 
-		<!--<CodesignKey>Apple Distribution: Aurel Wuensch (57992CLWV5)</CodesignKey>
+	<!--<CodesignKey>Apple Distribution: Aurel Wuensch (57992CLWV5)</CodesignKey>
 		<CodesignProvision>IndoorCO2DataCollectorProvisioningProfile2025</CodesignProvision>
 		<ProvisioningType>manual</ProvisioningType>
 		-->
-		<!--<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey> -->
-		<!--CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey>-->
-		<!-- <CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision> -->
-		<!--<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision> -->
-		<!--<ProvisioningType>automatic</ProvisioningType> -->
-		<!--<CodesignKey>Apple Development: Created via API (57992CLWV5)</CodesignKey>-->
-	</PropertyGroup> 
+	<PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+		<CodesignKey>Apple Development: Created via API (XXAZ8TB4Q7)</CodesignKey>
+		<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>
+		<!--<CodesignProvision>VS: com.aurelwuensch.indoorco2datacollector Development</CodesignProvision>-->
+		<ProvisioningType>automatic</ProvisioningType> 
+	</PropertyGroup>
+
 
 	<!--<CodesignKey>Apple Development: Created via API (Q7C7NQF925)</CodesignKey> -->
 	

@@ -20,7 +20,7 @@ namespace IndoorCO2App_Multiplatform
         internal string OccupancyLevel { get; set; }
         internal string AdditionalNotes { get; set; }
 
-        public SubmissionData(string sensorType, string sensorID, string nwrType, long nwrID, string nwrName, double nwrLat, double nwrLon, long startTime)
+        public SubmissionData(string sensorType, string sensorID, string nwrType, long nwrID, string nwrName, double nwrLat, double nwrLon, long startTime, bool isRecovery)
         {
             SensorType = sensorType;
             SensorID = sensorID;
@@ -30,8 +30,12 @@ namespace IndoorCO2App_Multiplatform
             StartTime = startTime;
             NwrLatitude = nwrLat;
             NwrLongitude = nwrLon;
-            OccupancyLevel = "undefined";
+            OccupancyLevel = "undefined";            
             AdditionalNotes = String.Empty;
+            if (MainPage.MainPageSingleton._NotesEditor.Text != null && isRecovery)
+            {
+                AdditionalNotes = MainPage.MainPageSingleton._NotesEditor.Text;
+            }
             SensorData = new List<SensorData>();
         }
 

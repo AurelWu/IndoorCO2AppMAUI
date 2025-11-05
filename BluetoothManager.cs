@@ -189,13 +189,13 @@ namespace IndoorCO2App_Multiplatform
 
         }
 
-        public static void StartNewRecording(CO2MonitorType monitorType, LocationData location, long startTime, bool prerecording)
+        public static void StartNewRecording(CO2MonitorType monitorType, LocationData location, long startTime, bool prerecording, bool isRecovery)
         {
             previousUpdate = DateTime.Now.AddMinutes(-3);
             isRecording = true;
             recordedData = new List<SensorData>();
             startingTime = startTime;
-            submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,false), location.Type, location.ID, location.Name, location.Latitude, location.Longitude, startTime);
+            submissionData = new SubmissionData(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,true), location.Type, location.ID, location.Name, location.Latitude, location.Longitude, startTime, isRecovery);
             NotifyCharacteristicAlreadyHookedUp = false;
             if (prerecording)
             {
@@ -212,7 +212,7 @@ namespace IndoorCO2App_Multiplatform
             isRecording = true;
             isTransportRecording = false;
             recordedData = new List<SensorData>();
-            submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(deviceID,false), startTime);
+            submissionDataManual = new SubmissionDataManual(UserIDManager.GetEncryptedID(deviceID,true), startTime);
             startingTime = startTime;
             NotifyCharacteristicAlreadyHookedUp = false;
             if (prerecording)
@@ -225,13 +225,13 @@ namespace IndoorCO2App_Multiplatform
             }
         }
 
-        public static void StartTransportRecording(CO2MonitorType monitorType,long startTime, bool prerecording, LocationData startLocation, TransitLineData transitLineData)
+        public static void StartTransportRecording(CO2MonitorType monitorType,long startTime, bool prerecording, LocationData startLocation, TransitLineData transitLineData, bool isRecovery)
         {
             isRecording = true;
             isTransportRecording = true;
             recordedData = new List<SensorData>();
             startingTime = startTime;
-            submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,true), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.Type,startLocation.Name);
+            submissionDataTransport = new SubmissionDataTransport(monitorType.ToString(), UserIDManager.GetEncryptedID(deviceID,true), startTime,transitLineData.ID,transitLineData.NWRType,transitLineData.Name, startLocation.ID,startLocation.Type,startLocation.Name, isRecovery);
             NotifyCharacteristicAlreadyHookedUp = false;
             prerecordingLength = 0; // no prerecording for now
             Logger.WriteToLog("Transportrecording starttime used: " + startingTime + " | current Time: " + DateTime.UtcNow, false);
@@ -451,15 +451,14 @@ namespace IndoorCO2App_Multiplatform
                 if (monitorType == CO2MonitorType.InkbirdIAMT1)
                 {
                     List<IDevice> inkbirdFilter = discoveredDevices.ToList();
-                    inkbirdFilter.RemoveAll(x => !x.Name.Contains("Inkbird"));
+                    inkbirdFilter.RemoveAll(x => x == null || x.Name == null || !x.Name.Contains("Ink@IAM-T1"));                    
                     discoveredDevices = inkbirdFilter;
                 }
                
                 else if (monitorType == CO2MonitorType.AirSpot)
                 {
                     List<IDevice> airSpotFilter = discoveredDevices.ToList();
-                    airSpotFilter.RemoveAll(x => x.Name == null);
-                    airSpotFilter.RemoveAll(x => !x.Name.ToLower().Contains("airspot"));
+                    airSpotFilter.RemoveAll(x => x == null || x.Name == null || !x.Name.ToLower().Contains("airspot"));
                     discoveredDevices = airSpotFilter;
                 }
 
@@ -1075,6 +1074,7 @@ namespace IndoorCO2App_Multiplatform
                 return;
             }
             currentCO2Reading = CO2LiveValue;
+            gattStatus = 0;
             timeOfLastNotifyUpdate = DateTime.Now;
             if (isRecording)
             {

@@ -43,7 +43,8 @@
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
-     inkscape:current-layer="Layer_1" />
+     inkscape:current-layer="Layer_1"
+     inkscape:document-rotation="0" />
   <defs
      id="defs4">
     <style
@@ -78,7 +79,7 @@
      id="rect6" />
   <g
      id="g68"
-     transform="matrix(0.84689604,0,0,0.84689604,19.876375,21.011216)">
+     transform="matrix(1.3926436,0,0,1.3926436,-41.331942,-39.4658)">
     <g
        id="g12">
       <rect
@@ -141,11 +142,11 @@
          id="g62">
         <polygon
            class="cls-2"
-           points="120.99,104.27 149.98,97.44 149.98,107 120.99,113.83 "
+           points="120.99,113.83 120.99,104.27 149.98,97.44 149.98,107 "
            id="polygon30" />
         <polygon
            class="cls-2"
-           points="120.99,117.8 149.98,110.98 149.98,120.53 120.99,127.36 "
+           points="120.99,127.36 120.99,117.8 149.98,110.98 149.98,120.53 "
            id="polygon32" />
         <path
            class="cls-2"
@@ -153,23 +154,23 @@
            id="path34" />
         <polygon
            class="cls-2"
-           points="120.99,94.44 149.98,84.21 149.98,93.48 120.99,100.3 "
+           points="120.99,100.3 120.99,94.44 149.98,84.21 149.98,93.48 "
            id="polygon36" />
         <polygon
            class="cls-2"
-           points="120.99,131.33 149.98,124.51 149.98,134.06 120.99,140.89 "
+           points="120.99,140.89 120.99,131.33 149.98,124.51 149.98,134.06 "
            id="polygon38" />
         <polygon
            class="cls-2"
-           points="153.85,84.89 169.31,94.17 169.31,99.88 153.85,93.69 "
+           points="153.85,93.69 153.85,84.89 169.31,94.17 169.31,99.88 "
            id="polygon40" />
         <polygon
            class="cls-2"
-           points="169.31,163.62 153.85,163.62 153.85,151.98 169.31,158.17 "
+           points="169.31,158.17 169.31,163.62 153.85,163.62 153.85,151.98 "
            id="polygon42" />
         <polygon
            class="cls-2"
-           points="101.66,59.71 124.85,64.68 124.85,71.6 101.66,68.12 "
+           points="101.66,68.12 101.66,59.71 124.85,64.68 124.85,71.6 "
            id="polygon44" />
         <rect
            class="cls-2"
@@ -180,11 +181,11 @@
            id="rect46" />
         <polygon
            class="cls-2"
-           points="169.31,140.47 153.85,134.29 153.85,124.92 169.31,131.11 "
+           points="169.31,131.11 169.31,140.47 153.85,134.29 153.85,124.92 "
            id="polygon48" />
         <polygon
            class="cls-2"
-           points="169.31,154 153.85,147.82 153.85,138.45 169.31,144.64 "
+           points="169.31,144.64 169.31,154 153.85,147.82 153.85,138.45 "
            id="polygon50" />
         <path
            class="cls-2"
@@ -192,7 +193,7 @@
            id="path52" />
         <polygon
            class="cls-2"
-           points="68.8,163.62 58.87,163.62 58.87,116.49 68.8,112.63 "
+           points="68.8,112.63 68.8,163.62 58.87,163.62 58.87,116.49 "
            id="polygon54" />
         <path
            class="cls-2"
@@ -209,16 +210,8 @@
       </g>
       <polygon
          class="cls-2"
-         points="76.53,108.33 80.4,109.27 80.4,73.14 76.53,73.14 "
+         points="76.53,73.14 76.53,108.33 80.4,109.27 80.4,73.14 "
          id="polygon64" />
     </g>
   </g>
-  <rect
-     style="fill:none;fill-opacity:1;stroke:#e4be52;stroke-width:5;stroke-miterlimit:9.30000019;stroke-dasharray:none;stroke-opacity:1"
-     id="rect902"
-     width="198.84323"
-     height="198.84322"
-     x="15.438385"
-     y="15.438393"
-     ry="0" />
 </svg>

@@ -346,7 +346,7 @@
     <value>Lokal gespeicherte Standorte abgerufen</value>
   </data>
   <data name="NoStoredLocations" xml:space="preserve">
-    <value>Keine nahelegende Orte local gespeichert</value>
+    <value>Keine nahelegende Orte lokal gespeichert</value>
   </data>
   <data name="TransmissionSuccessful" xml:space="preserve">
     <value>Übetragung erfolgreich!</value>

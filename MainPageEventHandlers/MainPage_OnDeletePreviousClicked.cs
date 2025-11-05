@@ -20,7 +20,7 @@ namespace IndoorCO2App_Multiplatform
                 }
                 _DeleteLastSubmissionButton.Text = "fetching Last Submission";
                 MainPageSingleton._DeleteLastSubmissionButton.IsEnabled = false;
-                string id = UserIDManager.GetEncryptedID(BluetoothManager.deviceID, false);
+                string id = UserIDManager.GetEncryptedID(BluetoothManager.deviceID, true);
                 Logger.WriteToLog("requesting last submission of: " + id, false);
                 var content = new StringContent(id, Encoding.UTF8, "text/plain");
                 using var client = new HttpClient();
@@ -35,7 +35,7 @@ namespace IndoorCO2App_Multiplatform
                     }
                     catch (Exception)
                     {
-                        await DisplayAlert("No Entry Found", "No deletable entry in database. To delete entries older than 24 hours, send an email to aurelwuensch@proton.me", "OK");
+                        await DisplayAlert("No Entry Found", "Deleting Entries is currently being reworked, please send an email to aurelwuensch@proton.me and I'll manually delete the entry", "OK");
                         MainPageSingleton._DeleteLastSubmissionButton.IsEnabled = true;
                         return;
                     }
@@ -43,7 +43,7 @@ namespace IndoorCO2App_Multiplatform
 
                 if (submissionInfo == null)
                 {
-                    await DisplayAlert("No Entry Found", "No deletable entry in database. To delete entries older than 24 hours, send an email to aurelwuensch@proton.me", "OK");
+                    await DisplayAlert("No Entry Found", "Deleting Entries is currently being reworked, please send an email to aurelwuensch@proton.me and I'll manually delete the entry", "OK");
                     MainPageSingleton._DeleteLastSubmissionButton.IsEnabled = true;
                     return;
                 }

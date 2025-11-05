@@ -42,6 +42,7 @@ namespace IndoorCO2App_Multiplatform
         public static bool endTrimSliderHasBeenUsed = false;
         public static bool endtrimSliderIsAtmax = false;
         public static TransitFilterMode TransitFilter = TransitFilterMode.All;
+        public static bool TransmissionFailed = false;
 
         int searchRange = 100;
 
@@ -251,7 +252,7 @@ namespace IndoorCO2App_Multiplatform
                     selectedLocation = (LocationData)_LocationPicker.SelectedItem;
                     ChangeToRecordingUI();
                     long startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                    BluetoothManager.StartNewRecording(monitorType, selectedLocation, startTime, prerecording);
+                    BluetoothManager.StartNewRecording(monitorType, selectedLocation, startTime, prerecording,false);
                     
                     if(prerecording)
                     {
@@ -275,7 +276,7 @@ namespace IndoorCO2App_Multiplatform
                     LocationData ld = new LocationData(RecoveryData.locationType, RecoveryData.locationID, RecoveryData.locationName, RecoveryData.locationLat, RecoveryData.locationLon, RecoveryData.locationLat, RecoveryData.locationLon);
                     selectedLocation = ld;
                     ChangeToRecordingUI();                    
-                    BluetoothManager.StartNewRecording(monitorType, selectedLocation, RecoveryData.startTime, false);
+                    BluetoothManager.StartNewRecording(monitorType, selectedLocation, RecoveryData.startTime, false,true);
                     await _MainScrollView.ScrollToAsync(0, 0, false);
                 }
 
@@ -322,7 +323,7 @@ namespace IndoorCO2App_Multiplatform
                 RecoveryData.WriteToPreferences();
 
                 ChangeToTransportRecordingUI();
-                BluetoothManager.StartTransportRecording(monitorType, startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine);
+                BluetoothManager.StartTransportRecording(monitorType, startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine, false);
                 await _MainScrollView.ScrollToAsync(0, 0, true);
             }
             else
@@ -354,7 +355,7 @@ namespace IndoorCO2App_Multiplatform
                 endTrimSliderHasBeenUsed = false;
                 previousDataCount = 0;
                 ChangeToTransportRecordingUI();
-                BluetoothManager.StartTransportRecording(monitorType, RecoveryData.startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine);
+                BluetoothManager.StartTransportRecording(monitorType, RecoveryData.startTime, prerecording, selectedTransitOriginLocation, selectedTransitLine,true);
                 await _MainScrollView.ScrollToAsync(0, 0, false);
             }
 
@@ -409,11 +410,13 @@ namespace IndoorCO2App_Multiplatform
 
         public void OnTransmissionFailed(string msg)
         {
+            TransmissionFailed = true;
             _FinishRecordingButton.Text = msg;
             _FinishRecordingButton.IsEnabled = true;
         }
         public void OnTransmissionSuccess(string msg)
         {
+            TransmissionFailed = false;
             _FinishRecordingButton.Text = LocalisationResourceManager.Instance.GetString(nameof(AppStrings.TransmissionSuccessful));
             OverpassModule.lastFetchWasSuccess = false;
             OverpassModule.lastFetchWasSuccessButNoResults = false;

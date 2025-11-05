@@ -379,6 +379,7 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[office=educational_institution];" +
                 $"nwr(around:{rString},{latString},{lonString})[office=government];" +
                 $"nwr(around:{rString},{latString},{lonString})[office=political_party];" +
+                $"nwr(around:{rString},{latString},{lonString})[office=coworking];" +
                 $"nwr(around:{rString},{latString},{lonString})[government=register_office];" +                
                 $"nwr(around:{rString},{latString},{lonString})[shop];" +
                 $"nwr(around:{rString},{latString},{lonString})[craft];" +
@@ -395,6 +396,7 @@ namespace IndoorCO2App_Multiplatform
                 $"nwr(around:{rString},{latString},{lonString})[leisure=sauna];" +
                 $"nwr(around:{rString},{latString},{lonString})[leisure=hackerspace];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=townhall];" +
+                $"nwr(around:{rString},{latString},{lonString})[amenity=car_rental];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=convention_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=conference_centre];" +
                 $"nwr(around:{rString},{latString},{lonString})[amenity=congress_centre];" +
