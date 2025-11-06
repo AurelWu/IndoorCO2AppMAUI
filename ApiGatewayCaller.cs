@@ -72,7 +72,7 @@ namespace IndoorCO2App_Multiplatform
             }
             else if (successState == "failure")
             {
-                MainPage.MainPageSingleton.OnTransmissionFailed("Transmission failed. Try again!!");
+                MainPage.MainPageSingleton.OnTransmissionFailed("Transmission failed. Try again!");
             }
             else
             {

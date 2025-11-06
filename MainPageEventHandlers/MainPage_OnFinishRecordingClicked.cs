@@ -32,22 +32,25 @@ namespace IndoorCO2App_Multiplatform
                 }
                 _FinishRecordingButton.Text = "Submitting Data";
                 _FinishRecordingButton.IsEnabled = false; ;
-
+                BluetoothManager.isSubmitting = true;
                 int trimStart = (int)Math.Floor(_TrimSlider.RangeStart);
                 int trimEnd = (int)Math.Floor(_TrimSlider.RangeEnd);
                 bool success = await BluetoothManager.FinishRecordingAsync(trimStart, trimEnd, submissionMode, _ManualNameEditor.Text, _ManualAddressEditor.Text);
                 if (success)
                 {
+                    BluetoothManager.isSubmitting = false;
                     ResetRecordingState();
                     await ShowSuccessNotificationAsync();
                 }
                 else
                 {
+                    BluetoothManager.isSubmitting = false;
                     Logger.WriteToLog($"FinishRecordingAsync returned no success", false);
                 }
             }
             catch (Exception ex)
             {
+                BluetoothManager.isSubmitting = false;
                 Logger.WriteToLog($"Error when calling OnFinishRecordingClicked: {ex}", false);
             }
         }

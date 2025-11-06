@@ -48,12 +48,12 @@
 		<string>fetch</string>
 	</array>
 	<key>CFBundleShortVersionString</key>
-	<string>127.0</string>
+	<string>128.0</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>CFBundleIdentifier</key>
 	<string></string>
 	<key>CFBundleVersion</key>
-	<string>127</string>
+	<string>128</string>
 </dict>
 </plist>

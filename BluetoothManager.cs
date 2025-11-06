@@ -79,6 +79,7 @@ namespace IndoorCO2App_Multiplatform
         public static DateTime timeOfLastNotifyUpdate = DateTime.MinValue;
 
         public static bool isRecording;
+        public static bool isSubmitting = false;
         public static bool isTransportRecording;
         public static long startingTime;
         public static List<SensorData> recordedData;

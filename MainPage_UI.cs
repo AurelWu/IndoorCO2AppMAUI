@@ -514,6 +514,7 @@ namespace IndoorCO2App_Multiplatform
 
         private void UpdateFinishRecordingButton()
         {
+            if (BluetoothManager.isSubmitting == true) return; //while its submitting we don't update it, it gets set during initiation of submission and either if it fails or succeeds isSubmitting is set to false afterwards and this here takes over again
             _FinishRecordingButton.IsEnabled = false;
             int original = BluetoothManager.recordedData.Count;
             int trimStart = (int)Math.Floor(_TrimSlider.RangeStart);
