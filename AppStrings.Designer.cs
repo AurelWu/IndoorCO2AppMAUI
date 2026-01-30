@@ -187,7 +187,8 @@ namespace IndoorCO2App_Android {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Sensor found, but &apos;Smart Home Integration&apos; is disabled.\r\nEnable it using the offical Aranet app ⓘ ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sensor found, but &apos;Smart Home Integration&apos; is disabled. 
+        ///Enable it using the offical Aranet app ⓘ ähnelt.
         /// </summary>
         internal static string DisabledSmarthomeIntegration {
             get {

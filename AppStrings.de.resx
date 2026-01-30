@@ -280,7 +280,8 @@
     <value>Sensor gefunden, aber die firmware is veraltet.\r\nUpdate via offizieller Aranet App erforderlich ⓘ</value>
   </data>
   <data name="DisabledSmarthomeIntegration" xml:space="preserve">
-    <value>Sensor gefunden - 'Smart Home Integration' ist deaktiviert.\r\nAktivierung mit der offiziellen Aranet App erforderlichⓘ</value>
+    <value>Sensor gefunden - 'Smart Home Integration' ist deaktiviert.
+Aktivierung mit der offiziellen Aranet App erforderlichⓘ</value>
   </data>
   <data name="LowCO2Levels" xml:space="preserve">
     <value>| niedriger CO2-Wert! Sensor muss eventuell neu kalibriert werden</value>

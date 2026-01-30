@@ -280,7 +280,8 @@
     <value>Capteur détecté, mais le firmware est obsolète.\r\nMettez-le à jour à l'aide de l'application officielle Aranet ⓘ</value>
   </data>
   <data name="DisabledSmarthomeIntegration" xml:space="preserve">
-    <value>Capteur détecté, mais la fonction « Smart Home Integration » est désactivée.\r\nActivez-la à l'aide de l'application officielle Aranet ⓘ</value>
+    <value>Capteur détecté, mais la fonction « Smart Home Integration » est désactivée. 
+Activez-la à l'aide de l'application officielle Aranet ⓘ</value>
   </data>
   <data name="LowCO2Levels" xml:space="preserve">
     <value>| Faible valeur de CO2 ! Le capteur doit peut-être être recalibré.</value>

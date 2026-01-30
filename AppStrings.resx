@@ -281,7 +281,8 @@
     <value>Sensor found, but the firmware is outdated.\r\nUpdate it using the official Aranet app ⓘ</value>
   </data>
   <data name="DisabledSmarthomeIntegration" xml:space="preserve">
-    <value>Sensor found, but 'Smart Home Integration' is disabled.\r\nEnable it using the offical Aranet app ⓘ</value>
+    <value>Sensor found, but 'Smart Home Integration' is disabled. 
+Enable it using the offical Aranet app ⓘ</value>
   </data>
   <data name="LowCO2Levels" xml:space="preserve">
     <value>| low CO2 Value! Sensor might need recalibration </value>

@@ -17,7 +17,7 @@ namespace IndoorCO2App_Multiplatform
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
-                .UseSkiaSharp(true)
+                .UseSkiaSharp()
                 .ConfigureSyncfusionCore()
                 .ConfigureFonts(fonts =>
                 {

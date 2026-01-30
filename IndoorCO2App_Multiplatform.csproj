@@ -175,6 +175,7 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
 	  <IsTrimmable>True</IsTrimmable>
+	  <DebugSymbols>True</DebugSymbols>
 	</PropertyGroup>
 
 		<PropertyGroup>
@@ -205,6 +206,7 @@
 	<ItemGroup>
 		<!-- <PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" /> -->
 		<!--<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.83" /> -->
+		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.1" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" /> 
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.50" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.50" />
@@ -213,8 +215,8 @@
 		<!--<PackageReference Include="DotNetEnv" /> -->
 		<!--<PackageReference Include="Mapsui" Version="4.1.8" /> -->
 		<!--<PackageReference Include="Mapsui.Maui" Version="4.1.8" />-->
-		<PackageReference Include="Mapsui" Version="4.1.9" /> 
-		<PackageReference Include="Mapsui.Maui" Version="4.1.9" />
+		<PackageReference Include="Mapsui" Version="5.0.0" /> 
+		<PackageReference Include="Mapsui.Maui" Version="5.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<!--<PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.100" />  -->
@@ -347,6 +349,11 @@
 	  <Compile Update="MainPageEventHandlers\MainPage_OnShowMapInBrowserClicked.cs">
 	    <DependentUpon>%(Filename)</DependentUpon>
 	  </Compile>
+	  <Compile Update="Resources\Strings\Localisation.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Localisation.resx</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -357,6 +364,10 @@
 	  <EmbeddedResource Update="AppStrings.pt.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>Appstrings.pt.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>	
+	  <EmbeddedResource Update="Resources\Strings\Localisation.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Localisation.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
 

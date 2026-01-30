@@ -599,7 +599,7 @@ namespace IndoorCO2App_Multiplatform
                 //{
                 //    _DeviceLabel.Text = "Device found but Update Interval not set to 1 Minute, change to 1 Minute using official App. next attempt in " + BluetoothManager.timeToNextUpdate + "s";
                 //}
-                else if (BluetoothManager.currentCO2Reading != 0 && BluetoothManager.gattStatus == 0) //TODO also add check if last reading was a success maybe?         
+                else if (BluetoothManager.currentCO2Reading != 0 && (BluetoothManager.gattStatus == 0 || monitorType == CO2MonitorType.Airvalent)) //TODO also add check if last reading was a success maybe?         
                 {
                     //checking bondstate does not work for Aranet4 or BLE devices in general, would need to infer from trying to read characteristics
                     //if (BluetoothManager.isBonded == false && (monitorType == CO2MonitorType.Airvalent || monitorType == CO2MonitorType.Aranet4))
